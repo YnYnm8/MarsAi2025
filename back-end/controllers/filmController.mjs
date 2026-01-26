@@ -52,3 +52,27 @@ export async function getAllFilms(req, res) {
         return catchError(res, err)
     }
 }
+
+export async function getFilmById(req, res) {
+    try {
+        const filmData = await Film.findByPk(req.params.id,{
+            include: [
+                {
+                    model: Candidature,
+                    attributes: ["id"],
+
+                },
+                {
+                    model: User,
+                    attributes: ["username"]
+                }
+            ]
+        });
+        if (!filmData ) {
+            return res.status(200).json({message:"Film introvable "});
+        }
+        return res.status(200).json(filmData);
+    } catch (err) {
+        return catchError(res, err)
+    }
+}
