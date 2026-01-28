@@ -12,7 +12,6 @@ const sendErrors = (res, errors, status = 400) => {
     return res.status(status).json({ errors });
 };
 
-
 function catchError(res, err) {
 
     if (err.name === "SequelizeValidationError") {

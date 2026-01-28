@@ -1,5 +1,5 @@
 import sequelize from "../config/database.mjs";
-import { DataTypes, INTEGER } from "sequelize";
+import { DataTypes } from "sequelize";
 
 export const Film = sequelize.define("Film", {
     id: {
@@ -25,7 +25,7 @@ export const Film = sequelize.define("Film", {
     },
    
     duration: {
-        type: DataTypes.INTEGER,
+        type: DataTypes.FLOAT,
         allowNull: false,
         validate: {
             notEmpty: { msg: "Duratation est obligatoire." },
