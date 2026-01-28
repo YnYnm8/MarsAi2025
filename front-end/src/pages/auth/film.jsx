@@ -10,7 +10,7 @@ export default function Film() {
     
 
       <div className="card">
-        <h2>nom de film: L'AUBE</h2>
+        <h2 className="text-3xl font-bold underline">nom de film: L'AUBE</h2>
         <p>Profile</p>
         <p>Jean Dupont – France</p>
 
@@ -41,7 +41,7 @@ export default function Film() {
             </br>
           </a>
           <placeholder>httm:jkljkljjkjjj</placeholder>
-          <button className="register-button">Partager</button>
+          <button className="btn btn-warning">Partager</button>
 
         </div> {/* share div の閉じタグ */}
 
