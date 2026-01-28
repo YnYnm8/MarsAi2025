@@ -23,7 +23,6 @@ export const Film = sequelize.define("Film", {
             len: { args: [2, 50], msg: "2 a 50 caractères." }
         }
     },
-   
     duration: {
         type: DataTypes.FLOAT,
         allowNull: false,
@@ -38,7 +37,6 @@ export const Film = sequelize.define("Film", {
         validate: {
             notEmpty: { msg: "Subtitle est obligatoire" }
         }
-
     },
     description: {
         type: DataTypes.STRING,
@@ -96,3 +94,5 @@ export const Film = sequelize.define("Film", {
     tableName: "films",
     timestamps: true
 })
+
+
