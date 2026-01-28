@@ -16,5 +16,5 @@ Film.belongsToMany(Playlist, {
 export {
   Film,
   Playlist,
-  PlaylistFilm
+  PlaylistFilm,
 };
