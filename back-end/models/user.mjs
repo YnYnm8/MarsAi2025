@@ -3,7 +3,7 @@ import sequelize from '../config/database.mjs'
 import { hash, verify } from 'argon2';
 
 
-const User = sequelize.define('User', {
+export const User = sequelize.define('User', {
     id: {
         type: DataTypes.INTEGER,
         primaryKey: true,
