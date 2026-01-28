@@ -2,7 +2,6 @@ import { DataTypes } from "sequelize;
 import sequelize, { Sequelize } from "../config/database.mjs";
 
 
-
 export const PlaylistFilm = sequelize.define("Playlist", {
     id: {
         type: DataTypes.INTGER,

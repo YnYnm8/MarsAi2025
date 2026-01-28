@@ -9,7 +9,6 @@ export const Film = sequelize.define("Film", {
     },
     candidature_fk: {
         type: DataTypes.INTEGER,
-
     },
     collaborateur: {
         type: DataTypes.STRING,

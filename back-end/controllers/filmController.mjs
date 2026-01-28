@@ -75,4 +75,4 @@ export async function getFilmById(req, res) {
     } catch (err) {
         return catchError(res, err)
     }
-}
+} 
