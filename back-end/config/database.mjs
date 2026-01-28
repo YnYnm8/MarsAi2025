@@ -3,7 +3,6 @@ import dotenv from 'dotenv';
 
 dotenv.config({ path: './.env' });
 
-console.log('DB_USER:', process.env.DB_USER);
 
 const sequelize = new Sequelize(
   process.env.DB_NAME,
