@@ -1,12 +1,12 @@
 services:
   bdd:
-    image: mariadb:lts  # Utilisation de la version Long Term Support
+    image: mysql  # Utilisation de la version Long Term Support
     restart: always      # Redémarre le conteneur s'il plante
     environment:
-      MARIADB_ROOT_PASSWORD: root
-      MARIADB_USER: user
-      MARIADB_PASSWORD: user
-      MARIADB_DATABASE: MarsAI-database
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_USER: user
+      MYSQL_PASSWORD: user
+      MYSQL_DATABASE: MarsAI-database
     ports:
       - "3306:3306"
     volumes:

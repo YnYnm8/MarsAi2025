@@ -1,7 +1,8 @@
 import { Sequelize } from 'sequelize';
 import dotenv from 'dotenv';
 
-dotenv.config();
+dotenv.config({ path: './.env' });
+
 
 const sequelize = new Sequelize(
   process.env.DB_NAME,
@@ -9,17 +10,21 @@ const sequelize = new Sequelize(
   process.env.DB_PASS,
   {
     host: process.env.DB_HOST,
-    port: process.env.DB_PORT,
-    dialect: 'mariadb', // Spécifique pour MariaDB
+    port: Number(process.env.DB_PORT),
+    dialect: 'mysql',
     logging: false,
+
+    timezone: '+02:00',
+
     pool: {
-      max: 10,  // Maximum 10 connexions simultanées
-      min: 0, // Minimum 0 connexions en attente
-      acquire: 30000, // Timeout 30s pour acquérir connexion
-      idle: 10000 // Ferme connexion après 10s d'inactivité
+      max: 10,
+      min: 0,
+      acquire: 30000,
+      idle: 10000
     },
+
     dialectOptions: {
-      timezone: 'Etc/GMT-2' // Timezone GMT+2 (heure d'été France)
+      useUTC: false
     }
   }
 );

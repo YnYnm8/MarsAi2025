@@ -1,14 +1,24 @@
-import { BrowserRouter, Routes, Route } from "react-router";
-import Dashboard from "./components/pages/dashboard/dashboard"; 
+// import { useState } from 'react'
+
+import { Routes, Route } from "react-router";
+import Film from './pages/auth/film';
+import { Routes, Route } from "react-router";
+import Dashboard from "./components/pages/dashboard/dashboard";
 
 function App() {
+
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/dashboard" element={<Dashboard />} />
-      </Routes>
-    </BrowserRouter>
-  );
+    <>
+      <section>
+        <main>
+          <Routes>
+            <Route path="/film" element={<Film />} />
+            <Route path="/dashboard" element={<Dashboard />} />
+          </Routes>
+        </main>
+      </section>
+    </>
+  )
 }
 
-export default App;
+export default App
