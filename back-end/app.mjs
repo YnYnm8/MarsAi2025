@@ -1,31 +1,43 @@
 import express from 'express';
+import cors from 'cors';
 import sequelize from './config/database.mjs';
 import "./models/index.mjs";
+import authRoute from './routes/authRoutes.mjs';
+import dotenv from "dotenv";
+
+dotenv.config();
 
 const app = express();
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 
+// Middleware JSON
+app.use(express.json());
+
+app.use(cors({
+  origin: "http://localhost:5174",
+  credentials: true, // cookies
+}));
+
+// Routes
+app.use("/", authRoute);
+
+app.get("/", (req, res) => {
+  res.send("API OK");
+});
+
+// serveur + BDD
 try {
   await sequelize.authenticate();
-  console.log(" ");
-  console.log("Connexion réussie ✅");
+  console.log("✅ Connexion à la BDD réussie");
 
   await sequelize.sync({ alter: true });
-  console.log(" ");
-  console.log("Tables créées avec succès ✅");
-
-  app.get("/", (req, res) => {
-    res.send("API OK");
-  });
+  console.log("✅ Tables synchronisées");
 
   app.listen(PORT, () => {
-    console.log(" ");
-    console.log(`Port utilisé: ${PORT} 🔌`);
+    console.log(`🚀 Serveur démarré sur http://localhost:${PORT}`);
   });
-
 } catch (error) {
-  console.error(" ");
-  console.error("❌ Erreur au démarrage de l’API");
+  console.error("❌ Erreur au démarrage de l'API");
   console.error(error.message);
-  process.exit(1); 
+  process.exit(1);
 }
