@@ -2,19 +2,18 @@
 
 import { Routes, Route } from "react-router";
 import Film from './pages/auth/film';
+import PostMovie from "./pages/films/post-movie";
 
 function App() {
 
   return (
     <>
-      <section>
         <main>
           <Routes>
             <Route path="/film" element={<Film />} />
-          
+          <Route path="/form-movie" element={<PostMovie/>}/>
           </Routes>
         </main>
-      </section>
     </>
   )
 }
