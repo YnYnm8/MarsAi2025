@@ -38,7 +38,8 @@ function Dashboard() {
           <p className="text-right text-blue-800 font-bold"> OBJECTIF 600 </p>
           <p className="text-2xl font-bold"> 482 </p>
           <p className="mb-8"> FILMS EVALUES PAR LE JURY</p>
-          <img src="/barrebleue.png" alt="barre bleue" />
+          <p className="font-bold "> 80,3% COMPLETE </p>
+          <progress className="rounded-full progress w-56" value="80" max="100" ></progress>
         </div>
 
 
@@ -50,7 +51,10 @@ function Dashboard() {
           <p className="text-2xl font-bold">08/12</p>
           <p className="mb-8">  JURES AYANT FINALISE LEUR LOT </p>
           <p className="font-bold"> EN COURS DE DELIBERATION </p>
-          <img src="/barreorange.png" alt="barre orange" />
+          <progress value="85" max="100"
+  className="w-56 h-3 rounded-full progress-orange"></progress>
+
+
         </div>
 
         <div className="metric3 border p-4 rounded-2xl bg-white ">
