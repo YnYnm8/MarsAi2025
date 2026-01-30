@@ -1,96 +1,160 @@
 function Dashboard() {
   return (
-    <div className="bg-gray-100 w-full min-h-screen px-8"> 
-    
+    <div className="bg-gray-100 min-h-screen px-12 py-8">
 
       {/* HEADER */}
-      <div className="header justify-between flex gap-2 mb-6">
-        <h2 className="dashboard-kicker text-gray-54">BACK-OFFICE OFFICIEL</h2>
-        <div className="">
-          <p className="dashboard-user font-bold text-black ">ADMINISTRATEUR</p>
-          <div className="">
-            <p className="text-blue-500 font-bold ">admin@email.com</p>
-            <img src="/mec.jpg" alt="mec" className="w-10" />
+      <div className="flex justify-between items-center mb-12">
+        <h2 className="text-gray-500 tracking-wide">
+          BACK-OFFICE OFFICIEL
+        </h2>
+
+        <div className="flex items-center gap-4">
+          <div className="text-right">
+            <p className="font-semibold text-black">
+              ADMINISTRATEUR
+            </p>
+            <p className="text-blue-500 font-semibold text-sm">
+              admin@email.com
+            </p>
           </div>
+          <img
+            src="/mec.jpg"
+            alt="profil"
+            className="w-10 h-10 rounded-full object-cover"
+          />
         </div>
       </div>
 
       {/* OVERVIEW */}
-      <div className="dashboard-overview mb-8">
-        <h2 className="mb-10 dashboard-title text-orange-400 mb-4 font-bold">
+      <div className="mb-12">
+        <h2 className="text-orange-400 font-bold mb-2 tracking-wide">
           ADMIN MANAGEMENT
         </h2>
 
-        <h1 className="overview-title font-bold text-3xl mb-9 text-black">
+        <h1 className="text-3xl font-bold text-black mb-4">
           VUE D'ENSEMBLE
         </h1>
 
-        <p className="overview-description">
+        <p className="text-gray-600 max-w-xl">
           Analyse détaillée de la progression du festival et des indicateurs de performance
         </p>
       </div>
 
       {/* METRICS */}
-      <div className="overview-metrics grid grid-cols-2 gap-6">
+      <div className="grid grid-cols-2 gap-8">
 
-        <div className="metric1 border p-4 rounded-2xl bg-white">
-          <img src="/pellicule.png" alt="pellicule" className="w-10" />
-          <p className="text-right text-blue-800 font-bold"> OBJECTIF 600 </p>
-          <p className="text-2xl font-bold"> 482 </p>
-          <p className="mb-8"> FILMS EVALUES PAR LE JURY</p>
-          <p className="font-bold "> 80,3% COMPLETE </p>
-          <progress className="rounded-full progress w-56" value="80" max="100" ></progress>
-        </div>
+        {/* CARD 1 */}
+        <div className="bg-white p-6 rounded-2xl shadow-sm space-y-4">
+          <div className="flex justify-between items-center">
+            <img src="/pellicule.png" alt="icon" className="w-8" />
+            <p className="text-blue-800 font-semibold text-sm">
+              OBJECTIF 600
+            </p>
+          </div>
 
+          <p className="text-3xl font-bold">482</p>
 
-        <div className="metric2 border p-4 rounded-2xl bg-white">
-          <img src="/diplome.png" alt="diplome" className="w-10" />
-          <p className="text-right text-orange-600 font-bold">
-            Quota 100/JURÉ
+          <p className="text-gray-500 text-sm">
+            FILMS ÉVALUÉS PAR LE JURY
           </p>
-          <p className="text-2xl font-bold">08/12</p>
-          <p className="mb-8">  JURES AYANT FINALISE LEUR LOT </p>
-          <p className="font-bold"> EN COURS DE DELIBERATION </p>
-          <progress value="85" max="100"
-  className="w-56 h-3 rounded-full progress-orange"></progress>
 
-
+          <div>
+            <p className="font-semibold text-sm mb-2">
+              80,3% COMPLÉTÉ
+            </p>
+            <div className="w-full bg-gray-200 rounded-full h-2">
+              <div className="bg-blue-900 h-2 rounded-full w-[80%]"></div>
+            </div>
+          </div>
         </div>
 
-        <div className="metric3 border p-4 rounded-2xl bg-white ">
-          <img src="/mapemonde.png" alt="map" className="w-10" />
-          <p className="text-2xl font-bold">
-            124
+
+        {/* CARD 2 */}
+        <div className="bg-white p-6 rounded-2xl shadow-sm space-y-4">
+          <div className="flex justify-between items-center">
+            <img src="/diplome.png" alt="icon" className="w-8" />
+            <p className="text-orange-500 font-semibold text-sm">
+              QUOTA 100/JURÉ
+            </p>
+          </div>
+
+          <p className="text-3xl font-bold">08/12</p>
+
+          <p className="text-gray-500 text-sm">
+            JURÉS AYANT FINALISÉ LEUR LOT
           </p>
-          <p className="mb-8">  PAYS REPRESENTES</p>
-          <p className="font-bold">TOP ZONE : EUROPE </p>
+
+          <div>
+            <p className="font-semibold text-sm mb-2">
+              EN COURS DE DÉLIBÉRATION
+            </p>
+            <div className="w-full bg-gray-200 rounded-full h-2">
+              <div className="bg-orange-400 h-2 rounded-full w-[85%]"></div>
+            </div>
+          </div>
         </div>
 
-        <div className="metric4 bg-gray-800 text-white text-lg border border-black p-4 ml-auto  rounded-2xl w-[15cm]">
-          <img src="/yo.png" alt="yo" className="w-10" />
-          <p className="text-white font-bold text-2xl">72%</p>
-          <p className="mb-8 text-blue-400">TAUX D'OCCUPATION WORKSHOP</p>
-          <button className="bg-blue-800 text-white px-4 py-2 rounded mt-2 w-full">
+
+        {/* CARD 3 */}
+        <div className="bg-white p-6 rounded-2xl shadow-sm space-y-4">
+          <div className="flex items-center gap-3">
+            <img src="/mapemonde.png" alt="icon" className="w-8" />
+            <p className="text-gray-500 text-sm">
+              PAYS REPRÉSENTÉS
+            </p>
+          </div>
+
+          <p className="text-3xl font-bold">124</p>
+
+          <p className="font-semibold text-sm">
+            TOP ZONE : EUROPE
+          </p>
+        </div>
+
+
+        {/* CARD 4 */}
+        <div className="bg-gray-800 text-white p-6 rounded-2xl shadow-sm space-y-4">
+          <div className="flex items-center gap-3">
+            <img src="/yo.png" alt="icon" className="w-8" />
+            <p className="text-blue-400 text-sm">
+              TAUX D'OCCUPATION WORKSHOP
+            </p>
+          </div>
+
+          <p className="text-4xl font-bold">72%</p>
+
+          <button className="bg-blue-600 hover:bg-blue-700 transition text-white py-2 rounded-lg w-full mt-4">
             VOIR LES ÉLÉMENTS
           </button>
         </div>
 
-        <div className="metric5 bg-white border border-gray-200 p-6 rounded-2xl col-span-2 w-[29cm] h-[4cm] justify-center">
-          <img src="/pellicule.png" alt="pellicule" className="w-10" />
-          <p className="font-bold text-2xl">
-            182
-          </p>
-          <p> COMPTES UTILISATEURS ACTIFS</p>
-          <div className="justify-content right">
-          <p className="text-right text-blue-600 text-2xl font-bold"> +8 </p>
-          <p className="text-right"> AUJOURD'HUI </p>
+
+        {/* CARD 5 FULL WIDTH */}
+        <div className="bg-white p-6 rounded-2xl shadow-sm col-span-2 flex justify-between items-center">
+
+          <div className="flex items-center gap-4">
+            <img src="/pellicule.png" alt="icon" className="w-8" />
+            <div>
+              <p className="text-3xl font-bold">182</p>
+              <p className="text-gray-500 text-sm">
+                COMPTES UTILISATEURS ACTIFS
+              </p>
+            </div>
           </div>
+
+          <div className="text-right">
+            <p className="text-blue-600 text-2xl font-bold">+8</p>
+            <p className="text-gray-500 text-sm">
+              AUJOURD'HUI
+            </p>
+          </div>
+
         </div>
 
       </div>
-
     </div>
   );
 }
 
 export default Dashboard;
+
