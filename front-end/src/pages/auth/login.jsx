@@ -29,9 +29,10 @@ const Login = () => {
     };
 
     return (
+        <div>
+        <TopNavbar />
         <div className="min-h-screen bg-[#F4F6F9] flex flex-col items-center px-6 pt-8 pb-12">
-
-            <TopNavbar />
+        
             <div className="text-center mb-6">
                 <h1 className="text-3xl font-extrabold tracking-widest text-gray-900">
                     CONNEXION
@@ -135,6 +136,7 @@ const Login = () => {
                 ← RETOUR ACCUEIL
             </Link>
 
+        </div>
         </div>
     );
 };

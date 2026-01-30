@@ -56,8 +56,9 @@ const Register = () => {
 
 
     return ( // Mobile Resp
-        <div className="min-h-screen bg-[#F4F6F9] flex flex-col items-center px-6 pt-8 pb-12">
+        <div>
              <TopNavbar />
+        <div className="min-h-screen bg-[#F4F6F9] flex flex-col items-center px-6 pt-8 pb-12">
 
             {/* Header */}
             <div className="w-full flex items-center justify-between mb-10">
@@ -220,6 +221,7 @@ const Register = () => {
                 ← RETOUR ACCUEIL
             </Link>
 
+        </div>
         </div>
     );
 };
