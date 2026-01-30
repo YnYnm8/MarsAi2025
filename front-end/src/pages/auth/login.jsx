@@ -24,7 +24,7 @@ const Login = () => {
         }
 
         console.log("Email:", email, "Password:", password);
-        navigate("/home");
+        navigate("/");
     };
 
     return (

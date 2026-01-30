@@ -22,7 +22,7 @@ function App() {
             <Route path="/logout" element={<Logout />} />
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/profile" element={<Profile />} />
-            <Route path="/home" element={<Home />} />
+            <Route path="/" element={<Home />} />
 
           </Routes>
         </main>
