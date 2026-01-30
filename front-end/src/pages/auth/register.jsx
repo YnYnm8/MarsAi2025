@@ -1,6 +1,12 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router";
 import logo from "/src/assets/icon-stars.png";
+import profile from "/src/assets/profil.png";
+import mailIcon from "/src/assets/mail.png";
+import cadenaIcon from "/src/assets/cadena.png";
+import TopNavbar from "./navbar";
+
+
 
 const Register = () => {
     const [username, setUsername] = useState("");
@@ -49,17 +55,13 @@ const Register = () => {
     };
 
 
-    return (
+    return ( // Mobile Resp
         <div className="min-h-screen bg-[#F4F6F9] flex flex-col items-center px-6 pt-8 pb-12">
+             <TopNavbar />
 
             {/* Header */}
             <div className="w-full flex items-center justify-between mb-10">
-                <div className="bg-blue-600 text-white text-sm font-semibold px-4 py-2 rounded-full">
-                    MARS.AI
-                </div>
-                <div className="flex items-center gap-4 text-2xl">
-                    🇬🇧
-                </div>
+
             </div>
 
             {/* Title */}
@@ -87,8 +89,12 @@ const Register = () => {
                         <label className="block text-[11px] font-semibold text-[#6B7A90] tracking-widest mb-2">
                             NOM
                         </label>
-                        <div className="flex items-center bg-[#F2F4F7] rounded-xl px-4 py-3 border border-gray-200">
-                            <span className="text-gray-400 mr-3 opacity-10">👤</span>
+                        <div className="flex items-center bg-[#F2F4F7] rounded-2xl px-4 py-3 border border-gray-200">
+                            <img
+                                src={profile}
+                                alt="LogoProfile"
+                                className="h-5 w-auto object-contain mr-2"
+                            />
                             <input
                                 type="text"
                                 value={username}
@@ -104,8 +110,12 @@ const Register = () => {
                         <label className="block text-[11px] font-semibold text-[#6B7A90] tracking-widest mb-2">
                             PRENOM
                         </label>
-                        <div className="flex items-center bg-[#F2F4F7] rounded-xl px-4 py-3 border border-gray-200">
-                            <span className="text-gray-400 mr-3 opacity-10">👤</span>
+                        <div className="flex items-center bg-[#F2F4F7] rounded-2xl px-4 py-3 border border-gray-200">
+                            <img
+                                src={profile}
+                                alt="Logoprofile"
+                                className="h-5 w-auto object-contain mr-2"
+                            />
                             <input
                                 type="text"
                                 value={firstname}
@@ -121,8 +131,12 @@ const Register = () => {
                         <label className="block text-[11px] font-semibold text-[#6B7A90] tracking-widest mb-2">
                             ADRESSE E-MAIL
                         </label>
-                        <div className="flex items-center bg-[#F2F4F7] rounded-xl px-4 py-3 border border-gray-200">
-                            <span className="text-gray-400 mr-3 opacity-50">✉️</span>
+                        <div className="flex items-center bg-[#F2F4F7] rounded-2xl px-4 py-3 border border-gray-200">
+                            <img
+                                src={mailIcon}
+                                alt="logoMail"
+                                className="h-5 w-auto object-contain mr-2"
+                            />
                             <input
                                 type="email"
                                 value={email}
@@ -138,8 +152,12 @@ const Register = () => {
                         <label className="block text-[11px] font-semibold text-[#6B7A90] tracking-widest mb-2">
                             MOT DE PASSE
                         </label>
-                        <div className="flex items-center bg-[#F2F4F7] rounded-xl px-4 py-3 border border-gray-200">
-                            <span className="text-gray-400 mr-3 opacity-50">🔒</span>
+                        <div className="flex items-center bg-[#F2F4F7] rounded-2xl px-4 py-3 border border-gray-200">
+                            <img
+                                src={cadenaIcon}
+                                alt="logoCadena"
+                                className="h-5 w-auto object-contain mr-2"
+                            />
                             <input
                                 type="password"
                                 value={password}
@@ -155,8 +173,12 @@ const Register = () => {
                         <label className="block text-[11px] font-semibold text-[#6B7A90] tracking-widest mb-2">
                             VERIFIER MOT DE PASSE
                         </label>
-                        <div className="flex items-center bg-[#F2F4F7] rounded-xl px-4 py-3 border border-gray-200">
-                            <span className="text-gray-400 mr-3 opacity-50">🔒</span>
+                        <div className="flex items-center bg-[#F2F4F7] rounded-2xl px-4 py-3 border border-gray-200">
+                            <img
+                                src={cadenaIcon}
+                                alt="logoCadena"
+                                className="h-5 w-auto object-contain mr-2"
+                            />
                             <input
                                 type="password"
                                 value={verifiedPassword}
@@ -172,7 +194,7 @@ const Register = () => {
                     {/* Button */}
                     <button
                         type="submit"
-                        className="w-full bg-[#1F66B1] hover:bg-[#155a9c] text-white font-semibold py-3 rounded-xl transition mt-2"
+                        className="w-full bg-[#1F66B1] hover:bg-[#155a9c] text-white font-semibold py-3 rounded-2xl transition mt-2"
                     >
                         CRÉER MON PROFIL
                     </button>
@@ -192,7 +214,7 @@ const Register = () => {
             </div>
 
             <Link
-                to="/"
+                to="/login"
                 className="mt-8 text-sm text-blue-600 font-semibold flex items-center gap-2"
             >
                 ← RETOUR ACCUEIL
