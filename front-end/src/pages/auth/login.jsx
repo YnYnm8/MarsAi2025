@@ -6,7 +6,6 @@ import logo from "/src/assets/icon-stars.png"
 import cadenaIcon from "/src/assets/cadena.png";
 import TopNavbar from "./navbar";
 
-
 const Login = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
@@ -25,7 +24,7 @@ const Login = () => {
         }
 
         console.log("Email:", email, "Password:", password);
-        navigate("/profile");
+        navigate("/home");
     };
 
     return (
@@ -102,8 +101,7 @@ const Login = () => {
                                 />
                             </div>
                         </div>
-
-
+                        
                         <button
                             type="submit"
                             className="w-full bg-[#1F66B1] hover:bg-[#155a9c] text-white font-semibold py-3 rounded-2xl transition mt-2"
