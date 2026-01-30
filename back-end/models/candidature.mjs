@@ -26,30 +26,36 @@ export const Candidature = sequelize.define("Candidature", {
     school: {
         type: DataTypes.STRING,
         allowNull: false,
-        
+
     },
     bio: {
         type: DataTypes.STRING,
         allowNull: false,
-       
+
     },
     author: {
         type: DataTypes.STRING,
         allowNull: false,
     },
+    socialNetworks: {
+        type: DataTypes.JSON,
+        allowNull: true,
+        defaultValue: {}
+    },
     status: {
         type: DataTypes.STRING,
         allowNull: false,
-        
+
     },
+
 
     submitted_at: {
         type: DataTypes.DATE,
         allowNull: false,
-        
+
     },
-    
-  
+
+
 }, {
     tableName: "candidature",
     timestamps: true
