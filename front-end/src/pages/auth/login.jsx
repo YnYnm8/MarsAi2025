@@ -1,7 +1,10 @@
 import { useState } from "react";
 import { useLocation, useNavigate } from "react-router";
 import { Link } from "react-router";
-import logo from "/src/assets/icon-stars.png";
+import mailIcon from "/src/assets/mail.png";
+import logo from "/src/assets/icon-stars.png"
+import cadenaIcon from "/src/assets/cadena.png";
+import TopNavbar from "./navbar";
 
 
 const Login = () => {
@@ -22,22 +25,13 @@ const Login = () => {
         }
 
         console.log("Email:", email, "Password:", password);
-        navigate("/dashboard");
+        navigate("/profile");
     };
 
     return (
         <div className="min-h-screen bg-[#F4F6F9] flex flex-col items-center px-6 pt-8 pb-12">
 
-            <div className="w-full flex items-center justify-between mb-10">
-                <div className="bg-blue-600 text-white text-sm font-semibold px-4 py-2 rounded-full">
-                    MARS.AI
-                </div>
-
-                <div className="flex items-center gap-4 text-2xl">
-                    🇬🇧
-                </div>
-            </div>
-
+            <TopNavbar />
             <div className="text-center mb-6">
                 <h1 className="text-3xl font-extrabold tracking-widest text-gray-900">
                     CONNEXION
@@ -49,7 +43,7 @@ const Login = () => {
                         alt="Logo"
                         className="h-5 w-auto object-contain"
                     />
-                    <p className="text-xs tracking-[0.35em] text-gray-600 font-medium">
+                    <p className="text-xs tracking-[0.25em] text-gray-600 font-medium">
                         ESPACE MEMBRE MARS.A.I
                     </p>
                 </div>
@@ -70,8 +64,12 @@ const Login = () => {
                         <label className="block text-[11px] font-semibold text-[#6B7A90] tracking-widest mb-2">
                             ADRESSE E-MAIL
                         </label>
-                        <div className="flex items-center bg-[#F2F4F7] rounded-xl px-4 py-3 border border-gray-200">
-                            <span className="text-gray-400 mr-3 opacity-50">✉️</span>
+                        <div className="flex items-center bg-[#F2F4F7] rounded-2xl px-4 py-3 border border-gray-200">
+                            <img
+                                src={mailIcon}
+                                alt="logoMail"
+                                className="h-5 w-auto object-contain mr-2"
+                            />
                             <input
                                 type="email"
                                 value={email}
@@ -87,8 +85,12 @@ const Login = () => {
                         <label className="block text-[11px] font-semibold text-[#6B7A90] tracking-widest mb-2">
                             MOT DE PASSE
                         </label>
-                        <div className="flex items-center bg-[#F2F4F7] rounded-xl px-4 py-3 border border-gray-200">
-                            <span className="text-gray-400 mr-3 opacity-50">🔒</span>
+                        <div className="flex items-center bg-[#F2F4F7] rounded-2xl px-4 py-3 border border-gray-200">
+                            <img
+                                src={cadenaIcon}
+                                alt="logoCadena"
+                                className="h-5 w-auto object-contain mr-2"
+                            />
                             <input
                                 type="password"
                                 value={password}
@@ -103,7 +105,7 @@ const Login = () => {
 
                     <button
                         type="submit"
-                        className="w-full bg-[#1F66B1] hover:bg-[#155a9c] text-white font-semibold py-3 rounded-xl transition mt-2"
+                        className="w-full bg-[#1F66B1] hover:bg-[#155a9c] text-white font-semibold py-3 rounded-2xl transition mt-2"
                     >
                         ACCÉDER À L’ESPACE
                     </button>
