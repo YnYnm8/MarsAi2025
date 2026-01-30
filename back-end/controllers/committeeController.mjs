@@ -4,11 +4,17 @@ export const getComite = (req, res) => {
   res.json("Comite router");
 };
 
-export const selectFilm = (req, res) => {
-  res.json({});
+export const selectFilm = async (req, res) => {
+
+    // const lignes = await Model.findAll();
+    const films = await Film.findAll();
+
+  res.json(films);
 };
 
-export const addNote = (req, res) => {
+export const addNote = async (req, res) => {
+
+    const
   res.json({});
 };
 
