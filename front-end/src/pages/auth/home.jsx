@@ -1,6 +1,6 @@
 
 import bgImg from "../../assets/accueilbg.png";
-import TopNavbar from "./navbar";
+import TopNavbar from "../../components/navbar";
 import logo from "/src/assets/icon-stars.png"
 
 

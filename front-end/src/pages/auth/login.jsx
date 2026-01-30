@@ -4,7 +4,7 @@ import { Link } from "react-router";
 import mailIcon from "/src/assets/mail.png";
 import logo from "/src/assets/icon-stars.png"
 import cadenaIcon from "/src/assets/cadena.png";
-import TopNavbar from "./navbar";
+import TopNavbar from "../../components/navbar";
 
 const Login = () => {
     const [email, setEmail] = useState("");
