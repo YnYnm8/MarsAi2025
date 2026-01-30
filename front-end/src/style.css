@@ -1,2 +1,9 @@
 @import "tailwindcss";
 @plugin "daisyui";
+
+@theme {
+    --font-display: "Plus Jakarta Sans", sans-serif;
+    --color-primary-blue: #246BAD;
+    --color-secondary-orange: #FF5845;
+}
+

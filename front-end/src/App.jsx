@@ -1,6 +1,7 @@
 // import { useState } from 'react'
 import { Routes, Route } from "react-router";
 import Film from './pages/auth/film';
+import PostMovie from "./pages/films/post-movie";
 import Register from './pages/auth/register.jsx';
 import Logout from './pages/auth/logout.jsx'
 import Login from './pages/auth/login.jsx';
@@ -12,10 +13,10 @@ function App() {
 
   return (
     <>
-      <section>
         <main>
           <Routes>
             <Route path="/film" element={<Film />} />
+          <Route path="/form-movie" element={<PostMovie/>}/>
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
             <Route path="/logout" element={<Logout />} />
@@ -25,7 +26,6 @@ function App() {
 
           </Routes>
         </main>
-      </section>
     </>
   )
 }
