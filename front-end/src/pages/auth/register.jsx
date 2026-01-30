@@ -6,8 +6,6 @@ import mailIcon from "/src/assets/mail.png";
 import cadenaIcon from "/src/assets/cadena.png";
 import TopNavbar from "./navbar";
 
-
-
 const Register = () => {
     const [username, setUsername] = useState("");
     const [firstname, setFirstname] = useState("");

@@ -1,12 +1,18 @@
 import { useState } from "react";
 import drapeauIcon from "/src/assets/drapeau.png";
 
-const TopNavbar = () => {
+// On ajoute la prop { transparent } pour pouvoir choisir le mode
+const TopNavbar = ({ transparent = false }) => {
     const [menuOpen, setMenuOpen] = useState(false);
 
     return (
         <>
-            <nav className="flex items-center justify-between bg-white px-6 py-4 shadow-sm rounded-b-2xl">
+            <nav
+                className={`flex items-center justify-between px-6 py-4 transition-all duration-300 z-50 w-full ${transparent
+                    ? "bg-transparent absolute top-0 left-0 shadow-none"
+                    : "bg-white shadow-sm rounded-b-2xl relative"
+                    }`}
+            >
                 <div className="bg-[#1F66B1] text-white font-bold text-xl px-3 py-3 rounded-2xl tracking-wider select-none cursor-pointer">
                     MARS.A.I
                 </div>
@@ -27,17 +33,14 @@ const TopNavbar = () => {
                     </button>
                 </div>
             </nav>
-
-            {/* Overlay */}
             <div
-                className={`fixed inset-0 bg-black/40 backdrop-blur-sm transition-opacity duration-300 z-40 ${menuOpen ? "opacity-100 visible" : "opacity-0 invisible"
+                className={`fixed inset-0 bg-black/40 backdrop-blur-sm transition-opacity duration-300 z-[60] ${menuOpen ? "opacity-100 visible" : "opacity-0 invisible"
                     }`}
                 onClick={() => setMenuOpen(false)}
             />
 
-            {/* Menu coulissant */}
             <div
-                className={`fixed top-0 right-0 h-full w-64 bg-white shadow-xl z-50 transform transition-transform duration-300 ${menuOpen ? "translate-x-0" : "translate-x-full"
+                className={`fixed top-0 right-0 h-full w-64 bg-white shadow-xl z-[70] transform transition-transform duration-300 ${menuOpen ? "translate-x-0" : "translate-x-full"
                     }`}
             >
                 <div className="p-6 flex justify-between items-center border-b">
@@ -48,10 +51,10 @@ const TopNavbar = () => {
                 </div>
 
                 <div className="p-6 flex flex-col gap-3">
-                    <a href="#">LE FESTIVAL</a>
-                    <a href="#">GALERIE</a>
-                    <a href="#">AGENDA</a>
-                    <a href="#">LIEU</a>
+                    <a href="#" className="hover:text-blue-500 transition-colors">LE FESTIVAL</a>
+                    <a href="#" className="hover:text-blue-500 transition-colors">GALERIE</a>
+                    <a href="#" className="hover:text-blue-500 transition-colors">AGENDA</a>
+                    <a href="#" className="hover:text-blue-500 transition-colors">LIEU</a>
                 </div>
             </div>
         </>
