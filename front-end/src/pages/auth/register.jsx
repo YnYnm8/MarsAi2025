@@ -4,7 +4,7 @@ import logo from "/src/assets/icon-stars.png";
 import profile from "/src/assets/profil.png";
 import mailIcon from "/src/assets/mail.png";
 import cadenaIcon from "/src/assets/cadena.png";
-import TopNavbar from "./navbar";
+import TopNavbar from "../../components/navbar";
 
 const Register = () => {
     const [username, setUsername] = useState("");
