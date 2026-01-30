@@ -1,37 +1,37 @@
-// // controllers/committeeController.mjs
 
-// export const getComite = (req, res) => {
-//   res.json("Comite router");
-// };
 
-// export const selectFilm = async (req, res) => {
+export const getComite = (req, res) => {
+    res.json("Comite router");
+};
 
-//     // const lignes = await Model.findAll();
-//     const films = await Film.findAll();
+export const selectFilm = async (req, res) => {
 
-//   res.json(films);
-// };
+    const lignes = await Model.findAll();
+    const films = await films.findAll();
 
-// // export const addNote = async (req, res) => {
+    res.json(films);
+};
 
-// //     const
-// //   res.json({});
-// // };
+export const addNote = async (req, res) => {
 
-// export const validateFilm = (req, res) => {
-//   const { filmid } = req.params;
-//   res.json({ filmid });
-// };
 
-// export const refuseFilm = (req, res) => {
-//   const { filmid } = req.params;
-//   res.json({ filmid });
-// };
+    res.json({});
+};
 
-// export const listFilms = (req, res) => {
-//   res.json({});
-// };
+export const validateFilm = (req, res) => {
+    const { filmid } = req.params;
+    res.json({ filmid });
+};
 
-// export const sortHistory = (req, res) => {
-//   res.json({});
-// };
+export const refuseFilm = (req, res) => {
+    const { filmid } = req.params;
+    res.json({ filmid });
+};
+
+export const listFilms = (req, res) => {
+    res.json({});
+};
+
+export const sortHistory = (req, res) => {
+    res.json({});
+};
