@@ -1,8 +1,12 @@
 // import { useState } from 'react'
-
 import { Routes, Route } from "react-router";
 import Film from './pages/auth/film';
 import PostMovie from "./pages/films/post-movie";
+import Register from './pages/auth/register.jsx';
+import Logout from './pages/auth/logout.jsx'
+import Login from './pages/auth/login.jsx';
+import Profile from "./pages/auth/profile.jsx";
+import Dashboard from "./components/pages/dashboard/dashboard.jsx";
 
 function App() {
 
@@ -12,6 +16,13 @@ function App() {
           <Routes>
             <Route path="/film" element={<Film />} />
           <Route path="/form-movie" element={<PostMovie/>}/>
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
+            <Route path="/logout" element={<Logout />} />
+            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/profile" element={<Profile />} />
+
+
           </Routes>
         </main>
     </>

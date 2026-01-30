@@ -1,5 +1,4 @@
-
-import { User } from '../models/index.mjs';
+import  User  from '../models/user.mjs';
 import jwt from 'jsonwebtoken';
 import { hash, verify } from 'argon2';
 
@@ -50,32 +49,24 @@ export const register = async (req, res) => {
             return res.status(400).json({ message: 'Cet email est déjà utilisé' });
         }
 
-        const hashedPassword = await hash(password);
-
+        // SUPPRIMER hash(password)
         const user = await User.create({
             email,
-            password: hashedPassword,
+            password, 
             firstName: firstName || '',
             lastName: lastName || '',
             role: 'visitor',
             isActive: true
         });
 
-        res.status(201).json({
-            message: 'Inscription réussie',
-            user: {
-                id: user.id,
-                email: user.email,
-                firstName: user.firstName,
-                lastName: user.lastName,
-                role: user.role,
-            }
-        });
+        res.status(201).json({ message: 'Inscription réussie' });
+
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: 'Erreur serveur' });
     }
 };
+
 
 export const login = async (req, res) => {
     try {
@@ -113,49 +104,10 @@ export const login = async (req, res) => {
     }
 }
 
-/** Récupérer l'utilisateur connecté */
-// export const getCurrentUser = async (req, res) => {
-//     try {
-//         const userId = req.user?.id;
-//         if (!userId) return res.status(401).json({ message: 'Non authentifié' });
-
-//         const user = await User.findByPk(userId, { attributes: { exclude: ['password'] } });
-//         if (!user) return res.status(404).json({ message: 'Utilisateur introuvable' });
-
-//         res.status(200).json({ user });
-//     } catch (error) {
-//         console.error(error);
-//         res.status(500).json({ message: 'Erreur serveur' });
-//     }
-// };
-
-// export const updateProfile = async (req, res) => {
-//     try {
-//         const userId = req.user?.id;
-//         if (!userId) return res.status(401).json({ message: 'Non authentifié' });
-
-//         const user = await User.findByPk(userId);
-//         if (!user) return res.status(404).json({ message: 'Utilisateur introuvable' });
-
-//         const { firstName, lastName } = req.body;
-//         if (firstName !== undefined) user.firstName = firstName;
-//         if (lastName !== undefined) user.lastName = lastName;
-
-//         await user.save();
-
-//         const cleanUser = user.toJSON();
-//         delete cleanUser.password;
-
-//         res.status(200).json({ message: 'Profil mis à jour', user: cleanUser });
-//     } catch (error) {
-//         console.error(error);
-//         res.status(500).json({ message: 'Erreur serveur' });
-//     }
-// };
-
 export const logout = (req, res) => {
     res.clearCookie("token");
     res.status(200).json({ message: 'Déconnexion réussie' });
 };
+
 
 
