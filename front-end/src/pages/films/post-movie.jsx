@@ -52,10 +52,10 @@ export default function PostMovie() {
                     </div>
                 </fieldset>
 
-                <fieldset className="bg-[#292828] text-white  fieldset border-base-300 rounded-box m-7 border pt-15 pb-15 pr-10 pl-10">
-                    <div className="flex border-b border-gray-600 pb-2">
-                        <img src="src/assets/icon-placa.png" alt="" className="bg-[#246BAD] rounded-box p-2 h-15" />
-                        <h1 className="uppercase font-display p-5 tracking-widest font-bold text-lg">02. Déclaration Usage de l'IA</h1>
+                <fieldset className="bg-[#292828] text-white p-10  fieldset border-base-300 rounded-box m-7 border pt-15 pb-15 pr-10 pl-10">
+                    <div className="flex border-b border-gray-600 pb-5">
+                        <img src="src/assets/icon-placa.png" alt="" className="bg-[#246BAD] rounded-box p-2 h-12" />
+                        <h1 className="uppercase font-display pl-3 pt-2 tracking-widest font-bold text-lg">02. Déclaration Usage de l'IA</h1>
                     </div>
                     <div className="flex gap-10 justify-center bg-[#333333] p-5 rounded-box border border-gray-600 mt-10">
                         <img src="src/assets/icon-info.png" className="h-10" alt="" />
@@ -192,7 +192,7 @@ export default function PostMovie() {
                                 <img src="src/assets/avatar.png" className="w-12 rounded-box bg-[#FAF5FF] p-1" alt="" />
                                 <p className="uppercase pt-2 tracking-widest font-bold text-lg " > 04. Composition de l'Équipe</p>
                             </div>
-                            <button className="btn btn-neutral tracking-widest p-6 rounded-box font-bold " > + AJOUTER COLLABORATEUR</button>
+                            <button className="btn bg-[#333333] text-white tracking-widest p-6 rounded-box font-bold " > + AJOUTER COLLABORATEUR</button>
                         </div>
                         <div className="bg-[#F2F2F2] p-5 flex justify-around gap-5 mt-10 font-bold rounded-box tracking-wider text-sm text-[#64748B]">
                             <div className="flex flex-col" >
