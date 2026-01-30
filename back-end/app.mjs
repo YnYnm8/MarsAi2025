@@ -1,6 +1,8 @@
 import express from 'express';
 import sequelize from './config/database.mjs';
 import "./models/index.mjs";
+import comiteRouter from './routes/committeeRoutes.mjs';
+    
 
 const app = express();
 const PORT = 3000;
@@ -17,6 +19,8 @@ try {
   app.get("/", (req, res) => {
     res.send("API OK");
   });
+
+  app.use("/comite",comiteRouter); // prefix
 
   app.listen(PORT, () => {
     console.log(" ");
