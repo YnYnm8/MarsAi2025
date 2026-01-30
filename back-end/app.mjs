@@ -2,6 +2,8 @@ import express from 'express';
 import cors from 'cors';
 import sequelize from './config/database.mjs';
 import "./models/index.mjs";
+import comiteRouter from './routes/committeeRoutes.mjs';
+    
 import authRoute from './routes/authRoutes.mjs';
 import dotenv from "dotenv";
 
@@ -31,6 +33,14 @@ try {
   console.log("✅ Connexion à la BDD réussie");
 
   await sequelize.sync({ alter: true });
+  console.log(" ");
+  console.log("Tables créées avec succès ✅");
+
+  app.get("/", (req, res) => {
+    res.send("API OK");
+  });
+
+  app.use("/comite",comiteRouter); // prefix
   console.log("✅ Tables synchronisées");
 
   app.listen(PORT, () => {

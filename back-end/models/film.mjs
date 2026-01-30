@@ -7,7 +7,7 @@ export const Film = sequelize.define("Film", {
         primaryKey: true,
         autoIncrement: true
     },
-    candidature_fk: {
+    candidature_id: {
         type: DataTypes.INTEGER,
     },
     collaborateur: {
