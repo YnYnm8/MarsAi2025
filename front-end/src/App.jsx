@@ -1,7 +1,8 @@
 // import { useState } from 'react'
 
 import { Routes, Route } from "react-router";
-import Film from './pages/auth/film';
+import Film from "./pages/film/film";
+import Note from "./pages/film/note";
 
 function App() {
 
@@ -11,6 +12,7 @@ function App() {
         <main>
           <Routes>
             <Route path="/film" element={<Film />} />
+            <Route path="/note" element={<Note/>}/>
           
           </Routes>
         </main>
