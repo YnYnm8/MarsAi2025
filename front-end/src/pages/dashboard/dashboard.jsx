@@ -77,7 +77,7 @@ function Dashboard() {
           <p className="text-3xl font-bold">08/12</p>
 
           <p className="text-gray-500 text-sm">
-            JURY AYANT FINALISÉ LEUR LOT
+            COMITE AYANT FINALISÉ LEUR LOT
           </p>
 
           <div>
@@ -116,7 +116,7 @@ function Dashboard() {
           <p className="text-4xl font-bold">72%</p>
 
           <button className="bg-blue-600 hover:bg-blue-700 transition text-white py-2 rounded-lg w-full mt-4">
-            VOIR LES ÉLÉMENTS
+            VOIR TOUS LES WORKSHOPS
           </button>
 
           <ul className="space-y-2 mt-4">
