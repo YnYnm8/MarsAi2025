@@ -13,21 +13,23 @@ function App() {
 
   return (
     <>
-        <main>
-          <Routes>
-            <Route path="/film" element={<Film />} />
-          <Route path="/form-movie" element={<PostMovie/>}/>
-            <Route path="/login" element={<Login />} />
-            <Route path="/register" element={<Register />} />
-            <Route path="/logout" element={<Logout />} />
-            <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="/profile" element={<Profile />} />
-            <Route path="/" element={<Home />} />
+      <main>
+        <Routes>
+          <Route path="/film" element={<Film />} />
+          <Route path="/note" element={<Note />} />
 
-          </Routes>
-        </main>
+          <Route path="/form-movie" element={<PostMovie />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/logout" element={<Logout />} />
+          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/profile" element={<Profile />} />
+          <Route path="/" element={<Home />} />
+
+        </Routes>
+      </main>
     </>
-  )
+  );
 }
 
 export default App

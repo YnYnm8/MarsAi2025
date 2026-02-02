@@ -1,18 +1,36 @@
+import { Playlists } from "./playlists.mjs";
 import { Film } from "./film.mjs";
-import { Playlist } from "./playlist.mjs";
-import { PlaylistFilm } from "./playlist_films.mjs";
+import { PlaylistsFilms } from "./playlists_films.mjs";
 import { User } from "./user.mjs";
 import { Candidature} from "./candidature.mjs"
 
-// MANY TO MANY
-Playlist.belongsToMany(Film, {
-  through: PlaylistFilm,
-  foreignKey: "playlist_id"
+// manyu to many
+Playlists.belongsToMany(Film, {
+    through: PlaylistsFilms,
+    foreignKey: "playlist_id",
+    onDelete: "CASCADE"
 });
 
-Film.belongsToMany(Playlist, {
-  through: PlaylistFilm,
-  foreignKey: "film_id"
+Film.belongsToMany(Playlists, {
+    through: PlaylistsFilms,
+    foreignKey: "film_id",
+    onDelete: "CASCADE"
+});
+// User <-> Film
+User.hasMany(Film, {
+    foreignKey: "user_id",
+    onDelete: "CASCADE",
+});
+Film.belongsTo(User, {
+    foreignKey: "user_id",
+});
+//USER <-> Playlist
+User.hasMany(Playlists, {
+    foreignKey: "user_id",
+    onDelete: "CASCADE",
+});
+Playlists.belongsTo(User, {
+    foreignKey: "user_id",
 });
 
 
@@ -20,8 +38,8 @@ Film.belongsToMany(Playlist, {
 
 export {
   Film,
-  Playlist,
-  PlaylistFilm,
+  Playlists,
+  PlaylistsFilms,
   User,
   Candidature
 };
