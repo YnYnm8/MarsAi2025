@@ -2,6 +2,7 @@ import { Playlists } from "./playlists.mjs";
 import { Film } from "./film.mjs";
 import { PlaylistsFilms } from "./playlists_films.mjs";
 import { User } from "./user.mjs";
+import { Candidature} from "./candidature.mjs"
 
 // manyu to many
 Playlists.belongsToMany(Film, {
@@ -32,9 +33,13 @@ Playlists.belongsTo(User, {
     foreignKey: "user_id",
 });
 
+
+
+
 export {
   Film,
   Playlists,
   PlaylistsFilms,
-  User
+  User,
+  Candidature
 };

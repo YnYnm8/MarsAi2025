@@ -36,20 +36,6 @@ export const User = sequelize.define('User', {
     // Champs Profil 
     // stockage RS en JSON
 
-    bio: {
-        type: DataTypes.TEXT,
-        allowNull: true
-    },
-    school: {
-        type: DataTypes.STRING(255),
-        allowNull: true
-    },
-    socialNetworks: {
-        type: DataTypes.JSON,
-        allowNull: true,
-        defaultValue: {}
-    },
-
     isEmailVerified: { type: DataTypes.BOOLEAN, defaultValue: false },
     isActive: { type: DataTypes.BOOLEAN, defaultValue: true },
     lastLoginAt: { type: DataTypes.DATE, allowNull: true }
