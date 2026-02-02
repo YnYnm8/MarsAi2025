@@ -52,7 +52,7 @@ function Dashboard() {
           <p className="text-3xl font-bold">482</p>
 
           <p className="text-gray-500 text-sm">
-            FILMS ÉVALUÉS PAR LE JURY
+            FILMS ÉVALUÉS PAR LE COMITE
           </p>
 
           <div>
@@ -77,7 +77,7 @@ function Dashboard() {
           <p className="text-3xl font-bold">08/12</p>
 
           <p className="text-gray-500 text-sm">
-            JURÉS AYANT FINALISÉ LEUR LOT
+            JURY AYANT FINALISÉ LEUR LOT
           </p>
 
           <div>
@@ -150,7 +150,7 @@ function Dashboard() {
             <div>
               <p className="text-3xl font-bold">182</p>
               <p className="text-gray-500 text-sm">
-                COMPTES UTILISATEURS ACTIFS
+                COMPTES REALISATEURS ACTIFS
               </p>
             </div>
           </div>
