@@ -7,8 +7,16 @@ export const Film = sequelize.define("Film", {
         primaryKey: true,
         autoIncrement: true
     },
-    candidature_fk: {
+    candidature_id: {
         type: DataTypes.INTEGER,
+    },
+    user_id: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        references: {
+            model: "users",
+            key: "id"
+        },
     },
     collaborateur: {
         type: DataTypes.STRING,
@@ -74,7 +82,7 @@ export const Film = sequelize.define("Film", {
             notEmpty: { msg: "OutilAI est obligatoire" }
         }
     },
-    
+
     generate_Ai: {
         type: DataTypes.ENUM("full_ai", "hybrid"),
         allowNull: false,

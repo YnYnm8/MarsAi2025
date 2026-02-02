@@ -43,9 +43,10 @@ export async function getAllFilms(req, res) {
             ]
         });
 
-        if (!filmsData || filmsData.length === 0) {
-            return res.status(200).json([]);
+        if (!filmsData) {
+            return res.status(404).json({ message: "Film introuvable" });
         }
+
         return res.status(200).json(filmsData);
     } catch (err) {
         return catchError(res, err)
@@ -54,7 +55,7 @@ export async function getAllFilms(req, res) {
 
 export async function getFilmById(req, res) {
     try {
-        const filmData = await Film.findByPk(req.params.id,{
+        const filmData = await Film.findByPk(req.params.id, {
             include: [
                 {
                     model: Candidature,
@@ -67,11 +68,29 @@ export async function getFilmById(req, res) {
                 }
             ]
         });
-        if (!filmData ) {
-            return res.status(200).json({message:"Film introvable "});
+        if (!filmData) {
+            return res.status(200).json({ message: "Film introvable " });
         }
         return res.status(200).json(filmData);
     } catch (err) {
         return catchError(res, err)
     }
-} 
+}
+export async function getFilmsByStatus(req, res) {
+    try {
+        const { status } = req.params;
+        const allowedStatus = ["accepted", "rejected", "to_discuss"];
+        if (!allowedStatus.includes(status)) {
+            return res.status(400).json({ message: "Invalid status" });
+        }
+
+        const films = await Film.findAll({
+            where: { status },
+            include: filmInclude
+        });
+
+        return res.status(200).json(films);
+    } catch (err) {
+        return catchError(res, err);
+    }
+}
