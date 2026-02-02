@@ -35,7 +35,7 @@ try {
   await sequelize.authenticate();
   console.log("✅ Connexion à la BDD réussie");
 
-  await sequelize.sync({ alter: true });
+  await sequelize.sync({ alter: false });
   console.log(" ");
   console.log("Tables créées avec succès ✅");
 
