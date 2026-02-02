@@ -1,4 +1,5 @@
 import { useState } from "react";
+
 export default function Note() {
   const [value, setValue] = useState(1); // ←ここで状態を定義
   return (
