@@ -2,8 +2,25 @@
 @plugin "daisyui";
 
 @theme {
-    --font-display: "Plus Jakarta Sans", sans-serif;
-    --color-primary-blue: #246BAD;
-    --color-secondary-orange: #FF5845;
-}
+    /*Font Family */
+    --font-display: "Arimo", sans-serif;
+    --font-size-text: 1rem;
+    --font-size-subtile: 1.5rem;
+    --font-size-title: 6rem;
+    /* text-7xl */
+    
+    /*Text color*/
+    --color-white-primary: #64748B;
+    --color-white-secondary: #FFFFFF;
+    --text-black-input: #0f0f0f;
+    --color-blue-tertiary: #51A2FF;
+    --color-white-subtitle: #e7e7e7;
+    /*Background*/
+    --bg-color-primary-black: #050505;
+    --bg-color-input: #d9cbcbd1;
+    --bg-rainbow: linear-gradient(180deg,
+            #51A2FF 0%,
+            #AD46FF 50%,
+            #FF2B7F 100%);
 
+}
