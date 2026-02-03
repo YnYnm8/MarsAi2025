@@ -1,8 +1,7 @@
-import { DataTypes } from "sequelize";
 import sequelize from "../config/database.mjs";
+import { DataTypes } from "sequelize";
 
-
-export const Playlists = sequelize.define("Playlists", {
+const Playlist = sequelize.define("Playlist", {
     id: {
         type: DataTypes.INTEGER,
         primaryKey: true,
@@ -11,20 +10,16 @@ export const Playlists = sequelize.define("Playlists", {
     status: {
         type: DataTypes.STRING,
         allowNull: false,
-        validate: {
-            len: [3, 300]
-        },
     },
     user_id: {
         type: DataTypes.INTEGER,
         allowNull: true,
-        references: {
-            model: "users",
-            key: "id",
-        },
+
     },
 }, {
-    tableName: "playlists",
+
     timestamps: true
-}
-)
+});
+
+
+export default Playlist;
