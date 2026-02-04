@@ -2,9 +2,9 @@ import express from 'express';
 import cors from 'cors';
 import sequelize from './config/database.mjs';
 import "./models/index.mjs";
-import { filmSeed } from './seeds/filmSeed.mjs';
-import { userSeed } from './seeds/userSeed.mjs';
-import { playlistSeed } from './seeds/playlistSeed.mjs';
+//import { filmSeed } from './seeds/filmSeed.mjs';
+//import { userSeed } from './seeds/userSeed.mjs';
+//import { playlistSeed } from './seeds/playlistSeed.mjs';
 import comiteRouter from './routes/committeeRoutes.mjs';
     
 import authRoute from './routes/authRoutes.mjs';
@@ -15,7 +15,7 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Middleware JSON
+// Middleware JSON 
 app.use(express.json());
 
 app.use(cors({
@@ -39,9 +39,9 @@ try {
   console.log(" ");
   console.log("Tables créées avec succès ✅");
 
-  await userSeed();
-  await filmSeed();
-  await playlistSeed();
+  //wait userSeed();
+  //await filmSeed();
+  //await playlistSeed();
 
   app.get("/", (req, res) => {
     res.send("API OK");

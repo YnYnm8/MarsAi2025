@@ -1,4 +1,4 @@
-import { Playlists} from "../models/playlists.mjs";
+import { Playlists} from "../models/Playlists.mjs";
 
 const sendErrors = (res, errors, status = 400) => {
     // 500系エラーだけログに出す
@@ -23,4 +23,20 @@ function catchError(res, err) {
 
 }
 
+
 // controllers/playlists.controller.js
+import { Playlists } from '../models/Playlists.mjs';
+
+export async function getPlaylistsByStatus(req, res) {
+    try {
+        const { status } = req.params;
+
+        const playlists = await Playlists.findAll({
+            where: { status }
+        });
+
+        res.json(playlists);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+}

@@ -1,13 +1,13 @@
 export default function PostMovie() {
     return (
-        <div className="flex flex-col m-8 flex-wrap ">
+        <div className="flex flex-col m-8 flex-wrap">
             <div className="font-display text-center flex items-center flex-col ">
                 <div className="flex uppercase font-extrabold p-5 ">
                     <img src="src/assets/icon-stars.png" className="w-8 pr-2" alt="" />
-                    <p className="text-[var(--color-secondary-orange)] text-base tracking-wider"> Appel à Projets 2026</p>
+                    <p className="text-blue-tertiary text-base tracking-wider"> Appel à Projets 2026</p>
                 </div>
-                <h1 className="text-7xl uppercase font-extrabold pb-8 ">Soumettre un <span className="text-[var(--color-primary-blue)]">film</span></h1>
-                <p className="font-bold text-lg tracking-wide w-2xl ">Transmettez les éléments techniques,
+                <h1 className="text-7xl text-white-secondary uppercase font-extrabold pb-8 ">Soumettre un <span className="text-blue-tertiary">film</span></h1>
+                <p className="font-bold text-lg text-white-subtitle tracking-wide w-2xl ">Transmettez les éléments techniques,
                     l'usage de l'IA et la composition de votre équipe.
                     Tous les champs marqués d'une étoile (*) sont obligatoires.
                 </p>
@@ -20,33 +20,33 @@ export default function PostMovie() {
                     </div>
                     <div className="grid grid-cols-2 gap-x-20 gap-y-15 pt-5 tracking-wider text-base font-bold">
                         <div className="flex flex-col">
-                            <label className="pb-2 text-[#64748B]">TITRE ORIGINAL *</label>
+                            <label className="pb-2 text-white-primary">TITRE ORIGINAL *</label>
                             <input type="text" name="titre" className="bg-[#F2F2F2] p-3 rounded-lg text-sm" required id="titreInput" placeholder="TITRE ORIGINAL" />
                         </div>
                         <div className="flex flex-col">
-                            <label htmlFor="" className="pb-2 text-[#64748B]">TRADUCTION ANGLAISE *</label>
+                            <label htmlFor="" className="pb-2 text-white-primary">TRADUCTION ANGLAISE *</label>
                             <input type="text" name="" id="" className="bg-[#F2F2F2] p-3 rounded-lg text-sm" placeholder="TRADUCTION ANGLAISE" required />
                         </div>
                         <div className="flex flex-col">
-                            <label htmlFor="" className="pb-2 text-[#64748B]">DURÉE EXACTE (EN SECONDES) *</label>
+                            <label htmlFor="" className="pb-2 text-white-primary">DURÉE EXACTE (EN SECONDES) *</label>
                             <input type="number" name="" id="" className="bg-[#F2F2F2] p-3 rounded-lg text-sm" placeholder="EX:60" required />
                         </div>
 
                         <div className="flex flex-col">
-                            <label htmlFor="" className="pb-2 text-[#64748B]">LANGUE PARLÈE/PRINCIPALE DU FILM *</label>
+                            <label htmlFor="" className="pb-2 text-white-primary">LANGUE PARLÈE/PRINCIPALE DU FILM *</label>
                             <input type="text" placeholder="LANGUE" className="bg-[#F2F2F2] p-3 rounded-lg text-sm" required />
                         </div>
                     </div>
 
                     <div className="flex flex-col pt-15 tracking-wider text-base font-bold">
-                        <label htmlFor="" className="pb-2 text-[#64748B]">SYNOPSIS LANGUE ORIGINALE* (MAX. 300 CARACTÈRES)</label>
+                        <label htmlFor="" className="pb-2 text-white-primary">SYNOPSIS LANGUE ORIGINALE* (MAX. 300 CARACTÈRES)</label>
                         <textarea name="" id="" maxLength={300} className="bg-[#F2F2F2] p-3 rounded-lg text-sm uppercase min-h-35 max-h-45"
                             placeholder="résumez l’intention de votre film et l’histoire qu’il raconte en quelques lignes...">
                         </textarea>
 
 
                         <div className="flex flex-col pt-15 tracking-wider text-base font-bold">
-                            <label htmlFor="" className="pb-2 text-[#64748B]">SYNOPSIS ANGLAIS* (MAX. 300 CARACTÈRES)</label>
+                            <label htmlFor="" className="pb-2 text-white-primary">SYNOPSIS ANGLAIS* (MAX. 300 CARACTÈRES)</label>
                             <textarea name="" id="" className="bg-[#F2F2F2] p-3 rounded-lg text-sm uppercase min-h-35 max-h-45" placeholder="résumez l’intention de votre film et l’histoire qu’il raconte en quelques lignes..."></textarea>
                         </div>
                     </div>
@@ -106,7 +106,7 @@ export default function PostMovie() {
                     </div>
                     <div className="grid grid-cols-2 gap-x-20 gap-y-15 " >
                         <div className="flex flex-col" >
-                            <span className="text-[#64748B] p-3">
+                            <span className="text-white-primary p-3">
                                 Lien YouTube (Public / Non-répertorié) *
                             </span>
                             <label htmlFor="videoUrl"
@@ -118,7 +118,7 @@ export default function PostMovie() {
                                 required
                                 className="hidden" />
                         </div>
-                        <div className="text-[#64748B] flex flex-col">
+                        <div className="text-white-primary flex flex-col">
                             <p>Sous-titres (.srt)</p>
                             <label className="flex items-center gap-3 pt-4 gap-6 cursor-pointer">
                                 <input
@@ -136,7 +136,7 @@ export default function PostMovie() {
                             />
                         </div>
                         <div>
-                            <p className="text-[#64748B] p-3">Vignette Officielle (16:9) *</p>
+                            <p className="text-white-primary p-3">Vignette Officielle (16:9) *</p>
                             <div className="bg-[#F2F2F2] p-4 rounded-lg h-100 flex justify-center border-2 border-dashed">
                                 <label
                                     htmlFor="fichier-vignette"
@@ -161,7 +161,7 @@ export default function PostMovie() {
                             </div>
                         </div>
                         <div>
-                            <p className="text-[#64748B] p-3">Galerie Médias (Stills - Max 3)</p>
+                            <p className="text-white-primary p-3">Galerie Médias (Stills - Max 3)</p>
                             <div className="flex justify-between gap-1 ">
                                 <div className="bg-[#F2F2F2] p-4 rounded-xl border-2 border-dashed" >
                                     <label className="cursor-pointer " htmlFor="fichier-galerie-1">
@@ -194,7 +194,7 @@ export default function PostMovie() {
                             </div>
                             <button className="btn bg-[#333333] text-white tracking-widest p-6 rounded-box font-bold " > + AJOUTER COLLABORATEUR</button>
                         </div>
-                        <div className="bg-[#F2F2F2] p-5 flex justify-around gap-5 mt-10 font-bold rounded-box tracking-wider text-sm text-[#64748B]">
+                        <div className="bg-[#F2F2F2] p-5 flex justify-around gap-5 mt-10 font-bold rounded-box tracking-wider text-sm text-white-primary">
                             <div className="flex flex-col" >
                                 <label htmlFor="">civilité*</label>
                                 <select className="bg-white p-5 border-2 rounded-box mt-5" name="genre-collab" id="">
