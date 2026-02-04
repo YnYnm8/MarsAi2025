@@ -122,22 +122,26 @@ function Dashboard() {
           <ul className="space-y-2 mt-4">
             <li className="flex items-center gap-2">
               <img src="/calendar.svg" alt="calendrier" className="w-6" />
-              <span className="text-xs uppercase font-semibold opacity-60">
-                12/04 - Evènement n°1 workshop
+              <span className="text-xs uppercase font-semibold opacity-60 mb-5">
+                12/04 - IA & Création Cinématographique — écrire, filmer, réinventer
+                <p> Début : 12H30 </p>
+              </span>
+            </li>
+            
+
+            <li className="flex items-center gap-2">
+              <img src="/calendar.svg" alt="calendrier" className="w-6" />
+              <span className="text-xs uppercase font-semibold opacity-60 mb-5">
+                5/05 - IA & Post-production : réinventer le montage
+                <p>Début : 8H45</p>
               </span>
             </li>
 
             <li className="flex items-center gap-2">
-              <img src="/calendar.svg" alt="calendrier" className="w-6" />
-              <span className="text-xs uppercase font-semibold opacity-60">
-                5/05 - Evènement n°2 workshop
-              </span>
-            </li>
-
-            <li className="flex items-center gap-2">
-              <img src="/calendar.svg" alt="calendrier" className="w-6" />
-              <span className="text-xs uppercase font-semibold opacity-60">
-                22/05 - Evènement n°3 workshop
+              <img src="/calendar.svg" alt="calendrier" className="w-6"/>
+              <span className="text-xs uppercase font-semibold opacity-60 mb-5">
+                22/05 - Écriture augmentée : scénariser avec l’intelligence artificielle
+                <p>Début : 14H00</p>
               </span>
             </li>
           </ul>
