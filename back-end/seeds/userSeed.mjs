@@ -1,109 +1,57 @@
 // seed-users.js
-import { User } from '../models/user.mjs';
+import { User } from '../models/User.mjs';
 
 export async function userSeed() {
-  await User.bulkCreate([
+  await User.bulkCreate(
+    [
+      {
+        email: 'admin@example.com',
+        password: 'Admin123!',
+        firstName: 'Admin',
+        lastName: 'User',
+        role: 'admin',
+        isEmailVerified: true,
+        isActive: true
+      },
+      {
+        email: 'director@example.com',
+        password: 'Director123!',
+        firstName: 'Taro',
+        lastName: 'Director',
+        role: 'director',
+        isEmailVerified: true,
+        isActive: true
+      },
+      {
+        email: 'committee1@example.com',
+        password: 'Committee123!',
+        firstName: 'Hanako',
+        lastName: 'Committee',
+        role: 'committee',
+        isEmailVerified: false,
+        isActive: true
+      },
+      {
+        email: 'committee2@example.com',
+        password: 'Committee456!',
+        firstName: 'Ken',
+        lastName: 'Committee',
+        role: 'committee',
+        isEmailVerified: false,
+        isActive: true
+      },
+      {
+        email: 'visitor@example.com',
+        password: 'Visitor123!',
+        firstName: 'Guest',
+        lastName: 'User',
+        role: 'visitor',
+        isEmailVerified: false,
+        isActive: true
+      }
+    ],
     {
-      email: 'jury1@example.com',
-      password: 'password123',
-      firstName: 'Paul',
-      lastName: 'Michel',
-      role: 'committee',
-      bio: 'Jury du festival',
-      school: null,
-      socialNetworks: { twitter: 'https://twitter.com/jury1' }
-    },
-    {
-      email: 'jury2@example.com',
-      password: 'password123',
-      firstName: 'Marie',
-      lastName: 'Dupont',
-      role: 'committee',
-      bio: 'Spécialiste cinéma',
-      school: 'Université de Paris',
-      socialNetworks: {}
-    },
-    {
-      email: 'jury3@example.com',
-      password: 'password123',
-      firstName: 'Liam',
-      lastName: 'Wilson',
-      role: 'director',
-      bio: 'Réalisateur indépendant',
-      school: null,
-      socialNetworks: { instagram: 'https://instagram.com/liamwilson' }
-    },
-    {
-      email: 'jury4@example.com',
-      password: 'password123',
-      firstName: 'Emma',
-      lastName: 'Martin',
-      role: 'visitor',
-      bio: null,
-      school: 'ENS Lyon',
-      socialNetworks: {}
-    },
-    {
-      email: 'jury5@example.com',
-      password: 'password123',
-      firstName: 'Noah',
-      lastName: 'Lemoine',
-      role: 'committee',
-      bio: 'Critique de cinéma',
-      school: null,
-      socialNetworks: {}
-    },
-    {
-      email: 'jury6@example.com',
-      password: 'password123',
-      firstName: 'Chloé',
-      lastName: 'Dubois',
-      role: 'visitor',
-      bio: null,
-      school: null,
-      socialNetworks: {}
-    },
-    {
-      email: 'jury7@example.com',
-      password: 'password123',
-      firstName: 'Lucas',
-      lastName: 'Moreau',
-      role: 'director',
-      bio: 'Réalisateur débutant',
-      school: null,
-      socialNetworks: {}
-    },
-    {
-      email: 'jury8@example.com',
-      password: 'password123',
-      firstName: 'Sophie',
-      lastName: 'Lefevre',
-      role: 'committee',
-      bio: 'Jury cinéma international',
-      school: null,
-      socialNetworks: {}
-    },
-    {
-      email: 'jury9@example.com',
-      password: 'password123',
-      firstName: 'Gabriel',
-      lastName: 'Roux',
-      role: 'visitor',
-      bio: null,
-      school: 'Université Toulouse',
-      socialNetworks: {}
-    },
-    {
-      email: 'admin@example.com',
-      password: 'password123',
-      firstName: 'Admin',
-      lastName: 'User',
-      role: 'admin',
-      bio: 'Super administrateur',
-      school: null,
-      socialNetworks: {}
+      individualHooks: true // ← argon2 が確実に動く
     }
-  ], {
-    ignoreDuplicates: true // Évite les doublons si un email existe déjà
-  });
+  );
 }

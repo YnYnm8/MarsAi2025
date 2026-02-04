@@ -27,12 +27,6 @@ export const User = sequelize.define('User', {
     firstName: { type: DataTypes.STRING(100) },
     lastName: { type: DataTypes.STRING(100) },
 
-    role: {
-        type: DataTypes.ENUM('visitor', 'director', 'committee', 'admin'),
-        allowNull: false,
-        defaultValue: 'visitor'
-    },
-
     // Champs Profil 
     // stockage RS en JSON
 
@@ -41,7 +35,6 @@ export const User = sequelize.define('User', {
     lastLoginAt: { type: DataTypes.DATE, allowNull: true }
 }, {
     timestamps: true,
-    tableName: 'users',
     charset: 'utf8mb4',
     collate: 'utf8mb4_unicode_ci'
 })
