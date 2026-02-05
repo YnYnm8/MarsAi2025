@@ -3,12 +3,6 @@ import { DataTypes } from "sequelize";
 
 const Film = sequelize.define("Film", {
 
-
-    user_id: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-
-    },
     last_name: {
         type: DataTypes.STRING,
         allowNull: false

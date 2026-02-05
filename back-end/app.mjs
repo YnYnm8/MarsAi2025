@@ -8,7 +8,6 @@ import filmRoutes from './routes/filmRoutes.mjs';
 import dotenv from "dotenv";
 import { userSeed } from './seeds/userSeed.mjs';
 import { seedAll } from './seeds/seedAll.mjs';
-//import { filmSeed } from './seeds/filmSeed.mjs';
 
 
 dotenv.config();
@@ -27,6 +26,9 @@ app.use(cors({
 // Routes
 app.use("/", authRoute);
 app.use("/", filmRoutes);
+app.use("/comite", comiteRouter); // prefix
+console.log("     ⏱️ Tables synchronisées  ✅ ");
+
 
 app.get("/", (req, res) => {
   res.send("API OK");
@@ -41,8 +43,8 @@ try {
   console.log(" ");
   console.log("     🧩 Tables créées avec succès  ✅");
 
+  //Seed
   await userSeed();
-  //await filmSeed();
   await seedAll();
 
   console.log(" ");
@@ -52,8 +54,6 @@ try {
     res.send("API OK");
   });
 
-  app.use("/comite", comiteRouter); // prefix
-  console.log("     ⏱️ Tables synchronisées  ✅ ");
 
   app.listen(PORT, () => {
     console.log(`   🚀 Serveur démarré sur http://localhost:${PORT} 🔌`);
