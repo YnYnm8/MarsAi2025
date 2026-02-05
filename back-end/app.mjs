@@ -27,6 +27,7 @@ app.use(cors({
 app.use("/", authRoute);
 app.use("/", filmRoutes);
 app.use("/comite", comiteRouter); // prefix
+console.log(" ");
 console.log("     ⏱️ Tables synchronisées  ✅ ");
 
 
@@ -37,6 +38,7 @@ app.get("/", (req, res) => {
 // serveur + BDD
 try {
   await sequelize.authenticate();
+  console.log(" ");
   console.log("     🗄️ Connexion à la BDD réussie ✅");
 
   await sequelize.sync({ force: true });
@@ -56,6 +58,7 @@ try {
 
 
   app.listen(PORT, () => {
+    console.log(" ");
     console.log(`   🚀 Serveur démarré sur http://localhost:${PORT} 🔌`);
   });
 } catch (error) {
