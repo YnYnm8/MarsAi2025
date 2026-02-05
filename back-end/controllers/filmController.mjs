@@ -4,9 +4,10 @@ import File from "../models/File.mjs";
 import Selection from "../models/Selection.mjs";
 import { catchError } from "../helpers/errorHandler.mjs";
 
-
-// Recuperation des tous les films
-
+/*
+*  GET  /films
+* Recuperation des tous les films
+*/
 export async function getFilms(req, res) {
     try {
         const FilmData = await Film.findAll({
@@ -29,8 +30,10 @@ export async function getFilms(req, res) {
         return catchError(res, err)
     }
 }
-// Recuperation d'un film par son id
-
+/*
+ *  GET  /films/:id
+ *   Recuperation d'un film par son id
+ */
 export async function getFilmById(req, res) {
     try {
         const id = Number(req.params.id);
@@ -71,7 +74,10 @@ export async function getFilmById(req, res) {
         return catchError(res, err)
     }
 }
-
+/**  
+ * GET  /films/select  == /films/select/list
+ *  Récupération de tous les films de la table Selection
+ */
 export async function getFilmsSelect(req, res) {
     try {
         const selectData = await Selection.findAll({
@@ -101,7 +107,11 @@ export async function getFilmsSelect(req, res) {
     }
 }
 
-// Creation d'un nouveau film
+/*
+*  POST  /films
+*   Creation d'un nouveau film
+*/
+
 export async function createFilm(req, res) {
     try {
         const { last_name, collaborateur, email, school, country, bio,
@@ -147,8 +157,10 @@ export async function createFilm(req, res) {
     }
 }
 
-// Modification d'un film existant
-
+/*
+ * PUT  /films/:id
+ * Modification d'un film existant
+ */
 export async function updateFilm(req, res) {
     try {
         const { collaborateur, email, school, country, bio,
@@ -197,8 +209,10 @@ export async function updateFilm(req, res) {
     }
 
 }
-
-// Suppression d'un film 
+/**
+ * DELETE  /films/:id
+ * Suppression d'un film existant
+ */
 
 export async function deleteFilm(req, res) {
     try {
@@ -216,16 +230,11 @@ export async function deleteFilm(req, res) {
     }
 }
 
-export async function getMyFilms(req, res) {
-    try {
+/*
+ * GET /films/my-submissions
+ * Récupérer les films créés par l'utilisateur connecté
+*/
 
-
-    } catch (err) {
-        return catchError(res, err)
-    }
-}
-
-// Récupérer les films créés par l'utilisateur connecté
 export async function getFilmsByUser(req, res) {
     try {
         const userId = req.user?.id;

@@ -134,14 +134,14 @@ export async function seedAll() {
         await playlists[1].addFilms([films[2], films[3]]);
 
         // --- COMMENTS ---
-        await Comment.bulkCreate([
+       const commentaires =  await Comment.bulkCreate([
             { UserId: 1, FilmId: films[2].id, content: 'Excelente documental!' },
             { UserId: 2, FilmId: films[0].id, content: 'Muy interesante!' },
             { UserId: 1, FilmId: films[0].id, content: 'Gran iluminación en la escena final.' }
         ]);
 
         // --- ANNOTATIONS ---
-        await Annotation.bulkCreate([
+         const annotations = await Annotation.bulkCreate([
             { UserId: 1, FilmId: films[2].id, content: 'Revisar escenas iniciales' },
             { UserId: 2, FilmId: films[0].id, content: 'Nota sobre iluminación' },
             { UserId: 1, FilmId: films[1].id, content: 'Agregar efectos visuales en la mitad' }
@@ -162,7 +162,7 @@ export async function seedAll() {
         ]);
 
         // --- NOTIFICATIONS ---
-        await Notification.bulkCreate([
+        const notifications = await Notification.bulkCreate([
             { UserId: 1, PriceId: prices[0].id },
             { UserId: 2, PriceId: prices[1].id },
             { UserId: 1, PriceId: prices[2].id }
@@ -171,16 +171,16 @@ export async function seedAll() {
         console.log('✅ DONNÉES DE TEST AJOUTÉES !')
         console.log('═══════════════════════════════════════════');
         console.log('\n📊 Résumé:');
-        console.log(`  ✅ films`);
-        console.log(`  ✅ fichiers`);
-        console.log(`  ✅ commentaires`);
-        console.log(`  ✅ annotations`);
-        console.log(`  ✅ playlists`);
-        console.log(`  ✅ sélections`);
-        console.log(`  ✅ sponsors`);
-        console.log(`  ✅ prix`);
-        console.log(`  ✅ notifications`);
-
+        console.log(` ✅ ${films.length} films`);
+        console.log(` ✅ ${films.length} fichiers`);
+        console.log(` ✅ ${commentaires.length} commentaires`);
+        console.log(` ✅ ${annotations.length} annotations`);
+        console.log(` ✅ ${playlists.length} playlists`);
+        console.log(` ✅ ${selections.length} sélections`);
+        console.log(` ✅ ${sponsors.length} sponsors`);
+        console.log(` ✅ ${prices.length} prix`);
+        console.log(` ✅ ${notifications.length} notifications`);
+        console.log('═══════════════════════════════════════════');
     } catch (err) {
         return catchError(err);
     }
