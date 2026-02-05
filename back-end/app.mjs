@@ -2,13 +2,14 @@ import express from 'express';
 import cors from 'cors';
 import sequelize from './config/database.mjs';
 import "./models/index.mjs";
-//import { filmSeed } from './seeds/filmSeed.mjs';
-//import { userSeed } from './seeds/userSeed.mjs';
-//import { playlistSeed } from './seeds/playlistSeed.mjs';
 import comiteRouter from './routes/committeeRoutes.mjs';
-    
 import authRoute from './routes/authRoutes.mjs';
+import filmRoutes from './routes/filmRoutes.mjs';
 import dotenv from "dotenv";
+import { userSeed } from './seeds/userSeed.mjs';
+import { seedAll } from './seeds/seedAll.mjs';
+//import { filmSeed } from './seeds/filmSeed.mjs';
+
 
 dotenv.config();
 
@@ -25,6 +26,7 @@ app.use(cors({
 
 // Routes
 app.use("/", authRoute);
+app.use("/", filmRoutes);
 
 app.get("/", (req, res) => {
   res.send("API OK");
@@ -33,28 +35,31 @@ app.get("/", (req, res) => {
 // serveur + BDD
 try {
   await sequelize.authenticate();
-  console.log("✅ Connexion à la BDD réussie");
+  console.log("     🗄️ Connexion à la BDD réussie ✅");
 
-  await sequelize.sync({ alter: false });
+  await sequelize.sync({ force: true });
   console.log(" ");
-  console.log("Tables créées avec succès ✅");
+  console.log("     🧩 Tables créées avec succès  ✅");
 
-  //wait userSeed();
+  await userSeed();
   //await filmSeed();
-  //await playlistSeed();
+  await seedAll();
+
+  console.log(" ");
+  console.log("     💾 Seeds insérés avec succès  ✅");
 
   app.get("/", (req, res) => {
     res.send("API OK");
   });
 
-  app.use("/comite",comiteRouter); // prefix
-  console.log("✅ Tables synchronisées");
+  app.use("/comite", comiteRouter); // prefix
+  console.log("     ⏱️ Tables synchronisées  ✅ ");
 
   app.listen(PORT, () => {
-    console.log(`🚀 Serveur démarré sur http://localhost:${PORT}`);
+    console.log(`   🚀 Serveur démarré sur http://localhost:${PORT} 🔌`);
   });
 } catch (error) {
-  console.error("❌ Erreur au démarrage de l'API");
+  console.error("   ❌ Erreur au démarrage de l'API");
   console.error(error.message);
   process.exit(1);
 }
