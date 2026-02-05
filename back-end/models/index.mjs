@@ -18,57 +18,57 @@ import FilmSponsor from "./FilmSponsor.mjs";
 
 
 // === User ===
-User.hasMany(Film, { foreignKey: "user_id", onDelete: "CASCADE" });
-Film.belongsTo(User, { foreignKey: "user_id" });
+User.hasMany(Film, {  onDelete: "CASCADE" });
+Film.belongsTo(User);
 
-User.hasMany(Playlist, { foreignKey: "user_id", onDelete: "CASCADE" });
-Playlist.belongsTo(User, { foreignKey: "user_id" });
+User.hasMany(Playlist, {onDelete: "CASCADE" });
+Playlist.belongsTo(User);
 
-User.belongsToMany(Film, { through: Comment, as: 'Commenters', foreignKey: "user_id" });
-Film.belongsToMany(User, { through: Comment, as: 'Commenters', foreignKey: "film_id" });
+User.belongsToMany(Film, { through: Comment, as: 'Commenters' });
+Film.belongsToMany(User, { through: Comment, as: 'Commenters' });
 
 
-User.belongsToMany(Film, { through: Annotation, as: 'Annotators' ,foreignKey: "user_id" });
-Film.belongsToMany(User, { through: Annotation, as: 'Annotators',  foreignKey: "film_id" });
+User.belongsToMany(Film, { through: Annotation, as: 'Annotators' });
+Film.belongsToMany(User, { through: Annotation, as: 'Annotators' });
 
-User.hasMany(Workshop, { foreignKey: "user_id" });
-Workshop.belongsTo(User, { foreignKey: "user_id" });
+User.hasMany(Workshop);
+Workshop.belongsTo(User);
 
-User.hasMany(Notification, { foreignKey: "user_id" });
-Notification.belongsTo(User, { foreignKey: "user_id" });
+User.hasMany(Notification);
+Notification.belongsTo(User);
 
 // === Film ===
-Film.belongsToMany(Playlist, { through: PlaylistFilm, foreignKey: "film_id" });
-Playlist.belongsToMany(Film, { through: PlaylistFilm, foreignKey: "playlist_id" });
+Film.belongsToMany(Playlist, { through: PlaylistFilm});
+Playlist.belongsToMany(Film, { through: PlaylistFilm});
 
-Film.hasMany(File, { foreignKey: "film_id", onDelete: "CASCADE" });
-File.belongsTo(Film, { foreignKey: "film_id" });
+Film.hasMany(File, { onDelete: "CASCADE" });
+File.belongsTo(Film);
 
 
-Film.hasMany(Price, { foreignKey: "film_id" });
-Price.belongsTo(Film, { foreignKey: "film_id" });
+Film.hasMany(Price);
+Price.belongsTo(Film);
 
-Film.belongsToMany(Sponsor, { through: FilmSponsor, foreignKey: "film_id" });
-Sponsor.belongsToMany(Film, { through: FilmSponsor, foreignKey: "sponsor_id" });
+Film.belongsToMany(Sponsor, { through: FilmSponsor });
+Sponsor.belongsToMany(Film, { through: FilmSponsor });
 
-Film.belongsToMany(Selection, { through: "SelectionFilm", foreignKey: "film_id" });
-Selection.belongsToMany(Film, { through: "SelectionFilm", foreignKey: "selection_id" });
+Film.belongsToMany(Selection, { through: "SelectionFilm" });
+Selection.belongsToMany(Film, { through: "SelectionFilm" });
 
 // === Sponsor / Price ===
-Sponsor.hasMany(Price, { foreignKey: "sponsor_id" });
-Price.belongsTo(Sponsor, { foreignKey: "sponsor_id" });
+Sponsor.hasMany(Price );
+Price.belongsTo(Sponsor);
 
 // === Workshop / Category ===
-WorkshopCategory.hasMany(Workshop, { foreignKey: "category_id" });
-Workshop.belongsTo(WorkshopCategory, { foreignKey: "category_id" });
+WorkshopCategory.hasMany(Workshop);
+Workshop.belongsTo(WorkshopCategory);
 
 // === Workshop / Notification ===
-Workshop.hasMany(Notification, { foreignKey: "workshop_id" });
-Notification.belongsTo(Workshop, { foreignKey: "workshop_id" });
+Workshop.hasMany(Notification);
+Notification.belongsTo(Workshop);
 
 // === Price / Notification ===
-Price.hasMany(Notification, { foreignKey: "Price_id" });
-Notification.belongsTo(Price, { foreignKey: "Price_id" });
+Price.hasMany(Notification);
+Notification.belongsTo(Price);
 
 // === Export ===
 export {
