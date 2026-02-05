@@ -45,7 +45,15 @@ export async function getFilmById(req, res) {
             include: [
                 {
                     model: User,
-                    attributes: ['id', 'firstName', 'lastName', 'email']
+                    as: 'Commenters',
+                    attributes: ['id', 'firstName', 'lastName'],
+                    through: { attributes: ['content', 'createdAt'] }
+                },
+                {
+                    model: User,
+                    as: 'Annotators',
+                    attributes: ['id', 'firstName', 'lastName'],
+                    through: { attributes: ['content', 'createdAt'] }
                 },
                 {
                     model: File,
@@ -215,4 +223,38 @@ export async function getMyFilms(req, res) {
     } catch (err) {
         return catchError(res, err)
     }
+}
+
+// Récupérer les films créés par l'utilisateur connecté
+export async function getFilmsByUser(req, res) {
+    try {
+        const userId = req.user?.id;
+
+        if (!userId) {
+            return res.status(401).json({ message: "Utilisateur non authentifié" });
+        }
+
+        const FilmData = await Film.findAll({
+            where: {
+                user_id: userId
+            },
+            include: [
+                {
+                    model: File,
+                    attributes: ['id', 'film_url', 'poster_url', 'subtitle', 'outil_Ai']
+                }
+            ]
+        })
+        if (!FilmData || FilmData.length === 0) {
+            return res.status(200).json({
+                message: "Vous n'avez aucun film pour le moment",
+                data: [],
+            });
+        }
+        return res.status(200).json(FilmData);
+
+    } catch (err) {
+        return catchError(res, err)
+    }
+
 }

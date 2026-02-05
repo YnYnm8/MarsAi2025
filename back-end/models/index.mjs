@@ -6,8 +6,8 @@ import Selection from "./Selection.mjs";
 import File from "./File.mjs";
 import Price from "./Price.mjs";
 import Sponsor from "./Sponsor.mjs";
-import Workshop from"./Workshop.mjs";
-import Notification from"./Notification.mjs";
+import Workshop from "./Workshop.mjs";
+import Notification from "./Notification.mjs";
 import Comment from "./Comment.mjs";
 import Annotation from "./Annotation.mjs";
 import PlaylistFilm from "./PlaylistFilm.mjs";
@@ -24,11 +24,12 @@ Film.belongsTo(User, { foreignKey: "user_id" });
 User.hasMany(Playlist, { foreignKey: "user_id", onDelete: "CASCADE" });
 Playlist.belongsTo(User, { foreignKey: "user_id" });
 
-User.belongsToMany(Film, { through: Comment, foreignKey: "user_id" });
-Film.belongsToMany(User, { through: Comment, foreignKey: "film_id" });
+User.belongsToMany(Film, { through: Comment, as: 'Commenters', foreignKey: "user_id" });
+Film.belongsToMany(User, { through: Comment, as: 'Commenters', foreignKey: "film_id" });
 
-User.belongsToMany(Film, { through: Annotation, foreignKey: "user_id" });
-Film.belongsToMany(User, { through: Annotation, foreignKey: "film_id" });
+
+User.belongsToMany(Film, { through: Annotation, as: 'Annotators' ,foreignKey: "user_id" });
+Film.belongsToMany(User, { through: Annotation, as: 'Annotators',  foreignKey: "film_id" });
 
 User.hasMany(Workshop, { foreignKey: "user_id" });
 Workshop.belongsTo(User, { foreignKey: "user_id" });
@@ -40,8 +41,9 @@ Notification.belongsTo(User, { foreignKey: "user_id" });
 Film.belongsToMany(Playlist, { through: PlaylistFilm, foreignKey: "film_id" });
 Playlist.belongsToMany(Film, { through: PlaylistFilm, foreignKey: "playlist_id" });
 
-Film.hasMany(File, { foreignKey: "film_id" });
+Film.hasMany(File, { foreignKey: "film_id", onDelete: "CASCADE" });
 File.belongsTo(Film, { foreignKey: "film_id" });
+
 
 Film.hasMany(Price, { foreignKey: "film_id" });
 Price.belongsTo(Film, { foreignKey: "film_id" });
