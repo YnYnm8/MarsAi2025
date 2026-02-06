@@ -24,8 +24,10 @@ const sequelize = new Sequelize(
     },
 
     dialectOptions: {
-      useUTC: false
-    }
+    },
+    
+    timezone: '+01:00',
+    logging: false
   }
 );
 
