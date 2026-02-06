@@ -1,9 +1,12 @@
+
+import { Link } from "react-router-dom";
+
 function Dashboard() {
   return (
     <div className="bg-gray-100 min-h-screen px-12 py-8">
       {/* HEADER */}
       <div className="flex justify-between items-center mb-12">
-        <h2 className="text-gray-500 tracking-wide">
+        <h2 className="text-gray-500 tracking-wide font-bold">
           BACK-OFFICE OFFICIEL
         </h2>
 
@@ -60,7 +63,7 @@ function Dashboard() {
               80,3% COMPLÉTÉ
             </p>
             <div className="w-full bg-gray-200 rounded-full h-2">
-              <div className="bg-blue-900 h-2 rounded-full w-[80%]"></div>
+              <div className="bg-blue-900 h-2 rounded-full w-[80%]" />
             </div>
           </div>
         </div>
@@ -85,7 +88,7 @@ function Dashboard() {
               EN COURS DE DÉLIBÉRATION
             </p>
             <div className="w-full bg-gray-200 rounded-full h-2">
-              <div className="bg-orange-400 h-2 rounded-full w-[85%]"></div>
+              <div className="bg-orange-400 h-2 rounded-full w-[85%]" />
             </div>
           </div>
         </div>
@@ -105,7 +108,7 @@ function Dashboard() {
         </div>
 
         {/* CARD 4 */}
-        <div className="bg-gray-800 text-white p-6 rounded-2xl shadow-sm space-y-4">
+        <div className="bg-gray-800 text-white p-6 rounded-2xl shadow-sm space-y-6">
           <div className="flex items-center gap-3">
             <img src="/yo.png" alt="icon" className="w-8" />
             <p className="text-blue-400 text-sm">
@@ -115,39 +118,38 @@ function Dashboard() {
 
           <p className="text-4xl font-bold">72%</p>
 
-          <button className="bg-blue-600 hover:bg-blue-700 transition text-white py-2 rounded-lg w-full mt-4">
+          <Link to="/workshop">
+          <button className="bg-blue-600 hover:bg-blue-700 transition text-white py-2 rounded-lg w-full">
             VOIR TOUS LES WORKSHOPS
           </button>
+          </Link>
 
-          <ul className="space-y-2 mt-4">
-            <li className="flex items-center gap-2">
+          {/* WORKSHOPS */}
+          <ul className="space-y-4 text-xs uppercase font-semibold opacity-70">
+            
+            <li className="flex items-center gap-3">
               <img src="/calendar.svg" alt="calendrier" className="w-6" />
-              <span className="text-xs uppercase font-semibold opacity-60 mb-5">
-                12/04 - IA & Création Cinématographique — écrire, filmer, réinventer
-                <p> Début : 12H30 </p>
-              </span>
+              <div>
+                <p>Vendredi 17 mai</p>
+                <p>10:00 - 12:00</p>
+                <p>Masterclass : prompt engineering video</p>
+              </div>
             </li>
             
 
-            <li className="flex items-center gap-2">
+            <li className="flex items-center gap-3">
               <img src="/calendar.svg" alt="calendrier" className="w-6" />
-              <span className="text-xs uppercase font-semibold opacity-60 mb-5">
-                5/05 - IA & Post-production : réinventer le montage
-                <p>Début : 8H45</p>
-              </span>
+              <div>
+                <p>Vendredi 17 mai</p>
+                <p>14:00 - 16:00</p>
+                <p>Atelier : Musique & IA Générative</p>
+              </div>
             </li>
 
-            <li className="flex items-center gap-2">
-              <img src="/calendar.svg" alt="calendrier" className="w-6"/>
-              <span className="text-xs uppercase font-semibold opacity-60 mb-5">
-                22/05 - Écriture augmentée : scénariser avec l’intelligence artificielle
-                <p>Début : 14H00</p>
-              </span>
-            </li>
           </ul>
         </div>
 
-        {/* CARD 5 FULL WIDTH */}
+        {/* CARD 5 */}
         <div className="bg-white p-6 rounded-2xl shadow-sm col-span-2 flex justify-between items-center">
           <div className="flex items-center gap-4">
             <img src="/pellicule.png" alt="icon" className="w-8" />
