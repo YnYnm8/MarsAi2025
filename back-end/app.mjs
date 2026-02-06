@@ -1,5 +1,6 @@
 import express from 'express';
 import cors from 'cors';
+import helmet from 'helmet';
 import sequelize from './config/database.mjs';
 import "./models/index.mjs";
 import comiteRouter from './routes/committeeRoutes.mjs';
@@ -14,13 +15,31 @@ dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+const FRONTEND_URL = process.env.FRONTEND_URL || 'http://localhost:5173';
 
 // Middleware JSON 
 app.use(express.json());
 
 app.use(cors({
-  origin: "http://localhost:5173",
+  origin: FRONTEND_URL,
   credentials: true, // cookies
+}));
+
+// Middleware HELMET
+app.use(helmet({
+  contentSecurityPolicy: {
+    directives: {
+      defaultSrc: ["'self'"],
+      styleSrc: ["'self'", "'unsafe-inline'"],
+      scriptSrc: ["'self'"],
+      imgSrc: ["'self'", 'data:', 'https:'],
+      connectSrc: ["'self'", process.env.FRONTEND_URL || 'http://localhost:5173']
+    }
+  },
+  crossOriginResourcePolicy: { policy: 'cross-origin' },
+  frameguard: { action: 'deny' },
+  noSniff: true,
+  xssFilter: true
 }));
 
 // Routes
