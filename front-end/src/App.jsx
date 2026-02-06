@@ -9,6 +9,7 @@ import Login from './pages/auth/login.jsx';
 import Profile from "./pages/auth/profile.jsx";
 import Dashboard from "./pages/dashboard/dashboard.jsx";
 import Home from "./pages/auth/home.jsx";
+import Workshop from "./pages/dashboard/workshop.jsx";
 
 function App() {
 
@@ -25,8 +26,9 @@ function App() {
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/" element={<Home />} />
+          <Route path="/workshop" element={<Workshop/>} />
 
-        </Routes>
+        </Routes>                                                                              
       </main>
     </>
   );
