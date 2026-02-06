@@ -22,7 +22,7 @@ export const registerSchema = z.object({
     .min(2, 'Min 2 caractères'),
 
     role: z
-    .enum(['director', 'visitor'])
+    .enum(['director', 'visitor', 'committee', 'admin'])
     .default('visitor'),
 })
 
