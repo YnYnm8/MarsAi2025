@@ -1,7 +1,7 @@
 //Routes
 import express from 'express';
 import { getFilms, getFilmById, getFilmsSelect, createFilm, updateFilm, deleteFilm, getFilmsByUser } from '../controllers/filmController.mjs';
-import { authMiddleware } from '../controllers/authController.mjs';
+import { authMiddleware } from '../middlewares/authMiddleware.mjs';
 
 const router = express.Router();
 
