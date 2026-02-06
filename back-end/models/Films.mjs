@@ -3,12 +3,6 @@ import { DataTypes } from "sequelize";
 
 const Film = sequelize.define("Film", {
 
-
-    user_id: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-
-    },
     last_name: {
         type: DataTypes.STRING,
         allowNull: false
@@ -18,13 +12,18 @@ const Film = sequelize.define("Film", {
         type: DataTypes.STRING,
         allowNull: true
 
-    }, 
+    },
     email: {
         type: DataTypes.STRING,
         allowNull: false,
 
-    }, 
+    },
     school: {
+        type: DataTypes.STRING,
+        allowNull: true,
+
+    },
+    country: {
         type: DataTypes.STRING,
         allowNull: true,
 
@@ -33,7 +32,7 @@ const Film = sequelize.define("Film", {
         type: DataTypes.STRING,
         allowNull: true,
 
-    }, 
+    },
     socialNetworks: {
         type: DataTypes.JSON,
         allowNull: true,
@@ -64,9 +63,6 @@ const Film = sequelize.define("Film", {
         allowNull: false,
 
     },
-
-
-
     generate_Ai: {
         type: DataTypes.ENUM("full_ai", "hybrid"),
         allowNull: false,
@@ -77,6 +73,5 @@ const Film = sequelize.define("Film", {
 }, {
     timestamps: true
 });
-
 
 export default Film;

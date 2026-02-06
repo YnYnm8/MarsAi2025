@@ -10,16 +10,12 @@ const Playlist = sequelize.define("Playlist", {
     status: {
         type: DataTypes.STRING,
         allowNull: false,
-    },
-    user_id: {
-        type: DataTypes.INTEGER,
-        allowNull: true,
+    }
+},
+    {
 
-    },
-}, {
-
-    timestamps: true
-});
+        timestamps: true
+    });
 
 
 export default Playlist;
