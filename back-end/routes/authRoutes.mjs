@@ -12,10 +12,10 @@ import { authMiddleware, roleMiddleware  } from '../middlewares/authMiddleware.m
 
 const router = express.Router();
 
-router.post("/register", validate(registerSchema), register, authLimiter);
-router.post("/login", validate(loginSchema), login, authLimiter);
-router.put("/profile",authMiddleware,roleMiddleware, validate(updateProfileSchema), updateProfile);
-router.get("/me",authMiddleware,roleMiddleware, getCurrentUser)
+router.post("/register",authLimiter, validate(registerSchema), register);
+router.post("/login",authLimiter, validate(loginSchema), login);
+router.put("/profile",authMiddleware,roleMiddleware('director'), validate(updateProfileSchema), updateProfile);
+router.get("/me",authMiddleware,roleMiddleware('admin'), getCurrentUser)
 router.post("/logout", logout);
 
 export default router;
