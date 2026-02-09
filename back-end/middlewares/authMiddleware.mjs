@@ -68,20 +68,15 @@ export const authMiddleware = async (req, res, next) => {
 /** Middleware de Rôle (Exemple pour Admin) */
 export const roleMiddleware = (...allowedRoles) => {
   return (req, res, next) => {
+    // 1. On vérifie si req.user existe (rempli par authMiddleware)
     if (!req.user) {
-      return res.status(401).json({
-        success: false,
-        message: "Non authentifié",
-      });
+      return res.status(401).json({ message: "Authentification requise" });
     }
 
-if (!allowedRoles.includes(req.user.role)) { 
-      return res.status(403).json({
-        success: false,
-        message: `Accès refusé. Rôles requis: ${allowedRoles.join(", ")}`,
-        requiredRoles: allowedRoles,
-        userRole: req.user.role, 
-        userId: req.user.id,
+    // 2. On vérifie si le rôle de l'utilisateur est dans la liste autorisée
+    if (!allowedRoles.includes(req.user.role)) {
+      return res.status(403).json({ 
+        message: `Accès refusé. Rôle requis : ${allowedRoles.join(' ou ')}` 
       });
     }
 

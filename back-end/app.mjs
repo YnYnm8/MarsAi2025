@@ -1,5 +1,6 @@
 import express from 'express';
 import cors from 'cors';
+import cookieParser from 'cookie-parser';
 import helmet from 'helmet';
 import sequelize from './config/database.mjs';
 import "./models/index.mjs";
@@ -17,6 +18,7 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 const FRONTEND_URL = process.env.FRONTEND_URL || 'http://localhost:5173';
 
+app.use(cookieParser());
 // Middleware JSON 
 app.use(express.json());
 
