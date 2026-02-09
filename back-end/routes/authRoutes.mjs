@@ -3,7 +3,7 @@ import { registerSchema, loginSchema, updateProfileSchema } from '../validators/
 import express from "express";
 import { register,login,logout,updateProfile,getCurrentUser } from "../controllers/authController.mjs";
 import { authLimiter } from "../middlewares/rateLimiter.mjs"
-import { validate } from '../middlewares/validate.mjs'; 
+import { validate } from '../validators/validate.mjs'; 
 import { authMiddleware, roleMiddleware  } from '../middlewares/authMiddleware.mjs';
 
 
