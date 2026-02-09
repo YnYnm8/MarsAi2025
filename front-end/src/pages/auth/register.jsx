@@ -99,7 +99,7 @@ const Register = () => {
                                     value={username}
                                     onChange={(e) => setUsername(e.target.value)}
                                     placeholder="NOM"
-                                    className="bg-transparent w-full outline-none text-sm placeholder-gray-400"
+                                    className="bg-transparent w-full outline-none text-sm text-black"
                                     required
                                 />
                             </div>
@@ -120,7 +120,7 @@ const Register = () => {
                                     value={firstname}
                                     onChange={(e) => setFirstname(e.target.value)}
                                     placeholder="PRENOM"
-                                    className="bg-transparent w-full outline-none text-sm placeholder-gray-400"
+                                    className="bg-transparent w-full outline-none text-sm text-black placeholder-gray-400"
                                     required
                                 />
                             </div>
@@ -141,7 +141,7 @@ const Register = () => {
                                     value={email}
                                     onChange={(e) => setEmail(e.target.value)}
                                     placeholder="EMAIL@EXEMPLE.COM"
-                                    className="bg-transparent w-full outline-none text-sm placeholder-gray-400"
+                                    className="bg-transparent w-full outline-none text-sm text-black placeholder-gray-400"
                                     required
                                 />
                             </div>
@@ -162,7 +162,7 @@ const Register = () => {
                                     value={password}
                                     onChange={(e) => setPassword(e.target.value)}
                                     placeholder="••••••••••"
-                                    className="bg-transparent w-full outline-none text-sm placeholder-gray-400"
+                                    className="bg-transparent w-full outline-none text-sm text-black placeholder-gray-400"
                                     required
                                 />
                             </div>
@@ -183,7 +183,7 @@ const Register = () => {
                                     value={verifiedPassword}
                                     onChange={(e) => setVerifiedPassword(e.target.value)}
                                     placeholder="••••••••••"
-                                    className="bg-transparent w-full outline-none text-sm placeholder-gray-400"
+                                    className="bg-transparent w-full outline-none text-sm text-black placeholder-gray-400"
                                     required
                                 />
                             </div>
