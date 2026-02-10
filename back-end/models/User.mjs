@@ -27,6 +27,12 @@ export const User = sequelize.define('User', {
     firstName: { type: DataTypes.STRING(100) },
     lastName: { type: DataTypes.STRING(100) },
 
+    role: {
+        type: DataTypes.ENUM('visitor', 'réalisator', 'admin', 'committee'),
+        defaultValue: 'visitor'
+    },
+
+
     // Champs Profil 
     // stockage RS en JSON
 

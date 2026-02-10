@@ -9,6 +9,7 @@ import comiteRouter from './routes/committeeRoutes.mjs';
     
 import authRoute from './routes/authRoutes.mjs';
 import dotenv from "dotenv";
+import adminRoutes from "./routes/adminRoutes.mjs";
 
 dotenv.config();
 
@@ -25,6 +26,9 @@ app.use(cors({
 
 // Routes
 app.use("/", authRoute);
+// admin route
+app.use("/admin", adminRoutes);
+
 
 app.get("/", (req, res) => {
   res.send("API OK");
@@ -35,7 +39,7 @@ try {
   await sequelize.authenticate();
   console.log("✅ Connexion à la BDD réussie");
 
-  await sequelize.sync({ alter: false });
+  await sequelize.sync({alter:true});
   console.log(" ");
   console.log("Tables créées avec succès ✅");
 

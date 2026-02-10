@@ -18,12 +18,12 @@ const Film = sequelize.define("Film", {
         type: DataTypes.STRING,
         allowNull: true
 
-    }, 
+    },
     email: {
         type: DataTypes.STRING,
         allowNull: false,
 
-    }, 
+    },
     school: {
         type: DataTypes.STRING,
         allowNull: true,
@@ -33,7 +33,7 @@ const Film = sequelize.define("Film", {
         type: DataTypes.STRING,
         allowNull: true,
 
-    }, 
+    },
     socialNetworks: {
         type: DataTypes.JSON,
         allowNull: true,
@@ -65,6 +65,22 @@ const Film = sequelize.define("Film", {
 
     },
 
+    views: {
+        type: DataTypes.INTEGER,
+        defaultValue: 0,
+        allowNull: false
+    },
+
+    shares: {
+        type: DataTypes.INTEGER,
+        defaultValue: 0,
+        allowNull: false
+    },
+    
+    country: {
+        type: DataTypes.STRING(100),
+        allowNull: true
+    },
 
 
     generate_Ai: {
