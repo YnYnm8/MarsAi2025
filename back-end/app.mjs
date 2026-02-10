@@ -8,6 +8,7 @@ import comiteRouter from './routes/committeeRoutes.mjs';
 import authRoute from './routes/authRoutes.mjs';
 import filmRoutes from './routes/filmRoutes.mjs';
 import dotenv from "dotenv";
+import adminRoutes from "./routes/adminRoutes.mjs";
 import { userSeed } from './seeds/userSeed.mjs';
 import { seedAll } from './seeds/seedAll.mjs';
 
@@ -46,6 +47,8 @@ app.use(helmet({
 
 // Routes
 app.use("/", authRoute);
+// admin route
+app.use("/admin", adminRoutes);
 app.use("/", filmRoutes);
 app.use("/comite", comiteRouter); // prefix
 console.log(" ");
@@ -62,7 +65,7 @@ try {
   console.log(" ");
   console.log("     🗄️ Connexion à la BDD réussie ✅");
 
-  await sequelize.sync({ force: true });
+  await sequelize.sync({alter:true});
   console.log(" ");
   console.log("     🧩 Tables créées avec succès  ✅");
 

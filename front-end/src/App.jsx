@@ -10,6 +10,11 @@ import Profile from "./pages/auth/profile.jsx";
 import Dashboard from "./pages/dashboard/dashboard.jsx";
 import Home from "./pages/auth/home.jsx";
 import Workshop from "./pages/dashboard/workshop.jsx";
+import AdminDashboard from "./pages/admin/admin.jsx";
+import AdminDetailsFilms from './pages/admin/admindetailsfilms.jsx';
+import AdminDash from './pages/admin/admindashboard.jsx';
+
+
 
 function App() {
 
@@ -27,7 +32,9 @@ function App() {
           <Route path="/profile" element={<Profile />} />
           <Route path="/" element={<Home />} />
           <Route path="/workshop" element={<Workshop/>} />
-
+          <Route path="/admin/dashboard" element={<AdminDash/>} />
+          <Route path="/admin/statistique" element={<AdminDashboard/>} />
+          <Route path="/admin/detailsfilms" element={<AdminDetailsFilms />} />
         </Routes>                                                                              
       </main>
     </>

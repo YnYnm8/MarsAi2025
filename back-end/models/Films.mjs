@@ -63,6 +63,25 @@ const Film = sequelize.define("Film", {
         allowNull: false,
 
     },
+
+    views: {
+        type: DataTypes.INTEGER,
+        defaultValue: 0,
+        allowNull: false
+    },
+
+    shares: {
+        type: DataTypes.INTEGER,
+        defaultValue: 0,
+        allowNull: false
+    },
+    
+    country: {
+        type: DataTypes.STRING(100),
+        allowNull: true
+    },
+
+
     generate_Ai: {
         type: DataTypes.ENUM("full_ai", "hybrid"),
         allowNull: false,
