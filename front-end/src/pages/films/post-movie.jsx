@@ -7,7 +7,7 @@ export default function PostMovie() {
                     <p className="text-blue-tertiary text-base tracking-wider"> Appel à Projets 2026</p>
                 </div>
                 <h1 className="text-7xl text-white-secondary uppercase font-extrabold pb-8 ">Soumettre un <span className="text-blue-tertiary">film</span></h1>
-                <p className="font-bold text-lg text-white-subtitle tracking-wide w-2xl ">Transmettez les éléments techniques,
+                <p className="font-bold text-lg text-black-primary tracking-wide w-2xl ">Transmettez les éléments techniques,
                     l'usage de l'IA et la composition de votre équipe.
                     Tous les champs marqués d'une étoile (*) sont obligatoires.
                 </p>

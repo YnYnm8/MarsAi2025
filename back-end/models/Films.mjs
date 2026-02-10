@@ -50,6 +50,7 @@ const Film = sequelize.define("Film", {
     status: {
         type: DataTypes.STRING,
         allowNull: false,
+        defaultValue: "submitted",
 
     },
 
