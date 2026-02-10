@@ -3,12 +3,6 @@ import { DataTypes } from "sequelize";
 
 const Film = sequelize.define("Film", {
 
-
-    user_id: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-
-    },
     last_name: {
         type: DataTypes.STRING,
         allowNull: false
@@ -25,6 +19,11 @@ const Film = sequelize.define("Film", {
 
     },
     school: {
+        type: DataTypes.STRING,
+        allowNull: true,
+
+    },
+    country: {
         type: DataTypes.STRING,
         allowNull: true,
 
@@ -93,6 +92,5 @@ const Film = sequelize.define("Film", {
 }, {
     timestamps: true
 });
-
 
 export default Film;
