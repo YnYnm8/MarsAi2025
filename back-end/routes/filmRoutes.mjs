@@ -10,7 +10,7 @@ const router = express.Router();
 router.get('/films', getFilms); // public
 router.get('/films/:id', getFilmById); //public
 router.get('/films/select/list', getFilmsSelect); //public
-router.post('/films', authMiddleware, uploadFields, uploadMiddleware, createFilm); //realisateur
+router.post('/films',  uploadFields, uploadMiddleware, createFilm); //realisateur
 router.put('/films/:id', authMiddleware,  updateFilm); // realisateur 
 router.get('/films/my-submissions/list', authMiddleware, getFilmsByUser); // realisateur
 router.delete('/films/:id',authMiddleware, deleteFilm); //realisateur / admin

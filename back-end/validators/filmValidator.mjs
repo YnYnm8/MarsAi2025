@@ -2,7 +2,7 @@ import { z } from "zod";
 
 export const filmSchema = z.object({
 
-    
+
     last_name: z
         .string()
         .min(2, "Nom obligatoire minimum 2 caractères"),
@@ -31,13 +31,13 @@ export const filmSchema = z.object({
         .preprocess(val => Number(val), z.number().positive().max(120, "Durée maximale 2 minutes")),
 
 
-    status: z.enum(["submitted", "accepted", "rejected"]),
+    status: z.enum(["submitted", "accepted", "rejected"]).default("submitted"),
 
     description: z
         .string()
         .min(10, "Description obligatoire minimum 10 caractères"),
 
-    category: z.enum(["animation", "documentaire", "fiction", "expérimental"]),
+    category: z.string().optional(),
 
     generate_Ai: z.enum(["full_ai", "hybrid"]),
 
@@ -45,6 +45,7 @@ export const filmSchema = z.object({
         .string()
         .min(2, "Outil AI obligatoire minimum 2 caractères"),
 
+    creativeMethodology: z.string().optional(),
 
 });
 

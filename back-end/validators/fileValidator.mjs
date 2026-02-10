@@ -16,10 +16,10 @@ export const filesSchema = z.object({
       z.object({
         mimetype: z.enum(["image/jpeg", "image/png"]),
         size: z.number(),
+        path: z.string(),
       })
     )
-    .min(1, "Au moins 1 image est obligatoire")
-    .max(3, "Maximum 3 images autorisées"),
+    .length(1, "Le poster est obligatoire"),
 
   subtitle: z
     .array(
@@ -30,6 +30,16 @@ export const filesSchema = z.object({
     )
     .min(1, "Au moins 1 fichier de sous-titres est obligatoire"),
 
- 
+  galerie: z
+    .array(
+      z.object({
+        mimetype: z.enum(["image/jpeg", "image/png"]),
+        size: z.number(),
+        path: z.string(),
+      })
+    )
+    .max(2, "Maximum 2 images pour la gallery")
+    .optional(),
+
 });
 

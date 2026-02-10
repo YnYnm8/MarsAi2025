@@ -16,7 +16,7 @@ export async function getFilms(req, res) {
             include: [
                 {
                     model: File,
-                    attributes: ['id', 'film_url', 'poster_url', 'subtitle', 'outil_Ai']
+                    attributes: ['id', 'film_url', 'poster_url', 'galerie_url', 'creativeMethodology', 'subtitle', 'outil_Ai']
                 }
             ],
             order: [['createdAt', 'DESC']]
@@ -62,7 +62,7 @@ export async function getFilmById(req, res) {
                 },
                 {
                     model: File,
-                    attributes: ['id', 'film_url', 'poster_url', 'subtitle', 'outil_Ai']
+                    attributes: ['id', 'film_url','creativeMethodology', 'galerie_url', 'poster_url', 'subtitle', 'outil_Ai']
                 }
             ]
         });
@@ -91,7 +91,7 @@ export async function getFilmsSelect(req, res) {
                     include: [
                         {
                             model: File,
-                            attributes: ['id', 'subtitle', 'film_url', 'poster_url']
+                            attributes: ['id', 'creativeMethodology', 'galerie_url', 'subtitle', 'film_url', 'poster_url']
                         }
                     ]
                 }
@@ -226,7 +226,7 @@ export async function getFilmsByUser(req, res) {
             include: [
                 {
                     model: File,
-                    attributes: ['id', 'film_url', 'poster_url', 'subtitle', 'outil_Ai']
+                    attributes: ['id', 'creativeMethodology', 'galerie_url', 'film_url', 'poster_url', 'subtitle', 'outil_Ai']
                 }
             ],
             order: [['createdAt', 'DESC']]

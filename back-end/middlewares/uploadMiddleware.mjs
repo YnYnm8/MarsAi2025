@@ -9,6 +9,8 @@ import { catchError } from "../helpers/errorHandler.mjs";
 export const uploadMiddleware = async (req, res, next) => {
 
     try {
+         console.log("BODY RECEIVED:", req.body); 
+         console.log("FILES RECEIVED:", req.files);
         // Validation des données du film avec zod
         const bodyValidation = filmSchema.safeParse(req.body);
         if (!bodyValidation.success) {
@@ -57,7 +59,7 @@ export const uploadMiddleware = async (req, res, next) => {
 
         const newFilm = await Film.create({
 
-            UserId: req.user?.id,
+            UserId: req.user?.id || 1, // Utilisateur par défaut si pas d'authentification
             last_name,
             email,
             title,
@@ -70,16 +72,20 @@ export const uploadMiddleware = async (req, res, next) => {
 
         // Creation des fichiers en base de données
         const filmFile = req.files.film[0];
-        const posterFiles = req.files.poster;
+        const posterFiles = req.files.poster[0];
         const subtitleFiles = req.files.subtitle;
         const { outil_Ai } = bodyValidation.data;
+        const galerieFiles = req.files.galerie || [];
+        const { creativeMethodology } = bodyValidation.data;
 
         await File.create({
             FilmId: newFilm.id,
             film_url: filmFile.path,
-            poster_url: posterFiles.map(file => file.path).join(","),
+            poster_url: posterFiles.path,
             subtitle: subtitleFiles.map(f => f.path).join(","),
             outil_Ai,
+            galerie_url: galerieFiles.map(f => f.path).join(","), 
+            creativeMethodology
         })
 
         // ajout film et fichiers à req pour les utiliser dans le controller
