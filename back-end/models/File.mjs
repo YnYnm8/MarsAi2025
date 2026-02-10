@@ -30,7 +30,14 @@ const File = sequelize.define("File", {
             notEmpty: { msg: "OutilAI est obligatoire" }
         }
     },
-
+    galerie_url: {
+        type: DataTypes.STRING,
+        allowNull: true,
+    },
+    creativeMethodology: {
+        type: DataTypes.STRING,
+        allowNull: true,
+    }
 });
 
 
