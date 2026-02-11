@@ -8,7 +8,7 @@ import Price from "./Price.mjs";
 import Sponsor from "./Sponsor.mjs";
 import Workshop from "./Workshop.mjs";
 import Notification from "./Notification.mjs";
-import Comment from "./Comment.mjs";
+import Note from "./Note.mjs";
 import Annotation from "./Annotation.mjs";
 import PlaylistFilm from "./PlaylistFilm.mjs";
 import WorkshopCategory from "./WorkshopCategory.mjs";
@@ -18,18 +18,15 @@ import FilmSponsor from "./FilmSponsor.mjs";
 
 
 // === User ===
-User.hasMany(Film, {  onDelete: "CASCADE" });
-Film.belongsTo(User);
 
-User.hasMany(Playlist, {onDelete: "CASCADE" });
+
+User.hasMany(Playlist, { onDelete: "CASCADE" });
 Playlist.belongsTo(User);
 
-User.belongsToMany(Film, { through: Comment, as: 'Commenters' });
-Film.belongsToMany(User, { through: Comment, as: 'Commenters' });
 
+User.belongsToMany(Film, { through: Note});
+Film.belongsToMany(User, { through: Note});
 
-User.belongsToMany(Film, { through: Annotation, as: 'Annotators' });
-Film.belongsToMany(User, { through: Annotation, as: 'Annotators' });
 
 User.hasMany(Workshop);
 Workshop.belongsTo(User);
@@ -54,6 +51,7 @@ Sponsor.belongsToMany(Film, { through: FilmSponsor });
 Film.belongsToMany(Selection, { through: "SelectionFilm" });
 Selection.belongsToMany(Film, { through: "SelectionFilm" });
 
+
 // === Sponsor / Price ===
 Sponsor.hasMany(Price );
 Price.belongsTo(Sponsor);
@@ -70,9 +68,22 @@ Notification.belongsTo(Workshop);
 Price.hasMany(Notification);
 Notification.belongsTo(Price);
 
+// PlaylistFilm (履歴テーブル) から参照
+PlaylistFilm.belongsTo(Playlist);
+PlaylistFilm.belongsTo(Film );
+PlaylistFilm.belongsTo(User);
+
+
+
+// Playlist → PlaylistFilm
+Playlist.hasMany(PlaylistFilm);
+Film.hasMany(PlaylistFilm);
+User.hasMany(PlaylistFilm);
+
+
 // === Export ===
 export {
   User, Film, Playlist, Selection,
   File, Price, Sponsor, Workshop, WorkshopCategory,
-  Notification
+  Notification, Note, Annotation, PlaylistFilm, FilmSponsor
 };

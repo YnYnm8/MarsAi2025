@@ -47,14 +47,8 @@ export async function getFilmById(req, res) {
         }
 
         const FilmData = await Film.findByPk(id, {
-            include: [
-                {
-                    model: User,
-                    as: 'Commenters',
-                    attributes: ['id', 'firstName', 'lastName'],
-                    through: { attributes: ['content', 'createdAt'] }
-                },
-                {
+                include: 
+                [{
                     model: User,
                     as: 'Annotators',
                     attributes: ['id', 'firstName', 'lastName'],

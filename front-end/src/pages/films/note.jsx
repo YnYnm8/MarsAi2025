@@ -148,7 +148,7 @@ export default function Note() {
             </span>
             <div className="flex flex-col md:flex-row gap-2 w-full md:w-auto mt-2 md:mt-0">
               <button className="bg-green-500 text-white rounded-lg px-6 py-2 text-sm font-semibold w-full md:w-auto">SÉLECTIONNER</button>
-              <button className="bg-red-500 text-white rounded-lg px-6 py-2 text-sm font-semibold w-full md:w-auto">REFUSER</button>
+              <button onclick = {handleRefuse} className="bg-red-500 text-white rounded-lg px-6 py-2 text-sm font-semibold w-full md:w-auto">REFUSER</button>
               <button className="bg-gray-900 text-white rounded-lg px-6 py-2 text-sm font-semibold w-full md:w-auto">+ PLACER DANS UNE LISTE</button>
             </div>
           </div>

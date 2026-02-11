@@ -5,16 +5,16 @@ import dotenv from "dotenv";
 import cookieParser from 'cookie-parser';
 import helmet from 'helmet';
 import "./models/index.mjs";
-import comiteRouter from './routes/committeeRoutes.mjs';
+import comiteRouter from './routes/comiteRoutes.mjs';
 import authRoute from './routes/authRoutes.mjs';
 import filmRoutes from './routes/filmRoutes.mjs';
 import profileRoutes from './routes/profileRoutes.mjs';
+// import{userSeed } from './seeds/userSeed.mjs';
+// import{seedMeiko}from './seeds/seedMeiko.mjs';
 import adminRoutes from "./routes/adminRoutes.mjs";
-import { userSeed } from './seeds/userSeed.mjs';
-import { seedAll } from './seeds/seedAll.mjs';
-
-
+import selectionRoutes from"./routes/selectionRoutes.mjs";
 dotenv.config();
+//import { seedAll } from './seeds/seedAll.mjs';
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -30,6 +30,7 @@ app.use(cors({
 app.use(cookieParser());
 // Middleware JSON 
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 
 // Middleware HELMET
@@ -51,10 +52,9 @@ app.use(helmet({
 
 // Routes
 app.use("/", authRoute);
-// admin route
-app.use("/admin", adminRoutes);
-app.use("/", filmRoutes);
-app.use("/comite", comiteRouter);
+app.use("/films", filmRoutes);
+app.use("/comite", comiteRouter); 
+app.use("/selection",selectionRoutes);
 app.use("/", profileRoutes);
 console.log(" ");
 console.log("     ⏱️ Tables synchronisées  ✅ ");
@@ -75,8 +75,9 @@ try {
   console.log("     🧩 Tables créées avec succès  ✅");
 
   //Seed
-  await userSeed();
-  await seedAll();
+  // await userSeed();
+  // await seedMeiko();
+  //await seedAll();
 
   console.log(" ");
   console.log("     💾 Seeds insérés avec succès  ✅");
