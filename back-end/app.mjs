@@ -23,11 +23,21 @@ app.use(cookieParser());
 // Middleware JSON 
 app.use(express.json());
 
-app.use(cors({
-  origin: FRONTEND_URL,
-  credentials: true, // cookies
-}));
+const allowedOrigins = ['http://localhost:5173', 'http://localhost:5173/'];
 
+app.use(cors({
+  origin: function(origin, callback) {
+    // permitir requests desde Postman o curl (sin origin)
+    if (!origin) return callback(null, true);
+    if (allowedOrigins.includes(origin)) {
+      return callback(null, true);
+    } else {
+      return callback(new Error(`Origen ${origin} no permitido por CORS`));
+    }
+  },
+  credentials: true,
+  methods: ["GET","POST","PUT","DELETE","OPTIONS"]
+}));
 // Middleware HELMET
 app.use(helmet({
   contentSecurityPolicy: {
