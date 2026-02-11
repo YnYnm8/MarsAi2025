@@ -40,7 +40,7 @@ app.use(helmet({
       styleSrc: ["'self'", "'unsafe-inline'"],
       scriptSrc: ["'self'"],
       imgSrc: ["'self'", 'data:', 'https:'],
-      connectSrc: ["'self'", process.env.FRONTEND_URL || 'http://localhost:5173']
+      connectSrc: ["'self'", process.env.FRONTEND_URL || 'http://localhost:5173', "http://localhost:3000"]
     }
   },
   crossOriginResourcePolicy: { policy: 'cross-origin' },
@@ -91,7 +91,18 @@ try {
     console.log(`   🚀 Serveur démarré sur http://localhost:${PORT} 🔌`);
   });
 } catch (error) {
+  console.error(" ");
   console.error("   ❌ Erreur au démarrage de l'API");
-  console.error(error.message);
+  
+  // Si c'est une erreur de validation (Email, ENUM, etc.)
+  if (error.name === 'SequelizeValidationError' || error.name === 'SequelizeUniqueConstraintError') {
+    error.errors.forEach(err => {
+      console.error(`   👉 [VALIDATION] Champ: ${err.path} | Message: ${err.message} | Valeur: ${err.value}`);
+    });
+  } else {
+    // Si c'est une autre erreur (Syntaxe, Connexion, etc.)
+    console.error(`   👉 [ERREUR]: ${error.message}`);
+    console.error(error); 
+  }
   process.exit(1);
 }
