@@ -1,14 +1,15 @@
 import User from "../models/User.mjs";
-import Notification from "../models/Notification.mjs"; 
+import Notification from "../models/Notification.mjs";
 import jwt from "jsonwebtoken";
 import { verify } from "argon2";
 
 const JWT_SECRET = process.env.JWT_SECRET || "secret123";
 
 const generateToken = (user) => {
-  return jwt.sign({ id: user.id, role: user.role }, JWT_SECRET, { expiresIn: "1h" });
+  return jwt.sign({ id: user.id, role: user.role }, JWT_SECRET, {
+    expiresIn: "1h",
+  });
 };
-
 
 /** @POST /user/register */
 
@@ -42,13 +43,13 @@ export const register = async (req, res) => {
   }
 };
 
-
 /** @POST /user/login */
 
 export const login = async (req, res) => {
   try {
     const { email, password } = req.body;
-    if (!email || !password) return res.status(400).json({ message: "Champs requis" });
+    if (!email || !password)
+      return res.status(400).json({ message: "Champs requis" });
 
     const user = await User.findOne({ where: { email } });
     if (!user || !(await verify(user.password, password))) {
@@ -60,22 +61,21 @@ export const login = async (req, res) => {
     // Configuration du cookie
     res.cookie("token", token, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production", // True uniquement en HTTPS
+      secure: false, // True uniquement en HTTPS
       sameSite: "lax",
-      maxAge: 3600000 // 1 heure
+      maxAge: 3600000, // 1 heure
     });
 
-    res.json({
-      success: true,
-      token,
-      user: { id: user.id, email: user.email, role: user.role, firstName: user.firstName }
-    });
-  } catch (err) {
+    // On convertit en objet simple pour pouvoir supprimer le mot de passe
+    const userWithoutPassword = user.toJSON();
+    delete userWithoutPassword.password;
+
+    res.json({ success: true, user: userWithoutPassword, token });
+  } catch (error) {
+    console.error(error);
     res.status(500).json({ message: "Erreur serveur" });
   }
 };
-
-
 
 /** @POST /user/logout */
 
@@ -84,11 +84,17 @@ export const logout = (req, res) => {
   res.status(200).json({ message: "Déconnexion réussie" });
 };
 
-
 /** @GET /user/me */
 
 export const getCurrentUser = async (req, res) => {
   try {
+    // Sécurité : On vérifie que req.user existe bien
+    if (!req.user || !req.user.id) {
+      return res
+        .status(401)
+        .json({ message: "Utilisateur non authentifié via token" });
+    }
+
     const user = await User.findByPk(req.user.id, {
       attributes: { exclude: ["password"] },
     });
@@ -113,41 +119,40 @@ export const getCurrentUser = async (req, res) => {
   }
 };
 
-
 /** @PUT /user/profile */
 
 export const updateProfile = async (req, res) => {
   try {
     if (!req.user || !req.user.id) {
-      return res.status(401).json({ message: 'Non authentifié' });
+      return res.status(401).json({ message: "Non authentifié" });
     }
 
     const user = await User.findByPk(req.user.id);
-    
+
     if (!user) {
-      return res.status(404).json({ message: 'Utilisateur introuvable' });
+      return res.status(404).json({ message: "Utilisateur introuvable" });
     }
 
     const { firstName, lastName, bio, school, socialLinks } = req.body;
 
     // Mise à jour conditionnelle avec validation
-    if (firstName !== undefined && typeof firstName === 'string') {
+    if (firstName !== undefined && typeof firstName === "string") {
       user.firstName = firstName.trim().substring(0, 100);
     }
-    
-    if (lastName !== undefined && typeof lastName === 'string') {
+
+    if (lastName !== undefined && typeof lastName === "string") {
       user.lastName = lastName.trim().substring(0, 100);
     }
-    
+
     if (bio !== undefined) {
       user.bio = bio ? String(bio).substring(0, 500) : null;
     }
-    
+
     if (school !== undefined) {
       user.school = school ? String(school).substring(0, 200) : null;
     }
-    
-    if (socialLinks !== undefined && typeof socialLinks === 'object') {
+
+    if (socialLinks !== undefined && typeof socialLinks === "object") {
       user.socialLinks = JSON.stringify(socialLinks);
     }
 
@@ -159,19 +164,20 @@ export const updateProfile = async (req, res) => {
 
     res.status(200).json({
       success: true,
-      message: 'Profil mis à jour',
-      user: cleanUser
+      message: "Profil mis à jour",
+      user: cleanUser,
     });
-
   } catch (error) {
-    console.error('UpdateProfile error:', error);
-    res.status(500).json({ 
+    console.error("UpdateProfile error:", error);
+    res.status(500).json({
       success: false,
-      message: process.env.NODE_ENV === 'development' ? error.message : 'Profile update failed'
+      message:
+        process.env.NODE_ENV === "development"
+          ? error.message
+          : "Profile update failed",
     });
   }
 };
-
 
 /** @GET /notifications */
 
@@ -179,15 +185,14 @@ export const getNotifications = async (req, res) => {
   try {
     const notifications = await Notification.findAll({
       where: { userId: req.user.id },
-      order: [['createdAt', 'DESC']],
-      limit: 20 // On limite pour ne pas surcharger
+      order: [["createdAt", "DESC"]],
+      limit: 20, // On limite pour ne pas surcharger
     });
     res.json(notifications);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
 };
-
 
 /** @PATCH /notifications/read-all */
 
@@ -196,24 +201,26 @@ export const markReadAll = async (req, res) => {
     // 1. On utilise update() pour modifier plusieurs lignes d'un coup
     const [updatedCount] = await Notification.update(
       { isRead: true }, // Ce qu'on veut changer
-      { 
-        where: { 
+      {
+        where: {
           userId: req.user.id, // Uniquement pour l'utilisateur connecté
-          isRead: false        // Optionnel : uniquement celles qui ne sont pas encore lues
-        } 
-      }
+          isRead: false, // Optionnel : uniquement celles qui ne sont pas encore lues
+        },
+      },
     );
 
-    res.json({ 
+    res.json({
       success: true,
       message: `${updatedCount} notifications marquées comme lues`,
-      updatedCount 
+      updatedCount,
     });
-
   } catch (error) {
-    res.status(500).json({ 
+    res.status(500).json({
       success: false,
-      message: process.env.NODE_ENV === "development" ? error.message : "Erreur lors de la mise à jour" 
+      message:
+        process.env.NODE_ENV === "development"
+          ? error.message
+          : "Erreur lors de la mise à jour",
     });
   }
 };
