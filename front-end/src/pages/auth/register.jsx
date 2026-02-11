@@ -53,137 +53,138 @@ const Register = () => {
     };
 
 
-    return ( // Mobile Resp
-        <div>
+    return ( 
+        <div className="min-h-screen bg-black text-white font-sans selection:bg-purple-500 selection:text-white">
             <TopNavbar />
-            <div className="min-h-screen bg-[#F4F6F9] flex flex-col items-center px-6 pt-8 pb-12">
+            
+             {/* --- BANNIÈRE DÉGRADÉE --- */}
+            <div className="h-48 w-full bg-gradient-to-r from-blue-900 via-purple-900 to-black absolute top-0 left-0 z-0">
+                <div className="absolute inset-0 bg-black/40"></div>
+            </div>
 
-                {/* Header */}
-                <div className="w-full flex items-center justify-between mb-10">
-
-                </div>
+            <div className="min-h-screen flex flex-col items-center px-6 pt-24 pb-12 relative z-10">
 
                 {/* Title */}
-                <div className="text-center mb-6">
-                    <h1 className="text-3xl font-extrabold tracking-widest text-gray-900">
+                <div className="text-center mb-8">
+                    <h1 className="text-3xl font-extrabold tracking-widest text-white drop-shadow-lg">
                         REJOINDRE MARS.A.I
                     </h1>
 
-                    <div className="flex items-center justify-center mt-3">
+                    <div className="flex items-center justify-center mt-3 gap-2">
                         <img
                             src={logo}
                             alt="Logo"
-                            className="h-5 w-auto object-contain"
+                            className="h-5 w-auto object-contain brightness-200"
                         />
-                        <p className="text-xs tracking-[0.4em] text-gray-800 font-medium">
-                            INSCRIVEZ-VOUS POUR SOUMETTRE VOS FILMS
+                        <p className="text-xs tracking-[0.25em] text-gray-400 font-medium uppercase">
+                             Inscription
                         </p>
                     </div>
                 </div>
 
-                <div className="w-full max-w-sm bg-white rounded-2xl shadow-md px-6 py-7">
+                <div className="w-full max-w-sm bg-[#111] border border-gray-800 rounded-2xl shadow-2xl shadow-purple-900/10 px-6 py-8">
                     <form onSubmit={handleSubmit} className="space-y-5">
 
                         <div>
-                            <label className="block text-[11px] font-semibold text-[#6B7A90] tracking-widest mb-2">
+                            <label className="block text-[10px] font-bold text-gray-500 tracking-[0.2em] mb-2 uppercase">
                                 NOM
                             </label>
-                            <div className="flex items-center bg-[#F2F4F7] rounded-2xl px-4 py-3 border border-gray-200">
+                            <div className="flex items-center bg-black rounded-xl px-4 py-3 border border-gray-700 focus-within:border-blue-500 transition-colors">
                                 <img
                                     src={profile}
                                     alt="LogoProfile"
-                                    className="h-5 w-auto object-contain mr-2"
+                                    className="h-5 w-auto object-contain mr-3 invert opacity-70"
                                 />
                                 <input
                                     type="text"
                                     value={username}
                                     onChange={(e) => setUsername(e.target.value)}
-                                    placeholder="NOM"
-                                    className="bg-transparent w-full outline-none text-sm text-black"
+                                    placeholder="VOTRE NOM"
+                                    className="bg-transparent w-full outline-none text-sm text-white placeholder-gray-600 font-medium"
                                     required
                                 />
                             </div>
                         </div>
 
                         <div>
-                            <label className="block text-[11px] font-semibold text-[#6B7A90] tracking-widest mb-2">
+                            <label className="block text-[10px] font-bold text-gray-500 tracking-[0.2em] mb-2 uppercase">
                                 PRENOM
                             </label>
-                            <div className="flex items-center bg-[#F2F4F7] rounded-2xl px-4 py-3 border border-gray-200">
+                            <div className="flex items-center bg-black rounded-xl px-4 py-3 border border-gray-700 focus-within:border-blue-500 transition-colors">
                                 <img
                                     src={profile}
                                     alt="Logoprofile"
-                                    className="h-5 w-auto object-contain mr-2"
+                                    className="h-5 w-auto object-contain mr-3 invert opacity-70"
                                 />
                                 <input
                                     type="text"
                                     value={firstname}
                                     onChange={(e) => setFirstname(e.target.value)}
-                                    placeholder="PRENOM"
-                                    className="bg-transparent w-full outline-none text-sm text-black placeholder-gray-400"
+                                    placeholder="VOTRE PRÉNOM"
+                                    className="bg-transparent w-full outline-none text-sm text-white placeholder-gray-600 font-medium"
                                     required
                                 />
                             </div>
                         </div>
 
                         <div>
-                            <label className="block text-[11px] font-semibold text-[#6B7A90] tracking-widest mb-2">
+                            <label className="block text-[10px] font-bold text-gray-500 tracking-[0.2em] mb-2 uppercase">
                                 ADRESSE E-MAIL
                             </label>
-                            <div className="flex items-center bg-[#F2F4F7] rounded-2xl px-4 py-3 border border-gray-200">
+                            <div className="flex items-center bg-black rounded-xl px-4 py-3 border border-gray-700 focus-within:border-blue-500 transition-colors">
                                 <img
                                     src={mailIcon}
                                     alt="logoMail"
-                                    className="h-5 w-auto object-contain mr-2"
+                                    className="h-5 w-auto object-contain mr-3 invert opacity-70"
                                 />
                                 <input
                                     type="email"
                                     value={email}
                                     onChange={(e) => setEmail(e.target.value)}
                                     placeholder="EMAIL@EXEMPLE.COM"
-                                    className="bg-transparent w-full outline-none text-sm text-black placeholder-gray-400"
+                                    className="bg-transparent w-full outline-none text-sm text-white placeholder-gray-600 font-medium"
                                     required
                                 />
                             </div>
                         </div>
 
                         <div>
-                            <label className="block text-[11px] font-semibold text-[#6B7A90] tracking-widest mb-2">
+                            <label className="block text-[10px] font-bold text-gray-500 tracking-[0.2em] mb-2 uppercase">
                                 MOT DE PASSE
                             </label>
-                            <div className="flex items-center bg-[#F2F4F7] rounded-2xl px-4 py-3 border border-gray-200">
+                            <div className="flex items-center bg-black rounded-xl px-4 py-3 border border-gray-700 focus-within:border-blue-500 transition-colors">
                                 <img
                                     src={cadenaIcon}
                                     alt="logoCadena"
-                                    className="h-5 w-auto object-contain mr-2"
+                                    className="h-5 w-auto object-contain mr-3 invert opacity-70"
                                 />
                                 <input
                                     type="password"
                                     value={password}
                                     onChange={(e) => setPassword(e.target.value)}
                                     placeholder="••••••••••"
-                                    className="bg-transparent w-full outline-none text-sm text-black placeholder-gray-400"
+                                    className="bg-transparent w-full outline-none text-sm text-white placeholder-gray-600 font-medium"
                                     required
                                 />
                             </div>
                         </div>
 
                         <div>
-                            <label className="block text-[11px] font-semibold text-[#6B7A90] tracking-widest mb-2">
+                            <label className="block text-[10px] font-bold text-gray-500 tracking-[0.2em] mb-2 uppercase">
                                 VERIFIER MOT DE PASSE
                             </label>
-                            <div className="flex items-center bg-[#F2F4F7] rounded-2xl px-4 py-3 border border-gray-200">
+                            <div className="flex items-center bg-black rounded-xl px-4 py-3 border border-gray-700 focus-within:border-blue-500 transition-colors">
                                 <img
                                     src={cadenaIcon}
                                     alt="logoCadena"
-                                    className="h-5 w-auto object-contain mr-2"
+                                    className="h-5 w-auto object-contain mr-3 invert opacity-70"
                                 />
                                 <input
                                     type="password"
                                     value={verifiedPassword}
                                     onChange={(e) => setVerifiedPassword(e.target.value)}
                                     placeholder="••••••••••"
-                                    className="bg-transparent w-full outline-none text-sm text-black placeholder-gray-400"
+                                    className="bg-transparent w-full outline-none text-sm text-white placeholder-gray-600 font-medium"
                                     required
                                 />
                             </div>
@@ -193,19 +194,19 @@ const Register = () => {
                         {/* Button */}
                         <button
                             type="submit"
-                            className="w-full bg-[#1F66B1] hover:bg-[#155a9c] text-white font-semibold py-3 rounded-2xl transition mt-2"
+                            className="w-full bg-white text-black hover:bg-gray-200 font-bold py-3 rounded-full transition mt-4 tracking-wider text-sm"
                         >
                             CRÉER MON PROFIL
                         </button>
                     </form>
 
-                    <div className="my-5 border-t border-gray-200"></div>
+                    <div className="my-6 border-t border-gray-800"></div>
 
                     <p className="text-center text-xs text-gray-500 tracking-wide">
                         DÉJÀ INSCRIT ?{" "}
                         <Link
                             to="/login"
-                            className="font-semibold text-gray-700 hover:text-black"
+                            className="font-bold text-gray-300 hover:text-white transition-colors ml-1"
                         >
                             CONNECTEZ-VOUS ICI
                         </Link>
@@ -213,8 +214,8 @@ const Register = () => {
                 </div>
 
                 <Link
-                    to="/login"
-                    className="mt-8 text-sm text-blue-600 font-semibold flex items-center gap-2"
+                    to="/"
+                    className="mt-8 text-sm text-blue-500 hover:text-blue-400 font-semibold flex items-center gap-2 transition-colors"
                 >
                     ← RETOUR ACCUEIL
                 </Link>

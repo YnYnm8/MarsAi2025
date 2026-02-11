@@ -1,13 +1,14 @@
+import sequelize from './config/database.mjs';
 import express from 'express';
 import cors from 'cors';
+import dotenv from "dotenv";
 import cookieParser from 'cookie-parser';
 import helmet from 'helmet';
-import sequelize from './config/database.mjs';
 import "./models/index.mjs";
 import comiteRouter from './routes/committeeRoutes.mjs';
 import authRoute from './routes/authRoutes.mjs';
 import filmRoutes from './routes/filmRoutes.mjs';
-import dotenv from "dotenv";
+import profileRoutes from './routes/profileRoutes.mjs';
 import adminRoutes from "./routes/adminRoutes.mjs";
 import { userSeed } from './seeds/userSeed.mjs';
 import { seedAll } from './seeds/seedAll.mjs';
@@ -19,25 +20,17 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 const FRONTEND_URL = process.env.FRONTEND_URL || 'http://localhost:5173';
 
+app.use(cors({
+  origin: process.env.FRONTEND_URL || 'http://localhost:5173',
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept', 'Origin'] 
+}));
+
 app.use(cookieParser());
 // Middleware JSON 
 app.use(express.json());
 
-const allowedOrigins = ['http://localhost:5173', 'http://localhost:5173/'];
-
-app.use(cors({
-  origin: function(origin, callback) {
-    // permitir requests desde Postman o curl (sin origin)
-    if (!origin) return callback(null, true);
-    if (allowedOrigins.includes(origin)) {
-      return callback(null, true);
-    } else {
-      return callback(new Error(`Origen ${origin} no permitido por CORS`));
-    }
-  },
-  credentials: true,
-  methods: ["GET","POST","PUT","PATCH","DELETE","OPTIONS"]
-}));
 
 // Middleware HELMET
 app.use(helmet({
@@ -62,6 +55,8 @@ app.use("/", authRoute);
 app.use("/admin", adminRoutes);
 app.use("/films", filmRoutes);
 app.use("/comite", comiteRouter); // prefix
+app.use("/", profileRoutes);
+
 console.log(" ");
 console.log("     ⏱️ Tables synchronisées  ✅ ");
 
@@ -76,8 +71,9 @@ try {
   console.log(" ");
   console.log("     🗄️ Connexion à la BDD réussie ✅");
 
-  await sequelize.sync({force: true});
-  console.log("🧩 Tables créées avec succès  ✅");
+  await sequelize.sync({force:true});
+  console.log(" ");
+  console.log("     🧩 Tables créées avec succès  ✅");
 
   //Seed
   await userSeed();
