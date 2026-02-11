@@ -1,10 +1,10 @@
 import express from "express";
-import { getMyProfile, updateMyProfile } from "../controllers/profileController.mjs";
-import authMiddleware from "../middleware/auth.mjs";
+import { getCurrentUser, updateProfile } from "../controllers/authController.mjs";
+import { authMiddleware } from "../middlewares/authMiddleware.mjs";
 
 const router = express.Router();
 
-router.get("/profile", authMiddleware, getMyProfile);
-router.put("profile", authMiddleware, updateMyProfile);
+router.get("/me", authMiddleware, getCurrentUser);
+router.put("/profile", authMiddleware, updateProfile);
 
 export default router;
