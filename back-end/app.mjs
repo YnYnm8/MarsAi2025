@@ -36,8 +36,9 @@ app.use(cors({
     }
   },
   credentials: true,
-  methods: ["GET","POST","PUT","DELETE","OPTIONS"]
+  methods: ["GET","POST","PUT","PATCH","DELETE","OPTIONS"]
 }));
+
 // Middleware HELMET
 app.use(helmet({
   contentSecurityPolicy: {
@@ -46,7 +47,7 @@ app.use(helmet({
       styleSrc: ["'self'", "'unsafe-inline'"],
       scriptSrc: ["'self'"],
       imgSrc: ["'self'", 'data:', 'https:'],
-      connectSrc: ["'self'", process.env.FRONTEND_URL || 'http://localhost:5173']
+      connectSrc: ["'self'", process.env.FRONTEND_URL || 'http://localhost:5173', "http://localhost:3000"]
     }
   },
   crossOriginResourcePolicy: { policy: 'cross-origin' },
