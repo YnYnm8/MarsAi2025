@@ -60,7 +60,7 @@ app.use(helmet({
 app.use("/", authRoute);
 // admin route
 app.use("/admin", adminRoutes);
-app.use("/", filmRoutes);
+app.use("/films", filmRoutes);
 app.use("/comite", comiteRouter); // prefix
 console.log(" ");
 console.log("     ⏱️ Tables synchronisées  ✅ ");
@@ -76,7 +76,7 @@ try {
   console.log(" ");
   console.log("     🗄️ Connexion à la BDD réussie ✅");
 
-  await sequelize.sync({force:true});
+  await sequelize.sync({force: true});
   console.log("🧩 Tables créées avec succès  ✅");
 
   //Seed

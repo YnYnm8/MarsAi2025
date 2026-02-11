@@ -50,9 +50,9 @@ export async function getFilmById(req, res) {
             include: [
                 {
                     model: User,
-                    as: 'Commenters',
+                    as: 'Notes',
                     attributes: ['id', 'firstName', 'lastName'],
-                    through: { attributes: ['content', 'createdAt'] }
+                    through: { attributes: ['score','comment', 'createdAt'] }
                 },
                 {
                     model: User,

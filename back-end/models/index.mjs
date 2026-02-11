@@ -8,11 +8,12 @@ import Price from "./Price.mjs";
 import Sponsor from "./Sponsor.mjs";
 import Workshop from "./Workshop.mjs";
 import Notification from "./Notification.mjs";
-import Comment from "./Comment.mjs";
+import Note from "./Note.mjs";
 import Annotation from "./Annotation.mjs";
 import PlaylistFilm from "./PlaylistFilm.mjs";
 import WorkshopCategory from "./WorkshopCategory.mjs";
 import FilmSponsor from "./FilmSponsor.mjs";
+
 
 
 
@@ -24,8 +25,8 @@ Film.belongsTo(User);
 User.hasMany(Playlist, {onDelete: "CASCADE" });
 Playlist.belongsTo(User);
 
-User.belongsToMany(Film, { through: Comment, as: 'Commenters' });
-Film.belongsToMany(User, { through: Comment, as: 'Commenters' });
+User.belongsToMany(Film, { through: Note, as: 'Notes' });
+Film.belongsToMany(User, { through: Note, as: 'Notes' });
 
 
 User.belongsToMany(Film, { through: Annotation, as: 'Annotators' });
@@ -72,7 +73,7 @@ Notification.belongsTo(Price);
 
 // === Export ===
 export {
-  User, Film, Playlist, Selection,
+  User, Film, Playlist, Selection,Note, Annotation,
   File, Price, Sponsor, Workshop, WorkshopCategory,
   Notification
 };
