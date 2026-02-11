@@ -29,7 +29,7 @@ export const User = sequelize.define(
     lastName: { type: DataTypes.STRING(100) },
 
     role: {
-        type: DataTypes.ENUM('visitor', 'réalisator', 'admin', 'committee'),
+        type: DataTypes.ENUM('visitor', 'realisator', 'admin', 'committee'),
         defaultValue: 'visitor'
     },
 

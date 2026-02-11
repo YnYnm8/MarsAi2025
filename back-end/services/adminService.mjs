@@ -47,14 +47,14 @@ const fetchAllFilms = async () => {
   return await Film.findAll({
     include: [{
       model: User,
-      attributes: ['firstName', 'lastName', 'email'] 
+      attributes: ['id','firstName', 'lastName', 'email'] 
     }],
     order: [['createdAt', 'DESC']]
   });
 };
 
 const changeUserRole = async (id, role) => {
-  const allowedRoles = ["visitor","réalisator", "admin", "committee"];
+  const allowedRoles = ["visitor","realisator", "admin", "committee"];
 
   if (!allowedRoles.includes(role)) {
     throw new Error("Rôle invalide");
