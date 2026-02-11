@@ -65,9 +65,8 @@ try {
   console.log(" ");
   console.log("     🗄️ Connexion à la BDD réussie ✅");
 
-  await sequelize.sync({alter:true});
-  console.log(" ");
-  console.log("     🧩 Tables créées avec succès  ✅");
+  await sequelize.sync({force:true});
+  console.log("🧩 Tables créées avec succès  ✅");
 
   //Seed
   await userSeed();
@@ -86,7 +85,18 @@ try {
     console.log(`   🚀 Serveur démarré sur http://localhost:${PORT} 🔌`);
   });
 } catch (error) {
+  console.error(" ");
   console.error("   ❌ Erreur au démarrage de l'API");
-  console.error(error.message);
+  
+  // Si c'est une erreur de validation (Email, ENUM, etc.)
+  if (error.name === 'SequelizeValidationError' || error.name === 'SequelizeUniqueConstraintError') {
+    error.errors.forEach(err => {
+      console.error(`   👉 [VALIDATION] Champ: ${err.path} | Message: ${err.message} | Valeur: ${err.value}`);
+    });
+  } else {
+    // Si c'est une autre erreur (Syntaxe, Connexion, etc.)
+    console.error(`   👉 [ERREUR]: ${error.message}`);
+    console.error(error); 
+  }
   process.exit(1);
 }

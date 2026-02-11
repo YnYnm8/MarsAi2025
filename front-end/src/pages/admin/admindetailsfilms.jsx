@@ -55,7 +55,7 @@ const AdminDetailsFilms = () => {
                                 <th className="px-6 py-4">Film ID</th>
                                 <th className="px-6 py-4 border-l border-slate-100">User ID</th>
                                 <th className="px-6 py-4">Titre</th>
-                                <th className="px-6 py-4">Réalisateur</th>
+                                <th className="px-6 py-4">Realisateur</th>
                                 <th className="px-6 py-4">Pays</th>
                                 <th className="px-6 py-4">IA</th>
                                 <th className="px-6 py-4 text-right">Vues</th>
@@ -69,9 +69,9 @@ const AdminDetailsFilms = () => {
                                         #{film.id.toString().slice(0, 8)}
                                     </td>
 
-                                    {/* USER ID */}
+                                    {/* USER ID - Correction apportée ici */}
                                     <td className="px-6 py-4 font-mono text-[10px] text-green-700 bg-blue-50/10 border-l border-slate-100">
-                                        {film.user_id || 'N/A'}
+                                        {film.User?.id || film.userId || 'N/A'}
                                     </td>
 
                                     <td className="px-6 py-4 font-bold text-slate-800 italic uppercase text-xs tracking-tight">
