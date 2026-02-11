@@ -53,9 +53,10 @@ app.use(helmet({
 app.use("/", authRoute);
 // admin route
 app.use("/admin", adminRoutes);
-app.use("/", filmRoutes);
-app.use("/comite", comiteRouter);
+app.use("/films", filmRoutes);
+app.use("/comite", comiteRouter); // prefix
 app.use("/", profileRoutes);
+
 console.log(" ");
 console.log("     ⏱️ Tables synchronisées  ✅ ");
 
