@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import DynamicInputList from "../../components/DynamicInput";
+import { DynamicInputList, DynamicSubtitleInput } from "../../components/DynamicInput";
 import ImagesPreview from "../../components/imagesPreview";
 import defaultImg from "../../assets/image-default.png";
 import VideoUpload from "../../components/videoPreview";
@@ -13,6 +13,8 @@ export default function PostMovie() {
     const [collaborateurs, setCollaborateurs] = useState([{ genre: "", name: "" }]);
     const [selected, setSelected] = useState(null);
     const [toastMessages, setToastMessages] = useState([]);
+    const [subtitles, setSubtitles] = useState([{ type: "file", value: null }]);
+
     const navigate = useNavigate();
     const options = [
         { label: "Génération intégrale (100% IA)", value: "full_ai" },
@@ -56,6 +58,15 @@ export default function PostMovie() {
         socials.forEach((s, i) => {
             formData.append(`socialNetworks[${i}]`, s);
         });
+
+        subtitles.forEach((sub) => {
+            if (sub.type === "file" && sub.value) {
+                formData.append("subtitles", sub.value);
+            } else if (sub.type === "url" && sub.value) {
+                formData.append("subtitlesUrl", sub.value);
+            }
+        });
+
 
         collaborateurs.forEach((c, i) => {
             formData.append(`collaborateurs[${i}][genre]`, c.genre);
@@ -133,7 +144,7 @@ export default function PostMovie() {
 
                         <div className="flex flex-col">
                             <label htmlFor="lastNameInput" className="pb-2 text-white-primary"> NOM *</label>
-                            <input type="text" name="last_name" className="bg-[#F2F2F2] p-3 rounded-lg text-sm" id="titreInput" placeholder="TITRE ORIGINAL" />
+                            <input type="text" name="last_name" className="bg-[#F2F2F2] p-3 rounded-lg text-sm" id="titreInput" placeholder="NOM ET PRENOM" />
                         </div>
 
                         <div className="flex flex-col">
@@ -159,13 +170,9 @@ export default function PostMovie() {
                             setArray={setSocials}
                             name="socialNetworks"
                             placeholder="Lien vers votre profil (Instagram, YouTube…)"
+                            type="text"
+                            max={5}
                         />
-
-                        <div className="flex flex-col">
-                            <label htmlFor="titleInput" className="pb-2 text-white-primary">TITRE *</label>
-                            <input type="text" name="title" id="titleInput" className="bg-[#F2F2F2] p-3 rounded-lg text-sm" placeholder="TITRE" />
-                        </div>
-
                         <div className="flex flex-col">
                             <label htmlFor="durationInput" className="pb-2 text-white-primary">DURÉE EXACTE (EN SECONDES) *</label>
                             <input type="number" name="duration" id="durationInput" className="bg-[#F2F2F2] p-3 rounded-lg text-sm" placeholder="EX:60" />
@@ -173,11 +180,15 @@ export default function PostMovie() {
 
 
                     </div>
+                        <div className="flex flex-col items-center font-display tracking-widest font-bold">
+                            <label htmlFor="titleInput" className="pb-2 mt-15 text-lg text-white-primary text-center">TITRE *</label>
+                            <input type="text" name="title" id="titleInput" className="bg-[#F2F2F2]  w-300 p-3 rounded-lg text-sm " placeholder="TITRE" />
+                        </div>
 
                     <div className="flex flex-col pt-15 tracking-wider text-base font-bold">
                         <label htmlFor="bioInput" className="pb-2 text-white-primary"> BIOGRAPHIE  (MAX. 300 CARACTÈRES)</label>
                         <textarea name="bio" id="bioInput" maxLength={300} className="bg-[#F2F2F2] p-3 rounded-lg text-sm uppercase min-h-35 max-h-45"
-                            placeholder="résumez l’intention de votre film et l’histoire qu’il raconte en quelques lignes...">
+                            placeholder="Résumez brièvement votre biographie et comment vous en êtes arrivé(e) là...">
                         </textarea>
                     </div>
 
@@ -279,16 +290,11 @@ export default function PostMovie() {
                             <VideoUpload label="Lien YouTube (Public / Non-répertorié) *" name="film" id="videoUrl" />
 
                             <div className="text-white-primary flex flex-col">
-                                <p>Sous-titres (.srt)</p>
 
-                                <label htmlFor="subtitle"
-                                    className="bg-[#F2F2F2] p-4 rounded-lg text-sm uppercase mt-3 cursor-pointer"
-                                >Choisir fichier .SRT</label>
-
-                                <input type="file" name="subtitle" id="subtitle"
-                                    className="hidden"
+                                <DynamicSubtitleInput
+                                    subtitles={subtitles}
+                                    setSubtitles={setSubtitles}
                                 />
-
                             </div>
 
                             <div>
@@ -381,7 +387,7 @@ export default function PostMovie() {
                             <button
                                 type="button"
                                 onClick={addCollaborateur}
-                                className="mt-2 self-center bg-blue-600 font-bold font-display text-base uppercase text-white p-5  rounded-lg"
+                                className="mt-2 self-center bg-[#246BAD]  font-bold font-display text-base uppercase text-white p-5  rounded-lg"
                             >
                                 + Ajouter un collaborateur
                             </button>
