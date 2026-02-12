@@ -18,13 +18,14 @@ dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 3000;
-const FRONTEND_URL = process.env.FRONTEND_URL || 'http://localhost:5173';
-
+const FRONTEND_URL = (process.env.FRONTEND_URL || 'http://localhost:5173')
+  .replace(/\/$/, '');
+  
 app.use(cors({
-  origin: process.env.FRONTEND_URL || 'http://localhost:5173',
+  origin: FRONTEND_URL,
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept', 'Origin'] 
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept', 'Origin']
 }));
 
 app.use(cookieParser());
@@ -71,7 +72,7 @@ try {
   console.log(" ");
   console.log("     🗄️ Connexion à la BDD réussie ✅");
 
-  await sequelize.sync({force:true});
+  await sequelize.sync({ force: true });
   console.log(" ");
   console.log("     🧩 Tables créées avec succès  ✅");
 
@@ -94,7 +95,7 @@ try {
 } catch (error) {
   console.error(" ");
   console.error("   ❌ Erreur au démarrage de l'API");
-  
+
   // Si c'est une erreur de validation (Email, ENUM, etc.)
   if (error.name === 'SequelizeValidationError' || error.name === 'SequelizeUniqueConstraintError') {
     error.errors.forEach(err => {
@@ -103,7 +104,7 @@ try {
   } else {
     // Si c'est une autre erreur (Syntaxe, Connexion, etc.)
     console.error(`   👉 [ERREUR]: ${error.message}`);
-    console.error(error); 
+    console.error(error);
   }
   process.exit(1);
 }

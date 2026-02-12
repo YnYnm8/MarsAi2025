@@ -8,7 +8,7 @@ export async function userSeed() {
         await User.bulkCreate(
             [
                 {
-                    email: 'admin@example.com',
+                    email: 'contact.admin@example.com',
                     password: 'Admin123!',
                     firstName: 'Admin',
                     lastName: 'User',
@@ -17,16 +17,16 @@ export async function userSeed() {
                     isActive: true
                 },
                 {
-                    email: 'director@example.com',
+                    email: 'contact.director@example.com',
                     password: 'Director123!',
                     firstName: 'Taro',
                     lastName: 'Director',
-                    role: 'realisator',
+                    role: 'director',
                     isEmailVerified: true,
                     isActive: true
                 },
                 {
-                    email: 'committee1@example.com',
+                    email: 'contact.committee1@example.com',
                     password: 'Committee123!',
                     firstName: 'Hanako',
                     lastName: 'Committee',
@@ -35,7 +35,7 @@ export async function userSeed() {
                     isActive: true
                 },
                 {
-                    email: 'committee2@example.com',
+                    email: 'contact.committee2@example.com',
                     password: 'Committee456!',
                     firstName: 'Ken',
                     lastName: 'Committee',
@@ -44,7 +44,7 @@ export async function userSeed() {
                     isActive: true
                 },
                 {
-                    email: 'visitor@example.com',
+                    email: 'contact.visitor@example.com',
                     password: 'Visitor123!',
                     firstName: 'Guest',
                     lastName: 'User',

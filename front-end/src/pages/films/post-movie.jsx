@@ -1,8 +1,10 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import DynamicInputList from "../../components/DynamicInput";
 import ImagesPreview from "../../components/imagesPreview";
 import defaultImg from "../../assets/image-default.png";
 import VideoUpload from "../../components/videoPreview";
+import { useNavigate } from "react-router";
+import { Toast } from "../../components/toastMessage";
 
 
 export default function PostMovie() {
@@ -10,7 +12,8 @@ export default function PostMovie() {
     const [socials, setSocials] = useState([""]);
     const [collaborateurs, setCollaborateurs] = useState([{ genre: "", name: "" }]);
     const [selected, setSelected] = useState(null);
-
+    const [toastMessages, setToastMessages] = useState([]);
+    const navigate = useNavigate();
     const options = [
         { label: "Génération intégrale (100% IA)", value: "full_ai" },
         { label: "Production hybride (Prises de vues réelles + apports IA)", value: "hybrid" },
@@ -30,9 +33,24 @@ export default function PostMovie() {
         setCollaborateurs(collaborateurs.filter((_, i) => i !== index));
     };
 
+    useEffect(() => {
+        if (!toastMessages.length) return;
+
+        const timer = setTimeout(() => {
+            setToastMessages([]);
+        }, 4000);
+
+        return () => clearTimeout(timer);
+    }, [toastMessages]);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+
+        const confirmation = window.confirm(
+            "Êtes-vous sûr de vouloir soumettre ce film ? Assurez-vous que toutes les informations sont correctes avant de continuer."
+        );
+        if (!confirmation) return
+
         const formData = new FormData(e.target);
 
         socials.forEach((s, i) => {
@@ -54,16 +72,25 @@ export default function PostMovie() {
                 body: formData,
                 credentials: "include"
             });
+            const data = await response.json();
+
             if (!response.ok) {
-                const err = await response.json();
-                console.error("Erreur lors de la soumission du film :", err);
+                if (data.errors) {
+                    setToastMessages(data.errors.map(err => err.message));
+                } else {
+                    setToastMessages([data.message || "Erreur inconnue"]);
+                }
                 return;
             }
 
-            const data = await response.json();
             console.log("Film soumis avec succès :", data);
+
+            navigate("/my-submissions", {
+                state: { successMessage: "Film soumis avec succès !." },
+            });// Redirige vers une page de succès après la soumission
         } catch (error) {
-            console.error(error)
+            setToastMessages(["Erreur réseau"]);
+            console.error(error);
         }
 
     }
@@ -106,18 +133,15 @@ export default function PostMovie() {
 
                         <div className="flex flex-col">
                             <label htmlFor="lastNameInput" className="pb-2 text-white-primary"> NOM *</label>
-                            <input type="text" name="last_name" className="bg-[#F2F2F2] p-3 rounded-lg text-sm" required id="titreInput" placeholder="TITRE ORIGINAL" />
+                            <input type="text" name="last_name" className="bg-[#F2F2F2] p-3 rounded-lg text-sm" id="titreInput" placeholder="TITRE ORIGINAL" />
                         </div>
 
                         <div className="flex flex-col">
                             <label className="pb-2 text-white-primary"> EMAIL * </label>
-                            <input type="email" name="email" required className="bg-[#F2F2F2] p-3 rounded-lg text-sm" id="emailInput" placeholder="EMAIL" />
+                            <input type="email" name="email" className="bg-[#F2F2F2] p-3 rounded-lg text-sm" id="emailInput" placeholder="EMAIL" />
                         </div>
 
-                        <div className="flex flex-col">
-                            <label className="pb-2 text-white-primary"> CATEGORY </label>
-                            <input type="text" name="category" className="bg-[#F2F2F2] p-3 rounded-lg text-sm" id="categoryInput" placeholder="CATEGORY" />
-                        </div>
+
 
                         <div className="flex flex-col">
                             <label className="pb-2 text-white-primary"> ÉTUDES </label>
@@ -139,12 +163,12 @@ export default function PostMovie() {
 
                         <div className="flex flex-col">
                             <label htmlFor="titleInput" className="pb-2 text-white-primary">TITRE *</label>
-                            <input type="text" name="title" id="titleInput" className="bg-[#F2F2F2] p-3 rounded-lg text-sm" placeholder="TITRE" required />
+                            <input type="text" name="title" id="titleInput" className="bg-[#F2F2F2] p-3 rounded-lg text-sm" placeholder="TITRE" />
                         </div>
 
                         <div className="flex flex-col">
                             <label htmlFor="durationInput" className="pb-2 text-white-primary">DURÉE EXACTE (EN SECONDES) *</label>
-                            <input type="number" name="duration" id="durationInput" className="bg-[#F2F2F2] p-3 rounded-lg text-sm" placeholder="EX:60" required />
+                            <input type="number" name="duration" id="durationInput" className="bg-[#F2F2F2] p-3 rounded-lg text-sm" placeholder="EX:60" />
                         </div>
 
 
@@ -159,7 +183,7 @@ export default function PostMovie() {
 
                     <div className="flex flex-col pt-15 tracking-wider text-base font-bold">
                         <label htmlFor="descriptionInput" className="pb-2 text-white-primary">MANIFESTE / SYNOPSIS * (MAX. 300 CARACTÈRES)</label>
-                        <textarea name="description" id="descriptionInput" required maxLength={300} className="bg-[#F2F2F2] p-3 rounded-lg text-sm uppercase min-h-35 max-h-45"
+                        <textarea name="description" id="descriptionInput" maxLength={300} className="bg-[#F2F2F2] p-3 rounded-lg text-sm uppercase min-h-35 max-h-45"
                             placeholder="résumez l’intention de votre film et l’histoire qu’il raconte en quelques lignes...">
                         </textarea>
                     </div>
@@ -192,7 +216,6 @@ export default function PostMovie() {
                                 <button
                                     key={index}
                                     type="button"
-                                    required
                                     name="generate_Ai"
                                     onClick={() => setSelected(option.value)}
                                     className={`uppercase p-10 rounded-box border
@@ -221,7 +244,7 @@ export default function PostMovie() {
                                 className="resize-none  h-60 uppercase bg-[#333333] p-5 rounded-box border border-gray-600"
                                 placeholder="Listez les outils utilisés (ex: Midjourney pour les visuels, ElevenLabs pour les voix, Runway pour l'animation...)"
                                 maxLength={500}
-                                required
+
                             ></textarea>
 
                         </div>
@@ -257,17 +280,11 @@ export default function PostMovie() {
 
                             <div className="text-white-primary flex flex-col">
                                 <p>Sous-titres (.srt)</p>
-                                <label className="flex items-center gap-3 pt-4 gap-6 cursor-pointer">
-                                    <input
-                                        type="checkbox"
-                                        name="checkbox-soustitre"
-                                        className="checkbox checkbox-sm"
-                                    />
-                                    <span>Voix ou textes nécessitant des sous-titres</span>
-                                </label>
+
                                 <label htmlFor="subtitle"
                                     className="bg-[#F2F2F2] p-4 rounded-lg text-sm uppercase mt-3 cursor-pointer"
                                 >Choisir fichier .SRT</label>
+
                                 <input type="file" name="subtitle" id="subtitle"
                                     className="hidden"
                                 />
@@ -384,9 +401,9 @@ export default function PostMovie() {
                     </div>
                 </div>
 
-                <button className="btn self-center bg-[#246BAD] text-white p-8 font-bold text-base tracking-widest rounded-xl uppercase">finaliser ma soumission</button>
+                <button className="btn self-center bg-[#246BAD] text-white p-8 font-bold text-base tracking-widest rounded-xl uppercase " type="submit">finaliser ma soumission</button>
             </form >
-
+            <Toast messages={toastMessages} />
         </div >
     )
 }

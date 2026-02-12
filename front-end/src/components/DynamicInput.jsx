@@ -28,7 +28,7 @@ export default function DynamicInputList({ label, array, setArray, placeholder }
                         onChange={(e) => handleChange(index, e.target.value)}
                         className="bg-[#F2F2F2] p-3 rounded-lg text-sm flex-1"
                         placeholder={placeholder}
-                        required
+                        
                     />
                     {array.length > 1 && (
                         <button
@@ -44,7 +44,7 @@ export default function DynamicInputList({ label, array, setArray, placeholder }
             <button
                 type="button"
                 onClick={handleAdd}
-                className="mt-2 bg-blue-600 uppercase text-white px-4 py-2 rounded-lg"
+                className="mt-2 bg-blue-600 uppercase self-center text-white p-5 rounded-lg"
             >
                 Ajouter
             </button>
