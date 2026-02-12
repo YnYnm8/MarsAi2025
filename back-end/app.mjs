@@ -4,6 +4,7 @@ import helmet from 'helmet';
 import sequelize from './config/database.mjs';
 import "./models/index.mjs";
 import comiteRouter from './routes/committeeRoutes.mjs';
+import workshopRoutes from './routes/workshopRoutes.mjs';
 import authRoute from './routes/authRoutes.mjs';
 import filmRoutes from './routes/filmRoutes.mjs';
 import dotenv from "dotenv";
@@ -43,6 +44,7 @@ app.use(helmet({
 }));
 
 // Routes
+app.use("/api",workshopRoutes);
 app.use("/", authRoute);
 app.use("/", filmRoutes);
 app.use("/comite", comiteRouter); // prefix
