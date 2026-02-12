@@ -2,6 +2,8 @@ import Film from "../models/Films.mjs";
 import User from "../models/User.mjs";
 import File from "../models/File.mjs";
 import Selection from "../models/Selection.mjs";
+import Playlist from "../models/Playlist.mjs";
+import PlaylistFilm from "../models/PlaylistFilm.mjs";
 import { catchError } from "../helpers/errorHandler.mjs";
 import { partialFilmSchema } from "../validators/filmValidator.mjs";
 
@@ -17,6 +19,10 @@ export async function getFilms(req, res) {
                 {
                     model: File,
                     attributes: ['id', 'film_url', 'poster_url', 'galerie_url', 'creativeMethodology', 'subtitle', 'outil_Ai']
+                },
+                {
+                    model:PlaylistFilm,
+              
                 }
             ],
             order: [['createdAt', 'DESC']]
@@ -32,10 +38,12 @@ export async function getFilms(req, res) {
         return catchError(res, err)
     }
 }
-/*
- *  GET  /films/:id
- *   Recuperation d'un film par son id
- */
+/**
+ *     GET  /films/:id
+ *  Recuperation d'un film par son id*/
+
+  
+
 export async function getFilmById(req, res) {
     try {
         const id = Number(req.params.id);
@@ -47,8 +55,14 @@ export async function getFilmById(req, res) {
         }
 
         const FilmData = await Film.findByPk(id, {
-                include: 
-                [{
+            include: [
+                {
+                    model: User,
+                    as: 'Notes',
+                    attributes: ['id', 'firstName', 'lastName'],
+                    through: { attributes: ['score','comment', 'createdAt'] }
+                },
+                {
                     model: User,
                     as: 'Annotators',
                     attributes: ['id', 'firstName', 'lastName'],

@@ -6,32 +6,121 @@ import { catchError } from "../helpers/errorHandler.mjs";
 
 //  GET /comite/select
 // 公式セレクションに選ばれた映画の限定リスト。（選考済み作品）
-export async function getOfficialSelection(req, res) {
-  try {
-    const userId = req.body.UserId;
 
-    // Playlist の情報だけ取得
-    const playlists = await Playlist.findAll({
-      where: { UserId, status: "SELECTED" },
-      attributes: ["id", "status"],
+export async function getAllOfficialSelection(req, res) {
+  try {
+   
+    const selectedPlaylistId = 1; // 例えばID=1がACCEPTED
+
+    const selectedFilms = await PlaylistFilm.findAll({
+      where: { UserId, PlaylistId: selectedPlaylistId },
+      include: [
+        {
+          model: Film,
+        },
+      ],
+      order: [["createdAt", "DESC"]],
     });
 
-    res.json(playlists);
+    if (selectedFilms.length === 0) {
+      return res
+        .status(404)
+        .json({ message: "公式セレクションが存在しません" });
+    }
+    res.json(selectedFilms);
+  } catch (err) {
+    return catchError(res, err);
+  }
+}
+//  GET /comite/select/:userid
+// 公式セレクションに選ばれた映画の限定リスト。（選考済み作品）
+
+export async function getOfficialSelectionById(req, res) {
+  try {
+   const  UserId  = req.params;
+    const selectedPlaylistId = 1; // 例えばID=1がACCEPTED
+
+    const selectedFilms = await PlaylistFilm.findAll({
+      where: { UserId, PlaylistId: selectedPlaylistId },
+      include: [
+        {
+          model: Film,
+        },
+      ],
+      order: [["createdAt", "DESC"]],
+    });
+
+    if (selectedFilms.length === 0) {
+      return res
+        .status(404)
+        .json({ message: "公式セレクションが存在しません" });
+    }
+    res.json(selectedFilms);
   } catch (err) {
     return catchError(res, err);
   }
 }
 
+
+// REFUSED映画一覧API
+// GET/commite/refused
+
+export async function getAllRefusedFilms(req, res) {
+
+  try {
+    // REFUSED プレイリストのIDを取得しておく
+    const refusedPlaylistId = 2; // 例えばID=2がREFUSED
+
+    const refusedFilms = await PlaylistFilm.findAll({
+      where: { PlaylistId: refusedPlaylistId },
+      include: [
+        {
+          model: Film,
+        },
+      ],
+      order: [["createdAt", "DESC"]],
+    });
+
+    res.json(refusedFilms);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+}
+// REFUSED映画一覧API
+// GET/commite/refused/:userid
+
+export async function getRefusedFilmsById(req, res) {
+  const { UserId } = req.param;
+
+  try {
+    // REFUSED プレイリストのIDを取得しておく
+    const refusedPlaylistId = 2; // 例えばID=2がREFUSED
+
+    const refusedFilms = await PlaylistFilm.findAll({
+      where: { PlaylistId: refusedPlaylistId },
+      include: [
+        {
+          model: Film,
+        },
+      ],
+      order: [["createdAt", "DESC"]],
+    });
+
+    res.json(refusedFilms);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+}
 // POST /comite/note
 // 委員会基準ごとの評価（1〜10）および／またはコメントを保存する。
 
 export async function addNote(req, res) {
   try {
-  //  const UserId = req.user.id; // JWT
-  
-    const {UserId,FilmId, score, comment } = req.body;
+    //  const UserId = req.user.id; // JWT
+
+    const { UserId, FilmId, score, comment } = req.body;
     const exsitsNote = await Note.findOne({
-      where: {  UserId, FilmId },
+      where: { UserId, FilmId },
     });
     if (exsitsNote) {
       // 既存の評価がある場合は更新
@@ -102,10 +191,7 @@ export async function modifyPlaylistStatus(req, res) {
 
     if (existsInOtherPlaylist) {
       // Si le film existe déjà dans une autre playlist on update la ligne
-      await PlaylistFilm.update(
-        { PlaylistId },
-        { where: { FilmId, UserId } },
-      );
+      await PlaylistFilm.update({ PlaylistId }, { where: { FilmId, UserId } });
       return res.json({
         message: "映画のプレイリストを更新しました",
         filmtitle: film.title,
@@ -142,7 +228,7 @@ export async function addFilmToPlaylist(req, res) {
       let playlist = await Playlist.findOne({
         where: {
           UserId,
-          play: "TO_DISCUSS",
+          play: "NOT_WATCHED", // 例えば「検討中」ステータス
         },
       });
 
@@ -179,9 +265,9 @@ export async function getComiteSortHistory(req, res) {
   try {
     // const userId = req.user.id; // JWT 前提
 
-    const { UserId } = req.params; // JWT 前提
+    const { UserId } = req.body; // JWT 前提
     const history = await PlaylistFilm.findAll({
-      where: { UserId},
+      where: { UserId },
       include: [
         {
           model: Playlist,

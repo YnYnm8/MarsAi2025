@@ -24,8 +24,11 @@ User.hasMany(Playlist, { onDelete: "CASCADE" });
 Playlist.belongsTo(User);
 
 
-User.belongsToMany(Film, { through: Note});
-Film.belongsToMany(User, { through: Note});
+User.belongsToMany(Film, { through: Note, as: 'Notes' });
+Film.belongsToMany(User, { through: Note, as: 'Notes' });
+
+User.belongsToMany(Film, { through: Annotation, as: 'Annotators' });
+Film.belongsToMany(User, { through: Annotation, as: 'Annotators' });
 
 
 User.hasMany(Workshop);

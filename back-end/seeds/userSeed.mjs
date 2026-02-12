@@ -21,7 +21,7 @@ export async function userSeed() {
                     password: 'Director123!',
                     firstName: 'Taro',
                     lastName: 'Director',
-                    role: 'realisator',
+                    role: 'director',
                     isEmailVerified: true,
                     isActive: true
                 },

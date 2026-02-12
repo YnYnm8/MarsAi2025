@@ -14,7 +14,8 @@ import Workshop from "./pages/dashboard/workshop.jsx";
 import AdminDashboard from "./pages/admin/admin.jsx";
 import AdminDetailsFilms from './pages/admin/admindetailsfilms.jsx';
 import AdminDash from './pages/admin/admindashboard.jsx';
-
+import RefusedFilmCard from './pages/films/RefusedFilmCard.jsx';
+import FilmCard from "./pages/films/FilmCard.jsx";
 
 
 function App() {
@@ -23,6 +24,7 @@ function App() {
       <Routes>
         <Route path="/film/:id" element={<Film />} />
         <Route path="/note" element={<Note />} />
+        <Route path="/filmcard" element={<FilmCard />} />
         <Route path="/form-movie" element={<PostMovie />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
@@ -34,6 +36,8 @@ function App() {
         <Route path="/refused" element={<Refused />} />          <Route path="/admin/dashboard" element={<AdminDash/>} />
         <Route path="/admin/statistique" element={<AdminDashboard/>} />
         <Route path="/admin/detailsfilms" element={<AdminDetailsFilms />} />
+        <Route path="/refusedfilmcard" element={<RefusedFilmCard />} />
+
       </Routes>
     </main>
   );

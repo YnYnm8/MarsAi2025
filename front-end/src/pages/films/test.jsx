@@ -1,38 +1,46 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
+import { useEffect}from "react";
 import { useParams } from "react-router-dom";
-import FilmCard from "./FilmCard";
-import ListFilms from "./ListFilms";
-
 export default function Note() {
-  const [value, setValue] = useState(1); // état du slider
-  const { id } = useParams();
-  const [films, setFilms] = useState([]);
-  const [filter, setFilter] = useState("NOT WATCHED"); // playlist par défaut
+  const [value, setValue] = useState(1); // ←ここで状態を定義
+   const { id } = useParams();
+  const [films, setFilms] = useState(null);
 
   useEffect(() => {
     const fetchFilm = async () => {
       try {
-        const response = await fetch("http://localhost:3000/films", {
-          method: "GET",
-          headers: { "Content-Type": "application/json" },
-        });
+        const response = await fetch(
+          `http://localhost:3000/films/1`,
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            // credentials: "include",
+          }
+        );
 
-        if (!response.ok) throw new Error("Failed to fetch film data");
+        if (!response.ok) {
+          throw new Error("Failed to fetch film data");
+        }
 
         const data = await response.json();
-        setFilms(data);
+        console.log(data);
+
+        setFilms(data); // ← 正しくここでセット
       } catch (error) {
         console.error("Error fetching film data:", error);
       }
     };
 
     fetchFilm();
-  }, [id]);
+  },[id]);
 
-  if (!films || !films.length) return <p className="text-center mt-10">Loading...</p>;
-
+  if (!films) return <p className="text-center mt-10">Loading...</p>;
   return (
+
     <div className="flex flex-col h-screen bg-gray-100 font-sans">
+
       {/* Header */}
       <header className="flex items-center justify-between bg-white px-4 py-3 shadow">
         <button className="text-sm text-gray-500">← Retour</button>
@@ -45,6 +53,7 @@ export default function Note() {
 
       {/* Main Layout */}
       <div className="flex flex-col md:flex-row flex-1 overflow-hidden">
+
         {/* Sidebar */}
         <aside className="w-full md:w-72 bg-white border-b md:border-b-0 md:border-r overflow-y-auto">
           <div className="p-4">
@@ -54,35 +63,53 @@ export default function Note() {
               className="w-full rounded border px-3 py-2 text-sm"
             />
           </div>
-
-          {/* Filtre */}
+          {/* ★ フィルター（ここを追加） */}
           <div className="px-4 pb-4">
+            
             <div className="flex justify-between text-xs font-semibold text-gray-500">
-              {["NOT WATCHED", "ACCEPTED", "REFUSED"].map((f) => (
-                <button
-                  key={f}
-                  onClick={() => setFilter(f)}
-                  className={`flex flex-col items-center gap-1 hover:text-blue-600 ${
-                    filter === f ? "text-blue-600 font-bold" : ""
-                  }`}
-                >
-                  <span>{f}</span>
-                </button>
-              ))}
+              <button className="flex flex-col items-center gap-1 hover:text-blue-600">
+                
+                <span>A VOIR</span>
+              </button>
+
+              <button className="flex flex-col items-center gap-1 hover:text-blue-600">
+                
+                <span>NOTES</span>
+              </button>
+
+              <button className="flex flex-col items-center gap-1 hover:text-blue-600">
+                
+                <span>TOUS</span>
+              </button>
             </div>
           </div>
-
-          {/* Liste des films */}
-          <ListFilms films={films} filter={filter} />
+           <ul className="space-y-2 px-4 pb-4">
+            {films.map((film ,index) => (
+              <li
+                key={film.id||index}
+                className={`flex items-center gap-3 rounded-lg p-2 cursor-pointer ${index === 0 ? "bg-blue-50" : "hover:bg-gray-50"
+                  }`}
+              >
+                <img
+                  src={film.thumbnail || "../src/assets/youtubeimg.webp"}
+                  alt="youtube"
+                  className="w-16 h-16 md:w-12 md:h-12 object-cover rounded"
+                />
+                <div>
+                  <p className="text-sm font-semibold">SYNTHETICA : L’AUBE</p>
+                  <p className="text-xs text-gray-500">Liam Wilson – Canada</p>
+                </div>
+              </li>
+            ))}
+          </ul> 
         </aside>
 
         {/* Main Content */}
         <main className="flex-1 overflow-y-auto p-4 md:p-8">
+
           {/* Title */}
           <div className="text-center mb-6">
-            <h1 className="text-xl md:text-2xl font-bold">
-              PRÊT POUR LES <br /> DÉLIBÉRATIONS ?
-            </h1>
+            <h1 className="text-xl md:text-2xl font-bold">PRÊT POUR LES <br /> DÉLIBÉRATIONS ?</h1>
             <p className="text-sm text-gray-500 mt-1">
               Sélectionnez un film dans la liste à gauche
             </p>
@@ -107,22 +134,21 @@ export default function Note() {
                 <h2 className="text-lg font-bold">SYNTHETICA : title</h2>
                 <p className="text-sm text-gray-500">Director· France</p>
               </div>
-              <div className="text-xl font-bold mt-2 md:mt-0">
-                0<span className="text-sm">/10</span>
-              </div>
+              <div className="text-xl font-bold mt-2 md:mt-0">0<span className="text-sm">/10</span></div>
             </div>
 
-            {/* Slider */}
+
+            {/* スライダー */}
             <input
               type="range"
               min="1"
               max="10"
-              value={value}
-              onChange={(e) => setValue(Number(e.target.value))}
+              value={value} // ←ここが重要
+              onChange={(e) => setValue(Number(e.target.value))} // 状態更新
               className="w-full accent-blue-600 mb-4"
             />
 
-            {/* Chiffres sous le slider */}
+            {/* 下に数字を表示（選択中はハイライト） */}
             <div className="flex justify-between text-sm font-medium mb-4">
               {Array.from({ length: 10 }, (_, i) => i + 1).map((num) => (
                 <span
@@ -134,10 +160,9 @@ export default function Note() {
               ))}
             </div>
 
-            {/* Note actuelle */}
+            {/* 現在のスコア表示 */}
             <div className="text-xl font-bold">{value}/10</div>
           </div>
-
           {/* Actions */}
           <div className="flex flex-col md:flex-row justify-between gap-2">
             <button className="rounded-lg bg-blue-600 px-6 py-2 text-white text-sm font-semibold">
@@ -149,37 +174,25 @@ export default function Note() {
           </div>
 
           {/* Selection Buttons */}
-          <div className="bg-white rounded-xl shadow p-4 flex flex-col md:flex-row justify-between items-center gap-6 mt-4">
+          <div className="bg-white rounded-xl shadow p-4 flex flex-col md:flex-row justify-between items-center gap-6">
             <span className="flex items-center gap-2 text-gray-700 font-semibold">
-              <svg
-                className="w-6 h-6 text-purple-400"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M5 13l4 4L19 7"
-                />
+              <svg className="w-6 h-6 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
               </svg>
               SÉLECTIONNER OU TRIER
             </span>
             <div className="flex flex-col md:flex-row gap-2 w-full md:w-auto mt-2 md:mt-0">
-              <button className="bg-green-500 text-white rounded-lg px-6 py-2 text-sm font-semibold w-full md:w-auto">
-                SÉLECTIONNER
-              </button>
-              <button className="bg-red-500 text-white rounded-lg px-6 py-2 text-sm font-semibold w-full md:w-auto">
-                REFUSER
-              </button>
-              <button className="bg-gray-900 text-white rounded-lg px-6 py-2 text-sm font-semibold w-full md:w-auto">
-                + PLACER DANS UNE LISTE
-              </button>
+              <button className="bg-green-500 text-white rounded-lg px-6 py-2 text-sm font-semibold w-full md:w-auto">SÉLECTIONNER</button>
+              <button className="bg-red-500 text-white rounded-lg px-6 py-2 text-sm font-semibold w-full md:w-auto">REFUSER</button>
+              <button className="bg-gray-900 text-white rounded-lg px-6 py-2 text-sm font-semibold w-full md:w-auto">+ PLACER DANS UNE LISTE</button>
             </div>
           </div>
-        </main>
+        </main >
       </div>
+
+
     </div>
+
+
   );
 }
