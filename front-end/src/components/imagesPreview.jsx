@@ -1,7 +1,7 @@
 
 import { useState } from "react";
 
-export default function ImagesPreview({ label, id, defaultImage,onFileSelect,
+export default function ImagesPreview({ label, id, name, defaultImage,onFileSelect,
     fullPreviewOnUpload = false
 }) {
     const [preview, setPreviews] = useState(null);
@@ -28,7 +28,7 @@ export default function ImagesPreview({ label, id, defaultImage,onFileSelect,
                 <input
                     type="file"
                     id={id}
-                    name="poster"
+                    name={name}
                     className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
                     accept="image/*"
                     onChange={handleFileChange}
@@ -56,6 +56,7 @@ export default function ImagesPreview({ label, id, defaultImage,onFileSelect,
                 <input
                     type="file"
                     id={id}
+                    name={name}
                     className="hidden"
                     accept="image/*"
                     onChange={handleFileChange}

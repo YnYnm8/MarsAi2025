@@ -22,5 +22,7 @@
             #51A2FF 0%,
             #AD46FF 50%,
             #FF2B7F 100%);
-
+    /*Button*/
+    --btn-padding: 5px;
+   
 }

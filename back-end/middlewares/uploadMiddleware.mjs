@@ -53,7 +53,6 @@ export const uploadMiddleware = async (req, res, next) => {
             title,
             description,
             duration,
-            category,
             generate_Ai,
         } = bodyValidation.data;
 
@@ -65,7 +64,6 @@ export const uploadMiddleware = async (req, res, next) => {
             title,
             description,
             duration,
-            category,
             generate_Ai,
             status: "submitted",
         })

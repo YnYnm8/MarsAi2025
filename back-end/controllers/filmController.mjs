@@ -87,7 +87,7 @@ export async function getFilmsSelect(req, res) {
                 {
                     model: Film,
                     attributes: ['id', 'userId', 'title', 'collaborateur', 'description',
-                        'school', 'country', 'duration', 'title', 'category', 'generate_Ai', 'socialNetworks'],
+                        'school', 'country', 'duration', 'title', 'generate_Ai', 'socialNetworks'],
                     include: [
                         {
                             model: File,

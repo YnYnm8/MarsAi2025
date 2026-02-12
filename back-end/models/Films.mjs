@@ -54,10 +54,6 @@ const Film = sequelize.define("Film", {
         type: DataTypes.TEXT,
         allowNull: false,
     },
-    category: {
-        type: DataTypes.STRING,
-        allowNull: false,
-    },
     views: {
         type: DataTypes.INTEGER,
         defaultValue: 0,

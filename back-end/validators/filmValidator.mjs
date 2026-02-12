@@ -1,7 +1,7 @@
 import { z } from "zod";
+import { filesSchema } from "./fileValidator.mjs";
 
 export const filmSchema = z.object({
-
 
     last_name: z
         .string()
@@ -37,7 +37,6 @@ export const filmSchema = z.object({
         .string()
         .min(10, "Description obligatoire minimum 10 caractères"),
 
-    category: z.string().optional(),
 
     generate_Ai: z.enum(["full_ai", "hybrid"]),
 
@@ -51,4 +50,6 @@ export const filmSchema = z.object({
 
 // Validation partielle pour les mises à jour de film (PUT /films/:id)
 export const partialFilmSchema = filmSchema.partial();
-
+export const createFilmSchema = filmSchema.extend({
+  ...filesSchema.shape
+});

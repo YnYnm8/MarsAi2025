@@ -5,7 +5,7 @@ import File from "../models/File.mjs";
 import Price from "../models/Price.mjs";
 import Sponsor from "../models/Sponsor.mjs";
 import Notification from "../models/Notification.mjs";
-import Comment from "../models/Comment.mjs";
+
 import Annotation from "../models/Annotation.mjs";
 import PlaylistFilm from "../models/PlaylistFilm.mjs";
 import FilmSponsor from "../models/FilmSponsor.mjs";
@@ -42,7 +42,6 @@ export async function seedAll() {
                 duration: 85,
                 status: 'draft',
                 description: 'Cine experimental sobre la memoria.',
-                category: 'Experimental',
                 generate_Ai: 'full_ai',
                 Files: [
                     { subtitle: 'English', film_url: 'https://cdn.example.com/f1.mp4', poster_url: 'https://cdn.example.com/p1.jpg', outil_Ai: 'Stable Diffusion' }
@@ -60,7 +59,6 @@ export async function seedAll() {
                 duration: 95,
                 status: 'published',
                 description: 'Documental sobre la vida marina.',
-                category: 'Documentary',
                 generate_Ai: 'hybrid',
                 Files: [
                     { subtitle: 'English', film_url: 'https://cdn.example.com/f2.mp4', poster_url: 'https://cdn.example.com/p2.jpg', outil_Ai: 'None' }
@@ -78,13 +76,13 @@ export async function seedAll() {
         // Utilisation sécurisée des index 0 et 1 (car nous n'avons créé que 2 films)
         await playlists[0].addFilms([films[0]]);
         await playlists[1].addFilms([films[1]]);
-
+/*
         // --- COMMENTS ---
         const commentaires = await Comment.bulkCreate([
             { UserId: 1, FilmId: films[1].id, content: 'Excelente documental!' },
             { UserId: 2, FilmId: films[0].id, content: 'Muy interesante!' }
         ]);
-
+*/
         // --- ANNOTATIONS ---
         const annotations = await Annotation.bulkCreate([
             { UserId: 1, FilmId: films[1].id, content: 'Revisar escenas iniciales' },
