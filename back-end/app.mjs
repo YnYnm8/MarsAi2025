@@ -6,6 +6,7 @@ import cookieParser from 'cookie-parser';
 import helmet from 'helmet';
 import "./models/index.mjs";
 import comiteRouter from './routes/committeeRoutes.mjs';
+import workshopRoutes from './routes/workshopRoutes.mjs';
 import authRoute from './routes/authRoutes.mjs';
 import filmRoutes from './routes/filmRoutes.mjs';
 import profileRoutes from './routes/profileRoutes.mjs';
@@ -51,6 +52,7 @@ app.use(helmet({
 }));
 
 // Routes
+app.use("/api",workshopRoutes);
 app.use("/", authRoute);
 // admin route
 app.use("/admin", adminRoutes);
