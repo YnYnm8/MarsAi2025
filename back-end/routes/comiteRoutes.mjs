@@ -1,25 +1,31 @@
 import express from "express";
 import {
   getAllOfficialSelection,
-  // getOfficialSelectionById,
   getAllRefusedFilms,
-  getRefusedFilmsById,
+  reviewFilm,
   addNote,
-  modifyPlaylistStatus,
+  acceptedFilm,
+  refuseFilm,
   addFilmToPlaylist,
   getComiteSortHistory,
+  modifyPlaylistStatus,
+  // getOfficialSelectionById,
+  // getRefusedFilmsById,
   
 } from "../controllers/comiteController.mjs";
 
 const comiteRouter = express.Router();
 
 comiteRouter.get("/select", getAllOfficialSelection);
-// comiteRouter.get("/select/:userId", getOfficialSelectionById);
+comiteRouter.post("/review/:FilmId", reviewFilm);
 comiteRouter.get("/refused",getAllRefusedFilms);
-// comiteRouter.get("/refused/:userId", getRefusedFilmsById);
-comiteRouter.post("/note", addNote);
-comiteRouter.post("/select/:playlist_id", modifyPlaylistStatus);
+comiteRouter.post("/select/:FilmId", acceptedFilm);
+comiteRouter.post("/refused/:FilmId", refuseFilm);
 comiteRouter.post("/film/list", addFilmToPlaylist);
 comiteRouter.get("/sort/history/:userId", getComiteSortHistory);
+comiteRouter.post("/select/:playlist_id", modifyPlaylistStatus);
+comiteRouter.post("/note", addNote);
 
+// comiteRouter.get("/refused/:userId", getRefusedFilmsById);
+// comiteRouter.get("/select/:userId", getOfficialSelectionById);
 export default comiteRouter;

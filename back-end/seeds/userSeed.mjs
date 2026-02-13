@@ -51,6 +51,61 @@ export async function userSeed() {
                     role: 'visitor',
                     isEmailVerified: false,
                     isActive: true
+                },
+                {
+
+                    email: 'director3@example.com',
+                    password: 'Director123!',
+                    firstName: 'Charlie',
+                    lastName: 'Director',
+                    role: 'director',
+                    isEmailVerified: true,
+                    isActive: true
+                },
+                {
+                    email: 'director4@example.com',
+                    password: 'Director123!',
+                    firstName: 'Diana',
+                    lastName: 'Director',
+                    role: 'director',
+                    isEmailVerified: true,
+                    isActive: true
+                },
+                {
+                    email: 'director5@example.com',
+                    password: 'Director123!',
+                    firstName: 'Edward',
+                    lastName: 'Director',
+                    role: 'director',
+                    isEmailVerified: true,
+                    isActive: true
+                },
+                {
+                    email: 'committee3@example.com',
+                    password: 'Committee123!',
+                    firstName: 'Fumiko',
+                    lastName: 'Committee',
+                    role: 'committee',
+                    isEmailVerified: false,
+                    isActive: true
+                },
+                {
+                    email: 'committee4@example.com',
+                    password: 'Committee123!',
+                    firstName: 'Goro',
+                    lastName: 'Committee',
+                    role: 'committee',
+                    isEmailVerified: false,
+                    isActive: true
+                },
+                {
+                    email: 'committee5@example.com',
+                    password: 'Committee123!',
+                    firstName: 'Hana',
+                    lastName: 'Committee',
+                    role: 'committee',
+                    isEmailVerified: false,
+                    isActive: true
                 }
             ],
             {

@@ -31,6 +31,34 @@ export async function getAllOfficialSelection(req, res) {
     return catchError(res, err);
   }
 }
+//  GET /comite/select/:userid
+// 公式セレクションに選ばれた映画の限定リスト。（選考済み作品）
+
+export async function getOfficialSelectionById(req, res) {
+  try {
+    const UserId = req.params;
+    const selectedPlaylistId = 1; // 例えばID=1がACCEPTED
+
+    const selectedFilms = await PlaylistFilm.findAll({
+      where: { UserId, PlaylistId: selectedPlaylistId },
+      include: [
+        {
+          model: Film,
+        },
+      ],
+      order: [["createdAt", "DESC"]],
+    });
+
+    if (selectedFilms.length === 0) {
+      return res
+        .status(404)
+        .json({ message: "公式セレクションが存在しません" });
+    }
+    res.json(selectedFilms);
+  } catch (err) {
+    return catchError(res, err);
+  }
+}
 
 // POST/comite/review/FilmId
 // ノートとSTATUSを同時に保存するAPI
@@ -236,7 +264,7 @@ export async function refuseFilm(req, res) {
     console.error(err);
     res.status(500).json({ error: err.message });
   }
-}
+
 /**
  * POST /comite/select/:PlaylistId
  * 映画を却下リストに追加 * 映画を公式セレクションに追加
@@ -322,7 +350,7 @@ export async function addFilmToPlaylist(req, res) {
       let playlist = await Playlist.findOne({
         where: {
           UserId,
-          status: "NOT_WATCHED", // 例えば「検討中」ステータス
+          play: "NOT_WATCHED", // 例えば「検討中」ステータス
         },
       });
 
@@ -380,4 +408,4 @@ export async function getComiteSortHistory(req, res) {
     return catchError(res, err);
   }
 }
-
+}
