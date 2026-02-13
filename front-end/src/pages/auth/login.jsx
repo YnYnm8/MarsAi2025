@@ -1,57 +1,68 @@
 import { useState } from "react";
-import { useLocation, useNavigate } from "react-router"; 
-import { Link } from "react-router"; 
+import { useLocation, useNavigate, Link } from "react-router-dom"; // Attention: import depuis 'react-router-dom'
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
+
 import mailIcon from "/src/assets/mail.png";
 import logo from "/src/assets/icon-stars.png";
 import cadenaIcon from "/src/assets/cadena.png";
 import TopNavbar from "../../components/navbar";
 
-const Login = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
+// SCHÉMA DE VALIDATION (Doit matcher ton authValidator.mjs)
+const loginSchema = z.object({
+  email: z.string().email("Format email invalide"),
+  // Le backend est strict, on doit l'être aussi pour passer le middleware
+      password: z
+    .string({ required_error: 'Mots de passe obligatoire'})
+    .min(8, 'Min 8 caracteres')
+    .regex(/[A-Z]/, 'Min 1 majuscule requise')
+    .regex(/[a-z]/, 'Min 1 minuscule requise')
+    .regex(/[0-9]/, 'Min 1 chiffre requis')
+    .regex(/[^a-zA-Z0-9]/, "Min 1 caractère spécial requis"),
+});
 
+const Login = () => {
   const location = useLocation();
   const navigate = useNavigate();
-
+  const [serverError, setServerError] = useState("");
   const successMessage = location.state?.successMessage;
 
-  const handleSubmit = async (e) => { 
-    e.preventDefault();
-    setError(""); 
+  const { 
+    register, 
+    handleSubmit, 
+    formState: { errors, isSubmitting } 
+  } = useForm({
+    resolver: zodResolver(loginSchema)
+  });
 
-    if (!email || !password) {
-      setError("Veuillez remplir tous les champs !");
-      return;
-    }
+  const onSubmit = async (formData) => {
+    setServerError("");
 
     try {
       const response = await fetch('http://localhost:3000/login', {
         method: 'POST',
-        headers: { 
-            'Content-Type': 'application/json' 
-        },
-        credentials: 'include',
-        body: JSON.stringify({ email, password }),
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include', // Important pour recevoir le cookie.
+        body: JSON.stringify(formData),
       });
 
       const data = await response.json();
 
       if (!response.ok) {
-        // Si mot de passe faux ou email inconnu
-        setError(data.message || "Erreur de connexion");
+        // Gestion des erreurs renvoyées par Zod backend ou erreur d'auth
+        setServerError(data.message || "Email ou mot de passe incorrect");
         return;
       }
 
-      // Si c'est bon, on redirige
       console.log("Connexion réussie !");
-      navigate("/profile", { // TEST
+      navigate("/profile", { 
         state: { successMessage: "Connexion réussie ! Bienvenue." },
       });
 
     } catch (err) {
       console.error(err);
-      setError("Le serveur ne répond pas. Vérifiez qu'il est lancé.");
+      setServerError("Le serveur ne répond pas. Vérifiez qu'il est lancé.");
     }
   };
 
@@ -59,7 +70,7 @@ const Login = () => {
     <div className="min-h-screen bg-black text-white font-sans selection:bg-purple-500 selection:text-white">
       <TopNavbar />
 
-      {/* --- BANNIÈRE DÉGRADÉE (Comme le Profil) --- */}
+      {/* --- BANNIÈRE --- */}
       <div className="h-48 w-full bg-gradient-to-r from-blue-900 via-purple-900 to-black absolute top-0 left-0 z-0">
           <div className="absolute inset-0 bg-black/40"></div>
       </div>
@@ -74,7 +85,7 @@ const Login = () => {
             <img
               src={logo}
               alt="Logo"
-              className="h-5 w-auto object-contain brightness-200" // Éclairci le logo pour le fond noir
+              className="h-5 w-auto object-contain brightness-200"
             />
             <p className="text-xs tracking-[0.25em] text-gray-400 font-medium">
               ESPACE MEMBRE MARS.A.I
@@ -83,47 +94,50 @@ const Login = () => {
         </div>
 
         <div className="w-full max-w-sm bg-[#111] border border-gray-800 rounded-2xl shadow-2xl shadow-purple-900/10 px-6 py-8">
+          
           {/* Message de succès (venant de l'inscription) */}
           {successMessage && (
-            <p className="text-green-400 text-sm mb-4 text-center font-bold bg-green-900/20 py-2 rounded border border-green-800/50">
+            <div className="mb-4 p-3 bg-green-900/20 border border-green-800/50 rounded text-green-400 text-xs text-center font-bold">
               {successMessage}
-            </p>
+            </div>
           )}
 
-          {/* Message d'erreur */}
-          {error && (
-            <p className="text-red-400 text-sm mb-4 text-center font-bold bg-red-900/20 py-2 rounded border border-red-800/50">
-              {error}
-            </p>
+          {/* Message d'erreur Serveur */}
+          {serverError && (
+            <div className="mb-4 p-3 bg-red-900/20 border border-red-800/50 rounded text-red-400 text-xs text-center font-bold">
+              {serverError}
+            </div>
           )}
 
-          <form onSubmit={handleSubmit} className="space-y-6">
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+            
+            {/* EMAIL */}
             <div>
               <label className="block text-[10px] font-bold text-gray-500 tracking-[0.2em] mb-2 uppercase">
                 ADRESSE E-MAIL
               </label>
-              <div className="flex items-center bg-black rounded-xl px-4 py-3 border border-gray-700 focus-within:border-blue-500 transition-colors">
+              <div className={`flex items-center bg-black rounded-xl px-4 py-3 border transition-colors ${errors.email ? "border-red-500" : "border-gray-700 focus-within:border-blue-500"}`}>
                 <img
                   src={mailIcon}
                   alt="logoMail"
-                  className="h-5 w-auto object-contain mr-3 invert opacity-70" // Inversion couleur pour dark mode
+                  className="h-5 w-auto object-contain mr-3 invert opacity-70"
                 />
                 <input
                   type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
                   placeholder="EMAIL@EXEMPLE.COM"
                   className="bg-transparent w-full outline-none text-sm text-white placeholder-gray-600 font-medium"
-                  required
+                  {...register("email")}
                 />
               </div>
+              {errors.email && <p className="text-red-500 text-[10px] mt-1 font-bold">{errors.email.message}</p>}
             </div>
 
+            {/* MOT DE PASSE */}
             <div>
               <label className="block text-[10px] font-bold text-gray-500 tracking-[0.2em] mb-2 uppercase">
                 MOT DE PASSE
               </label>
-              <div className="flex items-center bg-black rounded-xl px-4 py-3 border border-gray-700 focus-within:border-blue-500 transition-colors">
+              <div className={`flex items-center bg-black rounded-xl px-4 py-3 border transition-colors ${errors.password ? "border-red-500" : "border-gray-700 focus-within:border-blue-500"}`}>
                 <img
                   src={cadenaIcon}
                   alt="logoCadena"
@@ -131,20 +145,20 @@ const Login = () => {
                 />
                 <input
                   type="password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
                   placeholder="••••••••••"
                   className="bg-transparent w-full outline-none text-sm text-white placeholder-gray-600 font-medium"
-                  required
+                  {...register("password")}
                 />
               </div>
+              {errors.password && <p className="text-red-500 text-[10px] mt-1 font-bold">{errors.password.message}</p>}
             </div>
 
             <button
               type="submit"
-              className="w-full bg-white text-black hover:bg-gray-200 font-bold py-3 rounded-full transition mt-4 tracking-wider text-sm"
+              disabled={isSubmitting}
+              className="w-full bg-white text-black hover:bg-gray-200 font-bold py-3 rounded-full transition mt-4 tracking-wider text-sm disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              ACCÉDER À L’ESPACE
+              {isSubmitting ? "CONNEXION..." : "ACCÉDER À L’ESPACE"}
             </button>
           </form>
 
