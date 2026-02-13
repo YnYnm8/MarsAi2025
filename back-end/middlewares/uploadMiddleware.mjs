@@ -48,8 +48,6 @@ export const uploadMiddleware = async (req, res, next) => {
 
         // Creation du film en base de données
         const {
-            last_name,
-            email,
             title,
             description,
             duration,
@@ -59,8 +57,6 @@ export const uploadMiddleware = async (req, res, next) => {
         const newFilm = await Film.create({
 
             UserId: req.user?.id || 1, // Utilisateur par défaut si pas d'authentification
-            last_name,
-            email,
             title,
             description,
             duration,

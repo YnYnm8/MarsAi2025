@@ -7,34 +7,9 @@ const Film = sequelize.define("Film", {
         primaryKey: true,
         autoIncrement: true
     },
-    last_name: {
-        type: DataTypes.STRING,
-        allowNull: false
-    },
     collaborateur: {
         type: DataTypes.STRING,
         allowNull: true
-    },
-    email: {
-        type: DataTypes.STRING,
-        allowNull: false,
-    },
-    school: {
-        type: DataTypes.STRING,
-        allowNull: true,
-    },
-    
-    country: {
-        type: DataTypes.STRING(100),
-        allowNull: true
-    },
-    bio: {
-        type: DataTypes.STRING,
-        allowNull: true,
-    },
-    socialNetworks: {
-        type: DataTypes.JSON,
-        allowNull: true,
     },
     title: {
         type: DataTypes.STRING,

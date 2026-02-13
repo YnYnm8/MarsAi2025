@@ -3,25 +3,7 @@ import { filesSchema } from "./fileValidator.mjs";
 
 export const filmSchema = z.object({
 
-    last_name: z
-        .string()
-        .min(2, "Nom obligatoire minimum 2 caractères"),
-
     collaborateur: z.string().optional(),
-
-    email: z
-        .string()
-        .email("Format email invalide"),
-
-    school: z.string().optional(),
-
-    country: z.string().optional(),
-
-    bio: z.string().optional(),
-
-    socialNetworks: z
-        .array(z.string().url("Format URL invalide"))
-        .optional(),
 
     title: z
         .string()
@@ -51,5 +33,5 @@ export const filmSchema = z.object({
 // Validation partielle pour les mises à jour de film (PUT /films/:id)
 export const partialFilmSchema = filmSchema.partial();
 export const createFilmSchema = filmSchema.extend({
-  ...filesSchema.shape
+    ...filesSchema.shape
 });
