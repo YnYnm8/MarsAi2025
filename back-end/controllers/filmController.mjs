@@ -52,7 +52,7 @@ export async function getFilmById(req, res) {
                     model: User,
                     as: 'Notes',
                     attributes: ['id', 'firstName', 'lastName'],
-                    through: { attributes: ['score','comment', 'createdAt'] }
+                    through: { attributes: ['score', 'comment', 'createdAt'] }
                 },
                 {
                     model: User,
@@ -62,7 +62,7 @@ export async function getFilmById(req, res) {
                 },
                 {
                     model: File,
-                    attributes: ['id', 'film_url','creativeMethodology', 'galerie_url', 'poster_url', 'subtitle', 'outil_Ai']
+                    attributes: ['id', 'film_url', 'creativeMethodology', 'galerie_url', 'poster_url', 'subtitle', 'outil_Ai']
                 }
             ]
         });
@@ -87,7 +87,7 @@ export async function getFilmsSelect(req, res) {
                 {
                     model: Film,
                     attributes: ['id', 'userId', 'title', 'collaborateur', 'description',
-                        'school', 'country', 'duration', 'title', 'category', 'generate_Ai', 'socialNetworks'],
+                        'duration', 'generate_Ai'],
                     include: [
                         {
                             model: File,
