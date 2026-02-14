@@ -12,7 +12,7 @@ const Selection = sequelize.define("Selection", {
   },
   year: {
     type: DataTypes.INTEGER,
-    allowNull: false,
+    allowNull: true,
   },
 });
 export default Selection;

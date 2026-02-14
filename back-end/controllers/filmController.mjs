@@ -21,6 +21,10 @@ export async function getFilms(req, res) {
                     attributes: ['id', 'film_url', 'poster_url', 'galerie_url', 'creativeMethodology', 'subtitle', 'outil_Ai']
                 },
                 {
+                    model: User,
+                    attributes: { exclude: ['password'] }
+                },
+                {
                     model:PlaylistFilm,
               
                 }

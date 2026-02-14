@@ -18,7 +18,7 @@ export default function FilmCard({ film, isActive }) {
         <p className="text-gray-600">{film.id}</p>
         <p className="text-sm font-semibold text-gray-600">{film.title}</p>
         <p className="text-xs text-gray-500">
-          {film.last_name} – {film.country}
+          {film.User.lastName} – {film.User.country}
         </p>
       </div>
     </div>

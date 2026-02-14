@@ -22,9 +22,6 @@ Film.belongsTo(User);
 User.belongsToMany(Film, { through: Note, as: 'Notes' });
 Film.belongsToMany(User, { through: Note, as: 'Notes' });
 
-User.belongsToMany(Film, { through: Note, as: 'Notes' });
-Film.belongsToMany(User, { through: Note, as: 'Notes' });
-
 User.belongsToMany(Film, { through: Annotation, as: 'Annotators' });
 Film.belongsToMany(User, { through: Annotation, as: 'Annotators' });
 
@@ -88,5 +85,5 @@ User.hasMany(PlaylistFilm);
 export {
   User, Film, Playlist, Selection,Note, Annotation,
   File, Price, Sponsor, Workshop, WorkshopCategory,
-  Notification, Note, Annotation, PlaylistFilm, FilmSponsor
+  Notification, PlaylistFilm, FilmSponsor
 };

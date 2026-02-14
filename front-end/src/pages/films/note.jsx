@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import FilmCard from "./FilmCard";
 import ListFilms from "./ListFilms";
 
 export default function Note() {
@@ -114,7 +113,7 @@ export default function Note() {
   const handleNextFilm = (filmsArray) => {
     if (!filmsArray || filmsArray.length === 0) return;
     const nextFilm = filmsArray.find(film => film.status === "NOT WATCHED");
-    if (nextFilm) {
+    if (!nextFilm) {
       setSelectedFilm(nextFilm);
 
     } else {
