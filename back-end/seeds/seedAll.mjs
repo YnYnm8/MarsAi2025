@@ -388,28 +388,28 @@ export async function seedAll() {
         { PlaylistId: 3, status: "REFUSED" },
       ]);
       await PlaylistFilm.bulkCreate([
-         { PlaylistId: 1, FilmId: 1, UserId: 3 }, // Hanako Committee
-  { PlaylistId: 1, FilmId: 2, UserId: 4 }, // Ken Committee
-  { PlaylistId: 1, FilmId: 3, UserId: 5 }, // Fumiko Committee
-  { PlaylistId: 1, FilmId: 4, UserId: 3 },
-  { PlaylistId: 1, FilmId: 5, UserId: 4 },
-  { PlaylistId: 1, FilmId: 6, UserId: 9 },
-  { PlaylistId: 1, FilmId: 7, UserId: 3 },
-  { PlaylistId: 1, FilmId: 8, UserId: 4 },
-  { PlaylistId: 1, FilmId: 9, UserId: 9 },
-  { PlaylistId: 1, FilmId: 10, UserId: 3 },
-  { PlaylistId: 1, FilmId: 11, UserId: 4 },
-  { PlaylistId: 1, FilmId: 12, UserId: 9 },
+        { PlaylistId: 1, FilmId: 1, UserId: 3 }, // Hanako Committee
+        { PlaylistId: 1, FilmId: 2, UserId: 4 }, // Ken Committee
+        { PlaylistId: 1, FilmId: 3, UserId: 5 }, // Fumiko Committee
+        { PlaylistId: 1, FilmId: 4, UserId: 3 },
+        { PlaylistId: 1, FilmId: 5, UserId: 4 },
+        { PlaylistId: 1, FilmId: 6, UserId: 9 },
+        { PlaylistId: 1, FilmId: 7, UserId: 3 },
+        { PlaylistId: 1, FilmId: 8, UserId: 4 },
+        { PlaylistId: 1, FilmId: 9, UserId: 9 },
+        { PlaylistId: 1, FilmId: 10, UserId: 3 },
+        { PlaylistId: 1, FilmId: 11, UserId: 4 },
+        { PlaylistId: 1, FilmId: 12, UserId: 9 },
 
-  // Playlist 2: ACCEPTED (UserId 2) — 例として少数
-  { PlaylistId: 2, FilmId: 1, UserId: 3 },
-  { PlaylistId: 2, FilmId: 3, UserId: 4 },
-  { PlaylistId: 2, FilmId: 5, UserId: 9 },
+        // Playlist 2: ACCEPTED (UserId 2) — 例として少数
+        { PlaylistId: 2, FilmId: 1, UserId: 3 },
+        { PlaylistId: 2, FilmId: 3, UserId: 4 },
+        { PlaylistId: 2, FilmId: 5, UserId: 9 },
 
-  // Playlist 3: REFUSED (UserId 1) — 例として少数
-  { PlaylistId: 3, FilmId: 2, UserId: 3 },
-  { PlaylistId: 3, FilmId: 4, UserId: 4 },
-  { PlaylistId: 3, FilmId: 6, UserId: 9 },
+        // Playlist 3: REFUSED (UserId 1) — 例として少数
+        { PlaylistId: 3, FilmId: 2, UserId: 3 },
+        { PlaylistId: 3, FilmId: 4, UserId: 4 },
+        { PlaylistId: 3, FilmId: 6, UserId: 9 },
 
         // { PlaylistId: 1, FilmId: 1, UserId: 1 },
         // { PlaylistId: 3, FilmId: 2, UserId: 1 },
@@ -438,19 +438,25 @@ export async function seedAll() {
         },
       ]);
 
+      // --- PLAYLISTFILM ---
+      // Utilisation sécurisée des index 0 et 1 (car nous n'avons créé que 2 films)
+      await playlists[0].addFilms([films[0]]);
+      await playlists[1].addFilms([films[1]]);
+      /*
+        // --- COMMENTS ---
+        const commentaires = await Comment.bulkCreate([
+            { UserId: 1, FilmId: films[1].id, content: 'Excelente documental!' },
+            { UserId: 2, FilmId: films[0].id, content: 'Muy interesante!' }
+        ]);
+*/
       // --- ANNOTATIONS ---
-      await Annotation.bulkCreate([
-        {
-          UserId: 1,
-          FilmId: films[2].id,
-          content: "Revisar escenas iniciales",
-        },
-        { UserId: 2, FilmId: films[0].id, content: "Nota sobre iluminación" },
+      const annotations = await Annotation.bulkCreate([
         {
           UserId: 1,
           FilmId: films[1].id,
-          content: "Agregar efectos visuales en la mitad",
+          content: "Revisar escenas iniciales",
         },
+        { UserId: 2, FilmId: films[0].id, content: "Nota sobre iluminación" },
       ]);
 
       // --- PRICES ---

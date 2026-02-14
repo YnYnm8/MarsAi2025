@@ -31,7 +31,7 @@ export default function VideoUpload({ label, id }) {
         id={id}
         accept="video/*"
         name="film"
-        required
+       
         className="hidden"
         onChange={handleVideoChange}
       />

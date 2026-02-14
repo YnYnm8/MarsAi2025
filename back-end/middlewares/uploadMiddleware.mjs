@@ -48,24 +48,18 @@ export const uploadMiddleware = async (req, res, next) => {
 
         // Creation du film en base de données
         const {
-            last_name,
-            email,
             title,
             description,
             duration,
-            category,
             generate_Ai,
         } = bodyValidation.data;
 
         const newFilm = await Film.create({
 
             UserId: req.user?.id || 1, // Utilisateur par défaut si pas d'authentification
-            last_name,
-            email,
             title,
             description,
             duration,
-            category,
             generate_Ai,
             status: "submitted",
         })
