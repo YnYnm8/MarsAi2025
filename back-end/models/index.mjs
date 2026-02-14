@@ -17,12 +17,9 @@ import FilmSponsor from "./FilmSponsor.mjs";
 
 
 
-// === User ===
-
-
-User.hasMany(Playlist, { onDelete: "CASCADE" });
-Playlist.belongsTo(User);
-
+// === User / Playlist ===
+User.hasMany(Playlist, { foreignKey: { allowNull: true }, onDelete: "SET NULL" });
+Playlist.belongsTo(User, { foreignKey: { allowNull: true }, onDelete: "SET NULL" });
 
 User.belongsToMany(Film, { through: Note, as: 'Notes' });
 Film.belongsToMany(User, { through: Note, as: 'Notes' });
