@@ -18,7 +18,7 @@ const fileFilter = (req, file, cb) => {
     const field = file.fieldname;
     if (field === "film") {
         file.mimetype.startsWith("video/") ? cb(null, true) : cb(new Error("Le fichier du film doit être une vidéo"));
-    } else if (field === "poster" || field === "galerie") {
+    } else if (field === "poster" || field === "galerie" || field === "avatar") {
         ["image/jpeg", "image/png"].includes(file.mimetype)
             ? cb(null, true)
             : cb(new Error("Le poster doit être au format JPG ou PNG"));
@@ -38,5 +38,6 @@ export const uploadFields = upload.fields([
     { name: "poster", maxCount: 1 },
     { name: "galerie", maxCount: 2 },
     { name: "subtitle", maxCount: 5 },
+    { name: "avatar", maxCount: 1 },
 ]);
 

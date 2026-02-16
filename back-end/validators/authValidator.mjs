@@ -11,7 +11,7 @@ export const registerSchema = z.object({
     .regex(/[A-Z]/, 'Min 1 majuscule requise')
     .regex(/[a-z]/, 'Min 1 minuscule requise')
     .regex(/[0-9]/, 'Min 1 chiffre requis')
-    .regex(/[!@#$%^&*()_+=\-\[\]{};':"\\|,.<>\/?]/, 'Min 1 caractère spécial requis'),
+    .regex(/[^a-zA-Z0-9]/, "Min 1 caractère spécial requis"),
 
     firstName: z
     .string({ required_error: 'Prénom obligatoire' })
@@ -38,12 +38,18 @@ export const loginSchema = z.object({
     .regex(/[A-Z]/, 'Min 1 majuscule requise')
     .regex(/[a-z]/, 'Min 1 minuscule requise')
     .regex(/[0-9]/, 'Min 1 chiffre requis')
-    .regex(/[!@#$%^&*()_+=\-\[\]{};':"\\|,.<>\/?]/, 'Min 1 caractère spécial requis'),
+    .regex(/[^a-zA-Z0-9]/, "Min 1 caractère spécial requis"),
 })
 
 export const updateProfileSchema = z.object({
-  firstName: z.string().min(2).optional(),
-  lastName: z.string().min(2).optional(),
-  bio: z.string().optional(),
-  school: z.string().optional()
+    firstName: z.string().min(2).optional(),
+    lastName: z.string().min(2).optional(),
+    bio: z.string().max(500, "Max 500 caractères").optional(),
+    school: z.string().max(100).optional(),
+    country: z.string().max(50).optional(),
+    socialNetworks: z.object({
+        instagram: z.string().url().optional().or(z.literal("")),
+        linkedin: z.string().url().optional().or(z.literal("")),
+        website: z.string().url().optional().or(z.literal(""))
+    }).optional()
 });
