@@ -8,7 +8,11 @@ const WorkshopCategory = sequelize.define(
       type: DataTypes.INTEGER,
       primaryKey: true,
       autoIncrement: true,
+      
     },
+    categorie:{
+      type:DataTypes.STRING,
+    }
   },
   {
     timestamps: true, // crée automatiquement createdAt & updatedAt
