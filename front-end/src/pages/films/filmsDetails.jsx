@@ -9,11 +9,24 @@ export default function FilmsDetails() {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const navigate = useNavigate();
-    const handleDelete = async (id) => {
 
-        if (window.confirm("Voulez-vous vraiment supprimer ce film ?")) {
-            await fetch(`http://localhost:3000/films/${id}`, { method: 'DELETE' });
-            navigate('/profile');
+    const handleDeleteFilm = async (filmId, e) => {
+        e.stopPropagation(); // Empêche le clic de traverser et d'ouvrir la page du film
+        if (!window.confirm("Voulez-vous vraiment supprimer ce film définitivement ?")) return;
+
+        try {
+            const res = await fetch(`http://localhost:3000/films/${filmId}`, {
+                method: 'DELETE',
+                credentials: 'include'
+            });
+            if (res.ok) {
+                // Mise à jour optimiste : on filtre le film supprimé de la liste locale pour un effet immédiat
+                setFilms(prevFilms => prevFilms.filter(film => film.id !== filmId));
+            } else {
+                alert("Impossible de supprimer ce film.");
+            }
+        } catch (error) {
+            console.error("Erreur suppression", error);
         }
     };
     useEffect(() => {
@@ -78,7 +91,7 @@ export default function FilmsDetails() {
 
                         {/* Botón Borrar */}
                         <button
-                            onClick={() => handleDelete(movie.id)}
+                            onClick={() => handleDeleteFilm (movie.id)}
                             className="flex items-center gap-2 bg-red-600/20 hover:bg-red-600 border border-red-500/50 text-red-400 hover:text-white px-4 py-2 rounded-xl transition-all text-sm font-medium"
                         >
                             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
