@@ -3,6 +3,7 @@ import {
   getAllOfficialSelection,
   getAllRefusedFilms,
   reviewFilm,
+  createPlaylist,
   addNote,
   acceptedFilm,
   refuseFilm,
@@ -18,6 +19,7 @@ const comiteRouter = express.Router();
 
 comiteRouter.get("/select", getAllOfficialSelection);
 comiteRouter.post("/review/:FilmId", reviewFilm);
+comiteRouter.post("/create/playlist",createPlaylist);
 comiteRouter.get("/refused",getAllRefusedFilms);
 comiteRouter.post("/select/:FilmId", acceptedFilm);
 comiteRouter.post("/refused/:FilmId", refuseFilm);

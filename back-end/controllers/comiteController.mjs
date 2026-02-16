@@ -40,10 +40,11 @@ export async function reviewFilm(req, res) {
     const { UserId, score, comment, status } = req.body;
     const { FilmId } = req.params;
 
+    // 映画が存在するか確認
     const film = await Film.findByPk(FilmId);
     if (!film) return res.status(404).json({ message: "映画が存在しません" });
 
-    // ① ノート保存
+    // ① ノート保存（レビュー履歴として追加）
     await Note.create({
       UserId,
       FilmId,
@@ -51,30 +52,61 @@ export async function reviewFilm(req, res) {
       comment,
     });
 
-    // ② ステータス変換
+    // ② ステータスをPlaylistIdに変換
     let PlaylistId;
-    if (status === "ACCEPTED") PlaylistId = 2;
-    if (status === "REFUSED") PlaylistId = 3;
+    if (status === "ACCEPTED") PlaylistId = 2; // SELECTED
+    else if (status === "REFUSED") PlaylistId = 3; // REFUSED
+    else PlaylistId = 1; // NOT WATCHED
 
-    let playlistFilm = await PlaylistFilm.findOne({
-      where: { FilmId, UserId },
+    // ③ 既存のPlaylistFilm行をすべて削除（重複行を消す）
+    await PlaylistFilm.destroy({
+      where: { FilmId}
     });
 
-    if (playlistFilm) {
-      playlistFilm.PlaylistId = PlaylistId;
-      await playlistFilm.save();
-    } else {
-      playlistFilm = await PlaylistFilm.create({
-        FilmId,
-        UserId,
-        PlaylistId,
-      });
-    }
+    // ④ 最新状態の行を1行だけ作成
+    await PlaylistFilm.create({
+      FilmId,
+      UserId,
+      PlaylistId,
+    });
 
     return res.json({
-      message: "レビューを保存しました",
+      message: "レビューとステータスを保存しました",
     });
 
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+}
+
+//POST /comite/create/playlist
+//選考委員が自分のプレイリストを作成するAPI
+
+export async function createPlaylist(req, res) {
+  try {
+    const { UserId,status,FilmId} = req.body;
+    if (!status) {
+      return res.status(400).json({ message: "プレイリスト名は必須です" });
+    }
+
+    // プレイリストの作成
+    const newPlaylist = await Playlist.create({
+      UserId,
+      status: status,
+      
+    });
+if(FilmId){
+    // プレイリストに映画を追加
+    await PlaylistFilm.create({
+      FilmId,
+      UserId,
+      PlaylistId: newPlaylist.id,
+    });
+}
+    return res.status(201).json({
+      message: "プレイリストを作成し、フィルムを追加しました",
+      playlist: newPlaylist,
+    });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
@@ -313,16 +345,16 @@ export async function addFilmToPlaylist(req, res) {
   try {
     // const {UserId} = req.user.id; // JWT
 
-    const { UserId, FilmId, PlaylistId } = req.body;
+    const { UserId, FilmId, status } = req.body;
 
-    let targetPlaylistId = PlaylistId;
+    let target = status;
 
     // 1️ PlaylistId が指定されていなければ、デフォルトの「検討中」リストを探す
-    if (!targetPlaylistId) {
+    if (!target) {
       let playlist = await Playlist.findOne({
         where: {
           UserId,
-          status: "NOT_WATCHED", // 例えば「検討中」ステータス
+          status: target, // 例えば「検討中」ステータス
         },
       });
 
@@ -330,7 +362,7 @@ export async function addFilmToPlaylist(req, res) {
       if (!playlist) {
         playlist = await Playlist.create({
           UserId,
-          PlaylistId: null, // auto-increment
+          status: target,
         });
       }
 

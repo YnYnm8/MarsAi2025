@@ -7,7 +7,7 @@ import Sponsor from "../models/Sponsor.mjs";
 import Notification from "../models/Notification.mjs";
 
 import Annotation from "../models/Annotation.mjs";
-import PlaylistFilm from "../models/PlaylistFilm.mjs";
+// import PlaylistFilm from "../models/PlaylistFilm.mjs";
 import FilmSponsor from "../models/FilmSponsor.mjs";
 
 export async function seedAll() {
@@ -67,15 +67,15 @@ export async function seedAll() {
         ], { include: [File], returning: true });
 
         // --- PLAYLISTS ---
-        const playlists = await Playlist.bulkCreate([
-            { status: 'public', UserId: 1 },
-            { status: 'private', UserId: 2 }
-        ], { returning: true });
+        // const playlists = await Playlist.bulkCreate([
+        //     { status: 'public', UserId: 1 },
+        //     { status: 'private', UserId: 2 }
+        // ], { returning: true });
 
         // --- PLAYLISTFILM ---
         // Utilisation sécurisée des index 0 et 1 (car nous n'avons créé que 2 films)
-        await playlists[0].addFilms([films[0]]);
-        await playlists[1].addFilms([films[1]]);
+        // await playlists[0].addFilms([films[0]]);
+        // await playlists[1].addFilms([films[1]]);
 /*
         // --- COMMENTS ---
         const commentaires = await Comment.bulkCreate([
