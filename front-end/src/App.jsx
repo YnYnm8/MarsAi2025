@@ -13,6 +13,7 @@ import Workshop from "./pages/dashboard/workshop.jsx";
 import AdminDashboard from "./pages/admin/admin.jsx";
 import AdminDetailsFilms from './pages/admin/admindetailsfilms.jsx';
 import AdminDash from './pages/admin/admindashboard.jsx';
+import FilmsDetails from "./pages/films/filmsDetails.jsx";
 
 
 
@@ -23,6 +24,7 @@ function App() {
       <main>
         <Routes>
           <Route path="/film" element={<Film />} />
+          <Route path="/films/:id" element={<FilmsDetails />} />
           <Route path="/note" element={<Note />} />
           <Route path="/form-movie" element={<PostMovie />} />
           <Route path="/login" element={<Login />} />
