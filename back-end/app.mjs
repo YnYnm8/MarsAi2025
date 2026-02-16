@@ -13,15 +13,14 @@ import profileRoutes from './routes/profileRoutes.mjs';
 import adminRoutes from "./routes/adminRoutes.mjs";
 import { userSeed } from './seeds/userSeed.mjs';
 import { seedAll } from './seeds/seedAll.mjs';
-
-
+import { WorkshopSeed } from './seeds/workshopSeed.mjs';
 dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 const FRONTEND_URL = (process.env.FRONTEND_URL || 'http://localhost:5173')
   .replace(/\/$/, '');
-  
+
 app.use(cors({
   origin: FRONTEND_URL,
   credentials: true,
@@ -52,7 +51,7 @@ app.use(helmet({
 }));
 
 // Routes
-app.use("/api",workshopRoutes);
+app.use("/api", workshopRoutes);
 app.use("/", authRoute);
 // admin route
 app.use("/admin", adminRoutes);
@@ -81,7 +80,7 @@ try {
   //Seed
   await userSeed();
   await seedAll();
-
+  await WorkshopSeed();
   console.log(" ");
   console.log("     💾 Seeds insérés avec succès  ✅");
 
@@ -90,7 +89,8 @@ try {
   });
 
 
-  app.listen(PORT, () => {
+  app.listen(PORT, () => { 
+    
     console.log(" ");
     console.log(`   🚀 Serveur démarré sur http://localhost:${PORT} 🔌`);
   });
