@@ -1,10 +1,10 @@
 
-import User from '../models/User.mjs'; 
+import User from '../models/User.mjs';
 
 export async function userSeed() {
     try {
         console.log(" Insertion des utilisateurs...");
-        
+
         await User.bulkCreate(
             [
                 {
@@ -17,13 +17,17 @@ export async function userSeed() {
                     isActive: true
                 },
                 {
-                    email: 'contact.director@example.com',
+                    email: 'director@example.com',
                     password: 'Director123!',
                     firstName: 'Taro',
-                    lastName: 'Director',
+                    lastName: 'DirectorTEST',
                     role: 'director',
                     isEmailVerified: true,
-                    isActive: true
+                    isActive: true,
+                    bio: 'Réalisateur passionné de Sci-Fi',
+                    school: 'Ecole de Cinéma de Paris',
+                    country: 'France',
+                    socialNetworks: { instagram: 'https://instagram.com/taro' },
                 },
                 {
                     email: 'contact.committee1@example.com',
@@ -57,7 +61,7 @@ export async function userSeed() {
                 individualHooks: true // Important pour que le hachage du mot de passe (argon2/bcrypt) s'exécute
             }
         );
-        
+
         console.log("   ✅ Utilisateurs insérés avec succès !");
     } catch (error) {
         console.error("   ❌ Erreur dans userSeed.mjs :");

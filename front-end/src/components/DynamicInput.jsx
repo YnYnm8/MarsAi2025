@@ -27,6 +27,7 @@ export function DynamicInputList({
 
     return (
         <div className="flex flex-col gap-3">
+            
             <label className="pb-2 text-white-primary uppercase font-bold">{label}</label>
             {array.map((value, index) => (
                 <div key={index} className="flex gap-2">
@@ -88,7 +89,7 @@ export function DynamicSubtitleInput({ subtitles, setSubtitles}) {
 
         return (
             <div className="flex flex-col gap-4">
-                <label className="uppercase font-bold text-white-primary">Sous-titres</label>
+                <label className="uppercase font-bold text-white-primary">Sous-titres (Stills - Max 5) </label>
 
                 {subtitles.map((sub, index) => (
                     <div key={index} className="flex gap-2 items-center">
