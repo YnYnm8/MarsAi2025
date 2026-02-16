@@ -7,27 +7,30 @@ const Film = sequelize.define("Film", {
         primaryKey: true,
         autoIncrement: true
     },
-    collaborateur: {
-        type: DataTypes.STRING,
-        allowNull: true
-    },
     title: {
         type: DataTypes.STRING,
+        allowNull: false,
+    },
+    description: {
+        type: DataTypes.TEXT,
         allowNull: false,
     },
     duration: {
         type: DataTypes.FLOAT,
         allowNull: false,
     },
+    collaborateur: {
+        type: DataTypes.STRING,
+        allowNull: true
+    },
+    generateAi: {
+        type: DataTypes.ENUM("fullAi", "hybrid"),
+        allowNull: false,
+    },
     status: {
         type: DataTypes.STRING,
         allowNull: false,
         defaultValue: "submitted",
-
-    },
-    description: {
-        type: DataTypes.TEXT,
-        allowNull: false,
     },
     views: {
         type: DataTypes.INTEGER,
@@ -39,10 +42,7 @@ const Film = sequelize.define("Film", {
         defaultValue: 0,
         allowNull: false
     },
-    generate_Ai: {
-        type: DataTypes.ENUM("full_ai", "hybrid"),
-        allowNull: false,
-    },
+
 }, {
     timestamps: true
 });
