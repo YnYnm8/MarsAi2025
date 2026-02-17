@@ -5,7 +5,7 @@ import File from "../models/File.mjs";
 import Price from "../models/Price.mjs";
 import Sponsor from "../models/Sponsor.mjs";
 import Notification from "../models/Notification.mjs";
-import Comment from "../models/Comment.mjs";
+
 import Annotation from "../models/Annotation.mjs";
 import PlaylistFilm from "../models/PlaylistFilm.mjs";
 import FilmSponsor from "../models/FilmSponsor.mjs";
@@ -36,20 +36,22 @@ export async function seedAll() {
         const films = await Film.bulkCreate([
             {
                 UserId: 1,
-                last_name: 'Smith',
-                collaborateur: 'no',
-                email: 'contact.smith@cinema.com', 
-                school: 'NY Film School',
-                country: 'USA',
-                bio: 'Director experimental.',
+
+                collaborateur: 'Alex Rivera, Sora AI',
                 title: 'Fragments of Reality',
                 duration: 85,
                 status: 'draft',
                 description: 'Cine experimental sobre la memoria.',
-                category: 'Experimental',
                 generate_Ai: 'full_ai',
                 Files: [
-                    { subtitle: 'English', film_url: 'https://cdn.example.com/f1.mp4', poster_url: 'https://cdn.example.com/p1.jpg', outil_Ai: 'Stable Diffusion' }
+                    {
+                        subtitle: 'English',
+                        film_url: 'https://sample-videos.com/video123/mp4/720/big_buck_bunny_720p_1mb.mp4', // Link de video real para pruebas
+                        poster_url: 'https://images.unsplash.com/photo-1536440136628-849c177e76a1?q=80&w=1000&auto=format&fit=crop',
+                        galerie_url: 'https://images.unsplash.com/photo-1485846234645-a62644f84728?q=80&w=1000&auto=format&fit=crop',
+                        outil_Ai: 'Stable Diffusion',
+                        creativeMethodology: 'Para este proyecto, entrenamos un modelo LoRA específico con texturas de películas de 35mm de los años 70. Las transiciones se generaron mediante interpolación de frames para dar esa sensación de fluidez onírica propia de los recuerdos.'
+                    }
                 ]
             },
             {
@@ -82,7 +84,6 @@ export async function seedAll() {
                 duration: 95,
                 status: 'published',
                 description: 'Documental sobre la vida marina.',
-                category: 'Documentary',
                 generate_Ai: 'hybrid',
                 Files: [
                     { subtitle: 'English', film_url: 'https://cdn.example.com/f2.mp4', poster_url: 'https://cdn.example.com/p2.jpg', outil_Ai: 'None' }
@@ -137,13 +138,13 @@ export async function seedAll() {
         // Utilisation sécurisée des index 0 et 1 (car nous n'avons créé que 2 films)
         await playlists[0].addFilms([films[0]]);
         await playlists[1].addFilms([films[1]]);
-
-        // --- COMMENTS ---
-        const commentaires = await Comment.bulkCreate([
-            { UserId: 1, FilmId: films[1].id, content: 'Excelente documental!' },
-            { UserId: 2, FilmId: films[0].id, content: 'Muy interesante!' }
-        ]);
-
+        /*
+                // --- COMMENTS ---
+                const commentaires = await Comment.bulkCreate([
+                    { UserId: 1, FilmId: films[1].id, content: 'Excelente documental!' },
+                    { UserId: 2, FilmId: films[0].id, content: 'Muy interesante!' }
+                ]);
+        */
         // --- ANNOTATIONS ---
         const annotations = await Annotation.bulkCreate([
             { UserId: 1, FilmId: films[1].id, content: 'Revisar escenas iniciales' },

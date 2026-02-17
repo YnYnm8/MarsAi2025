@@ -1,14 +1,14 @@
 
-import User from '../models/User.mjs'; 
+import User from '../models/User.mjs';
 
 export async function userSeed() {
     try {
         console.log(" Insertion des utilisateurs...");
-        
+
         await User.bulkCreate(
             [
                 {
-                    email: 'admin@example.com',
+                    email: 'contact.admin@example.com',
                     password: 'Admin123!',
                     firstName: 'Admin',
                     lastName: 'User',
@@ -28,9 +28,17 @@ export async function userSeed() {
                     isActive: true,
                     
 
+                    lastName: 'DirectorTEST',
+                    role: 'director',
+                    isEmailVerified: true,
+                    isActive: true,
+                    bio: 'Réalisateur passionné de Sci-Fi',
+                    school: 'Ecole de Cinéma de Paris',
+                    country: 'France',
+                    socialNetworks: { instagram: 'https://instagram.com/taro' },
                 },
                 {
-                    email: 'committee1@example.com',
+                    email: 'contact.committee1@example.com',
                     password: 'Committee123!',
                     firstName: 'Hanako',
                     lastName: 'Committee',
@@ -52,7 +60,7 @@ export async function userSeed() {
                     
                 },
                 {
-                    email: 'committee2@example.com',
+                    email: 'contact.committee2@example.com',
                     password: 'Committee456!',
                     firstName: 'Ken',
                     lastName: 'Committee',
@@ -63,7 +71,7 @@ export async function userSeed() {
 
                 },
                 {
-                    email: 'visitor@example.com',
+                    email: 'contact.visitor@example.com',
                     password: 'Visitor123!',
                     firstName: 'Guest',
                     lastName: 'User',
@@ -87,7 +95,7 @@ export async function userSeed() {
                 individualHooks: true // Important pour que le hachage du mot de passe (argon2/bcrypt) s'exécute
             }
         );
-        
+
         console.log("   ✅ Utilisateurs insérés avec succès !");
     } catch (error) {
         console.error("   ❌ Erreur dans userSeed.mjs :");

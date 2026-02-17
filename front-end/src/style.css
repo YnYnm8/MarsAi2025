@@ -1,26 +1,34 @@
 @import "tailwindcss";
 @plugin "daisyui";
 
-@theme {
-    /*Font Family */
-    --font-display: "Arimo", sans-serif;
-    --font-size-text: 1rem;
-    --font-size-subtile: 1.5rem;
-    --font-size-title: 6rem;
-    /* text-7xl */
-    
-    /*Text color*/
-    --color-white-primary: #64748B;
-    --color-black-secondary:#0f0f0f;
-    --text-black-input: #0f0f0f;
-    --color-blue-tertiary: #51A2FF;
-    --color-white-subtitle: #e7e7e7;
-    /*Background*/
-    --bg-color-primary-black: #050505;
-    --bg-color-input: #d9cbcbd1;
-    --bg-rainbow: linear-gradient(180deg,
-            #51A2FF 0%,
-            #AD46FF 50%,
-            #FF2B7F 100%);
+:root {
+  /*Font Family */
+  --font-display: "Arimo", sans-serif;
+  --font-size-text: 1rem;
+  --font-size-subtile: 1.5rem;
+  --font-size-title: 6rem;
 
+  /* text-7xl */
+
+  /*Text color*/
+
+  --color-white-primary: #64748B;
+  --color-black-secondary: #0f0f0f;
+  --text-black-input: #0f0f0f;
+  --color-blue-tertiary: #51A2FF;
+  --color-white-subtitle: #e7e7e7;
+  --color-orange: #FF5845;
+  /*Background*/
+
+  --bg-color-primary-black: #050505;
+  --bg-color-input: #d9cbcbd1;
+  --bg-rainbow: linear-gradient(180deg,
+      #51A2FF 0%,
+      #AD46FF 50%,
+      #FF2B7F 100%);
+
+  /*Button*/
+
+  --btn-padding: 5px;
+  --btn-bg-color: #246BAD --btn-hover-color: #1A4F85;
 }

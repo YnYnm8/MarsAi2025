@@ -1,43 +1,52 @@
+import sequelize from './config/database.mjs';
 import express from 'express';
 import cors from 'cors';
+import dotenv from "dotenv";
 import cookieParser from 'cookie-parser';
 import helmet from 'helmet';
-import sequelize from './config/database.mjs';
+import path from 'path';
+import { fileURLToPath } from 'url'; 
+
 import "./models/index.mjs";
 import comiteRouter from './routes/committeeRoutes.mjs';
+import workshopRoutes from './routes/workshopRoutes.mjs';
 import authRoute from './routes/authRoutes.mjs';
 import filmRoutes from './routes/filmRoutes.mjs';
-import dotenv from "dotenv";
+import profileRoutes from './routes/profileRoutes.mjs';
 import adminRoutes from "./routes/adminRoutes.mjs";
 import { userSeed } from './seeds/userSeed.mjs';
 import { seedAll } from './seeds/seedAll.mjs';
-
+import { WorkshopSeed } from './seeds/workshopSeed.mjs';
 
 dotenv.config();
 
+// Configuration pour __dirname 
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
 const app = express();
 const PORT = process.env.PORT || 3000;
-const FRONTEND_URL = process.env.FRONTEND_URL || 'http://localhost:5173';
+const FRONTEND_URL = (process.env.FRONTEND_URL || 'http://localhost:5173')
+  .replace(/\/$/, '');
+
+
+// Configuration CORS
+app.use(cors({
+  origin: [
+    'http://localhost:5173' 
+    .replace(/\/$/, ''), 
+    process.env.FRONTEND_URL
+  ].filter(Boolean),
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept', 'Origin']
+}));
 
 app.use(cookieParser());
-// Middleware JSON 
 app.use(express.json());
 
-const allowedOrigins = ['http://localhost:5173', 'http://localhost:5173/'];
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
-app.use(cors({
-  origin: function(origin, callback) {
-    // permitir requests desde Postman o curl (sin origin)
-    if (!origin) return callback(null, true);
-    if (allowedOrigins.includes(origin)) {
-      return callback(null, true);
-    } else {
-      return callback(new Error(`Origen ${origin} no permitido por CORS`));
-    }
-  },
-  credentials: true,
-  methods: ["GET","POST","PUT","PATCH","DELETE","OPTIONS"]
-}));
 
 // Middleware HELMET
 app.use(helmet({
@@ -46,25 +55,27 @@ app.use(helmet({
       defaultSrc: ["'self'"],
       styleSrc: ["'self'", "'unsafe-inline'"],
       scriptSrc: ["'self'"],
-      imgSrc: ["'self'", 'data:', 'https:'],
-      connectSrc: ["'self'", process.env.FRONTEND_URL || 'http://localhost:5173', "http://localhost:3000"]
+      // On autorise les images venant de 'self' (localhost:3000) et data: (base64)
+      imgSrc: ["'self'", 'data:', 'blob:', 'http://localhost:3000'], 
+      connectSrc: ["'self'", "http://localhost:5173", "http://localhost:3000"]
     }
   },
-  crossOriginResourcePolicy: { policy: 'cross-origin' },
+  crossOriginResourcePolicy: { policy: 'cross-origin' }, 
   frameguard: { action: 'deny' },
   noSniff: true,
   xssFilter: true
 }));
 
 // Routes
+app.use("/api", workshopRoutes);
 app.use("/", authRoute);
-// admin route
 app.use("/admin", adminRoutes);
-app.use("/", filmRoutes);
-app.use("/comite", comiteRouter); // prefix
-console.log(" ");
-console.log("     ⏱️ Tables synchronisées  ✅ ");
+app.use("/films", filmRoutes);
+app.use("/comite", comiteRouter);
+app.use("/", profileRoutes);
 
+console.log(" ");
+console.log("      ⏱️ Tables synchronisées  ✅ ");
 
 app.get("/", (req, res) => {
   res.send("API OK");
@@ -74,39 +85,35 @@ app.get("/", (req, res) => {
 try {
   await sequelize.authenticate();
   console.log(" ");
-  console.log("     🗄️ Connexion à la BDD réussie ✅");
+  console.log("      🗄️ Connexion à la BDD réussie ✅");
 
-  await sequelize.sync({force:true});
-  console.log("🧩 Tables créées avec succès  ✅");
+ 
+  await sequelize.sync({force:true}); 
+  console.log(" ");
+  console.log("      🧩 Tables créées avec succès  ✅");
 
   //Seed
   await userSeed();
   await seedAll();
-
+  await WorkshopSeed();
   console.log(" ");
-  console.log("     💾 Seeds insérés avec succès  ✅");
+  console.log("      💾 Seeds insérés avec succès  ✅");
 
-  app.get("/", (req, res) => {
-    res.send("API OK");
-  });
-
-
-  app.listen(PORT, () => {
+  app.listen(PORT, () => { 
+    
     console.log(" ");
-    console.log(`   🚀 Serveur démarré sur http://localhost:${PORT} 🔌`);
+    console.log(`    🚀 Serveur démarré sur http://localhost:${PORT} 🔌`);
   });
 } catch (error) {
   console.error(" ");
-  console.error("   ❌ Erreur au démarrage de l'API");
+  console.error("    ❌ Erreur au démarrage de l'API");
   
-  // Si c'est une erreur de validation (Email, ENUM, etc.)
   if (error.name === 'SequelizeValidationError' || error.name === 'SequelizeUniqueConstraintError') {
     error.errors.forEach(err => {
-      console.error(`   👉 [VALIDATION] Champ: ${err.path} | Message: ${err.message} | Valeur: ${err.value}`);
+      console.error(`    👉 [VALIDATION] Champ: ${err.path} | Message: ${err.message} | Valeur: ${err.value}`);
     });
   } else {
-    // Si c'est une autre erreur (Syntaxe, Connexion, etc.)
-    console.error(`   👉 [ERREUR]: ${error.message}`);
+    console.error(`    👉 [ERREUR]: ${error.message}`);
     console.error(error); 
   }
   process.exit(1);

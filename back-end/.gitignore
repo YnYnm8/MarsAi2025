@@ -2,6 +2,7 @@
 # 1. DÉPENDANCES (Ne jamais commiter ça)
 # ---------------------------------
 node_modules/
+node_modules
 pnpm-lock.yaml
 # Si tu utilises yarn, tu peux garder yarn.lock, sinon ignore-le :
 # yarn.lock
@@ -33,6 +34,7 @@ yarn-error.log*
 dist/
 build/
 coverage/
+uploads/
 
 # ---------------------------------
 # 5. SYSTÈME & ÉDITEURS (Fichiers parasites)
