@@ -23,8 +23,8 @@ const Film = sequelize.define("Film", {
         type: DataTypes.STRING,
         allowNull: true
     },
-    generateAi: {
-        type: DataTypes.ENUM("fullAi", "hybrid"),
+    generate_Ai: {
+        type: DataTypes.ENUM("full_ai", "hybrid"),
         allowNull: false,
     },
     status: {
@@ -41,6 +41,10 @@ const Film = sequelize.define("Film", {
         type: DataTypes.INTEGER,
         defaultValue: 0,
         allowNull: false
+    },
+    country: {
+        type: DataTypes.STRING,
+        allowNull: true
     },
 
 }, {
