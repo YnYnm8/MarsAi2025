@@ -42,10 +42,6 @@ const Film = sequelize.define("Film", {
         defaultValue: 0,
         allowNull: false
     },
-    country: {
-        type: DataTypes.STRING,
-        allowNull: true
-    },
 
 }, {
     timestamps: true

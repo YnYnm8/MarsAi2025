@@ -1,52 +1,48 @@
 import User from "../models/User.mjs";
 import Film from "../models/Films.mjs";
 import Selection from "../models/Selection.mjs";
-import Workshop from "../models/Workshop.mjs"; // Import ajouté
+import Workshop from "../models/Workshop.mjs";
 import { Sequelize, Op } from "sequelize"; 
 
 const fetchDashboardStats = async () => {
-  // Calcul des nouveaux inscrits du jour
+  
   const startOfDay = new Date();
   startOfDay.setHours(0, 0, 0, 0);
 
   const newUsersToday = await User.count({
-    where: {
-      createdAt: {
-        [Op.gte]: startOfDay,
-      },
-    },
+    where: { createdAt: { [Op.gte]: startOfDay } },
   });
 
-  // Statistiques Utilisateurs
   const totalUsers = await User.count();
   const activeUsers = await User.count({ where: { isActive: true } });
+  const finishedJuries = await User.count({ where: { role: 'committee', isActive: true } });
 
-  // pour linstant jai mis sa en attente
-  const finishedJuries = await User.count({ 
-    where: { role: 'committee', isActive: true } 
-  });
-
-  // Statistiques Films & Sélections
   const totalFilms = await Film.count();
   const totalSelected = await Selection.count();
   const totalViews = (await Film.sum("views")) || 0;
   const totalShares = (await Film.sum("shares")) || 0;
 
-  // Calcul dynamique du Taux d'occupation Workshop
   const totalInscrits = await Workshop.sum("participants") || 0;
   const totalPlaces = await Workshop.sum("resatotales") || 0;
-  
-  // Calcul du % global (évite la division par zéro)
-  const workshopOccupation = totalPlaces > 0 
-    ? Math.round((totalInscrits / totalPlaces) * 100) 
-    : 0;
+  const workshopOccupation = totalPlaces > 0 ? Math.round((totalInscrits / totalPlaces) * 100) : 0;
 
-  // Répartitions (Pays & IA)
   const filmsByCountry = await Film.findAll({
-    attributes: ["country", [Sequelize.fn("COUNT", Sequelize.col("id")), "count"]],
-    group: ["country"],
+    attributes: [
+      // On récupère le pays de l'utilisateur lié au film
+      [Sequelize.literal("IFNULL(`User`.`country`, 'Non renseigné')"), "country"], 
+      [Sequelize.fn("COUNT", Sequelize.col("Film.id")), "count"]
+    ],
+    include: [{
+      model: User,
+      attributes: [], 
+      required: true  // INNER JOIN : on ne compte que les films qui ont un utilisateur
+    }],
+    group: [Sequelize.col("User.country")], // On groupe par le pays de l'utilisateur
+    raw: true // Pour obtenir un tableau d'objets simple
   });
 
+  
+  // === Répartition IA ===
   const toolsUsage = await Film.findAll({
     attributes: ["generate_Ai", [Sequelize.fn("COUNT", Sequelize.col("generate_Ai")), "count"]],
     group: ["generate_Ai"],
@@ -58,7 +54,7 @@ const fetchDashboardStats = async () => {
     totalFilms,
     totalViews,
     toolsUsage,
-    filmsByCountry,
+    filmsByCountry, 
     totalShares,
     totalSelected,
     newUsersToday,
@@ -69,7 +65,6 @@ const fetchDashboardStats = async () => {
     totalPlaces         
   };
 };
-
 const fetchAllUsers = async () => {
   return await User.findAll();
 };
