@@ -20,7 +20,7 @@ const Admin = () => {
 
     const roleStyles = {
         admin: "bg-red-100 text-red-700 border-red-200",
-        realisator: "bg-purple-100 text-purple-700 border-purple-200",
+        director: "bg-purple-100 text-purple-700 border-purple-200",
         committee: "bg-amber-100 text-amber-700 border-amber-200",
         visitor: "bg-slate-100 text-slate-700 border-slate-200",
         default: "bg-blue-100 text-blue-700 border-blue-200"
@@ -87,7 +87,7 @@ const Admin = () => {
                 <header className="max-w-7xl mx-auto mb-10 flex flex-col md:flex-row md:items-end justify-between gap-4">
                     <div>
                         <h1 className="text-3xl font-bold tracking-tight text-slate-900">
-                            ADMIN <span className="text-blue-600">MANAGEMENT</span>
+                            ADMIN <span className="text-orange-600">MANAGEMENT</span>
                         </h1>
                         <p className="text-slate-500 text-sm mt-1">Analyse détaillée de la progression du festival et des indicateurs de performance</p>
                     </div>
@@ -228,7 +228,7 @@ const Admin = () => {
                                                         className="bg-white border border-slate-200 rounded-lg px-2 py-1.5 text-xs font-semibold focus:ring-2 focus:ring-blue-500 outline-none cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed shadow-sm"
                                                     >
                                                         <option value="visitor">Visitor</option>
-                                                        <option value="realisator">Realisateur</option>
+                                                        <option value="director">Realisateur</option>
                                                         <option value="committee">Committee</option>
                                                         <option value="admin">Admin</option>
                                                     </select>

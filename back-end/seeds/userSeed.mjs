@@ -14,12 +14,20 @@ export async function userSeed() {
                     lastName: 'User',
                     role: 'admin',
                     isEmailVerified: true,
-                    isActive: true
+                    isActive: true,
+                    
+
                 },
                 {
                     email: 'director@example.com',
                     password: 'Director123!',
                     firstName: 'Taro',
+                    lastName: 'Director',
+                    role: 'director',
+                    isEmailVerified: true,
+                    isActive: true,
+                    
+
                     lastName: 'DirectorTEST',
                     role: 'director',
                     isEmailVerified: true,
@@ -36,7 +44,20 @@ export async function userSeed() {
                     lastName: 'Committee',
                     role: 'committee',
                     isEmailVerified: false,
-                    isActive: true
+                    isActive: true,
+                   
+
+                },
+                 {
+                    email: 'jesus@example.com',
+                    password: 'jesus',
+                    firstName: 'jesus',
+                    lastName: 'jesus',
+                    role: 'director',
+                    isEmailVerified: false,
+                    isActive: true,
+                    
+                    
                 },
                 {
                     email: 'contact.committee2@example.com',
@@ -45,7 +66,9 @@ export async function userSeed() {
                     lastName: 'Committee',
                     role: 'committee',
                     isEmailVerified: false,
-                    isActive: true
+                    isActive: true,
+                    
+
                 },
                 {
                     email: 'contact.visitor@example.com',
@@ -54,7 +77,18 @@ export async function userSeed() {
                     lastName: 'User',
                     role: 'visitor',
                     isEmailVerified: false,
-                    isActive: true
+                    isActive: true,
+                   
+
+                },
+                {
+                    email: 'kylian@example.com',
+                    password: 'mbappe!',
+                    firstName: 'mbappe',
+                    lastName: 'kylian',
+                    role: 'director',
+                    isEmailVerified: false,
+                    isActive: true         
                 }
             ],
             {
