@@ -24,7 +24,11 @@ export async function seedAll() {
         // --- SELECTIONS ---
         const selections = await Selection.bulkCreate([
             { name: 'Festival Internacional 2026' },
-            { name: 'Competencia de Cortometrajes' }
+            { name: 'Competencia de Cortometrajes' },
+            { name: 'ia pur tous' },
+            { name: 'Competencia de Corto' }
+
+
         ], { returning: true });
 
         // --- FILMS + FILES ---
@@ -49,10 +53,65 @@ export async function seedAll() {
                 ]
             },
             {
+                UserId: 4,
+                last_name: 'Director',
+                collaborateur: 'no',
+                email: 'Taro@cinema.com', 
+                school: 'LABUBUUU',
+                country: 'MEXIQUE',
+                bio: 'Director experimental.',
+                title: 'LES CHIIIII',
+                duration: 100,
+                status: 'draft',
+                description: 'Cine experimental sobre la memoria.',
+                category: 'Experimental',
+                generate_Ai: 'hybrid',
+                Files: [
+                    { subtitle: 'English', film_url: 'https://cdn.example.com/f1.mp4', poster_url: 'https://cdn.example.com/p1.jpg', outil_Ai: 'Stable Diffusion' }
+                ]
+            },
+            {
                 UserId: 2,
                 last_name: 'Johnson',
                 collaborateur: 'yes',
                 email: 'contact.johnson@films.com',
+                school: 'LA Film Academy',
+                country: 'USA',
+                bio: 'Director documentalista.',
+                title: 'Ocean Voices',
+                duration: 95,
+                status: 'published',
+                description: 'Documental sobre la vida marina.',
+                category: 'Documentary',
+                generate_Ai: 'hybrid',
+                Files: [
+                    { subtitle: 'English', film_url: 'https://cdn.example.com/f2.mp4', poster_url: 'https://cdn.example.com/p2.jpg', outil_Ai: 'None' }
+                ]
+            },
+            {
+                UserId: 3,
+                last_name: 'User',
+                collaborateur: 'yes',
+                email: 'User@films.com',
+                school: 'LA Film Academy',
+                country: 'Japon',
+                bio: 'Director documentalista.',
+                title: 'Ocean Voices',
+                duration: 95,
+                status: 'published',
+                description: 'Documental sobre la vida marina.',
+                category: 'Documentary',
+                generate_Ai: 'hybrid',
+                Files: [
+                    { subtitle: 'English', film_url: 'https://cdn.example.com/f2.mp4', poster_url: 'https://cdn.example.com/p2.jpg', outil_Ai: 'None' }
+                ]
+            },
+            
+            {
+                UserId: 2,
+                last_name: 'Johnson',
+                collaborateur: 'yes',
+                email: 'contact.johnsonn@films.com',
                 school: 'LA Film Academy',
                 country: 'USA',
                 bio: 'Director documentalista.',
