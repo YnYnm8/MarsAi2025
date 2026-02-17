@@ -45,20 +45,14 @@ const AdminDash = () => {
     );
 
     const calculateBestZone = () => {
-        // Si les données ne sont pas encore chargées ou vides
         if (!stats.filmsByCountry || stats.filmsByCountry.length === 0) return "N/A";
 
-        const counts = {};
-        stats.filmsByCountry.forEach(item => {
-            // On essaie de trouver le nom de la zone/pays dans cet ordre d'importance
-            const name = item.country || "Inconnu";
-            // On additionne les occurrences ou le compteur 'count' envoyé par le backend
-            counts[name] = (counts[name] || 0) + (item.count || 1);
-        });
+        // On trouve l'entrée qui a le "count" le plus élevé
+        const topEntry = stats.filmsByCountry.reduce((prev, current) => {
+            return (parseInt(current.count) > parseInt(prev.count)) ? current : prev;
+        }, stats.filmsByCountry[0]);
 
-        // On récupère le nom qui a la plus grande valeur
-        const sorted = Object.entries(counts).sort((a, b) => b[1] - a[1]);
-        return sorted[0][0];
+        return topEntry.country || "Inconnu";
     };
 
     const bestZone = calculateBestZone();
