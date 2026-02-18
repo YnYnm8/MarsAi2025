@@ -12,7 +12,7 @@ router.get('/', getFilms); // public
 router.get('/:id', getFilmById); //public
 router.get('/select/list', getFilmsSelect); //public
 router.post('/',  uploadFields, validate(createFilmSchema), uploadMiddleware, createFilm); //realisateur
-router.put('/:id', authMiddleware,  updateFilm); // realisateur 
+router.put('edit/:id', authMiddleware,  updateFilm); // realisateur 
 router.get('/my-submissions/list', authMiddleware, getFilmsByUser); // realisateur
 router.delete('/:id',authMiddleware, deleteFilm); //realisateur / admin
 
