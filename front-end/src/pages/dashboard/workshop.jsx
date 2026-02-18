@@ -38,20 +38,22 @@ function Workshop() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-100 px-12 py-10">
+   <div className="min-h-screen bg-gray-100 px-12 py-10">
+
       {/* Header */}
+      
 
       <HeaderWorkshop />
 
       {/* ===== CONTENEUR GLOBAL ===== */}
-      <div className="flex flex-col gap-8">
+      <div className="grid grid-cols-2 gap-8">
 
         {workshops.length <= 0 && <p>Pas de workshops</p>}
 
         {workshops.map((workshop) => (
           <div
             key={workshop.id}
-            className="bg-white p-8 rounded-2xl shadow-md space-y-6"
+            className="bg-white p-8 rounded-2xl shadow-md space-y-6 "
           >
             <p>{new Date(workshop.date).toLocaleDateString()}</p>
 

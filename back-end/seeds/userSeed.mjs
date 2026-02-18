@@ -13,13 +13,23 @@ export async function userSeed() {
                     firstName: 'Admin',
                     lastName: 'User',
                     role: 'admin',
+                    country: 'Japon',
                     isEmailVerified: true,
-                    isActive: true
+                    isActive: true,
+                    
+
                 },
                 {
                     email: 'director@example.com',
                     password: 'Director123!',
                     firstName: 'Taro',
+                    lastName: 'Director',
+                    role: 'director',
+                    country: 'France', 
+                    isEmailVerified: true,
+                    isActive: true,
+                    
+
                     lastName: 'DirectorTEST',
                     role: 'director',
                     isEmailVerified: true,
@@ -35,8 +45,23 @@ export async function userSeed() {
                     firstName: 'Hanako',
                     lastName: 'Committee',
                     role: 'committee',
+                    country: 'Japon', 
                     isEmailVerified: false,
-                    isActive: true
+                    isActive: true,
+                   
+
+                },
+                 {
+                    email: 'jesus@example.com',
+                    password: 'jesus',
+                    firstName: 'jesus',
+                    lastName: 'jesus',
+                    role: 'director',
+                    country: 'Japon', 
+                    isEmailVerified: false,
+                    isActive: true,
+                    
+                    
                 },
                 {
                     email: 'contact.committee2@example.com',
@@ -44,8 +69,11 @@ export async function userSeed() {
                     firstName: 'Ken',
                     lastName: 'Committee',
                     role: 'committee',
+                    country: 'Japon', 
                     isEmailVerified: false,
-                    isActive: true
+                    isActive: true,
+                    
+
                 },
                 {
                     email: 'contact.visitor@example.com',
@@ -53,8 +81,21 @@ export async function userSeed() {
                     firstName: 'Guest',
                     lastName: 'User',
                     role: 'visitor',
+                    country: 'Japon',
                     isEmailVerified: false,
-                    isActive: true
+                    isActive: true,
+                   
+
+                },
+                {
+                    email: 'kylian@example.com',
+                    password: 'mbappe!',
+                    firstName: 'mbappe',
+                    lastName: 'kylian',
+                    role: 'director',
+                    country: 'France', 
+                    isEmailVerified: false,
+                    isActive: true         
                 }
             ],
             {

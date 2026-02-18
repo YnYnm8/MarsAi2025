@@ -28,7 +28,6 @@ Playlist.belongsTo(User);
 User.belongsToMany(Film, { through: Note, as: 'Notes' });
 Film.belongsToMany(User, { through: Note, as: 'Notes' });
 
-
 User.belongsToMany(Film, { through: Annotation, as: 'Annotators' });
 Film.belongsToMany(User, { through: Annotation, as: 'Annotators' });
 
@@ -44,7 +43,6 @@ Playlist.belongsToMany(Film, { through: PlaylistFilm});
 
 Film.hasMany(File, { onDelete: "CASCADE" });
 File.belongsTo(Film);
-
 
 Film.hasMany(Price);
 Price.belongsTo(Film);
