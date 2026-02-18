@@ -87,7 +87,7 @@ export async function getFilmsSelect(req, res) {
                 {
                     model: Film,
                     attributes: ['id', 'userId', 'title', 'collaborateur', 'description',
-                        'duration', 'generate_Ai'],
+                        'duration', 'generateAi'],
                     include: [
                         {
                             model: File,

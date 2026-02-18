@@ -42,7 +42,7 @@ export async function seedAll() {
                 duration: 85,
                 status: 'published',
                 description: 'Cine experimental sobre la memoria.',
-                generate_Ai: 'full_ai',
+                generateAi: 'fullAi',
                 collaborateur: 'Alex Rivera, Sora AI',
                 Files: [{
                     subtitle: 'English',
@@ -58,7 +58,7 @@ export async function seedAll() {
                 duration: 100,
                 status: 'draft',
                 description: 'Cine experimental sobre la memoria.',
-                generate_Ai: 'hybrid',
+                generateAi: 'hybrid',
                 collaborateur: 'no',
                 Files: [{
                     subtitle: 'Spanish',
