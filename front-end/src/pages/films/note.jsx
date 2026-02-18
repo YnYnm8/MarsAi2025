@@ -3,14 +3,16 @@ import { useParams } from "react-router-dom";
 import ListFilms from "./ListFilms";
 
 
+
 export default function Note() {
+  const { id } = useParams();// URLパラメータから映画IDを取得
   const [films, setFilms] = useState([]);// 映画データの状態
   const [selectedFilm, setSelectedFilm] = useState(null); // 選択中の映画
-  const [filter, setFilter] = useState("NOT WATCHED"); // 初期フィルター
+  const [filter, setFilter] = useState("NOT_WATCHED"); // 初期フィルター
   const [value, setValue] = useState(1); // スライダーの値
-  const { id } = useParams();// URLパラメータから映画IDを取得
   const [comment, setComment] = useState(""); // コメント欄の状態
   const [status, setStatus] = useState(null);
+  const [playlist, setPlaylist] = useState([])
   // モーダル用
   const [showModal, setShowModal] = useState(false);
   const [newListName, setNewListName] = useState("");
@@ -18,37 +20,68 @@ export default function Note() {
 
   // 映画データを取得
   useEffect(() => {
-    const fetchFilm = async () => {
+    const fetchFilmAndPlaylists = async () => {
       try {
-        const response = await fetch("http://localhost:3000/films", {
+        // 1️⃣ Fetch films
+        const filmRes = await fetch("http://localhost:3000/films", {
           method: "GET",
           headers: { "Content-Type": "application/json" },
         });
+        if (!filmRes.ok) throw new Error("Failed to fetch film data");
+        const filmsData = await filmRes.json();
 
-        if (!response.ok) throw new Error("Failed to fetch film data");
+        // 2️⃣ Fetch playlists
+        const playlistRes = await fetch("http://localhost:3000/comite/allplaylists", {
+          method: "GET",
+          headers: { "Content-Type": "application/json" },
+        });
+        if (!playlistRes.ok) throw new Error("Failed to fetch playlists");
+        const playlistsData = await playlistRes.json();
 
-        const data = await response.json();
+        // 3️⃣ Ajouter le status basé sur PlaylistFilms et la vraie playlist
+        const filmsWithStatus = filmsData.map(film => {
+          // Récupère l'ID de la playlist associée à ce film
+          const playlistId = film.PlaylistFilms?.[0]?.PlaylistId;
+          // Cherche l'objet playlist correspondant
+          const playlistObj = playlistsData.find(p => p.id === playlistId);
 
-        // --- 新しいコード: films に status を付与 ---
-        const filmsWithStatus = data.map(film => {
-          // 誰もレビューしていなければ NOT_WATCHED
-          const hasBeenReviewed = film.PlaylistFilms.length > 0;
           return {
             ...film,
-            status: hasBeenReviewed ? film.PlaylistFilms[0].status : "NOT_WATCHED"
+            // Définit le status à partir de la playlist, sinon "NOT_WATCHED"
+            status: playlistObj?.status || "NOT_WATCHED",
           };
         });
 
+        // 3️⃣b️⃣ Compter le nombre de films dans chaque playlist
+        const playlistWithCounts = playlistsData.map(p => {
+          const count = filmsWithStatus.filter(film =>
+            film.PlaylistFilms?.some(pf => pf.PlaylistId === p.id)
+          ).length;
+
+          return {
+            ...p,
+            filmCount: count // ajoute le nombre de films dans chaque playlist
+          };
+        });
+
+        // 4️⃣ Mettre à jour le state
         setFilms(filmsWithStatus);
-        setSelectedFilm(filmsWithStatus.find(f => f.status === "NOT_WATCHED") || filmsWithStatus[0]);
+        setSelectedFilm(
+          filmsWithStatus.find(f => f.status === "NOT_WATCHED") || filmsWithStatus[0]
+        );
+        setPlaylist(playlistWithCounts); // maintenant chaque playlist a filmCount
 
       } catch (error) {
-        console.error("Error fetching film data:", error);
+        console.error("Error fetching film or playlist data:", error);
       }
     };
 
-    fetchFilm();
+    fetchFilmAndPlaylists();
   }, [id]);
+
+
+
+  console.log("All films:", films);
 
   if (!films || !films.length) return <p className="text-center mt-10">Loading...</p>;
 
@@ -128,7 +161,7 @@ export default function Note() {
       setSelectedFilm(null);
     };
   };
-
+  // プレイリストを新しく作成する
   const handleCreateList = async () => {
     if (!newListName.trim()) {
       alert("Please enter a name for the list");
@@ -162,7 +195,14 @@ export default function Note() {
     }
   };
 
+  // すべてのプレイリストを取得する
+  // const handlePlaylist = async ()=>{
+  //   try {
 
+  //   } catch (error) {
+
+  //   }
+  // }
 
 
   return (
@@ -194,18 +234,20 @@ export default function Note() {
           {/* フィルター */}
           <div className="px-4 pb-4">
             <div className="flex justify-between text-xs font-semibold text-gray-500">
-              {["NOT WATCHED", "ACCEPTED", "REFUSED"].map((f) => (
+              {playlist.map((p) => (
                 <button
-                  key={f}
-                  onClick={() => setFilter(f)}
-                  className={`flex flex-col items-center gap-1 hover:text-blue-600 ${filter === f ? "text-blue-600 font-bold" : ""
+                  key={p.id}
+                  onClick={() => setFilter(p.status)}
+                  className={`flex flex-col items-center gap-1 hover:text-blue-600 ${filter === p.status ? "text-blue-600 font-bold" : ""
                     }`}
                 >
-                  <span>{f}</span>
+                  <span>{p.status} {p.filmCount}</span>
                 </button>
               ))}
             </div>
           </div>
+
+
 
           {/* 映画リスト */}
           <ListFilms
@@ -367,14 +409,14 @@ export default function Note() {
               Your Playlist personnelle
             </span>
             bott
-          
+
           </div>
 
 
 
 
         </main>
-      </div>
+      </div >
       {showModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white rounded-lg p-6 w-full max-w-md">
@@ -406,7 +448,8 @@ export default function Note() {
             </div>
           </div>
         </div>
-      )}
-    </div>
+      )
+      }
+    </div >
   );
 }

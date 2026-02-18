@@ -25,8 +25,10 @@ export async function getFilms(req, res) {
                     attributes: { exclude: ['password'] }
                 },
                 {
+                    model:Playlist,
+                },{
+                    
                     model:PlaylistFilm,
-              
                 }
             ],
             order: [['createdAt', 'DESC']]

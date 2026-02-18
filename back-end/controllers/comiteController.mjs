@@ -54,13 +54,15 @@ export async function reviewFilm(req, res) {
 
     // ② ステータスをPlaylistIdに変換
     let PlaylistId;
-    if (status === "ACCEPTED") PlaylistId = 2; // SELECTED
-    else if (status === "REFUSED") PlaylistId = 3; // REFUSED
+    if (status === "ACCEPTED")
+      PlaylistId = 2; // SELECTED
+    else if (status === "REFUSED")
+      PlaylistId = 3; // REFUSED
     else PlaylistId = 1; // NOT WATCHED
 
     // ③ 既存のPlaylistFilm行をすべて削除（重複行を消す）
     await PlaylistFilm.destroy({
-      where: { FilmId}
+      where: { FilmId },
     });
 
     // ④ 最新状態の行を1行だけ作成
@@ -73,18 +75,52 @@ export async function reviewFilm(req, res) {
     return res.json({
       message: "レビューとステータスを保存しました",
     });
-
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 }
+// GET/comite/filmbyplaylist
+// // すべてのSを取得するため
+export async function getFilmsByPlaylist(req, res) {
+  const PlaylistId = req.body;
+  const statusFilm = PlaylistId;
+  try {
+    const allstatuses = await Playlist.findAll({
+      where: { PlaylistId: statusFilm },
+      include: [
+        {
+          model: Film,
+          attributes: [],
+        },
+      ],
+    });
+    res.json(allstatuses);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+}
+
+
+// GET /comite/allplaylists
+// プレイリストを取得するためのもの
+export async function getAllPlaylists(req,res){
+ try {
+   
+   const playlists = await Playlist.findAll()
+
+ if (!playlists) return res.status(404).json({ message: "リストが存在しません" });
+res.json(playlists)
+   
+ } catch (err) {
+   res.status(500).json({ error: err.message });
+}}
 
 //POST /comite/create/playlist
 //選考委員が自分のプレイリストを作成するAPI
 
 export async function createPlaylist(req, res) {
   try {
-    const { UserId,status,FilmId} = req.body;
+    const { UserId, status, FilmId } = req.body;
     if (!status) {
       return res.status(400).json({ message: "プレイリスト名は必須です" });
     }
@@ -93,16 +129,15 @@ export async function createPlaylist(req, res) {
     const newPlaylist = await Playlist.create({
       UserId,
       status: status,
-      
     });
-if(FilmId){
-    // プレイリストに映画を追加
-    await PlaylistFilm.create({
-      FilmId,
-      UserId,
-      PlaylistId: newPlaylist.id,
-    });
-}
+    if (FilmId) {
+      // プレイリストに映画を追加
+      await PlaylistFilm.create({
+        FilmId,
+        UserId,
+        PlaylistId: newPlaylist.id,
+      });
+    }
     return res.status(201).json({
       message: "プレイリストを作成し、フィルムを追加しました",
       playlist: newPlaylist,
@@ -235,7 +270,7 @@ export async function acceptedFilm(req, res) {
 // POST /comite/refused/:FilmId // 映画を却下リストに追加
 export async function refuseFilm(req, res) {
   try {
-    const { UserId} = req.body;
+    const { UserId } = req.body;
     const { FilmId } = req.params;
 
     // // committeeのみ許可
@@ -250,7 +285,9 @@ export async function refuseFilm(req, res) {
     // REFUSED は PlaylistId = 3 と決め打ち
     const PlaylistId = 3;
 
-    let playlistFilm = await PlaylistFilm.findOne({ where: { FilmId, UserId } });
+    let playlistFilm = await PlaylistFilm.findOne({
+      where: { FilmId, UserId },
+    });
 
     if (playlistFilm) {
       playlistFilm.PlaylistId = PlaylistId;
@@ -261,9 +298,8 @@ export async function refuseFilm(req, res) {
 
     return res.json({
       message: "映画を REFUSED に更新しました",
-      data: playlistFilm
+      data: playlistFilm,
     });
-
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: err.message });
@@ -335,7 +371,6 @@ export async function modifyPlaylistStatus(req, res) {
     res.status(500).json({ error: err.message });
   }
 }
-
 
 /**
  *  映画をプレイリストに追加
@@ -412,4 +447,3 @@ export async function getComiteSortHistory(req, res) {
     return catchError(res, err);
   }
 }
-
