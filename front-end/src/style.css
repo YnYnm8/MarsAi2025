@@ -1,34 +1,39 @@
 @import "tailwindcss";
 @plugin "daisyui";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-:root {
-  /*Font Family */
-  --font-display: "Arimo", sans-serif;
-  --font-size-text: 1rem;
-  --font-size-subtile: 1.5rem;
-  --font-size-title: 6rem;
+@theme {
+  /* Colores de marca */
+  --color-brand-blue: #246BAD;
+  --color-brand-blue-light: #3B82F6;
 
-  /* text-7xl */
+  /* Escala de grises cinematográfica */
+  --color-dark-obsidian: #050505;
+  --color-dark-card: #0F0F0F;
+  --color-dark-border: #1F2937;
 
-  /*Text color*/
+  /* Acentos y estados */
+  --color-accent-purple: #8B5CF6;
+  --color-accent-cyan: #06B6D4;
 
-  --color-white-primary: #64748B;
-  --color-black-secondary: #0f0f0f;
-  --text-black-input: #0f0f0f;
-  --color-blue-tertiary: #51A2FF;
-  --color-white-subtitle: #e7e7e7;
-  --color-orange: #FF5845;
-  /*Background*/
+  /* Sombras con brillo (Glow) */
+  --shadow-glow-blue: 0 0 20px rgba(36, 107, 173, 0.4);
+  --shadow-glow-purple: 0 0 20px rgba(139, 92, 246, 0.3);
 
-  --bg-color-primary-black: #050505;
-  --bg-color-input: #d9cbcbd1;
-  --bg-rainbow: linear-gradient(180deg,
-      #51A2FF 0%,
-      #AD46FF 50%,
-      #FF2B7F 100%);
+  /* Tipografía */
+  --font-cinema: "Inter", "sans-serif";
 
-  /*Button*/
+  /* Animaciones */
+  --animate-subtle-pulse: pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
 
-  --btn-padding: 5px;
-  --btn-bg-color: #246BAD --btn-hover-color: #1A4F85;
+/* Estilos base seguros */
+@layer base {
+  body {
+    background-color: var(--color-dark-obsidian);
+    color: white;
+    font-family: var(--font-cinema);
+  }
 }

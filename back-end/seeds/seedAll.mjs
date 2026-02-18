@@ -37,6 +37,7 @@ export async function seedAll() {
         const films = await Film.bulkCreate([
             {
                 UserId: 1,
+                collaborateur: 'Alex Rivera, Sora AI',
                 title: 'Fragments of Reality',
                 duration: 85,
                 status: 'published',
@@ -72,14 +73,10 @@ export async function seedAll() {
                 duration: 95,
                 status: 'published',
                 description: 'Documental sobre la vida marina.',
-                generate_Ai: 'hybrid',
-                collaborateur: 'yes',
-                Files: [{
-                    subtitle: 'English',
-                    film_url: 'https://cdn.example.com/ocean.mp4',
-                    poster_url: 'https://cdn.example.com/ocean.jpg',
-                    outil_Ai: 'Midjourney'
-                }]
+                generateAi: 'hybrid',
+                Files: [
+                    { subtitle: 'English', film_url: 'https://cdn.example.com/f2.mp4', poster_url: 'https://cdn.example.com/p2.jpg', outil_Ai: 'None' }
+                ]
             }
         ], { 
             include: [File], 
