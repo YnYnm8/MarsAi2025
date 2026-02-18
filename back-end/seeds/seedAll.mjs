@@ -32,13 +32,12 @@ export async function seedAll() {
         const films = await Film.bulkCreate([
             {
                 UserId: 1,
-
                 collaborateur: 'Alex Rivera, Sora AI',
                 title: 'Fragments of Reality',
                 duration: 85,
                 status: 'draft',
                 description: 'Cine experimental sobre la memoria.',
-                generate_Ai: 'full_ai',
+                generateAi: 'fullAi',
                 Files: [
                     {
                         subtitle: 'English',
@@ -52,17 +51,12 @@ export async function seedAll() {
             },
             {
                 UserId: 2,
-                last_name: 'Johnson',
-                collaborateur: 'yes',
-                email: 'contact.johnson@films.com',
-                school: 'LA Film Academy',
-                country: 'USA',
-                bio: 'Director documentalista.',
+                collaborateur: 'yes',          
                 title: 'Ocean Voices',
                 duration: 95,
                 status: 'published',
                 description: 'Documental sobre la vida marina.',
-                generate_Ai: 'hybrid',
+                generateAi: 'hybrid',
                 Files: [
                     { subtitle: 'English', film_url: 'https://cdn.example.com/f2.mp4', poster_url: 'https://cdn.example.com/p2.jpg', outil_Ai: 'None' }
                 ]
