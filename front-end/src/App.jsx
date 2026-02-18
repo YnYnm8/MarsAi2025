@@ -37,6 +37,7 @@ function App() {
           <Route path="/register" element={<Register />} />
           <Route path="/logout" element={<Logout />} />
           <Route path="/me" element={<Profile />} />
+          <Route path="/profile" element={<Profile />} />
           <Route path="/" element={<Home />} />
 
           {/*ADMINISTRATOR*/}
