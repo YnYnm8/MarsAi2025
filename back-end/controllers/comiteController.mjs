@@ -378,33 +378,13 @@ export async function modifyPlaylistStatus(req, res) {
  */
 export async function addFilmToPlaylist(req, res) {
   try {
-    // const {UserId} = req.user.id; // JWT
+    const { UserId, FilmId, targetPlaylistId } = req.body;
 
-    const { UserId, FilmId, status } = req.body;
-
-    let target = status;
-
-    // 1️ PlaylistId が指定されていなければ、デフォルトの「検討中」リストを探す
-    if (!target) {
-      let playlist = await Playlist.findOne({
-        where: {
-          UserId,
-          status: target, // 例えば「検討中」ステータス
-        },
-      });
-
-      // 2️ デフォルト playlist がなければ作成
-      if (!playlist) {
-        playlist = await Playlist.create({
-          UserId,
-          status: target,
-        });
-      }
-
-      targetPlaylistId = playlist.id;
+    if (!UserId || !FilmId || !targetPlaylistId) {
+      return res.status(400).json({ errors: [{ field: "global", message: "UserId, FilmId, targetPlaylistId are required" }] });
     }
 
-    // 3️ PlaylistFilm に追加（重複を防ぐ）
+    // PlaylistFilm に追加（重複を防ぐ）
     const [item, created] = await PlaylistFilm.findOrCreate({
       where: {
         PlaylistId: targetPlaylistId,
@@ -415,9 +395,53 @@ export async function addFilmToPlaylist(req, res) {
 
     res.status(201).json(item);
   } catch (err) {
-    return catchError(res, err);
+    console.error(err);
+    res.status(500).json({ error: err.message });
   }
 }
+
+// export async function addFilmToPlaylist(req, res) {
+//   try {
+//     // const {UserId} = req.user.id; // JWT
+
+//     const { UserId, FilmId, status } = req.body;
+
+//     let target = status;
+
+//     // 1️ PlaylistId が指定されていなければ、デフォルトの「検討中」リストを探す
+//     if (!target) {
+//       let playlist = await Playlist.findOne({
+//         where: {
+//           UserId,
+//           status: target, // 例えば「検討中」ステータス
+//         },
+//       });
+
+//       // 2️ デフォルト playlist がなければ作成
+//       if (!playlist) {
+//         playlist = await Playlist.create({
+//           UserId,
+//           status: target,
+//         });
+//       }
+
+//       targetPlaylistId = playlist.id;
+//     }
+
+//     // 3️ PlaylistFilm に追加（重複を防ぐ）
+//     const [item, created] = await PlaylistFilm.findOrCreate({
+//       where: {
+//         PlaylistId: targetPlaylistId,
+//         FilmId,
+//         UserId,
+//       },
+//     });
+
+//     res.status(201).json(item);
+//   } catch (err) {
+//     return catchError(res, err);
+//   }
+// }
 /**
  *  選考委員の映画仕分け履歴取得
  * GET /playlistfilm/sort/history

@@ -28,8 +28,8 @@ comiteRouter.post("/select/:FilmId", acceptedFilm);
 comiteRouter.post("/refused/:FilmId", refuseFilm);
 comiteRouter.post("/film/list", addFilmToPlaylist);
 comiteRouter.get("/sort/history/:userId", getComiteSortHistory);
-// comiteRouter.post("/select/:playlist_id", modifyPlaylistStatus);
 comiteRouter.post("/note", addNote);
+// comiteRouter.post("/select/:playlist_id", modifyPlaylistStatus);
 // Object.function(String,function)
 
 // comiteRouter.get("/refused/:userId", getRefusedFilmsById);
