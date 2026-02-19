@@ -56,11 +56,11 @@ export const FilmComponent = ({ data, variant = "details" }) => {
                             {data.title}
                         </h2>
                         <div className="flex items-center gap-2 mt-1">
-                            <span className="text-[10px] text-blue-400 font-bold uppercase tracking-wider">
+                            <span className="text-[14px] text-blue-400 font-bold uppercase tracking-wider">
                                 {data.duration} min • {data.status}
                             </span>
                             {!isCard && mainFile.outil_Ai && (
-                                <span className="text-[10px] bg-blue-500/10 text-blue-400 border border-blue-500/20 px-2 py-0.5 rounded italic">
+                                <span className="text-[14px] bg-blue-500/10 text-blue-400 border border-blue-500/20 px-2 py-0.5 rounded italic">
                                     Propulsé par {mainFile.outil_Ai}
                                 </span>
                             )}
@@ -68,7 +68,7 @@ export const FilmComponent = ({ data, variant = "details" }) => {
                     </div>
 
                     {data.collaborateur && data.collaborateur !== "no" && (
-                        <div className="text-[10px] text-gray-400 bg-gray-800/50 px-2 py-1 rounded border border-gray-700">
+                        <div className="text-[12px] text-gray-400 bg-gray-800/50 px-2 py-1 rounded border border-gray-700">
                             Feat. <span className="text-white font-bold">
                                 {isCard ? data.collaborateur.split(',')[0] : data.collaborateur}
                             </span>

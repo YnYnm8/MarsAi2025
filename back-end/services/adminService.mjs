@@ -44,8 +44,8 @@ const fetchDashboardStats = async () => {
   
   // === Répartition IA ===
   const toolsUsage = await Film.findAll({
-    attributes: ["generate_Ai", [Sequelize.fn("COUNT", Sequelize.col("generate_Ai")), "count"]],
-    group: ["generate_Ai"],
+    attributes: ["generateAi", [Sequelize.fn("COUNT", Sequelize.col("generateAi")), "count"]],
+    group: ["generateAi"],
   });
 
   return {

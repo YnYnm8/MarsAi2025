@@ -11,6 +11,7 @@ export default function FilmsDetails() {
     const navigate = useNavigate();
 
     const handleDeleteFilm = async (filmId, e) => {
+
         e.stopPropagation(); // Empêche le clic de traverser et d'ouvrir la page du film
         if (!window.confirm("Voulez-vous vraiment supprimer ce film définitivement ?")) return;
 
@@ -29,6 +30,7 @@ export default function FilmsDetails() {
             console.error("Erreur suppression", error);
         }
     };
+
     useEffect(() => {
         const fetchFilmData = async () => {
             try {
@@ -80,7 +82,7 @@ export default function FilmsDetails() {
                     <div className="flex gap-3">
                         {/* Botón Modificar */}
                         <button
-                            onClick={() => navigate(`/film/edit/${movie.id}`)}
+                            onClick={() => navigate(`/edit/${movie.id}`)}
                             className="flex items-center gap-2 bg-blue-600/20 hover:bg-blue-600 border border-blue-500/50 text-blue-400 hover:text-white px-4 py-2 rounded-xl transition-all text-sm font-medium"
                         >
                             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -91,7 +93,7 @@ export default function FilmsDetails() {
 
                         {/* Botón Borrar */}
                         <button
-                            onClick={() => handleDeleteFilm (movie.id)}
+                            onClick={() => handleDeleteFilm(movie.id)}
                             className="flex items-center gap-2 bg-red-600/20 hover:bg-red-600 border border-red-500/50 text-red-400 hover:text-white px-4 py-2 rounded-xl transition-all text-sm font-medium"
                         >
                             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">

@@ -93,7 +93,7 @@ const AdminDetailsFilms = () => {
 
                                     <td className="px-6 py-4">
                                         <span className="text-[9px] px-2 py-0.5 rounded border border-slate-200 bg-white text-slate-600 font-black uppercase">
-                                            {film.generate_Ai}
+                                            {film.generateAi}
                                         </span>
                                     </td>
 

@@ -151,15 +151,15 @@ const Admin = () => {
                                 {(() => {
                                     const dataUsage = stats.toolsUsage || [];
                                     const finalStats = dataUsage.reduce((acc, curr) => {
-                                        const value = curr.generate_Ai;
+                                        const value = curr.generateAi;
                                         if (value === 'hybrid') acc.hybrid += curr.count;
-                                        else if (value === 'full_ai') acc.full_ai += curr.count;
+                                        else if (value === 'fullAi') acc.fullAi += curr.count;
                                         return acc;
-                                    }, { hybrid: 0, full_ai: 0 });
+                                    }, { hybrid: 0, fullAi: 0 });
 
                                     return [
                                         { id: 'hybrid', label: 'Hybrid AI', count: finalStats.hybrid },
-                                        { id: 'full_ai', label: 'Full AI', count: finalStats.full_ai }
+                                        { id: 'fullAi', label: 'Full AI', count: finalStats.fullAi }
                                     ].map((row) => {
                                         const percentage = stats.totalFilms > 0 ? (row.count / stats.totalFilms) * 100 : 0;
                                         return (

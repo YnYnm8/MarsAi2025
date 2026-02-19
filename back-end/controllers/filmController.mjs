@@ -16,7 +16,12 @@ export async function getFilms(req, res) {
             include: [
                 {
                     model: File,
+                    as: "Files",
                     attributes: ['id', 'film_url', 'poster_url', 'galerie_url', 'creativeMethodology', 'subtitle', 'outil_Ai']
+                },
+                {
+                    model: User, 
+                    attributes: ['firstName', 'lastName', 'country', 'avatar'] 
                 }
             ],
             order: [['createdAt', 'DESC']]
@@ -87,7 +92,7 @@ export async function getFilmsSelect(req, res) {
                 {
                     model: Film,
                     attributes: ['id', 'userId', 'title', 'collaborateur', 'description',
-                        'duration', 'generate_Ai'],
+                        'duration', 'generateAi'],
                     include: [
                         {
                             model: File,
