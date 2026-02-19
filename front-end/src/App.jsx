@@ -15,6 +15,7 @@ import AdminDetailsFilms from './pages/admin/admindetailsfilms.jsx';
 import AdminDash from './pages/admin/admindashboard.jsx';
 import FilmsDetails from "./pages/films/filmsDetails.jsx";
 import Reservation from "./pages/reservation/reservation.jsx";
+import Jury from "./pages/jury/jury.jsx";
 
 
 
@@ -40,6 +41,7 @@ function App() {
           <Route path="/admin/statistique" element={<AdminDashboard/>} />
           <Route path="/admin/detailsfilms" element={<AdminDetailsFilms />} />
           <Route path="/reservation" element={<Reservation/>}/>
+          <Route path="/jury" element={<Jury/>}/>
         </Routes>                                                                              
       </main>
     </>

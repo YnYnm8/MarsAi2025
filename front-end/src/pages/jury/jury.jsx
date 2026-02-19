@@ -1,13 +1,19 @@
+import TopNavbar from "../../components/navbar";
+
 
 function Jury() {
   return (
-    <div className="bg-[#282828] min-h-screen px-12 py-8">
+    
+    <div className="bg-[#282828] min-h-screen py-8">
+ <TopNavbar/>
 
 
-      <h1 className="text-[#FF5845] mb-6 font-bold">LES MEMBRES DU JURY</h1>
-      <h2 className="text-white text-4xl font-bold">UN JURY </h2>
-      <h2 className="text-white text-4xl font-bold"> D'EXCEPTION</h2>
-      <h2 className="text-blue-500 font-bold text-4xl mb-12">
+      
+
+      <h1 className="text-[#FF5845] mb-6 font-bold py-15 text-2xl ml-20">LES MEMBRES DU JURY</h1>
+      <h2 className="text-white text-6xl font-bold ml-20">UN JURY </h2>
+      <h2 className="text-white text-6xl font-bold ml-20"> D'EXCEPTION</h2>
+      <h2 className="text-blue-500 font-bold text-6xl mb-12 ml-20">
         POUR LE FUTUR
       </h2>
 
@@ -17,14 +23,14 @@ function Jury() {
           <img
             src="julien.jpg"
             alt="julien jury"
-            className="w-full h-full object-cover"
+            className="w-[1700px] h-full object-cover mx-auto rounded-2xl"
           />
 
           <div className="absolute bottom-6 left-6">
-            <p className="text-[#FF5845] font-bold text-3xl mb-10">
+            <p className="text-[#FF5845] font-bold text-3xl mb-10 ml-20">
               PRESIDENT DU JURY
             </p>
-            <p className="text-white font-bold text-5xl mb-20">
+            <p className="text-white font-bold text-5xl mb-20 ml-20 ">
               JULIEN VALROS
             </p>
           </div>
@@ -32,7 +38,8 @@ function Jury() {
       </div>
 
 
-      <div className="bg-[#333333] p-8 rounded-2xl mb-12 flex flex-col items-center text-center">
+     <div className="bg-[#333333] p-8 rounded-2xl mb-12 flex flex-col items-center text-center w-[1700px] mx-auto">
+
         <img src="ard.png" alt="ard" className="mb-6 w-16" />
 
         <p className="text-white max-w-3xl">
@@ -46,7 +53,7 @@ function Jury() {
 
 
       <div className="flex mb-20">
-        <button className="bg-[#FF5845] hover:bg-[#e04b3b] text-white font-bold py-3 px-6 rounded-xl transition duration-300 shadow-lg">
+        <button className="bg-[#FF5845] hover:bg-[#e04b3b] text-white font-bold py-3 px-6 rounded-xl transition duration-300 shadow-lg items-center text-center w-[400px] ml-19 ">
           VOIR SA FILMOGRAPHIE
         </button>
       </div>
