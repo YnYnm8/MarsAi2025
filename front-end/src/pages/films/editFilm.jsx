@@ -147,7 +147,7 @@ export default function EditFilm() {
                 if (result.errors) {
                     setToastMessages(result.errors.map(err => err.message));
                 } else {
-                    setToastMessages([resultmessage || "Erreur inconnue"]);
+                    setToastMessages([result.message || "Erreur inconnue"]);
                 }
                 return;
             }
