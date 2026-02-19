@@ -58,6 +58,8 @@ export async function reviewFilm(req, res) {
       PlaylistId = 2; // SELECTED
     else if (status === "REFUSED")
       PlaylistId = 3; // REFUSED
+    else if (status ==="TO_DISCUSS")
+      PlaylistId = 4; 
     else PlaylistId = 1; // NOT WATCHED
 
     // ③ 既存のPlaylistFilm行をすべて削除（重複行を消す）
@@ -66,7 +68,7 @@ export async function reviewFilm(req, res) {
     });
 
     // ④ 最新状態の行を1行だけ作成
-    await PlaylistFilm.create({
+    await PlaylistFilm.upsert({
       FilmId,
       UserId,
       PlaylistId,
@@ -130,14 +132,14 @@ export async function createPlaylist(req, res) {
       UserId,
       status: status,
     });
-    if (FilmId) {
-      // プレイリストに映画を追加
-      await PlaylistFilm.create({
-        FilmId,
-        UserId,
-        PlaylistId: newPlaylist.id,
-      });
-    }
+    // if (FilmId) {
+    //   // プレイリストに映画を追加
+    //   await PlaylistFilm.create({
+    //     FilmId,
+    //     UserId,
+    //     PlaylistId: newPlaylist.id,
+    //   });
+    // }
     return res.status(201).json({
       message: "プレイリストを作成し、フィルムを追加しました",
       playlist: newPlaylist,

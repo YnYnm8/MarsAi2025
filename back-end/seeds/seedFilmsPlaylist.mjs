@@ -246,7 +246,7 @@ export default async function seedFilmsPlaylist() {
              { PlaylistId: 1, status: "NOT_WATCHED" },
              { PlaylistId: 2, status: "ACCEPTED" },
              { PlaylistId: 3, status: "REFUSED" },
-             { PlaylistId: 4, status: "TO_DISCUS" },
+             { PlaylistId: 4, status: "TO_DISCUSS" },
            ]);
            await PlaylistFilm.bulkCreate([
             //  { PlaylistId: 1, FilmId: 1 }, // Hanako Committee
