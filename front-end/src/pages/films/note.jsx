@@ -3,9 +3,6 @@ import { useParams } from "react-router-dom";
 import ListFilms from "./ListFilms";
 import { useMemo } from "react";
 
-
-
-
 export default function Note() {
   const { id } = useParams();// URLパラメータから映画IDを取得
   const [films, setFilms] = useState([]);// 映画データの状態
@@ -23,135 +20,80 @@ export default function Note() {
 
   // 🔹 データ取得専用 useEffect
   // id が変わった時だけ再取得する
+  const fetchFilmAndPlaylists = async () => {
+    try {
+      // ① 映画を取得
+      const filmRes = await fetch("http://localhost:3000/films");
+      if (!filmRes.ok) throw new Error("Failed to fetch film data");
+      const filmsData = await filmRes.json();
+
+      // ② プレイリストを取得
+      const playlistRes = await fetch("http://localhost:3000/comite/allplaylists");
+      if (!playlistRes.ok) throw new Error("Failed to fetch playlists");
+      const playlistsData = await playlistRes.json();
+
+      // プレイリストに name がない場合はステータスを名前として代入
+      const playlistsWithName = playlistsData.map(p => ({
+        ...p,
+        name: p.name || p.status || "Sans nom", // name がなければ status を使用
+        filmCount: 0
+      }));
+      // ③ 各映画に status を追加
+      // （映画がどのPlaylistに属しているかを確認）
+      const filmsWithStatus = filmsData.map(film => {
+        const playlistId = film.PlaylistFilms?.[0]?.PlaylistId;
+        const playlistObj = playlistsData.find(p => p.id === playlistId);
+
+        return {
+          ...film,
+          status: playlistObj?.status || "NOT_WATCHED",
+          playlistName: playlistObj?.name || "なし",
+        };
+      });
+
+      // ④ state に保存（元データのみ保存）
+      setFilms(filmsWithStatus);
+      setPlaylist(playlistsWithName);
+
+      // 最初に選択する映画
+      setSelectedFilm(
+        filmsWithStatus.find(f => f.status === "NOT_WATCHED") || filmsWithStatus[0]
+      );
+
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
+
   useEffect(() => {
-    const fetchFilmAndPlaylists = async () => {
-      try {
-        // ① 映画を取得
-        const filmRes = await fetch("http://localhost:3000/films");
-        if (!filmRes.ok) throw new Error("Failed to fetch film data");
-        const filmsData = await filmRes.json();
-
-        // ② プレイリストを取得
-        const playlistRes = await fetch("http://localhost:3000/comite/allplaylists");
-        if (!playlistRes.ok) throw new Error("Failed to fetch playlists");
-        const playlistsData = await playlistRes.json();
-
-        // ③ 各映画に status を追加
-        // （映画がどのPlaylistに属しているかを確認）
-        const filmsWithStatus = filmsData.map(film => {
-          const playlistId = film.PlaylistFilms?.[0]?.PlaylistId;
-          const playlistObj = playlistsData.find(p => p.id === playlistId);
-
-          return {
-            ...film,
-            status: playlistObj?.status || "NOT_WATCHED",
-          };
-        });
-
-        // ④ state に保存（元データのみ保存）
-        setFilms(filmsWithStatus);
-        setPlaylist(playlistsData);
-
-        // 最初に選択する映画
-        setSelectedFilm(
-          filmsWithStatus.find(f => f.status === "NOT_WATCHED") || filmsWithStatus[0]
-        );
-
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
-    };
-
     fetchFilmAndPlaylists();
   }, [id]);
 
-  // 🔹 films または playlist が変わるたびに自動再計算
+  // // 🔹 films または playlist が変わるたびに自動再計算
   const playlistsWithCounts = useMemo(() => {
-
-    // playlist がまだ空なら何もしない
     if (!playlist.length) return [];
 
     return playlist.map(p => {
+      let count;
 
-      // この playlist に属している映画の数をカウント
-      const count = films.filter(film =>
-        film.PlaylistFilms?.some(pf => pf.PlaylistId === p.id)
-      ).length;
+      if (p.status === "NOT_WATCHED") {
+        // NOT_WATCHEDはステータスで数える
+        count = films.filter(film => film.status === "NOT_WATCHED").length;
+      } else {
+        // その他はプレイリストIDで数える
+        count = films.filter(film =>
+          film.PlaylistFilms?.some(pf => pf.PlaylistId === p.id)
+        ).length;
+      }
 
       return {
         ...p,
-        filmCount: count, // ← 動的に追加
+        filmCount: count,
       };
     });
-
-  }, [films, playlist]); // ← films が変わると自動更新
-
+  }, [films, playlist]);
 
 
-
-  // useEffect(() => {
-  //     const fetchFilmAndPlaylists = async () => {
-  //       try {
-  //         // Fetch films
-  //         const filmRes = await fetch("http://localhost:3000/films", {
-  //           method: "GET",
-  //           headers: { "Content-Type": "application/json" },
-  //         });
-  //         if (!filmRes.ok) throw new Error("Failed to fetch film data");
-  //         const filmsData = await filmRes.json();
-
-  //         //  Fetch playlists
-  //         const playlistRes = await fetch("http://localhost:3000/comite/allplaylists", {
-  //           method: "GET",
-  //           headers: { "Content-Type": "application/json" },
-  //         });
-  //         if (!playlistRes.ok) throw new Error("Failed to fetch playlists");
-  //         const playlistsData = await playlistRes.json();
-
-  //         //  Ajouter le status basé sur PlaylistFilms et la vraie playlist
-  //         const filmsWithStatus = filmsData.map(film => {
-  //           // Récupère l'ID de la playlist associée à ce film
-  //           const playlistId = film.PlaylistFilms?.[0]?.PlaylistId;
-  //           // Cherche l'objet playlist correspondant
-  //           const playlistObj = playlistsData.find(p => p.id === playlistId);
-
-  //           return {
-  //             ...film,
-  //             // Définit le status à partir de la playlist, sinon "NOT_WATCHED"
-  //             status: playlistObj?.status || "NOT_WATCHED",
-  //           };
-  //         });
-
-  //         // Compter le nombre de films dans chaque playlist
-  //         const playlistWithCounts = playlistsData.map(p => {
-  //           const count = filmsWithStatus.filter(film =>
-  //             film.PlaylistFilms?.some(pf => pf.PlaylistId === p.id)
-  //           ).length;
-
-  //           return {
-  //             ...p,
-  //             filmCount: count // ajoute le nombre de films dans chaque playlist
-  //           };
-  //         });
-
-  //         //  Mettre à jour le state
-  //         setFilms(filmsWithStatus);
-  //         setSelectedFilm(
-  //           filmsWithStatus.find(f => f.status === "NOT_WATCHED") || filmsWithStatus[0]
-  //         );
-  //         setPlaylist(playlistWithCounts); // maintenant chaque playlist a filmCount
-
-  //       } catch (error) {
-  //         console.error("Error fetching film or playlist data:", error);
-  //       }
-  //     };
-
-  //     fetchFilmAndPlaylists();
-  //   }, [id]);
-
-
-
-  console.log("All films:", films);
 
   if (!films || !films.length) return <p className="text-center mt-10">Loading...</p>;
   const getPlaylistIdFromStatus = (status) => {
@@ -202,33 +144,15 @@ export default function Note() {
       }
 
       const data = await response.json();
-      console.log("Review saved:", data);
 
       alert("Review saved successfully!");
 
-      const playlistId = getPlaylistIdFromStatus(clickedStatus);
 
-      const updatedFilms = films.map(film =>
-        film.id === selectedFilm.id
-          ? {
-            ...film,
-            status: clickedStatus,
-            PlaylistFilms: [{ PlaylistId: playlistId }]
-          }
-          : film
-      );
+      await fetchFilmAndPlaylists();
 
-      setFilms(updatedFilms);
-      // selectedFilm も更新して即時反映
-      setSelectedFilm(prev => ({ ...prev, status: clickedStatus }));
-
-      // リセット
       setComment("");
       setValue(1);
       setStatus(null);
-
-      // 次の映画へ自動移動
-      handleNextFilm(updatedFilms);
 
 
     } catch (error) {
@@ -237,17 +161,7 @@ export default function Note() {
     }
   };
   // 次のページで自動で移動する
-  const handleNextFilm = (filmsArray) => {
-    if (!filmsArray || filmsArray.length === 0) return;
-    const nextFilm = filmsArray.find(film => film.status === "NOT_WATCHED");
-    if (nextFilm) {
-      setSelectedFilm(nextFilm);
 
-    } else {
-      alert("No more films to review!");
-      setSelectedFilm(null);
-    };
-  };
   // プレイリストを新しく作成する
   const handleCreateList = async () => {
     if (!newListName.trim()) {
@@ -274,8 +188,8 @@ export default function Note() {
 
       const data = await response.json();
       console.log("Playlist created:", data);
-      // // 新しいプレイリストを state に追加
-      // setPlaylist(prev => [...prev, data]);
+  
+      await fetchFilmAndPlaylists();
 
       setShowModal(false);
       setNewListName("");
@@ -308,7 +222,6 @@ export default function Note() {
       }
 
       await playlistResponse.json();
-
 
       const noteResponse = await fetch("http://localhost:3000/comite/note", {
         method: "POST",
@@ -343,12 +256,12 @@ export default function Note() {
           : film
       );
 
+      // 次の映画へ自動移動
+      // handleNextFilm(updatedFilms);
       setFilms(updatedFilms);
       setSelectedFilm(prev => ({ ...prev, status: playlistStatus }));
 
       alert(`映画を "${playlistStatus}" に追加して成績も入力しました！`);
-      // 次の映画へ自動移動
-      handleNextFilm(updatedFilms);
 
     } catch (error) {
       console.error("Error adding film to playlist:", error);
@@ -356,45 +269,6 @@ export default function Note() {
     }
   };
 
-  // const handleAddToPlaylist = async (playlistId) => {
-  //   if (!selectedFilm) {
-  //     alert("No film selected!");
-  //     return;
-  //   }
-  //   try {
-  //     const response = await fetch("http://localhost:3000/comite/film/list", {
-  //       method: "POST",
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //       },
-  //       body: JSON.stringify({
-  //         FilmId: selectedFilm.id,
-  //         targetPlaylistId: playlistId,
-  //       }),
-  //     });
-  //     if (!response.ok) {
-  //       throw new Error("Failed to add film to playlist");
-  //     }
-
-  //     alert("Film added to playlist successfully!");
-
-  //     const data = await response.json();
-  //     console.log("Film added to playlist:", data);
-
-  //     // 追加後、映画の status を更新して即時反映
-  //     const updatedFilms = films.map(film => {
-  //       if (film.id === selectedFilm.id) {
-  //         return { ...film, status: playlist.find(p => p.id === playlistId)?.status || film.status };
-  //       }
-  //       return film;
-  //     });
-  //     setFilms(updatedFilms);
-  //     setSelectedFilm(prev => ({ ...prev, status: playlist.find(p => p.id === playlistId)?.status || prev.status }));
-  //   } catch (error) {
-  //     console.error("Error adding film to playlist:", error);
-  //     alert("Error adding film to playlist");
-  //   }
-  // }
 
 
   return (
@@ -582,7 +456,27 @@ export default function Note() {
               <button onClick={() => setShowModal(true)} className="bg-gray-900 text-white rounded-lg px-6 py-2 text-sm font-semibold w-full md:w-auto" > + PLACER DANS UNE LISTE </button> </div>
           </div>
           {/* {個人プレイリスト} */}
-          <div className="flex flex-wrap gap-2 mt-3"> {playlist.slice(4).map(p => (<button key={p.id} onClick={() => handleAddToPlaylistWithNote(p.id)} className="bg-purple-600 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-purple-700 transition" > {p.status} </button>))} </div>
+
+          <span className="flex items-center gap-2 text-gray-700 font-semibold">
+            <svg
+              className="w-6 h-6 text-purple-400"
+              fill="none"
+              stroke="curren </div>tColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M5 13l4 4L19 7"
+              />
+            </svg>
+            YOUR ORIGINAL PLAYLIST
+          </span>
+
+          <div className="flex flex-col md:flex-row gap-2 w-full md:w-auto mt-2 md:mt-0"> {playlist.slice(4).map(p => (<button key={p.id} onClick={() => handleAddToPlaylistWithNote(p.id)} className="bg-purple-600 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-purple-700 transition" > {p.status} </button>))} </div>
+
+
         </main>
       </div>
 
@@ -622,3 +516,7 @@ export default function Note() {
     </div >
   );
 }
+
+
+
+

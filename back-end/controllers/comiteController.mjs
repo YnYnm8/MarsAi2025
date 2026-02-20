@@ -34,7 +34,6 @@ export async function getAllOfficialSelection(req, res) {
 
 // POST/comite/review/FilmId
 // ノートとSTATUSを同時に保存するAPI
-
 export async function reviewFilm(req, res) {
   try {
     const { UserId, score, comment, status } = req.body;
@@ -44,8 +43,8 @@ export async function reviewFilm(req, res) {
     const film = await Film.findByPk(FilmId);
     if (!film) return res.status(404).json({ message: "映画が存在しません" });
 
-    // ① ノート保存（レビュー履歴として追加）
-    await Note.create({
+    // ① Note（成績・コメント）を更新または作成
+    await Note.upsert({
       UserId,
       FilmId,
       score,
@@ -54,33 +53,72 @@ export async function reviewFilm(req, res) {
 
     // ② ステータスをPlaylistIdに変換
     let PlaylistId;
-    if (status === "ACCEPTED")
-      PlaylistId = 2; // SELECTED
-    else if (status === "REFUSED")
-      PlaylistId = 3; // REFUSED
-    else if (status ==="TO_DISCUSS")
-      PlaylistId = 4; 
-    else PlaylistId = 1; // NOT WATCHED
+    if (status === "ACCEPTED") PlaylistId = 2;
+    else if (status === "REFUSED") PlaylistId = 3;
+    else if (status === "TO_DISCUSS") PlaylistId = 4;
+    else PlaylistId = 1;
 
-    // ③ 既存のPlaylistFilm行をすべて削除（重複行を消す）
-    await PlaylistFilm.destroy({
-      where: { FilmId },
-    });
-
-    // ④ 最新状態の行を1行だけ作成
+    // ③ PlaylistFilmを更新または作成
     await PlaylistFilm.upsert({
       FilmId,
       UserId,
       PlaylistId,
     });
 
-    return res.json({
-      message: "レビューとステータスを保存しました",
-    });
+    return res.json({ message: "レビューとステータスを保存しました" });
+
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 }
+
+
+// export async function reviewFilm(req, res) {
+//   try {
+//     const { UserId, score, comment, status } = req.body;
+//     const { FilmId } = req.params;
+
+//     // 映画が存在するか確認
+//     const film = await Film.findByPk(FilmId);
+//     if (!film) return res.status(404).json({ message: "映画が存在しません" });
+
+//     // ① ノート保存（レビュー履歴として追加）
+//     await Note.create({
+//       UserId,
+//       FilmId,
+//       score,
+//       comment,
+//     });
+
+//     // ② ステータスをPlaylistIdに変換
+//     let PlaylistId;
+//     if (status === "ACCEPTED")
+//       PlaylistId = 2; // SELECTED
+//     else if (status === "REFUSED")
+//       PlaylistId = 3; // REFUSED
+//     else if (status ==="TO_DISCUSS")
+//       PlaylistId = 4; 
+//     else PlaylistId = 1; // NOT WATCHED
+
+//     // ③ 既存のPlaylistFilm行をすべて削除（重複行を消す）
+//     await PlaylistFilm.destroy({
+//       where: { FilmId,UserId},
+//     });
+
+//     // ④ 最新状態の行を1行だけ作成
+//     await PlaylistFilm.upsert({
+//       FilmId,
+//       UserId,
+//       PlaylistId,
+//     });
+
+//     return res.json({
+//       message: "レビューとステータスを保存しました",
+//     });
+//   } catch (err) {
+//     res.status(500).json({ error: err.message });
+//   }
+// }
 // GET/comite/filmbyplaylist
 // // すべてのSを取得するため
 export async function getFilmsByPlaylist(req, res) {
