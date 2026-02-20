@@ -9,11 +9,13 @@ import { createFilmSchema } from '../validators/filmValidator.mjs';
 const router = express.Router();
 
 router.get('/', getFilms); // public
-router.get('/:id', getFilmById); //public
 router.get('/select/list', getFilmsSelect); //public
+router.get('/my-submissions/list', authMiddleware, getFilmsByUser); // realisateur
+
+router.get('/:id', getFilmById); //public
+
 router.post('/',  uploadFields, validate(createFilmSchema), uploadMiddleware, createFilm); //realisateur
 router.put('/:id', authMiddleware,  updateFilm); // realisateur 
-router.get('/my-submissions/list', authMiddleware, getFilmsByUser); // realisateur
 router.delete('/:id',authMiddleware, deleteFilm); //realisateur / admin
 
 export default router;

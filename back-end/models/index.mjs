@@ -16,11 +16,9 @@ import FilmSponsor from "./FilmSponsor.mjs";
 
 
 
-
-
 // === User ===
-User.hasMany(Film, {  onDelete: "CASCADE" });
-Film.belongsTo(User);
+User.hasMany(Film, { foreignKey: 'UserId', onDelete: "CASCADE" });
+Film.belongsTo(User, { foreignKey: 'UserId' });
 
 User.hasMany(Playlist, {onDelete: "CASCADE" });
 Playlist.belongsTo(User);
@@ -51,7 +49,7 @@ Film.belongsToMany(Sponsor, { through: FilmSponsor });
 Sponsor.belongsToMany(Film, { through: FilmSponsor });
 
 Film.belongsToMany(Selection, { through: "SelectionFilm" });
-Selection.belongsToMany(Film, { through: "SelectionFilm" });
+Selection.belongsToMany(Film, { through: "SelectionFilm", as:"Films" });
 
 // === Sponsor / Price ===
 Sponsor.hasMany(Price );

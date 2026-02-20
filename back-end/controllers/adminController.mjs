@@ -31,14 +31,11 @@ export const updateUserRole = async (req, res) => {
 
     if (!role) return res.status(400).json({ message: "Role requis" });
 
-    // 1. On récupère l'utilisateur en base pour voir son rôle actuel
     const userToUpdate = await User.findByPk(id);
-
     if (!userToUpdate) {
       return res.status(404).json({ success: false, message: "Utilisateur non trouvé" });
     }
 
-    // Si l'utilisateur est déjà admin, on bloque toute modification vers un autre rôle
     if (userToUpdate.role === 'admin' && role !== 'admin') {
       return res.status(403).json({
         success: false,
@@ -46,10 +43,7 @@ export const updateUserRole = async (req, res) => {
       });
     }
 
-
-    // changement role
     await adminService.changeUserRole(id, role);
-
     res.json({ success: true, message: `Rôle mis à jour avec succès vers : ${role}` });
   } catch (err) {
     console.error(err.message);
@@ -57,16 +51,48 @@ export const updateUserRole = async (req, res) => {
   }
 };
 
+/**
+ * GESTION DES FILMS
+ */
+
 export const getAllFilms = async (req, res) => {
   try {
     const films = await adminService.fetchAllFilms();
     res.json({ success: true, data: films });
   } catch (err) {
-    res.status(500).json({ success: false, message: "Erreur lors de la récupération des films" });
+    res.status(500).json({ success: false, message: "Erreur" });
   }
 };
 
+// Sélection Officielle (Accepted)
+// GET /admin/films/accepted
+export const getAcceptedFilms = async (req, res) => {
+  try {
+    const films = await adminService.fetchAcceptedFilms();
+    res.json({ success: true, data: films });
+  } catch (err) {
+    res.status(500).json({ success: false, message: err.message });
+  }
+};
 
+// Films Refusés (Rejected)
+// GET /admin/films/rejected
+export const getRejectedFilms = async (req, res) => {
+  try {
+    const films = await adminService.fetchRejectedFilms(); 
+    res.json({ success: true, data: films });
+  } catch (err) {
+    res.status(500).json({ success: false, message: err.message });
+  }
+};
 
-
-
+// Films à discuter (Pending)
+// GET /admin/films/pending
+export const getPendingFilms = async (req, res) => {
+  try {
+    const films = await adminService.fetchFilmsToDiscuss(); 
+    res.json({ success: true, data: films });
+  } catch (err) {
+    res.status(500).json({ success: false, message: err.message });
+  }
+};
