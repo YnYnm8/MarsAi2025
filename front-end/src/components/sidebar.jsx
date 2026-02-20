@@ -35,7 +35,7 @@ const Sidebar = () => {
             icon: <img src={film} alt="" className="w-8 h-8 object-contain" />,
             subItems: [
                 { name: 'SÉLECTION OFFICIELLE', path: '/admin/films/selected' },
-                { name: 'REFUSÉ', path: '/admin/films/refused' },
+                { name: 'REFUSÉ', path: '/admin/films/rejected' },
                 { name: 'A DISCUTER', path: '/admin/films/pending' },
             ],
         },

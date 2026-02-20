@@ -194,8 +194,8 @@ const AdminDash = () => {
                         <div className="space-y-4">
                             {[
                                 { label: "OUI", percent: filmProgress, color: "green", link: "/admin/films/selected" },
-                                { label: "NON", percent: 25, color: "red", link: "/admin/films/refused" },
-                                { label: "À DISCUTER", percent: 15, color: "orange", link: "/admin/films/pending" }
+                                { label: "NON", percent: 25, color: "red", link: "/admin/films/rejected" },
+                                { label: "À DISCUTER", percent: 10, color: "orange", link: "/admin/films/pending" }
                             ].map((item, index) => (
                                 <Link
                                     key={index}

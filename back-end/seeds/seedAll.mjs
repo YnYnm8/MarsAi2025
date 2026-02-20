@@ -7,26 +7,18 @@ import Sponsor from "../models/Sponsor.mjs";
 import Notification from "../models/Notification.mjs";
 import Annotation from "../models/Annotation.mjs";
 import FilmSponsor from "../models/FilmSponsor.mjs";
-// import User from "../models/User.mjs"; 
 
 export async function seedAll() {
     try {
-        console.log("🚀 Lancement de la seed complémentaire...");
 
-        // On s'assure que les users de test ont un pays avant de lier les films.
-        // Cela répare les anciennes données sans pays.
-        // await User.update({ country: 'FRANCE' }, { where: { id: 1 } });
-        // await User.update({ country: 'USA' }, { where: { id: 2 } });
-        // await User.update({ country: 'JAPON' }, { where: { id: 3 } });
-        // await User.update({ country: 'MEXIQUE' }, { where: { id: 4 } });
-
-        // --- SPONSORS & SELECTIONS ---
+        // 1. CRÉATION DES SPONSORS
         const sponsors = await Sponsor.bulkCreate([
             { name: 'CineWorld' },
             { name: 'FilmFest Inc.' },
             { name: 'ArtHouse Studio' }
         ], { returning: true });
 
+        // 2. CRÉATION DES SÉLECTIONS (Les boîtes vides)
         const selections = await Selection.bulkCreate([
             { name: 'Festival Internacional 2026' },
             { name: 'Competencia de Cortometrajes' },
@@ -43,7 +35,7 @@ export async function seedAll() {
                 UserId: 1,
                 title: 'Fragments of Reality',
                 duration: 85,
-                status: 'published',
+                status: 'accepted', 
                 description: 'Cine experimental sobre la memoria.',
                 generateAi: 'fullAi',
                 collaborateur: 'Alex Rivera, Sora AI',
@@ -56,10 +48,26 @@ export async function seedAll() {
                 }]
             },
             {
+                UserId: 5,
+                title: 'Gingembre',
+                duration: 85,
+                status: 'pending', 
+                description: 'Gitan du siecle.',
+                generate_Ai: 'full_ai',
+                collaborateur: 'LoicLeclair',
+                Files: [{
+                    subtitle: 'Francais',
+                    film_url: 'https://sample-videos.com/video123/mp4/720/big_buck_bunny_720p_1mb.mp4',
+                    poster_url: 'https://images.unsplash.com/photo-1536440136628-849c177e76a1',
+                    outil_Ai: 'chatgpt',
+                    creativeMethodology: 'Focus textures 35mm.'
+                }]
+            },
+            {
                 UserId: 4,
                 title: 'LES CHIIIII',
                 duration: 100,
-                status: 'draft',
+                status: 'submitted',
                 description: 'Cine experimental sobre la memoria.',
                 generateAi: 'hybrid',
                 collaborateur: 'no',
@@ -75,7 +83,22 @@ export async function seedAll() {
                 UserId: 2,
                 title: 'Ocean Voices',
                 duration: 95,
-                status: 'published',
+                status: 'rejected',
+                description: 'Documental sobre la vida marina.',
+                generate_Ai: 'hybrid',
+                collaborateur: 'yes',
+                Files: [{
+                    subtitle: 'English',
+                    film_url: 'https://cdn.example.com/ocean.mp4',
+                    poster_url: 'https://cdn.example.com/ocean.jpg',
+                    outil_Ai: 'Midjourney'
+                }]
+            },
+            {
+                UserId: 2,
+                title: 'harry potter',
+                duration: 95,
+                status: 'rejected',
                 description: 'Documental sobre la vida marina.',
                 generateAi: 'hybrid',
                 collaborateur: 'Jane Doe',
@@ -174,7 +197,18 @@ export async function seedAll() {
             returning: true 
         });
 
-        // --- RELATIONS (Playlists, Annotations, Prix) ---
+        // liaison selection a films
+        if (selections.length > 0 && films.length > 0) {
+
+            // Association film 
+            await selections[0].addFilm(films[0]); 
+            await selections[1].addFilm(films[1]);
+            await selections[2].addFilm(films[2]);
+            
+            console.log("✅ Table de jointure SelectionFilm mise à jour !");
+        }
+
+        // --- LE RESTE DES RELATIONS ---
         const playlists = await Playlist.bulkCreate([
             { status: 'public', UserId: 1 },
             { status: 'private', UserId: 2 }

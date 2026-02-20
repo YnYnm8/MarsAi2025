@@ -16,7 +16,6 @@ export async function userSeed() {
                     country: 'Japon',
                     isEmailVerified: true,
                     isActive: true,
-                    
 
                 },
                 {
