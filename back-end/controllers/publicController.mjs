@@ -1,12 +1,63 @@
 import { Op } from "sequelize";
+import { Resend } from 'resend';
 import sequelize from "../config/database.mjs"; 
-
-// Imports des Modèles
 import Film from "../models/Films.mjs";
-import User from "../models/User.mjs";
-import Vote from "../models/Vote.mjs"; 
+import User from "../models/User.mjs"; 
 import Subscriber from "../models/Subscriber.mjs";
-import SiteContent from "../models/SiteContent.mjs";
+// import SiteContent from "../models/SiteContent.mjs";
+import FilmShare from "../models/FilmShare.mjs"; 
+
+const resend = new Resend(process.env.RESEND_API_KEY);
+
+/**
+ * CA 3 : Incrémenter le compteur de partages (Unique par IP et Film)
+ */
+export const incrementShare = async (req, res) => {
+  try {
+    const { id } = req.params;
+    
+    // Récupération de l'adresse IP de l'utilisateur
+    const ipAddress = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
+
+    const film = await Film.findByPk(id);
+
+    if (!film) {
+      return res.status(404).json({ success: false, message: 'Film non trouvé' });
+    }
+
+    // On vérifie si ce couple (IP, Film) a déjà partagé
+    const existingShare = await FilmShare.findOne({
+      where: { filmId: id, ipAddress }
+    });
+
+    if (existingShare) {
+      // Le CA 3 bloque ici : on renvoie le nombre actuel sans l'incrémenter
+      return res.status(200).json({ 
+        success: true, 
+        message: 'Film déjà partagé par cet utilisateur', 
+        shares: film.shares, 
+        incremented: false 
+      });
+    }
+
+    // C'est un nouveau partage pour cette IP : on l'enregistre
+    await FilmShare.create({ filmId: id, ipAddress });
+
+    // On incrémente le compteur global du film
+    film.shares = (film.shares || 0) + 1;
+    await film.save();
+
+    res.status(200).json({ 
+      success: true, 
+      shares: film.shares, 
+      incremented: true 
+    });
+
+  } catch (error) {
+    console.error('incrementShare error:', error);
+    res.status(500).json({ success: false, message: 'Erreur lors du partage' });
+  }
+};
 
 /**
  * GetFilmsPublic - Récupérer les films publics avec pagination
@@ -54,7 +105,7 @@ export const getFilmsPublic = async (req, res) => {
       include: [
         {
           model: User,
-          as: 'director', // Assure-toi que l'alias dans Film.belongsTo(User, { as: 'director' }) correspond
+          as: 'director',
           attributes: ['id', 'firstName', 'lastName', 'school']
         }
       ],
@@ -98,50 +149,39 @@ export const getFilmDetail = async (req, res) => {
       return res.status(400).json({ message: 'ID film invalide' });
     }
 
+    // 1. D'ABORD, on récupère le film dans la BDD
     const film = await Film.findByPk(parseInt(id), {
       include: [
         {
           model: User,
           as: 'director',
-          attributes: ['id', 'firstName', 'lastName', 'bio', 'school', 'email'] // Email peut-être sensible en public ?
-        },
-        // Décommente si tu as un modèle Vote
-        /*
-        {
-          model: Vote,
-          as: 'evaluations',
-          attributes: ['score', 'verdict', 'comment'],
-          include: [{
-            model: User,
-            as: 'evaluator',
-            attributes: ['firstName', 'lastName']
-          }]
+          attributes: ['id', 'firstName', 'lastName', 'bio', 'school', 'email'] 
         }
-        */
       ]
     });
 
+    // 2. On vérifie s'il existe
     if (!film) {
       return res.status(404).json({ message: 'Film non trouvé' });
     }
 
-    // Vérifier les permissions (Si le film n'est pas public)
+    // 3. Vérifier les permissions (Si le film n'est pas public)
     const publicStatuses = ['approved', 'selected', 'finalist', 'winner'];
     
     if (!publicStatuses.includes(film.status)) {
-      // Si l'utilisateur n'est pas admin (req.user vient d'un middleware auth optionnel)
       if (!req.user || req.user.role !== 'admin') {
         return res.status(403).json({ message: 'Accès refusé' });
       }
     }
 
-    // Incrémenter les vues
-    // Attention: viewCount doit exister dans ton modèle Film
-    if (film.viewCount !== undefined) {
-        film.viewCount = (film.viewCount || 0) + 1;
+    // 4. ENSUITE SEULEMENT, on incrémente les vues
+
+    if (film.views !== undefined) {
+        film.views += 1;
         await film.save();
     }
 
+    // 5. On renvoie la réponse
     res.status(200).json({
       success: true,
       film
@@ -152,6 +192,43 @@ export const getFilmDetail = async (req, res) => {
     res.status(500).json({
       success: false,
       message: process.env.NODE_ENV === 'development' ? error.message : 'Failed to fetch film'
+    });
+  }
+};
+
+/**
+ * GetTopRatedFilms - Les meilleurs films par vote
+ * @route GET /api/public/films/top-rated?limit=10
+ * @returns {200} Top rated films
+ */
+export const getTopRatedFilms = async (req, res) => {
+  try {
+    const limit = Math.min(100, Math.max(1, parseInt(req.query.limit) || 10));
+
+    const films = await Film.findAll({
+      where: {
+        status: { [Op.in]: ['approved', 'selected', 'finalist', 'winner'] },
+        isPublished: true
+      },
+      include: [{
+        model: User,
+        as: 'director',
+        attributes: ['id', 'firstName', 'lastName']
+      }],
+      order: [['averageScore', 'DESC'], ['views', 'DESC']],
+      limit
+    });
+
+    res.status(200).json({
+      success: true,
+      data: films
+    });
+
+  } catch (error) {
+    console.error('getTopRatedFilms error:', error);
+    res.status(500).json({
+      success: false,
+      message: process.env.NODE_ENV === 'development' ? error.message : 'Failed to fetch top rated films'
     });
   }
 };
@@ -184,19 +261,28 @@ export const subscribeNewsletter = async (req, res) => {
       isActive: true,
       subscribedAt: new Date()
     });
-
-    res.status(201).json({
-      success: true,
-      message: 'Abonnement réussi',
-      subscriber
+    // 2. L'envoi de l'email de bienvenue !
+    const { data, error } = await resend.emails.send({
+      from: 'MARS.A.I <onboarding@resend.dev>', 
+      to: email, // L'email de la personne qui s'inscrit
+      subject: 'Bienvenue dans l\'aventure MARS.A.I !',
+      html: `
+        <h2>Merci pour ton inscription !</h2>
+        <p>Tu recevras bientôt nos dernières actualités sur le cinéma et l'IA.</p>
+        <p>it WORKS !!!!!!!!!</p>`
     });
+
+    if (error) {
+      console.error("Erreur d'envoi Resend :", error);
+    } else {
+      console.log(`Email de bienvenue envoyé avec succès : ${data.id}`); 
+    }
+
+    res.status(201).json({ success: true, message: "Abonnement réussi" });
 
   } catch (error) {
-    console.error('subscribeNewsletter error:', error);
-    res.status(500).json({
-      success: false,
-      message: process.env.NODE_ENV === 'development' ? error.message : 'Subscription failed'
-    });
+    console.error("Erreur Newsletter :", error);
+    res.status(500).json({ message: "Erreur serveur" });
   }
 };
 

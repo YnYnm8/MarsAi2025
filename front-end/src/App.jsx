@@ -16,6 +16,9 @@ import AdminDash from './pages/admin/admindashboard.jsx';
 import FilmsDetails from "./pages/films/filmsDetails.jsx";
 import Reservation from "./pages/reservation/reservation.jsx";
 import Jury from "./pages/jury/jury.jsx";
+import Gallery from "./pages/public/gallery.jsx";
+import EditFilm from "./pages/films/editFilm.jsx";
+
 
 
 
@@ -28,6 +31,7 @@ function App() {
           {/* PUBLIC */}
           <Route path="/gallery" element={<Gallery />} />
           <Route path="/jury" element={<Jury />} />
+          <Route path="/top-rated" element={<Gallery />} />
 
           {/* FILMS*/}
           <Route path="/film" element={<Film />} />

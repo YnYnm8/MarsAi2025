@@ -17,6 +17,7 @@ import adminRoutes from "./routes/adminRoutes.mjs";
 import { userSeed } from './seeds/userSeed.mjs';
 import { seedAll } from './seeds/seedAll.mjs';
 import { WorkshopSeed } from './seeds/workshopSeed.mjs';
+import publicRoutes from './routes/publicRoutes.mjs';
 
 dotenv.config();
 
@@ -67,6 +68,7 @@ app.use(helmet({
 }));
 
 // Routes
+app.use('/api', publicRoutes);
 app.use("/api", workshopRoutes);
 app.use("/", authRoute);
 app.use("/admin", adminRoutes);

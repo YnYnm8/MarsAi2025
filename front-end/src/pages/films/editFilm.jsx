@@ -293,13 +293,13 @@ export default function EditFilm() {
                                     <ImagesPreview
                                         id="galerie-1"
                                         name="galerie"
-                                        defaultImage={existingGallery[0] ? `${SERVER_URL}${existingGallery[0].url}` : defaultImg}
+                                        defaultImage={existingGallery[0] ? `http://localhost:3000${existingGallery[0].url}` : defaultImg}
                                         onFileSelect={(file) => handleGalleryChange(0, file)}
                                     />
                                     <ImagesPreview
                                         id="galerie-2"
                                         name="galerie"
-                                        defaultImage={existingGallery[1] ? `${SERVER_URL}${existingGallery[1].url}` : defaultImg}
+                                        defaultImage={existingGallery[1] ? `http://localhost:3000${existingGallery[1].url}` : defaultImg}
                                         onFileSelect={(file) => handleGalleryChange(1, file)}
                                     />
                                 </div>
