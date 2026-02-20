@@ -145,7 +145,7 @@ export default function Note() {
 
       const data = await response.json();
 
-      alert("Review saved successfully!");
+      // alert("Review saved successfully!");
 
 
       await fetchFilmAndPlaylists();
@@ -257,11 +257,12 @@ export default function Note() {
       );
 
       // 次の映画へ自動移動
-      // handleNextFilm(updatedFilms);
       setFilms(updatedFilms);
       setSelectedFilm(prev => ({ ...prev, status: playlistStatus }));
+      await fetchFilmAndPlaylists();
+  
 
-      alert(`映画を "${playlistStatus}" に追加して成績も入力しました！`);
+      // alert(`映画を "${playlistStatus}" に追加して成績も入力しました！`);
 
     } catch (error) {
       console.error("Error adding film to playlist:", error);
@@ -453,7 +454,7 @@ export default function Note() {
               >
                 TO_DISCUSS
               </button>
-              <button onClick={() => setShowModal(true)} className="bg-gray-900 text-white rounded-lg px-6 py-2 text-sm font-semibold w-full md:w-auto" > + PLACER DANS UNE LISTE </button> </div>
+              <button onClick={() => setShowModal(true)} className="bg-gray-900 text-white rounded-lg px-6 py-2 text-sm font-semibold w-full md:w-auto" > + CREAT YOUR PLYLIST</button> </div>
           </div>
           {/* {個人プレイリスト} */}
 

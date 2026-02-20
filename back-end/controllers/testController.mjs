@@ -264,7 +264,7 @@ export async function refuseFilm(req, res) {
     console.error(err);
     res.status(500).json({ error: err.message });
   }
-
+}
 /**
  * POST /comite/select/:PlaylistId
  * 映画を却下リストに追加 * 映画を公式セレクションに追加
@@ -408,4 +408,4 @@ export async function getComiteSortHistory(req, res) {
     return catchError(res, err);
   }
 }
-}
+
