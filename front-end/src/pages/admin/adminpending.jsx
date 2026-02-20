@@ -115,7 +115,7 @@ const AdminPending = () => {
                     <input 
                         type="text" 
                         placeholder="Rechercher un film ou un réalisateur..." 
-                        className="w-full p-4 rounded-2xl bg-white shadow-sm text-sm outline-none focus:ring-2 focus:ring-orange-200 transition-all" 
+                        className="w-full p-4 rounded-2xl bg-white text-black shadow-sm text-sm outline-none focus:ring-2 focus:ring-orange-200 transition-all" 
                         onChange={(e) => setSearchTerm(e.target.value)} 
                     />
                 </div>

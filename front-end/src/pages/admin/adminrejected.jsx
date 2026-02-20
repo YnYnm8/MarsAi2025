@@ -54,7 +54,7 @@ const Adminrejected = () => {
     });
 
     let tableContent;
-
+    
     if (loading) {
         tableContent = [...Array(5)].map((_, i) => (
             <tr key={i}>
@@ -120,7 +120,7 @@ const Adminrejected = () => {
                             onClick={() => navigate(`/films/${film.id}`)} 
                             className="text-gray-300 hover:text-black transition-colors transform hover:scale-110"
                         >
-                            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 ml-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <svg xmlns="" className="h-5 w-5 ml-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M9 5l7 7-7 7" />
                             </svg>
                         </button>
@@ -143,7 +143,7 @@ const Adminrejected = () => {
                     <input 
                         type="text" 
                         placeholder="Rechercher dans les refusés (titre ou réalisateur)..." 
-                        className="w-full p-4 rounded-2xl bg-white border-none shadow-sm text-sm outline-none focus:ring-2 focus:ring-orange-200 transition-all" 
+                        className="w-full p-4 rounded-2xl bg-white text-black border-none shadow-sm text-sm outline-none focus:ring-2 focus:ring-orange-200 transition-all" 
                         onChange={(e) => setSearchTerm(e.target.value)} 
                     />
                 </div>

@@ -2,7 +2,7 @@ import User from "../models/User.mjs";
 import Film from "../models/Films.mjs";
 import Selection from "../models/Selection.mjs";
 import Workshop from "../models/Workshop.mjs";
-import { Sequelize, Op } from "sequelize"; 
+import { Sequelize, Op } from "sequelize";
 
 /**
  * STATISTIQUES GLOBALES
@@ -17,6 +17,7 @@ const fetchDashboardStats = async () => {
   const finishedJuries = await User.count({ where: { role: 'committee', isActive: true } });
   const totalFilms = await Film.count();
   const totalSelected = await Selection.count();
+
   const totalViews = (await Film.sum("views")) || 0;
   const totalShares = (await Film.sum("shares")) || 0;
 
@@ -26,7 +27,7 @@ const fetchDashboardStats = async () => {
 
   const filmsByCountry = await Film.findAll({
     attributes: [
-      [Sequelize.literal("IFNULL(`User`.`country`, 'Non renseigné')"), "country"], 
+      [Sequelize.literal("IFNULL(`User`.`country`, 'Non renseigné')"), "country"],
       [Sequelize.fn("COUNT", Sequelize.col("Film.id")), "count"]
     ],
     include: [{ model: User, attributes: [], required: true }],
@@ -40,13 +41,22 @@ const fetchDashboardStats = async () => {
   });
 
   return {
-    totalUsers, activeUsers, totalFilms, totalViews, toolsUsage,
-    filmsByCountry, totalShares, totalSelected, newUsersToday,
-    totalJuries: 12, finishedJuries, workshopOccupation, totalInscrits, totalPlaces
+    totalUsers,
+    activeUsers,
+    totalFilms,
+    totalViews,
+    toolsUsage,
+    filmsByCountry,
+    totalShares,
+    totalSelected,
+    newUsersToday,
+    totalJuries: 12,
+    finishedJuries,
+    workshopOccupation,
+    totalInscrits,
+    totalPlaces
   };
 };
-
-
 
 /**
  * GESTION DES FILMS PAR STATUT
@@ -56,14 +66,14 @@ const fetchDashboardStats = async () => {
 const fetchAcceptedFilms = async () => {
   return await Film.findAll({
     where: { status: 'accepted' },
-    include: [{ model: User, attributes: ["id", "firstName", "lastName","email","country"] }]
+    include: [{ model: User, attributes: ["id", "firstName", "lastName", "email", "country"] }]
   });
 };
 
 // Uniquement les films refusés
 const fetchRejectedFilms = async () => {
   return await Film.findAll({
-    where: { status: 'rejected' }, 
+    where: { status: 'rejected' },
     include: [{ model: User, attributes: ["id", "firstName", "lastName", "email", "country"] }],
     order: [["updatedAt", "DESC"]],
   });
@@ -72,7 +82,7 @@ const fetchRejectedFilms = async () => {
 // Uniquement les films à discuter
 const fetchFilmsToDiscuss = async () => {
   return await Film.findAll({
-    where: { status: 'pending' }, 
+    where: { status: 'pending' },
     include: [{ model: User, attributes: ["id", "firstName", "lastName", "email", "country"] }],
     order: [["createdAt", "DESC"]],
   });

@@ -64,7 +64,6 @@ export const getAllFilms = async (req, res) => {
   }
 };
 
-// Sélection Officielle (Accepted)
 // GET /admin/films/accepted
 export const getAcceptedFilms = async (req, res) => {
   try {
@@ -75,7 +74,6 @@ export const getAcceptedFilms = async (req, res) => {
   }
 };
 
-// Films Refusés (Rejected)
 // GET /admin/films/rejected
 export const getRejectedFilms = async (req, res) => {
   try {
@@ -86,7 +84,6 @@ export const getRejectedFilms = async (req, res) => {
   }
 };
 
-// Films à discuter (Pending)
 // GET /admin/films/pending
 export const getPendingFilms = async (req, res) => {
   try {
