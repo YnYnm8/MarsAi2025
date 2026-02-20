@@ -20,8 +20,8 @@ export const filmSchema = z.object({
         .min(10, "Description obligatoire minimum 10 caractères"),
 
 
-    generate_Ai: z.string()
-        .refine(val => val === "full_ai" || val === "hybrid", {
+    generateAi: z.string()
+        .refine(val => val === "fullAi" || val === "hybrid", {
             message: "Il est obligatoire de choisir une option"
         }),
 

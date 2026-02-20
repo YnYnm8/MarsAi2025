@@ -41,14 +41,14 @@ export const register = async (req, res) => {
     }
 
     // 3. Création de l'utilisateur
-    // Note: Le hashage du mot de passe est géré automatiquement par le hook 'beforeCreate' dans le modèle User
     const user = await User.create({
       email,
       password, 
       firstName: firstName || "",
       lastName: lastName || "",
-      role: "visitor", // Rôle par défaut
+      role: "visitor", 
       isActive: true,
+      country: "FR",
     });
 
     res.status(201).json({ message: "Inscription réussie" });
