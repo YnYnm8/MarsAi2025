@@ -56,9 +56,9 @@ export default function Note() {
       setPlaylist(playlistsWithName);
 
       // 最初に選択する映画
-      setSelectedFilm(
-        filmsWithStatus.find(f => f.status === "NOT_WATCHED") || filmsWithStatus[0]
-      );
+      // setSelectedFilm(
+      //   filmsWithStatus.find(f => f.status === "NOT_WATCHED") || filmsWithStatus[0]
+      // );
 
     } catch (error) {
       console.error("Error fetching data:", error);
@@ -68,6 +68,17 @@ export default function Note() {
   useEffect(() => {
     fetchFilmAndPlaylists();
   }, [id]);
+  useEffect(() => {
+  if (!films.length) return;
+
+  // Trouver le premier film correspondant au filtre actuel
+  const firstFilm = films.find(film => film.status === filter);
+  if (firstFilm) {
+    setSelectedFilm(firstFilm);
+  } else {
+    setSelectedFilm(films[0]); // fallback
+  }
+}, [filter, films]);
 
   // // 🔹 films または playlist が変わるたびに自動再計算
   const playlistsWithCounts = useMemo(() => {
@@ -424,7 +435,7 @@ export default function Note() {
             <div className="flex flex-col md:flex-row gap-2 w-full md:w-auto mt-2 md:mt-0">
               <button
                 onClick={() => {
-                  setStatus("ACCEPTED");
+                  // setStatus("ACCEPTED");
                   handleSavereview("ACCEPTED");
                 }}
                 className={`bg-green-500 text-white rounded-lg px-6 py-2 text-sm font-semibold ${status === "ACCEPTED" ? "ring-4 ring-green-300" : ""
@@ -435,7 +446,7 @@ export default function Note() {
 
               <button
                 onClick={() => {
-                  setStatus("REFUSED");
+                  // setStatus("REFUSED");
                   handleSavereview("REFUSED");
                 }}
                 className={`bg-red-500 text-white rounded-lg px-6 py-2 text-sm font-semibold ${status === "REFUSED" ? "ring-4 ring-red-300" : ""
@@ -446,7 +457,7 @@ export default function Note() {
 
               <button
                 onClick={() => {
-                  setStatus("TO_DISCUSS");
+                  // setStatus("TO_DISCUSS");
                   handleSavereview("TO_DISCUSS");
                 }}
                 className={`bg-yellow-500 text-white rounded-lg px-6 py-2 text-sm font-semibold ${status === "TO_DISCUSS" ? "ring-4 ring-yellow-300" : ""

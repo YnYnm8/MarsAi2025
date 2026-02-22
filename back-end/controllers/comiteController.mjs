@@ -98,7 +98,7 @@ export async function reviewFilm(req, res) {
 
     // ③ すでに登録されているか確認
     const existing = await PlaylistFilm.findOne({
-      where: { UserId, FilmId }
+      where: {  FilmId }
     });
 
     if (existing) {
