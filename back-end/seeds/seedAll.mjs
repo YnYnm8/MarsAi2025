@@ -53,7 +53,7 @@ export async function seedAll() {
                 duration: 85,
                 status: 'pending', 
                 description: 'Gitan du siecle.',
-                generate_Ai: 'full_ai',
+                generateAi: 'fullAi',
                 collaborateur: 'LoicLeclair',
                 Files: [{
                     subtitle: 'Francais',
@@ -85,7 +85,7 @@ export async function seedAll() {
                 duration: 95,
                 status: 'rejected',
                 description: 'Documental sobre la vida marina.',
-                generate_Ai: 'hybrid',
+                generateAi: 'hybrid',
                 collaborateur: 'yes',
                 Files: [{
                     subtitle: 'English',

@@ -24,8 +24,6 @@ import Gallery from "./pages/public/gallery.jsx";
 import EditFilm from "./pages/films/editFilm.jsx";
 
 
-
-
 function App() {
 
   return (

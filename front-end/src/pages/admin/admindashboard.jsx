@@ -18,7 +18,7 @@ const AdminDash = () => {
         newUsersToday: 0
     });
     const [loading, setLoading] = useState(true);
-
+// API
     useEffect(() => {
         const fetchData = async () => {
             try {
@@ -193,7 +193,7 @@ const AdminDash = () => {
                         </div>
                         <div className="space-y-4">
                             {[
-                                { label: "OUI", percent: filmProgress, color: "green", link: "/admin/films/selected" },
+                                { label: "OUI", percent: filmProgress, color: "emerald", link: "/admin/films/selected" },
                                 { label: "NON", percent: 25, color: "red", link: "/admin/films/rejected" },
                                 { label: "À DISCUTER", percent: 10, color: "orange", link: "/admin/films/pending" }
                             ].map((item, index) => (
