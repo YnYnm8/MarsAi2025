@@ -1,4 +1,5 @@
 import TopNavbar from "../../components/navbar";
+import Footer from "../../components/footer";
 
 
 function Jury() {
@@ -255,6 +256,7 @@ function Jury() {
 
 
       </div>
+      <Footer />
     </div>
   );
 }
