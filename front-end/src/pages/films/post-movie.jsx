@@ -93,7 +93,7 @@ export default function PostFilm() {
 
             console.log("Film soumis avec succès :", data);
 
-            navigate("/me", {
+            navigate("/profile", {
                 state: { successMessage: "Film soumis avec succès !." },
             });// Redirige vers une page de succès après la soumission
         } catch (error) {
@@ -126,7 +126,7 @@ export default function PostFilm() {
 
                     <fieldset className="fieldset bg-dark-card border-dark-border rounded-box m-7 border p-10">
                         <div className="flex pb-5">
-                           
+
                             <p className="uppercase font-display pl-2 tracking-widest font-bold text-lg ">01. Identité du Film</p>
                         </div>
 
@@ -172,7 +172,7 @@ export default function PostFilm() {
                                         key={index}
                                         type="button"
                                         onClick={() => setSelected(option.value)}
-                                        className={`uppercase p-10 rounded-box border transition-all duration-200
+                                        className={`uppercase p-10 cursor-pointer rounded-box border transition-all duration-200
                                              ${selected === option.value
                                                 ? "bg-blue-tertiary text-white border-blue-500 shadow-glow-blue"
                                                 : "bg-black/50 text-white/50 border-gray-700 hover:bg-gray-800"
@@ -204,7 +204,7 @@ export default function PostFilm() {
                     {/* 03. Livrables */}
                     <fieldset className="fieldset tracking-widest uppercase bg-dark-card border-dark-border rounded-box text-base font-bold m-7 border p-10">
                         <div className="flex gap-3 pb-7">
-                           
+
                             <p className="uppercase font-display pt-1 text-base tracking-widest font-bold text-lg ">03. Livrables & Accessibilité</p>
                         </div>
                         <div className="grid grid-cols-2 gap-x-20 gap-y-15 ">
@@ -216,7 +216,8 @@ export default function PostFilm() {
 
                             {/*SUBTITULOS */}
                             <div className="text-white/50 flex flex-col">
-                                <DynamicSubtitleInput subtitles={subtitles} setSubtitles={setSubtitles} />
+                                <DynamicSubtitleInput subtitles={subtitles}
+                                    setSubtitles={setSubtitles} />
                             </div>
                             {/*POSTER */}
                             <ImagesPreview
@@ -255,11 +256,11 @@ export default function PostFilm() {
                                     <input type="text" placeholder="EX: JEAN DUPOND" className="bg-black border border-gray-700 p-5 w-200 rounded-box mt-5 text-white outline-none focus:border-blue-tertiary"
                                         value={collab.name} onChange={(e) => handleCollabChange(index, "name", e.target.value)} />
                                     {collaborateurs.length > 1 && (
-                                        <button type="button" onClick={() => removeCollaborateur(index)} className="bg-red-900/40 text-red-500 p-7 rounded-lg hover:bg-red-600 hover:text-white transition-all">X</button>
+                                        <button type="button" onClick={() => removeCollaborateur(index)} className="bg-red-900/40 cursor-pointer text-red-500 p-7 rounded-lg hover:bg-red-600 hover:text-white transition-all">X</button>
                                     )}
                                 </div>
                             ))}
-                            <button type="button" onClick={addCollaborateur} className="mt-2 self-center bg-blue-tertiary font-bold font-display text-base uppercase text-white p-5 rounded-lg shadow-lg">
+                            <button type="button" onClick={addCollaborateur} className="btn self-center cursor-pointer  bg-blue-tertiary text-white py-6 px-20 font-bold text-lg rounded-2xl uppercase shadow-glow-blue hover:scale-105 transition-all mt-10 mb-20 flex items-center gap-3">
                                 + Ajouter un collaborateur
                             </button>
                         </div>
@@ -273,7 +274,7 @@ export default function PostFilm() {
                         </div>
                     </div>
 
-                    <button className="btn self-center bg-blue-tertiary text-white p-8 font-bold text-base tracking-widest rounded-xl uppercase shadow-glow-blue hover:scale-105 transition-all mb-20" type="submit">
+                    <button className="btn self-center cursor-pointer bg-blue-tertiary text-white p-8 font-bold text-base tracking-widest rounded-xl uppercase shadow-glow-blue hover:scale-105 transition-all mb-20" type="submit">
                         finaliser ma soumission
                     </button>
                 </form>

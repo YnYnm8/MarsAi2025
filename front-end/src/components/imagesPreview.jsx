@@ -40,7 +40,7 @@ export default function ImagesPreview({ label, id, name, defaultImage,onFileSele
     return (
         <div>
             <p className="text-white-primary p-3">{label}</p>
-            <div className="bg-[#F2F2F2] p-4 rounded-lg h-60 w-full flex justify-center border-3 border-dashed">
+            <div className="p-4 rounded-lg w-full flex justify-center border-3 border-dashed">
                 <label
                     htmlFor={id}
                     className="flex flex-col items-center justify-center gap-7 cursor-pointer w-full h-full"
