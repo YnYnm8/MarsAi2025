@@ -48,6 +48,9 @@ app.use(express.json());
 
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
+// On dit à Express de rendre accessible le dossier "dist" de React
+app.use(express.static(path.join(__dirname, '../front-end/dist')));
+
 
 // Middleware HELMET
 app.use(helmet({
@@ -81,6 +84,10 @@ console.log("      ⏱️ Tables synchronisées  ✅ ");
 
 app.get("/", (req, res) => {
   res.send("API OK");
+});
+
+app.get(/.*/, (req, res) => {
+  res.sendFile(path.join(__dirname, "../front-end/dist/index.html"));
 });
 
 // serveur + BDD

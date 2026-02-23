@@ -1,7 +1,7 @@
-
 import bgImg from "../../assets/accueilbg.png";
 import TopNavbar from "../../components/navbar";
 import logo from "/src/assets/icon-stars.png"
+import Footer from "../../components/footer";
 
 
 const Home = () => {
@@ -60,9 +60,9 @@ const Home = () => {
                     </div>
                 </main>
 
-                {/* Espace vide en bas pour équilibrer le centrage vertical */}
-                <div className="relative z-10 h-80"></div>
+
             </div>
+                <Footer />
         </div>
     );
 };
