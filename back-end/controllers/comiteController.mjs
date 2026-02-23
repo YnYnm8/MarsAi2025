@@ -219,31 +219,53 @@ export async function getRefusedFilmsById(req, res) {
 // POST /comite/note
 // 委員会基準ごとの評価（1〜10）および／またはコメントを保存する。
 
+// export async function addNote(req, res) {
+//   try {
+//     //  const UserId = req.user.id; // JWT
+
+//     const { UserId, FilmId, score, comment } = req.body;
+//     const exsitsNote = await Note.findOne({
+//       where: { UserId, FilmId },
+//     });
+//     if (exsitsNote) {
+//       // 既存の評価がある場合は更新
+//       exsitsNote.score = score;
+//       exsitsNote.comment = comment;
+//       await exsitsNote.save();
+//       return res.json({
+//         message: "評価を更新しました",
+//         note: exsitsNote,
+//       });
+//     }
+//     const newNote = await Note.create({
+//       UserId,
+//       FilmId,
+//       score,
+//       comment,
+//     });
+//     res.json(newNote);
+//   } catch (error) {
+//     return catchError(res, error);
+//   }
+// }
 export async function addNote(req, res) {
   try {
-    //  const UserId = req.user.id; // JWT
-
     const { UserId, FilmId, score, comment } = req.body;
-    const exsitsNote = await Note.findOne({
-      where: { UserId, FilmId },
-    });
-    if (exsitsNote) {
-      // 既存の評価がある場合は更新
-      exsitsNote.score = score;
-      exsitsNote.comment = comment;
-      await exsitsNote.save();
-      return res.json({
-        message: "評価を更新しました",
-        note: exsitsNote,
-      });
+
+    const existsNote = await Note.findOne({ where: { UserId, FilmId } });
+
+    if (existsNote) {
+      // 更新
+      existsNote.score = score;
+      existsNote.comment = comment;
+      await existsNote.save();
+      return res.json({ message: "評価を更新しました", note: existsNote });
     }
-    const newNote = await Note.create({
-      UserId,
-      FilmId,
-      score,
-      comment,
-    });
-    res.json(newNote);
+
+    // 新規作成
+    const newNote = await Note.create({ UserId, FilmId, score, comment });
+    res.status(201).json(newNote);
+
   } catch (error) {
     return catchError(res, error);
   }
@@ -397,6 +419,29 @@ export async function modifyPlaylistStatus(req, res) {
  *  映画をプレイリストに追加
  * POST /comite/film/list
  */
+// export async function addFilmToPlaylist(req, res) {
+//   try {
+//     const { UserId, FilmId, targetPlaylistId } = req.body;
+
+//     if (!UserId || !FilmId || !targetPlaylistId) {
+//       return res.status(400).json({ errors: [{ field: "global", message: "UserId, FilmId, targetPlaylistId are required" }] });
+//     }
+
+//     // PlaylistFilm に追加（重複を防ぐ）
+//     const [item, created] = await PlaylistFilm.findOrCreate({
+//       where: {
+//         PlaylistId: targetPlaylistId,
+//         FilmId,
+//         UserId,
+//       },
+//     });
+
+//     res.status(201).json(item);
+//   } catch (err) {
+//     console.error(err);
+//     res.status(500).json({ error: err.message });
+//   }
+// }
 export async function addFilmToPlaylist(req, res) {
   try {
     const { UserId, FilmId, targetPlaylistId } = req.body;
@@ -405,13 +450,16 @@ export async function addFilmToPlaylist(req, res) {
       return res.status(400).json({ errors: [{ field: "global", message: "UserId, FilmId, targetPlaylistId are required" }] });
     }
 
-    // PlaylistFilm に追加（重複を防ぐ）
-    const [item, created] = await PlaylistFilm.findOrCreate({
-      where: {
-        PlaylistId: targetPlaylistId,
-        FilmId,
-        UserId,
-      },
+    // 🔥 既存の PlaylistFilm を削除（古いステータスをクリア）
+    await PlaylistFilm.destroy({
+      where: { FilmId, UserId }
+    });
+
+    // 新しい Playlist に追加
+    const item = await PlaylistFilm.create({
+      PlaylistId: targetPlaylistId,
+      FilmId,
+      UserId
     });
 
     res.status(201).json(item);

@@ -41,8 +41,20 @@ export default function Note() {
       // ③ 各映画に status を追加
       // （映画がどのPlaylistに属しているかを確認）
       const filmsWithStatus = filmsData.map(film => {
-        const playlistId = film.PlaylistFilms?.[0]?.PlaylistId;
-        const playlistObj = playlistsData.find(p => p.id === playlistId);
+        if (!film.PlaylistFilms || film.PlaylistFilms.length === 0) {
+          return {
+            ...film,
+            status: "NOT_WATCHED",
+            playlistName: "なし",
+          };
+        }
+
+        // 🔥 最新のPlaylistだけを使う
+        const latestPlaylistFilm = film.PlaylistFilms[film.PlaylistFilms.length - 1];
+
+        const playlistObj = playlistsData.find(
+          p => p.id === latestPlaylistFilm.PlaylistId
+        );
 
         return {
           ...film,
@@ -50,15 +62,11 @@ export default function Note() {
           playlistName: playlistObj?.name || "なし",
         };
       });
-
       // ④ state に保存（元データのみ保存）
       setFilms(filmsWithStatus);
       setPlaylist(playlistsWithName);
 
-      // 最初に選択する映画
-      // setSelectedFilm(
-      //   filmsWithStatus.find(f => f.status === "NOT_WATCHED") || filmsWithStatus[0]
-      // );
+
 
     } catch (error) {
       console.error("Error fetching data:", error);
@@ -69,16 +77,16 @@ export default function Note() {
     fetchFilmAndPlaylists();
   }, [id]);
   useEffect(() => {
-  if (!films.length) return;
+    if (!films.length) return;
 
-  // Trouver le premier film correspondant au filtre actuel
-  const firstFilm = films.find(film => film.status === filter);
-  if (firstFilm) {
-    setSelectedFilm(firstFilm);
-  } else {
-    setSelectedFilm(films[0]); // fallback
-  }
-}, [filter, films]);
+    // Trouver le premier film correspondant au filtre actuel
+    const firstFilm = films.find(film => film.status === filter);
+    if (firstFilm) {
+      setSelectedFilm(firstFilm);
+    } else {
+      setSelectedFilm(films[0]); // fallback
+    }
+  }, [filter, films]);
 
   // // 🔹 films または playlist が変わるたびに自動再計算
   const playlistsWithCounts = useMemo(() => {
@@ -106,19 +114,6 @@ export default function Note() {
 
 
 
-  if (!films || !films.length) return <p className="text-center mt-10">Loading...</p>;
-  const getPlaylistIdFromStatus = (status) => {
-    switch (status) {
-      case "ACCEPTED":
-        return 2;
-      case "REFUSED":
-        return 3;
-      case "TO_DISCUSS":
-        return 4;
-      default:
-        return 1; // NOT_WATCHED
-    }
-  };
   // ノートをつけてSTATUSを変更する。
   // "/review/:FilmId"
   const handleSavereview = async (clickedStatus) => {
@@ -172,6 +167,7 @@ export default function Note() {
   // 次のページで自動で移動する
 
   // プレイリストを新しく作成する
+  // モーダル表示用
   const handleCreateList = async () => {
     if (!newListName.trim()) {
       alert("Please enter a name for the list");
@@ -197,7 +193,7 @@ export default function Note() {
 
       const data = await response.json();
       console.log("Playlist created:", data);
-  
+
       await fetchFilmAndPlaylists();
 
       setShowModal(false);
@@ -244,7 +240,7 @@ export default function Note() {
       });
 
       if (!noteResponse.ok) {
-        const errorData = await noteResponseesponse.json();
+        const errorData = await noteResponse.json();
         throw new Error(errorData.message || "Fail to add your note to the film");
       }
 
@@ -265,13 +261,12 @@ export default function Note() {
           : film
       );
 
-      // 次の映画へ自動移動
-      setFilms(updatedFilms);
-      setSelectedFilm(prev => ({ ...prev, status: playlistStatus }));
-      await fetchFilmAndPlaylists();
-  
 
-      // alert(`映画を "${playlistStatus}" に追加して成績も入力しました！`);
+      await fetchFilmAndPlaylists(); // films が最新状態になる
+
+      // その後、filter に合う映画を選ぶ
+      const firstFilm = films.find(f => f.status === playlistStatus) || films[0];
+      setSelectedFilm(firstFilm);
 
     } catch (error) {
       console.error("Error adding film to playlist:", error);
@@ -484,7 +479,10 @@ export default function Note() {
             YOUR ORIGINAL PLAYLIST
           </span>
 
-          <div className="flex flex-col md:flex-row gap-2 w-full md:w-auto mt-2 md:mt-0"> {playlist.slice(4).map(p => (<button key={p.id} onClick={() => handleAddToPlaylistWithNote(p.id)} className="bg-purple-600 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-purple-700 transition" > {p.status} </button>))} </div>
+          <div className="flex flex-col md:flex-row gap-2 w-full md:w-auto mt-2 md:mt-0">
+            {playlist.slice(4).map(p => (<button key={p.id} onClick={() => handleAddToPlaylistWithNote(p.id)}
+              className="bg-purple-600 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-purple-700 transition" >
+              {p.status} </button>))} </div>
 
 
         </main>
