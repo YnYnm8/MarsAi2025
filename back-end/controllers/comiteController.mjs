@@ -237,7 +237,7 @@ export async function addNote(req, res) {
         note: exsitsNote,
       });
     }
-    const newNote = await Note.update({
+    const newNote = await Note.create({
       UserId,
       FilmId,
       score,

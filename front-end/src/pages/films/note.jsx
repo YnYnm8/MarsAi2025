@@ -156,8 +156,6 @@ export default function Note() {
 
       const data = await response.json();
 
-      // alert("Review saved successfully!");
-
 
       await fetchFilmAndPlaylists();
 
@@ -228,7 +226,7 @@ export default function Note() {
       });
 
       if (!playlistResponse.ok) {
-        const errorData = await response.json();
+        const errorData = await playlistResponse.json();
         throw new Error(errorData.message || "Failed to add film to playlist");
       }
 
@@ -246,7 +244,7 @@ export default function Note() {
       });
 
       if (!noteResponse.ok) {
-        const errorData = await response.json();
+        const errorData = await noteResponseesponse.json();
         throw new Error(errorData.message || "Fail to add your note to the film");
       }
 
