@@ -96,7 +96,7 @@ export default function PostFilm() {
 
             console.log("Film soumis avec succès :", data);
 
-            navigate("/profile", {
+            navigate("/me", {
                 state: { successMessage: "Film soumis avec succès !." },
             });// Redirige vers une page de succès après la soumission
         } catch (error) {
