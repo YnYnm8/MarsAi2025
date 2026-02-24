@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-// 1. Rappel de ton composant Sidebar
 import Sidebar from '../../components/sidebar';
 
 const AdminDetailsFilms = () => {
@@ -20,6 +19,8 @@ const AdminDetailsFilms = () => {
         };
         fetchFilms();
     }, []);
+    
+    console.log(films[0]);
 
     if (loading) return (
         <div className="flex min-h-screen bg-slate-50">
@@ -33,7 +34,7 @@ const AdminDetailsFilms = () => {
     );
 
     return (
-        // 2. Structure en Flex pour intégrer la sidebar
+        // Structure en Flex pour intégrer la sidebar
         <div className="flex min-h-screen bg-slate-50">
 
             {/* Rappel de la Sidebar */}
@@ -88,12 +89,13 @@ const AdminDetailsFilms = () => {
                                     </td>
 
                                     <td className="px-6 py-4 text-[11px] font-bold text-slate-500">
-                                        {film.country}
+                                        {/* On va chercher le pays DANS l'objet User que ton contrôleur envoie */}
+                                        {film.User?.country || "Pays non renseigné"}
                                     </td>
 
                                     <td className="px-6 py-4">
                                         <span className="text-[9px] px-2 py-0.5 rounded border border-slate-200 bg-white text-slate-600 font-black uppercase">
-                                            {film.generate_Ai}
+                                            {film.generateAi}
                                         </span>
                                     </td>
 

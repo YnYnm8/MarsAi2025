@@ -51,7 +51,7 @@ export const uploadMiddleware = async (req, res, next) => {
             title,
             description,
             duration,
-            generate_Ai,
+            generateAi,
         } = bodyValidation.data;
 
         const newFilm = await Film.create({
@@ -60,7 +60,7 @@ export const uploadMiddleware = async (req, res, next) => {
             title,
             description,
             duration,
-            generate_Ai,
+            generateAi,
             status: "submitted",
         })
 

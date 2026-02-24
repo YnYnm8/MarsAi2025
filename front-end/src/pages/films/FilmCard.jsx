@@ -5,7 +5,7 @@ export default function FilmCard({ film, isActive }) {
   return (
     <div   // ← ここを div に変更
       className={`flex items-center gap-3 rounded-lg p-2 cursor-pointer ${
-        isActive ? "bg-blue-50" : "hover:bg-gray-50"
+        isActive ? "bg-black" : "hover:bg-gray-400"
       }`}
     >
       <img
@@ -15,10 +15,11 @@ export default function FilmCard({ film, isActive }) {
       />
 
       <div>
-        <p className="text-gray-600">{film.id}</p>
-        <p className="text-sm font-semibold text-gray-600">{film.title}</p>
+        <p className="text-[#246BAD]">{film.id}</p>
+        <p className="text-sm font-semibold text-[#FF5845]">{film.title}</p>
+        <p className="text-xs text-gray-5OO">{film.duration} min.</p>
         <p className="text-xs text-gray-500">
-          {film.User.lastName} – {film.User.country}
+          {film.User.lastName} –  ORIGIN  {film.User.country}
         </p>
       </div>
     </div>

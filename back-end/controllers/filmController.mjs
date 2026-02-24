@@ -18,12 +18,14 @@ export async function getFilms(req, res) {
             include: [
                 {
                     model: File,
+                    as: "Files",
                     attributes: ['id', 'film_url', 'poster_url', 'galerie_url', 'creativeMethodology', 'subtitle', 'outil_Ai']
                 },
                 {
-                    model: User,
-                    attributes: { exclude: ['password'] }
+                    model: User, 
+                    attributes: ['firstName', 'lastName', 'country', 'avatar'] 
                 },
+              
                 {
                     model:Playlist,
                 },{
@@ -90,39 +92,43 @@ export async function getFilmById(req, res) {
         return catchError(res, err)
     }
 }
-/**  
+/*
  * GET  /films/select  == /films/select/list
  *  Récupération de tous les films de la table Selection
  */
+
 export async function getFilmsSelect(req, res) {
     try {
         const selectData = await Selection.findAll({
             include: [
                 {
                     model: Film,
+                    as: 'Films', 
+                    required: true, 
                     attributes: ['id', 'userId', 'title', 'collaborateur', 'description',
-                        'duration', 'generate_Ai'],
+                        'duration', 'generateAi'],
                     include: [
                         {
+                            model: User, 
+                            attributes: ['id', 'firstName', 'lastName']
+                        },
+                        {
+                            // poster_url
                             model: File,
-                            attributes: ['id', 'creativeMethodology', 'galerie_url', 'subtitle', 'film_url', 'poster_url']
+                            as: 'Files', 
+                            attributes: ['poster_url'],
+                            limit: 1 
                         }
                     ]
                 }
             ]
         });
-        if (!selectData || selectData.length === 0) {
-            return res.status(200).json({
-                message: "Aucune sélection de films disponible",
-                data: []
-            });
-        }
-        return res.status(200).json(selectData);
+        res.status(200).json(selectData);
     } catch (err) {
-        return catchError(res, err)
+        console.error("Erreur getFilmsSelect:", err);
+        res.status(500).json({ message: err.message });
     }
 }
-
 /*
 *  POST  /films
 *   Creation d'un nouveau film

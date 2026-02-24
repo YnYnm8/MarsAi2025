@@ -14,10 +14,12 @@ import authRoute from "./routes/authRoutes.mjs";
 import filmRoutes from "./routes/filmRoutes.mjs";
 import profileRoutes from "./routes/profileRoutes.mjs";
 import adminRoutes from "./routes/adminRoutes.mjs";
-import selectionRoutes from "./routes/selectionRoutes.mjs";
-import { userSeed } from "./seeds/userSeed.mjs";
-import { seedAll } from "./seeds/seedAll.mjs";
-import seedFilmsPlaylist from "./seeds/seedFilmsPlaylist.mjs";
+import { userSeed } from './seeds/userSeed.mjs';
+import { seedAll } from './seeds/seedAll.mjs';
+import { WorkshopSeed } from './seeds/workshopSeed.mjs';
+import publicRoutes from './routes/publicRoutes.mjs';
+// import seedFilmsPlaylist from "./seeds/seedFilmsPlaylist.mjs";
+
 dotenv.config();
 
 // Configuration pour __dirname
@@ -26,6 +28,9 @@ const __dirname = path.dirname(__filename);
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+const FRONTEND_URL = (process.env.FRONTEND_URL || 'http://localhost:5173')
+  .replace(/\/$/, '');
+
 
 // Configuration CORS
 app.use(
@@ -77,13 +82,13 @@ app.use(
 );
 
 // Routes
-app.use("/api", workshopRoutes);
+app.use('/api', publicRoutes);
+app.use("/api",  workshopRoutes);
 app.use("/", authRoute);
 
 app.use("/admin", adminRoutes);
 app.use("/films", filmRoutes);
 app.use("/comite", comiteRouter);
-app.use("/selection", selectionRoutes);
 app.use("/", profileRoutes);
 
 console.log(" ");
@@ -106,12 +111,14 @@ try {
   //Seed
   await userSeed();
   await seedAll();
-  await seedFilmsPlaylist();
+  await WorkshopSeed();  
+  // await seedFilmsPlaylist();
 
   console.log(" ");
   console.log("      💾 Seeds insérés avec succès  ✅");
 
-  app.listen(PORT, () => {
+  app.listen(PORT, () => { 
+    
     console.log(" ");
     console.log(`    🚀 Serveur démarré sur http://localhost:${PORT} 🔌`);
   });

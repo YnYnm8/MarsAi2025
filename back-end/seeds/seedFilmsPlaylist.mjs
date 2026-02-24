@@ -256,35 +256,7 @@ export default async function seedFilmsPlaylist() {
       { PlaylistId: 1, FilmId: films[6].id },
       { PlaylistId: 1, FilmId: films[7].id },
     ]);
-    //  await PlaylistFilm.bulkCreate([
-    //  { PlaylistId: 1, FilmId: 1 }, // Hanako Committee
-    //  { PlaylistId: 1, FilmId: 2 }, // Ken Committee
-    //  { PlaylistId: 1, FilmId: 3}, // Fumiko Committee
-    //  { PlaylistId: 1, FilmId: 4},
-    //  { PlaylistId: 1, FilmId: 5},
-    //  { PlaylistId: 1, FilmId: 6},
-    //  { PlaylistId: 1, FilmId: 7},
-    //  { PlaylistId: 1, FilmId: 8},
-    //  { PlaylistId: 1, FilmId: 9},
-    //  { PlaylistId: 1, FilmId: 10},
-    //  { PlaylistId: 1, FilmId: 11},
-    //  { PlaylistId: 1, FilmId: 12},
-
-    // Playlist 2: ACCEPTED (UserId 2) — 例として少数
-    //  { PlaylistId: 2, FilmId: 1, UserId: 3 },
-    //  { PlaylistId: 2, FilmId: 3, UserId: 4 },
-    //  { PlaylistId: 2, FilmId: 5, UserId: 9 },
-
-    // Playlist 3: REFUSED (UserId 1) — 例として少数
-    //  { PlaylistId: 3, FilmId: 2, UserId: 3 },
-    //  { PlaylistId: 3, FilmId: 4, UserId: 4 },
-    //  { PlaylistId: 3, FilmId: 6, UserId: 9 },
-
-    // { PlaylistId: 1, FilmId: 1, UserId: 1 },
-    // { PlaylistId: 3, FilmId: 2, UserId: 1 },
-    // { PlaylistId: 2, FilmId: 3, UserId: 2 },
-    // { PlaylistId: 3, FilmId: 4, UserId: 2 },
-    //  ]);
+   
     // --- NOTES (comentarios) ---
     await Note.bulkCreate([
       {

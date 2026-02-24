@@ -1,10 +1,9 @@
-
-import User from '../models/User.mjs'; 
+import User from '../models/User.mjs';
 
 export async function userSeed() {
     try {
         console.log(" Insertion des utilisateurs...");
-        
+
         await User.bulkCreate(
             [
                 {
@@ -13,17 +12,30 @@ export async function userSeed() {
                     firstName: 'Admin',
                     lastName: 'User',
                     role: 'admin',
+                    country: 'Japon',
                     isEmailVerified: true,
-                    isActive: true
+                    isActive: true,
+
                 },
                 {
-                    email: 'contact.director@example.com',
+                    email: 'director@example.com',
                     password: 'Director123!',
                     firstName: 'Taro',
                     lastName: 'Director',
                     role: 'director',
+                    country: 'France', 
                     isEmailVerified: true,
-                    isActive: true
+                    isActive: true,
+                    
+
+                    lastName: 'DirectorTEST',
+                    role: 'director',
+                    isEmailVerified: true,
+                    isActive: true,
+                    bio: 'Réalisateur passionné de Sci-Fi',
+                    school: 'Ecole de Cinéma de Paris',
+                    country: 'France',
+                    socialNetworks: { instagram: 'https://instagram.com/taro' },
                 },
                 {
                     email: 'contact.committee1@example.com',
@@ -31,8 +43,23 @@ export async function userSeed() {
                     firstName: 'Hanako',
                     lastName: 'Committee',
                     role: 'committee',
+                    country: 'Japon', 
                     isEmailVerified: false,
-                    isActive: true
+                    isActive: true,
+                   
+
+                },
+                 {
+                    email: 'jesus@example.com',
+                    password: 'jesus',
+                    firstName: 'jesus',
+                    lastName: 'jesus',
+                    role: 'director',
+                    country: 'Japon', 
+                    isEmailVerified: false,
+                    isActive: true,
+                    
+                    
                 },
                 {
                     email: 'contact.committee2@example.com',
@@ -40,8 +67,11 @@ export async function userSeed() {
                     firstName: 'Ken',
                     lastName: 'Committee',
                     role: 'committee',
+                    country: 'Japon', 
                     isEmailVerified: false,
-                    isActive: true
+                    isActive: true,
+                    
+
                 },
                 {
                     email: 'contact.visitor@example.com',
@@ -49,70 +79,28 @@ export async function userSeed() {
                     firstName: 'Guest',
                     lastName: 'User',
                     role: 'visitor',
+                    country: 'Japon',
                     isEmailVerified: false,
-                    isActive: true
-                },
-                {
+                    isActive: true,
+                   
 
-                    email: 'director3@example.com',
-                    password: 'Director123!',
-                    firstName: 'Charlie',
-                    lastName: 'Director',
+                },
+                {
+                    email: 'kylian@example.com',
+                    password: 'mbappe!',
+                    firstName: 'mbappe',
+                    lastName: 'kylian',
                     role: 'director',
-                    isEmailVerified: true,
-                    isActive: true
-                },
-                {
-                    email: 'director4@example.com',
-                    password: 'Director123!',
-                    firstName: 'Diana',
-                    lastName: 'Director',
-                    role: 'director',
-                    isEmailVerified: true,
-                    isActive: true
-                },
-                {
-                    email: 'director5@example.com',
-                    password: 'Director123!',
-                    firstName: 'Edward',
-                    lastName: 'Director',
-                    role: 'director',
-                    isEmailVerified: true,
-                    isActive: true
-                },
-                {
-                    email: 'committee3@example.com',
-                    password: 'Committee123!',
-                    firstName: 'Fumiko',
-                    lastName: 'Committee',
-                    role: 'committee',
+                    country: 'France', 
                     isEmailVerified: false,
-                    isActive: true
-                },
-                {
-                    email: 'committee4@example.com',
-                    password: 'Committee123!',
-                    firstName: 'Goro',
-                    lastName: 'Committee',
-                    role: 'committee',
-                    isEmailVerified: false,
-                    isActive: true
-                },
-                {
-                    email: 'committee5@example.com',
-                    password: 'Committee123!',
-                    firstName: 'Hana',
-                    lastName: 'Committee',
-                    role: 'committee',
-                    isEmailVerified: false,
-                    isActive: true
+                    isActive: true         
                 }
             ],
             {
                 individualHooks: true // Important pour que le hachage du mot de passe (argon2/bcrypt) s'exécute
             }
         );
-        
+
         console.log("   ✅ Utilisateurs insérés avec succès !");
     } catch (error) {
         console.error("   ❌ Erreur dans userSeed.mjs :");
@@ -122,5 +110,5 @@ export async function userSeed() {
             console.error(error);
         }
         throw error; // On propage l'erreur pour que l'app s'arrête proprement
-    }
-}
+    }}
+    

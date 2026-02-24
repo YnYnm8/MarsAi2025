@@ -15,12 +15,18 @@ import WorkshopCategory from "./WorkshopCategory.mjs";
 import FilmSponsor from "./FilmSponsor.mjs";
 
 
-// === User ===
-User.hasMany(Film, {  onDelete: "CASCADE" });
-Film.belongsTo(User);
 
-User.belongsToMany(Film, { through: Note, as: 'Notes' });
-Film.belongsToMany(User, { through: Note, as: 'Notes' });
+
+
+// === User ===
+User.hasMany(Film, { foreignKey: 'UserId', onDelete: "CASCADE" });
+Film.belongsTo(User, { foreignKey: 'UserId' });
+
+User.hasMany(Playlist, {onDelete: "CASCADE" });
+Playlist.belongsTo(User);
+
+User.belongsToMany(Film, { through: Note, as: 'Notes' , onUpdate: "CASCADE" });
+Film.belongsToMany(User, { through: Note, as: 'Notes' , onUpdate: "CASCADE"});
 
 User.belongsToMany(Film, { through: Annotation, as: 'Annotators' });
 Film.belongsToMany(User, { through: Annotation, as: 'Annotators' });
@@ -41,7 +47,6 @@ Playlist.belongsToMany(Film, { through: PlaylistFilm});
 Film.hasMany(File, { onDelete: "CASCADE" });
 File.belongsTo(Film);
 
-
 Film.hasMany(Price);
 Price.belongsTo(Film);
 
@@ -50,7 +55,6 @@ Sponsor.belongsToMany(Film, { through: FilmSponsor });
 
 Film.belongsToMany(Selection, { through: "SelectionFilm" });
 Selection.belongsToMany(Film, { through: "SelectionFilm" });
-
 
 // === Sponsor / Price ===
 Sponsor.hasMany(Price );

@@ -3,8 +3,12 @@ import {
   getStats,
   getAllUsers,
   updateUserRole,
-  getAllFilms
+  getAllFilms,        
+  getRejectedFilms,   
+  getPendingFilms,
+  getAcceptedFilms 
 } from "../controllers/adminController.mjs";
+
 
 const router = express.Router();
 
@@ -14,10 +18,12 @@ router.get("/stats", getStats);
 // Liste de tous les users
 router.get("/users", getAllUsers);
 
-// Modifier le rôle d’un utilisateur
 router.patch("/users/:id/role", updateUserRole);
 
-router.get("/films", getAllFilms); // Endpoint: GET /admin/films
+router.get("/films", getAllFilms); 
+
+router.get("/films/selected", getAcceptedFilms); 
+router.get("/films/rejected", getRejectedFilms); 
+router.get("/films/pending", getPendingFilms);
 
 export default router;
-
