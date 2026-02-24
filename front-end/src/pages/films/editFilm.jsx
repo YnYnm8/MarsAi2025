@@ -160,7 +160,7 @@ export default function EditFilm() {
             })
             .join(", ");
 
-        // USAMOS EL SINGULAR AQUÍ PARA QUE COINCIDA CON ZOD Y SEQUELIZE
+        
         formData.set("collaborateur", namesWithGenre || "");
 
         // Append de galería (solo nuevos)

@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import TopNavbar from "../../components/navbar";
-import Footer from "../../components/footer";
+
 
 const Gallery = () => {
   const navigate = useNavigate();
@@ -358,7 +357,7 @@ const Gallery = () => {
   return (
     <div className="min-h-screen bg-[#050505] font-['Plus_Jakarta_Sans'] flex flex-col items-center text-white">
       <div className="w-full">
-        <TopNavbar />
+       
       </div>
 
       <div className="flex flex-col items-start w-full max-w-[1280px] px-[20px] py-[43px] gap-[38px] min-h-[600px]">
@@ -604,7 +603,7 @@ const Gallery = () => {
           </div>
         )}
       </div>
-      <Footer />
+ 
     </div>
   );
 };

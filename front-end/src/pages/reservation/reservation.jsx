@@ -1,4 +1,3 @@
-import TopNavbar from "../../components/navbar";
 
 function Reservation() {
   return (
@@ -7,7 +6,6 @@ function Reservation() {
 
   
     <div className="bg-[#EFF0F4] mx-15 ">
- <TopNavbar />
       
       <h2 className="text-[#246BAD] font-bold text-3xl mb-10 mt-10">
         MODIFIER MON CHOIX

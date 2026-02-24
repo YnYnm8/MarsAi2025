@@ -5,7 +5,6 @@ import defaultImg from "../../assets/image-default.png";
 import VideoUpload from "../../components/videoPreview";
 import { useNavigate } from "react-router";
 import { Toast } from "../../components/toastMessage";
-import TopNavbar from "../../components/navbar";
 import { faPlus, faTrash, faFilm, faMicrochip, faSave, faUsers, faCloudUploadAlt } from '@fortawesome/free-solid-svg-icons';
 
 
@@ -64,12 +63,16 @@ export default function PostFilm() {
             }
         });
 
-        collaborateurs.forEach((c, i) => {
-            formData.append(`collaborateurs[${i}][genre]`, c.genre);
-            formData.append(`collaborateurs[${i}][name]`, c.name);
-        });
+        const namesWithGenre = collaborateurs
+            .filter(c => c.name && c.name.trim() !== "") // Evita vacíos
+            .map(c => {
+                const prefix = c.genre === 'female' ? 'Mrs.' : 'M.';
+                return `${prefix} ${c.name.trim()}`;
+            })
+            .join(", ");
 
-
+        formData.set("collaborateur", namesWithGenre);
+        
         if (selected) formData.append("generateAi", selected);
 
         if (posterFile) formData.append("poster", posterFile);

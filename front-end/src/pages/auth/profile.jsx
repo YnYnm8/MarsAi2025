@@ -8,8 +8,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 // Zod: Librairie pour définir le schéma de validation des données
 import { z } from "zod";
-// Composant Navbar pour la navigation en haut de page
-import TopNavbar from "../../components/navbar";
+
 
 // --- SCHÉMA DE VALIDATION ZOD ---
 // Ce schéma définit les règles que les champs TEXTE doivent respecter.
@@ -228,7 +227,6 @@ const Profile = () => {
     // --- JSX (RENDU VISUEL) ---
     return (
         <div className="min-h-screen bg-black text-white font-sans selection:bg-purple-500 selection:text-white">
-            <TopNavbar />
 
             {/* HEADER BACKGROUND GRADIENT */}
             <div className="h-48 w-full bg-gradient-to-r from-blue-900 via-purple-900 to-black relative overflow-hidden">
