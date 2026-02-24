@@ -2,9 +2,12 @@ import bgImg from "../../assets/accueilbg.png";
 import TopNavbar from "../../components/navbar";
 import logo from "/src/assets/icon-stars.png"
 import Footer from "../../components/footer";
-
+import { useTranslation } from 'react-i18next'; 
 
 const Home = () => {
+    // 1. On initialise la fonction "t" pour traduire
+    const { t } = useTranslation('home'); 
+        
     return (
         <div>
             <TopNavbar />
@@ -19,7 +22,6 @@ const Home = () => {
                 </div>
 
                 <nav className="relative z-10 flex items-center justify-between px-6 py-8">
-
                 </nav>
 
                 <main className="relative z-10 flex-1 flex flex-col items-center justify-center px-6 text-center">
@@ -31,38 +33,40 @@ const Home = () => {
                             className="h-3 w-auto object-contain"
                         />
                         <span className="text-[10px] font-bold tracking-[0.2em] uppercase text-black">
-                            Festival International du Film IA
+                            {/* Traduction du sous-titre */}
+                            {t('subtitle')}
                         </span>
                     </div>
 
                     <h1 className="text-[42px] md:text-7xl font-black leading-[1.1] tracking-tight mb-6">
-                        IMAGINEZ DES <br />
-                        <span className="text-red-500">FUTURS</span> <br />
-                        SOUHAITABLES
+                        {/* Traduction du grand titre (en 3 parties pour garder le FUTURS en rouge) */}
+                        {t('title_1')} <br />
+                        <span className="text-red-500">{t('title_2')}</span> <br />
+                        {t('title_3')}
                     </h1>
 
                     <p className="text-sm md:text-base max-w-[320px] md:max-w-md opacity-100 leading-relaxed mb-10 font-light">
-                        Le festival de courts-métrages de 60 secondes réalisés par IA. <br />
-                        2 jours d'immersion au cœur de Marseille.
+                        {/* Traduction de la description (en 2 parties pour le saut de ligne) */}
+                        {t('desc_1')} <br />
+                        {t('desc_2')}
                     </p>
 
                     <div className="flex flex-col gap-4 w-full max-w-[340px]">
 
                         {/* Bouton Participer (Bleu) */}
                         <button className="bg-[#1F66B1] py-4 px-8 rounded-full font-bold text-sm flex items-center justify-center">
-                            PARTICIPER MAINTENANT
+                            {t('btn_participate')}
                         </button>
 
                         {/* Bouton En savoir plus (Blanc) */}
                         <button className="w-fit self-center bg-white text-black py-4 px-8 rounded-full font-bold text-xs flex items-center justify-center shadow-lg">
-                            EN SAVOIR PLUS
+                            {t('btn_learn_more')}
                         </button>
                     </div>
                 </main>
 
-
             </div>
-                <Footer />
+            <Footer />
         </div>
     );
 };

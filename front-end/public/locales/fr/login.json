@@ -1,0 +1,22 @@
+{
+  "val_email_invalid": "Format email invalide",
+  "val_pwd_required": "Mot de passe obligatoire",
+  "val_pwd_min": "Min 8 caractères",
+  "val_pwd_upper": "Min 1 majuscule requise",
+  "val_pwd_lower": "Min 1 minuscule requise",
+  "val_pwd_num": "Min 1 chiffre requis",
+  "val_pwd_special": "Min 1 caractère spécial requis",
+  "error_login_failed": "Email ou mot de passe incorrect",
+  "error_network": "Le serveur ne répond pas. Vérifiez qu'il est lancé.",
+  "success_login": "Connexion réussie ! Bienvenue.",
+  "title": "CONNEXION",
+  "subtitle": "ESPACE MEMBRE MARS.A.I",
+  "label_email": "ADRESSE E-MAIL",
+  "placeholder_email": "EMAIL@EXEMPLE.COM",
+  "label_password": "MOT DE PASSE",
+  "btn_submitting": "CONNEXION...",
+  "btn_submit": "ACCÉDER À L’ESPACE",
+  "new_user": "NOUVEAU SUR MARS.A.I ?",
+  "register_link": "INSCRIVEZ-VOUS",
+  "back_home": "← RETOUR ACCUEIL"
+}
