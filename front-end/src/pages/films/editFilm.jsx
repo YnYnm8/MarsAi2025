@@ -107,8 +107,9 @@ export default function EditFilm() {
         );
     };
 
-    const addCollaborateur = () => setCollaborateurs([...collaborateurs, ""]);
-
+    const addCollaborateur = () => {
+        setCollaborateurs([...collaborateurs, { genre: "male", name: "" }]);
+    };
     const removeCollaborateur = (index) => setCollaborateurs(collaborateurs.filter((_, i) => i !== index));
 
     const handleGalleryChange = (index, file) => {
@@ -160,7 +161,7 @@ export default function EditFilm() {
             })
             .join(", ");
 
-        // USAMOS EL SINGULAR AQUÍ PARA QUE COINCIDA CON ZOD Y SEQUELIZE
+
         formData.set("collaborateur", namesWithGenre || "");
 
         // Append de galería (solo nuevos)

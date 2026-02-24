@@ -146,11 +146,11 @@ export const updateProfile = async (req, res) => {
     }
 
     // 2. GESTION DE L'AVATAR (via Multer)
-    // Multer place les fichiers uploadés dans req.files (si upload.fields est utilisé) ou req.file (si upload.single)
-    if (req.files && req.files['avatar']) {
-        // On récupère le chemin du fichier enregistré sur le serveur
-        // 'path' ressemble à "uploads/123456-avatar.jpg"
-        user.avatar = req.files['avatar'][0].path; 
+    if (req.files && req.files['avatar'] && req.files['avatar'][0]) {
+
+        const fileName = req.files['avatar'][0].filename;
+        
+        user.avatar = `uploads/${fileName}`; 
     }
 
     // 3. RÉCUPÉRATION DES DONNÉES TEXTUELLES

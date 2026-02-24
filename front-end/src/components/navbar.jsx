@@ -114,12 +114,12 @@ const TopNavbar = () => {
               navigate("/gallery");
               setMenuOpen(false);
             }}
-            className="text-left text-gray-800 hover:text-blue-500 font-bold uppercase text-sm tracking-widest"
+            className="text-left cursor-pointer  text-gray-800 hover:text-blue-500 font-bold uppercase text-sm tracking-widest"
           >
             GALERIE
           </button>
 
-          <button className="text-left text-gray-800 hover:text-blue-500 font-bold uppercase text-sm tracking-widest">
+          <button className="text-left cursor-pointer  text-gray-800 hover:text-blue-500 font-bold uppercase text-sm tracking-widest">
             PROGRAMMES & INFOS
           </button>
 
@@ -128,7 +128,7 @@ const TopNavbar = () => {
               navigate("/jury");
               setMenuOpen(false);
             }}
-            className="text-left text-gray-800 hover:text-blue-500 font-bold uppercase text-sm tracking-widest"
+            className="text-left cursor-pointer  text-gray-800 hover:text-blue-500 font-bold uppercase text-sm tracking-widest"
           >
             JURY
           </button>
@@ -143,7 +143,7 @@ const TopNavbar = () => {
                   navigate("/form-movie");
                   setMenuOpen(false);
                 }}
-                className="text-left text-gray-800 hover:text-blue-500 font-bold uppercase text-sm tracking-widest"
+                className="text-left cursor-pointer  text-gray-800 hover:text-blue-500 font-bold uppercase text-sm tracking-widest"
               >
                 SOUMETTRE
               </button>
@@ -153,7 +153,7 @@ const TopNavbar = () => {
                   navigate("/profile");
                   setMenuOpen(false);
                 }}
-                className="text-left text-gray-800 hover:text-blue-500 font-bold uppercase text-sm tracking-widest"
+                className="text-left cursor-pointer  text-gray-800 hover:text-blue-500 font-bold uppercase text-sm tracking-widest"
               >
                 PROFILE
               </button>
@@ -163,7 +163,7 @@ const TopNavbar = () => {
                   handleLogout();
                   setMenuOpen(false);
                 }}
-                className="text-left text-red-600 hover:text-red-800 font-bold uppercase text-sm tracking-widest"
+                className="text-left cursor-pointer  text-red-600 hover:text-red-800 font-bold uppercase text-sm tracking-widest"
               >
                 SE DÉCONNECTER
               </button>
@@ -176,7 +176,7 @@ const TopNavbar = () => {
                   navigate("/register");
                   setMenuOpen(false);
                 }}
-                className="text-left text-gray-800 hover:text-blue-500 font-bold uppercase text-sm tracking-widest"
+                className="text-left text-gray-800 cursor-pointer  hover:text-blue-500 font-bold uppercase text-sm tracking-widest"
               >
                 REGISTER
               </button>
@@ -186,7 +186,7 @@ const TopNavbar = () => {
                   navigate("/login");
                   setMenuOpen(false);
                 }}
-                className="text-left text-gray-800 hover:text-blue-500 font-bold uppercase text-sm tracking-widest"
+                className="text-left text-gray-800 cursor-pointer  hover:text-blue-500 font-bold uppercase text-sm tracking-widest"
               >
                 LOGIN
               </button>

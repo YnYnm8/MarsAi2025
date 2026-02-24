@@ -8,8 +8,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 // Zod: Librairie pour définir le schéma de validation des données
 import { z } from "zod";
-// Composant Navbar pour la navigation en haut de page
-import TopNavbar from "../../components/navbar";
+
 
 // --- SCHÉMA DE VALIDATION ZOD ---
 // Ce schéma définit les règles que les champs TEXTE doivent respecter.
@@ -228,7 +227,6 @@ const Profile = () => {
     // --- JSX (RENDU VISUEL) ---
     return (
         <div className="min-h-screen bg-black text-white font-sans selection:bg-purple-500 selection:text-white">
-            <TopNavbar />
 
             {/* HEADER BACKGROUND GRADIENT */}
             <div className="h-48 w-full bg-gradient-to-r from-blue-900 via-purple-900 to-black relative overflow-hidden">
@@ -294,12 +292,12 @@ const Profile = () => {
                     <div className="flex items-center gap-3 mt-6">
                         {isEditing ? (
                             <>
-                                <button onClick={handleSubmit(onSubmit)} disabled={isSubmitting} className="bg-green-600 text-white font-bold py-2 px-6 rounded-full text-xs hover:bg-green-500 transition">ENREGISTRER</button>
+                                <button onClick={handleSubmit(onSubmit)} disabled={isSubmitting} className="bg-green-600 cursor-pointer text-white font-bold py-2 px-6 rounded-full text-xs hover:bg-green-500 transition">ENREGISTRER</button>
                                 {/* Au clic sur Annuler, on reset l'édition et l'image preview */}
-                                <button onClick={() => { setIsEditing(false); setPreviewUrl(null); setSelectedFile(null); }} className="bg-gray-800 text-white font-bold py-2 px-4 rounded-full text-xs border border-gray-700">ANNULER</button>
+                                <button onClick={() => { setIsEditing(false); setPreviewUrl(null); setSelectedFile(null); }} className="bg-gray-800 cursor-pointer  text-white font-bold py-2 px-4 rounded-full text-xs border border-gray-700">ANNULER</button>
                             </>
                         ) : (
-                            <button onClick={() => setIsEditing(true)} className="px-4 py-2 border border-gray-700 rounded-full text-xs text-gray-300 hover:bg-gray-900 transition flex items-center gap-2">
+                            <button onClick={() => setIsEditing(true)} className="px-4 py-2 border border-gray-700 rounded-full cursor-pointer  text-xs text-gray-300 hover:bg-gray-900 transition flex items-center gap-2">
                                 <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" /></svg>
                                 ÉDITER PROFIL
                             </button>
@@ -367,7 +365,7 @@ const Profile = () => {
                                 {/* Bouton de suppression (Corbeille) en haut à droite */}
                                 <button 
                                     onClick={(e) => handleDeleteFilm(film.id, e)}
-                                    className="absolute top-2 right-2 bg-red-600/80 hover:bg-red-600 text-white p-1.5 rounded-md opacity-0 group-hover:opacity-100 transition z-20 backdrop-blur-sm"
+                                    className="absolute top-2 right-2 bg-red-600/80 hover:bg-red-600 cursor-pointer  text-white p-1.5 rounded-md opacity-0 group-hover:opacity-100 transition z-20 backdrop-blur-sm"
                                     title="Supprimer ce film"
                                 >
                                     <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
