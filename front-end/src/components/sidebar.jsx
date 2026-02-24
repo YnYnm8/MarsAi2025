@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate, useLocation } from 'react-router';
+import { useNavigate, useLocation, Link } from 'react-router';
 import dashboardd from "/src/assets/dashboardd.png"
 import film from "/src/assets/film.png"
 import jury from "/src/assets/jury.png"
@@ -73,9 +73,12 @@ const Sidebar = () => {
     return (
         <div className="w-72 min-h-screen bg-[#1A1C1E] text-slate-400 p-6 flex flex-col border-r border-slate-800">
             <div className="mb-12 px-2">
-                <div className="bg-blue-600 text-white font-black py-1 px-3 rounded text-[12px] w-fit tracking-tighter uppercase">
+                <Link
+                    to="/"
+                    className="bg-blue-600 text-white font-black py-1 px-3 rounded text-[12px] w-fit tracking-tighter uppercase hover:bg-blue-700 transition-colors cursor-pointer block"
+                >
                     MARS.A.I
-                </div>
+                </Link>
             </div>
 
             <nav className="flex-1 space-y-2">

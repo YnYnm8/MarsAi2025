@@ -263,7 +263,7 @@ export const subscribeNewsletter = async (req, res) => {
     });
     // 2. L'envoi de l'email de bienvenue !
     const { data, error } = await resend.emails.send({
-      from: 'MARS.A.I <onboarding@resend.dev>', 
+      from: 'MARS.A.I <contact@code-colab.com>', 
       to: email, // L'email de la personne qui s'inscrit
       subject: 'Bienvenue dans l\'aventure MARS.A.I !',
       html: `

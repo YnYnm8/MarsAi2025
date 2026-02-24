@@ -40,7 +40,7 @@ export default function Footer() {
   };
 
   return (
-    <footer className="bg-[#282828] flex flex-col justify-center items-center py-[96px] px-[10px] w-full mt-20">
+    <footer className="bg-[#282828] flex flex-col justify-center items-center py-[96px] px-[10px] w-full">
       
       {/* Container Principal (max 1160px) */}
       <div className="flex flex-col justify-center items-center gap-[80px] w-full max-w-[1160px]">
@@ -65,7 +65,6 @@ export default function Footer() {
 
             {/* Réseaux Sociaux (Frame 1) */}
             <div className="flex flex-row flex-wrap items-start content-start gap-[36px] w-full max-w-[510px]">
-              {/* J'utilise FontAwesome pour remplacer tes .png */}
               <a href="#" className="w-[42px] h-[42px] bg-[#333333] rounded-full flex items-center justify-center text-white hover:bg-[#246BAD] transition-colors">
                 <FontAwesomeIcon icon={faFacebookF} />
               </a>
@@ -125,10 +124,8 @@ export default function Footer() {
           </div>
         </div>
 
-        {/* Ligne du Bas (Frame 20) */}
         <div className="flex flex-col md:flex-row justify-between items-center w-full max-w-[1140px] gap-8 md:gap-0">
           
-          {/* Liens (Frame 17) */}
           <div className="flex flex-row flex-wrap justify-center items-center gap-[40px] md:gap-[80px]">
             <Link to="/content/mentions-legales" className="font-['Plus_Jakarta_Sans'] font-[700] text-[14px] leading-[18px] uppercase text-[#64748B] hover:text-[#FFFFFF] transition-colors">
               Mentions Légales
@@ -141,7 +138,7 @@ export default function Footer() {
             </Link>
           </div>
 
-          {/* Copyright (Frame 18) */}
+          {/* Copyright */}
           <div className="font-['Plus_Jakarta_Sans'] font-[700] text-[14px] leading-[18px] uppercase text-[#64748B]">
             © {new Date().getFullYear()} MARS.A.I
           </div>
