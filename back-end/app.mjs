@@ -82,6 +82,10 @@ app.get("/", (req, res) => {
   res.send("API OK");
 });
 
+app.get(/.*/, (req, res) => {
+  res.sendFile(path.join(__dirname, "../front-end/dist/index.html"));
+});
+
 // serveur + BDD
 try {
   await sequelize.authenticate();

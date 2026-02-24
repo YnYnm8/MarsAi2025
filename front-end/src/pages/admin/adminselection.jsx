@@ -8,16 +8,15 @@ const AdminSelection = () => {
     const [searchTerm, setSearchTerm] = useState("");
     const navigate = useNavigate();
 
+    // API
     useEffect(() => {
         const fetchAcceptedFilms = async () => {
             try {
-                // CORRECTION : On pointe sur la nouvelle route filtrée
                 const response = await fetch('http://localhost:3000/admin/films/selected', {
                     credentials: 'include'
                 });
                 const json = await response.json();
 
-                // On récupère json.data car ton contrôleur renvoie { success: true, data: [...] }
                 let data = [];
                 if (json.success && Array.isArray(json.data)) {
                     data = json.data;
@@ -37,6 +36,7 @@ const AdminSelection = () => {
         fetchAcceptedFilms();
     }, []);
 
+    // Définit les couleurs des badges en fonction du statut du film
     const getStatusStyle = (status) => {
         const s = status ? status.toLowerCase() : "submitted";
         if (s === 'accepted') return 'bg-emerald-100 text-emerald-600 border-emerald-200';
@@ -53,7 +53,7 @@ const AdminSelection = () => {
         <div className={`animate-pulse bg-gray-200 rounded ${className}`}></div>
     );
 
-    // Filtrage simplifié car "film" est maintenant l'objet direct
+    // Filtre les films en temps réel selon le titre ou le nom du réalisateur
     const filteredFilms = selections.filter(film => {
         const title = film.title || "";
         const director = film.User ? `${film.User.firstName} ${film.User.lastName}` : "";
@@ -81,7 +81,8 @@ const AdminSelection = () => {
         );
     } else {
         tableContent = filteredFilms.map((film) => {
-            // Ton service renvoie directement le film, plus besoin de mainFilm
+
+            // Image par défaut si le poster est manquant
             const poster = film.Files?.[0]?.poster_url || "/src/assets/youtube.png";
             
             const directorName = film.User 
@@ -127,7 +128,7 @@ const AdminSelection = () => {
                             onClick={() => navigate(`/films/${film.id}`)} 
                             className="text-gray-300 hover:text-black transition-colors transform hover:scale-110"
                         >
-                            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 ml-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <svg xmlns="" className="h-5 w-5 ml-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M9 5l7 7-7 7" />
                             </svg>
                         </button>
