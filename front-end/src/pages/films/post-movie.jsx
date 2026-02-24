@@ -104,7 +104,6 @@ export default function PostFilm() {
     }
     return (
         <div className="bg-black-primary min-h-screen text-white">
-            <TopNavbar />
 
             {/* Cabecera */}
             <div className="flex flex-col m-8 flex-wrap">

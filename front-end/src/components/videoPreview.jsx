@@ -13,6 +13,7 @@ export default function VideoUpload({ label, id, defaultValue }) {
     const file = e.target.files[0];
     if (file) setVideoPreview(URL.createObjectURL(file));
   };
+  
 
   return (
 <div className="flex flex-col">

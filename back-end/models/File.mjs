@@ -31,8 +31,9 @@ const File = sequelize.define("File", {
         }
     },
     galerie_url: {
-        type: DataTypes.STRING,
+        type: DataTypes.JSON, 
         allowNull: true,
+        defaultValue: []     
     },
     creativeMethodology: {
         type: DataTypes.STRING,

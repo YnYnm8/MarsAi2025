@@ -46,8 +46,7 @@ app.use(cors({
 app.use(cookieParser());
 app.use(express.json());
 
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
-
+app.use('/uploads', express.static(path.join(__dirname, '../front-end/public/uploads')));
 
 // Middleware HELMET
 app.use(helmet({
@@ -95,9 +94,9 @@ try {
   console.log("      🧩 Tables créées avec succès  ✅");
 
   //Seed
-  await userSeed();
-  await seedAll();
-  await WorkshopSeed();
+  //await userSeed();
+  //await seedAll();
+  //await WorkshopSeed();
   console.log(" ");
   console.log("      💾 Seeds insérés avec succès  ✅");
 

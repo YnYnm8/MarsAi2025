@@ -6,9 +6,8 @@ import ImagesPreview from "../../components/imagesPreview";
 import VideoUpload from "../../components/videoPreview";
 import { DynamicSubtitleInput } from "../../components/DynamicInput";
 import { Toast } from "../../components/toastMessage";
-import TopNavbar from "../../components/navbar";
-import defaultImg from "../../assets/image-default.png";
 
+import defaultImg from "../../assets/image-default.png";
 
 
 export default function EditFilm() {
@@ -48,8 +47,18 @@ export default function EditFilm() {
                 setSelected(data.generateAi);
 
                 // Cargar colaboradores existentes
-                if (data.collaborateurs?.length > 0) {
-                    setCollaborateurs(data.collaborateurs);
+                if (data.collaborateur && data.collaborateur.trim() !== "") {
+                    const parsed = data.collaborateur.split(',').map(item => {
+                        const trimmed = item.trim();
+                        const isFemale = trimmed.startsWith('Mrs.');
+                        return {
+                            genre: isFemale ? "female" : "male",
+                            name: trimmed.replace(/^(M\.|Mrs\.)\s*/, '')
+                        };
+                    });
+                    setCollaborateurs(parsed); // El ESTADO puede llamarse plural si quieres, es interno
+                } else {
+                    setCollaborateurs([{ genre: "male", name: "" }]);
                 }
 
                 // Cargar subtítulos existentes (mapeo desde los archivos)
@@ -65,11 +74,17 @@ export default function EditFilm() {
 
                 const posterObj = data.Files?.find(f => f.category === "poster_url" || f.poster_url)
                 const posterPath = posterObj?.poster_url || posterObj?.url;
+                const fileObj = data.Files?.[0];
+                if (fileObj) {
+                    const currentGallery = Array.isArray(fileObj.galerie_url)
+                        ? fileObj.galerie_url
+                        : [];
 
-                const galleryFiles = data.Files?.filter(f => f.category === "galerie" || f.galerie_url);
-                const existingPaths = galleryFiles.map(f => f.galerie_url || f.url);
-                setNewGalleryFiles([existingPaths[0] || null, existingPaths[1] || null]);
-
+                    setNewGalleryFiles([
+                        currentGallery[0] || null,
+                        currentGallery[1] || null
+                    ]);
+                }
 
             } catch (error) {
                 console.error("Erreur fetch", error);
@@ -80,14 +95,19 @@ export default function EditFilm() {
 
     // 2. Manejo de cambios
     const handleCollabChange = (index, field, value) => {
-        const updated = [...collaborateurs];
-        updated[index][field] = value;
-        setCollaborateurs(updated);
+        setCollaborateurs(prevCollabs => {
+            const updated = [...prevCollabs];
+            updated[index] = {
+                ...updated[index],
+                [field]: value
+            }
+            return updated
+        }
+
+        );
     };
 
-    const addCollaborateur = () => {
-        setCollaborateurs([...collaborateurs, { genre: "", name: "" }]);
-    };
+    const addCollaborateur = () => setCollaborateurs([...collaborateurs, ""]);
 
     const removeCollaborateur = (index) => setCollaborateurs(collaborateurs.filter((_, i) => i !== index));
 
@@ -131,15 +151,29 @@ export default function EditFilm() {
         });
 
         // Append de colaboradores
-        collaborateurs.forEach((c, i) => {
-            formData.append(`collaborateurs[${i}][genre]`, c.genre);
-            formData.append(`collaborateurs[${i}][name]`, c.name);
-        });
+
+        const namesWithGenre = collaborateurs
+            .filter(c => c.name && c.name.trim() !== "")
+            .map(c => {
+                const prefix = c.genre === 'female' ? 'Mrs.' : 'M.';
+                return `${prefix} ${c.name.trim()}`;
+            })
+            .join(", ");
+
+        // USAMOS EL SINGULAR AQUÍ PARA QUE COINCIDA CON ZOD Y SEQUELIZE
+        formData.set("collaborateur", namesWithGenre || "");
 
         // Append de galería (solo nuevos)
+
         newGalleryFiles.forEach((file) => {
-            if (file) formData.append("galerie", file);
+            if (!file) return;
+            if (typeof file === "string") {
+                formData.append("existing_galerie", file);
+            } else {
+                formData.append("galerie", file);
+            }
         });
+
 
         // Append de generateAi, poster
 
@@ -172,12 +206,10 @@ export default function EditFilm() {
     };
 
     if (!movie) return <div className="text-white p-20 text-center font-display uppercase tracking-widest">Chargement du projet...</div>;
-
     // Archivos actuales para previsualización
 
     return (
         <div className="bg-black-primary min-h-screen text-white pb-20">
-            <TopNavbar />
 
             <div className="flex flex-col m-8 max-w-7xl mx-auto">
                 {/* Cabecera */}
@@ -257,14 +289,14 @@ export default function EditFilm() {
                             <div className="flex flex-col relative">
                                 <label className="pb-4 text-white/50 text-xs font-bold uppercase">Stack Technologique * (Min 10 caracteres)</label>
                                 <div className="relative">
-                                    <textarea name="outil_Ai" defaultValue={movie.outil_Ai} className="w-full bg-black/50 border border-gray-800 p-5 rounded-xl h-48 outline-none focus:border-blue-tertiary" />
+                                    <textarea name="outil_Ai" defaultValue={movie.Files[0].outil_Ai} className="w-full bg-black/50 border border-gray-800 p-5 rounded-xl h-48 outline-none focus:border-blue-tertiary" />
                                     <FontAwesomeIcon icon={faPencil} className="absolute right-4 top-5 text-blue-tertiary/40" />
                                 </div>
                             </div>
                             <div className="flex flex-col relative">
                                 <label className="pb-4 text-white/50 text-xs font-bold uppercase">Méthodologie Créative</label>
                                 <div className="relative">
-                                    <textarea name="creativeMethodology" defaultValue={movie.creativeMethodology} className="w-full bg-black/50 border border-gray-800 p-5 rounded-xl h-48 outline-none focus:border-blue-tertiary" />
+                                    <textarea name="creativeMethodology" defaultValue={movie.Files[0].creativeMethodology} className="w-full bg-black/50 border border-gray-800 p-5 rounded-xl h-48 outline-none focus:border-blue-tertiary" />
                                     <FontAwesomeIcon icon={faPencil} className="absolute right-4 top-5 text-blue-tertiary/40" />
                                 </div>
                             </div>
@@ -284,6 +316,7 @@ export default function EditFilm() {
                                 label="Fichier Vidéo / URL *"
                                 name="film"
                                 id="videoUrl"
+                                defaultValue={movie.Files[0].film_url}
                             />
 
                             {/*SUBTITULOS */}
@@ -311,13 +344,17 @@ export default function EditFilm() {
                                     <ImagesPreview
                                         id="galerie-1"
                                         name="galerie"
-                                        defaultImage={newGalleryFiles[0] || defaultImg}
+                                        defaultImage={typeof newGalleryFiles[0] === 'string'
+                                            ? `http://localhost:3000${newGalleryFiles[0]}`
+                                            : defaultImg}
                                         onFileSelect={(file) => handleGalleryChange(0, file)}
                                     />
                                     <ImagesPreview
                                         id="galerie-2"
                                         name="galerie"
-                                        defaultImage={newGalleryFiles[1] || defaultImg}
+                                        defaultImage={typeof newGalleryFiles[1] === 'string'
+                                            ? `http://localhost:3000${newGalleryFiles[1]}`
+                                            : defaultImg}
                                         onFileSelect={(file) => handleGalleryChange(1, file)}
                                     />
                                 </div>
@@ -346,7 +383,7 @@ export default function EditFilm() {
                                     <div className="relative flex-1">
                                         <input
                                             type="text"
-                                            value={collab.name}
+                                            value={collab.name || ""}
                                             onChange={(e) => handleCollabChange(index, "name", e.target.value)}
                                             className="w-full bg-black border border-gray-800 p-4 pr-12 rounded-xl outline-none focus:border-blue-tertiary"
                                             placeholder="NOM COMPLET"
