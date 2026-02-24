@@ -139,7 +139,7 @@ export default function PostFilm() {
                             </div>
                             <div className="flex flex-col">
                                 <label htmlFor="durationInput" className="pb-2 text-white/50">DURÉE EXACTE (EN SECONDES) *</label>
-                                <input type="number" name="duration" id="durationInput" className="bg-black border border-dark-border p-3 rounded-lg text-sm outline-none focus:border-blue-tertiary" placeholder="EX:60" />
+                                <input type="number" name="duration" min={1} id="durationInput" className="bg-black border border-dark-border p-3 rounded-lg text-sm outline-none focus:border-blue-tertiary" placeholder="EX:60" />
                             </div>
                         </div>
 
