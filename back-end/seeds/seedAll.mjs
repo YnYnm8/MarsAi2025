@@ -7,6 +7,8 @@ import Sponsor from "../models/Sponsor.mjs";
 import Notification from "../models/Notification.mjs";
 import Annotation from "../models/Annotation.mjs";
 import FilmSponsor from "../models/FilmSponsor.mjs";
+import Note from "../models/Note.mjs";
+import PlaylistFilm from "../models/PlaylistFilm.mjs";
 
 export async function seedAll() {
     try {
@@ -35,7 +37,7 @@ export async function seedAll() {
                 UserId: 1,
                 title: 'Fragments of Reality',
                 duration: 85,
-                status: 'accepted', 
+                status: 'accepted',
                 description: 'Cine experimental sobre la memoria.',
                 generateAi: 'fullAi',
                 collaborateur: 'Alex Rivera, Sora AI',
@@ -51,7 +53,7 @@ export async function seedAll() {
                 UserId: 5,
                 title: 'Gingembre',
                 duration: 85,
-                status: 'pending', 
+                status: 'pending',
                 description: 'Gitan du siecle.',
                 generateAi: 'fullAi',
                 collaborateur: 'LoicLeclair',
@@ -102,10 +104,10 @@ export async function seedAll() {
                 description: 'Documental sobre la vida marina.',
                 generateAi: 'hybrid',
                 collaborateur: 'Jane Doe',
-                Files: [{ 
-                    subtitle: 'English', 
-                    film_url: sampleVideo, 
-                    poster_url: 'https://picsum.photos/seed/ocean/800/1200', 
+                Files: [{
+                    subtitle: 'English',
+                    film_url: sampleVideo,
+                    poster_url: 'https://picsum.photos/seed/ocean/800/1200',
                     outil_Ai: 'Midjourney',
                     creativeMethodology: 'Génération de fonds sous-marins.'
                 }]
@@ -192,31 +194,29 @@ export async function seedAll() {
                 UserId: 4, title: 'The Architect', duration: 55, status: 'published', description: 'Création d\'un monde de A à Z.', generateAi: 'fullAi', collaborateur: 'Visionary',
                 Files: [{ subtitle: 'English', film_url: sampleVideo, poster_url: 'https://picsum.photos/seed/film20/800/1200', outil_Ai: 'Sora', creativeMethodology: 'Workflow complet text-to-video.' }]
             }
-        ], { 
-            include: [File], 
-            returning: true 
+        ], {
+            include: [File],
+            returning: true
         });
 
-        // liaison selection a films
-        if (selections.length > 0 && films.length > 0) {
 
-            // Association film 
-            await selections[0].addFilm(films[0]); 
-            await selections[1].addFilm(films[1]);
-            await selections[2].addFilm(films[2]);
-            
-            console.log("✅ Table de jointure SelectionFilm mise à jour !");
-        }
-
-        // --- LE RESTE DES RELATIONS ---
         const playlists = await Playlist.bulkCreate([
-            { status: 'public', UserId: 1 },
-            { status: 'private', UserId: 2 }
-        ], { returning: true });
+            { PlaylistId: 1, status: "NOT_WATCHED" },
+            { PlaylistId: 2, status: "ACCEPTED" },
+            { PlaylistId: 3, status: "REFUSED" },
+            { PlaylistId: 4, status: "TO_DISCUSS" },
+        ]);
 
-        // Ajout des films aux playlists (Sequelize mixins)
-        await playlists[0].addFilms([films[0], films[3], films[4]]);
-        await playlists[1].addFilms([films[1], films[5]]);
+        await PlaylistFilm.bulkCreate([
+            { PlaylistId: 1, FilmId: films[0].id },
+            { PlaylistId: 1, FilmId: films[1].id },
+            { PlaylistId: 1, FilmId: films[2].id },
+            { PlaylistId: 1, FilmId: films[3].id },
+            { PlaylistId: 1, FilmId: films[4].id },
+            { PlaylistId: 1, FilmId: films[5].id },
+            { PlaylistId: 1, FilmId: films[6].id },
+            { PlaylistId: 1, FilmId: films[7].id },
+        ]);
 
         const prices = await Price.bulkCreate([
             { FilmId: films[0].id, SponsorId: sponsors[0].id },
@@ -226,6 +226,27 @@ export async function seedAll() {
         await Annotation.bulkCreate([
             { UserId: 1, FilmId: films[1].id, content: 'Revisar escenas iniciales' },
             { UserId: 2, FilmId: films[5].id, content: 'Vérifier la colorimétrie' }
+        ]);
+
+        await Note.bulkCreate([
+            {
+                UserId: 1,
+                FilmId: films[2].id,
+                score: 8,
+                comment: "Excelente documental!",
+            },
+            {
+                UserId: 2,
+                FilmId: films[1].id,
+                score: 9,
+                comment: "Muy interesante!",
+            },
+            {
+                UserId: 3,
+                FilmId: films[0].id,
+                score: 7,
+                comment: "Gran iluminación en la escena final.",
+            },
         ]);
 
         await FilmSponsor.bulkCreate([
@@ -238,7 +259,7 @@ export async function seedAll() {
         ]);
 
         console.log('✅ SEED TERMINÉE AVEC SUCCÈS ! (' + films.length + ' films créés)');
-        
+
     } catch (err) {
         console.error("❌ Erreur dans seedAll :");
         console.error(err.message);

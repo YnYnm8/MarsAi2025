@@ -1,12 +1,9 @@
-import TopNavbar from "../../components/navbar";
-import Footer from "../../components/footer";
 
 
 function Jury() {
   return (
     
     <div className="bg-[#282828] min-h-screen py-8">
- <TopNavbar/>
 
 
       
@@ -256,7 +253,6 @@ function Jury() {
 
 
       </div>
-      <Footer />
     </div>
   );
 }

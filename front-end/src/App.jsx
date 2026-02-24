@@ -1,6 +1,5 @@
 // import { useState } from 'react'
 import { Routes, Route } from "react-router-dom";
-import Film from "./pages/films/film.jsx";
 import Note from "./pages/films/note.jsx";
 import PostFilm from "./pages/films/post-movie";
 import Register from './pages/auth/register.jsx';
@@ -22,6 +21,8 @@ import Reservation from "./pages/reservation/reservation.jsx";
 import Jury from "./pages/jury/jury.jsx";
 import Gallery from "./pages/public/gallery.jsx";
 import EditFilm from "./pages/films/editFilm.jsx";
+import TopNavbar from "./components/navbar.jsx";
+import Footer from "./components/footer.jsx";
 
 
 function App() {
@@ -29,6 +30,7 @@ function App() {
   return (
     <>
       <main>
+        <TopNavbar />
         <Routes>
           {/* PUBLIC */}
           <Route path="/gallery" element={<Gallery />} />
@@ -36,11 +38,10 @@ function App() {
           <Route path="/top-rated" element={<Gallery />} />
 
           {/* FILMS*/}
-          <Route path="/film" element={<Film />} />
           <Route path="/films/:id" element={<FilmsDetails />} />
           <Route path="/note" element={<Note />} />
           <Route path="/form-movie" element={<PostFilm />} />
-          <Route path="/edit/:id" element={<EditFilm/>} />
+          <Route path="/edit/:id" element={<EditFilm />} />
 
           {/* USER */}
           <Route path="/login" element={<Login />} />
@@ -60,10 +61,11 @@ function App() {
           <Route path="/admin/films/rejected" element={<Adminrejected />} />
           <Route path="/admin/films/pending" element={<Adminpending />} />
 
-          <Route path="/reservation" element={<Reservation/>}/>
-          <Route path="/jury" element={<Jury/>}/>
-        </Routes>                                                                              
+          <Route path="/reservation" element={<Reservation />} />
+          <Route path="/jury" element={<Jury />} />
+        </Routes>
       </main>
+      <Footer />
     </>
   );
 }

@@ -1,11 +1,16 @@
 import multer from "multer";
 import fs from "fs";
+import path from 'path';
+import { fileURLToPath } from "url";
 
 //storage
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
-        const dir = "./uploads";
+        const dir = path.resolve(__dirname, "../../front-end/public/uploads");
         if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
+        console.log('carpeta creada en:', dir)
         cb(null, dir)
     },
     filename: (req, file, cb) => {

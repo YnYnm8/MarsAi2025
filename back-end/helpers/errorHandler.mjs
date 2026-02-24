@@ -7,6 +7,15 @@ export const sendErrors = (res, errors, status = 400) => {
     }
     return res.status(status).json({ errors });
 };
+/**
+ * Formate les erreurs de validation Zod
+ */
+export const formatZodErrors = (zodError) => {
+    return zodError.issues.map(issue => ({
+        field: issue.path.join(".") || "global",
+        message: issue.message
+    }));
+};
 
 /**
  * Catch global des erreurs (Sequelize + autres)
