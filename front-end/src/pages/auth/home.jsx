@@ -1,6 +1,5 @@
 import bgImg from "../../assets/accueilbg.png";
 import logo from "/src/assets/icon-stars.png"
-import Footer from "../../components/footer";
 
 
 const Home = () => {
@@ -61,7 +60,7 @@ const Home = () => {
 
 
             </div>
-                <Footer />
+
         </div>
     );
 };
