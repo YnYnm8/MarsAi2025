@@ -1,0 +1,56 @@
+{
+  "back_home": "VOLVER AL INICIO",
+  "back_gallery": "VOLVER A LA GALERÍA",
+  "title": "GALERÍA DE PELÍCULAS",
+  "subtitle": "Explora toda la selección oficial. Visiones únicas, cortometrajes pioneros creados con Inteligencia Artificial.",
+  "search_placeholder": "Buscar por título, director...",
+  "error_fetch_films": "No se pueden cargar las películas. Inténtalo de nuevo más tarde.",
+  "no_films_found": "Ninguna película coincide con tus criterios.",
+  
+  "filter_all": "Ver todo",
+  "filter_ia_type": "Tipo de IA",
+  "filter_country": "País de origen",
+  "filter_status": "Estado",
+  "filter_sort": "Ordenar por",
+  
+  "status_submitted": "Enviada",
+  "status_pending": "Pendiente",
+  "status_selected": "Seleccionada",
+  "status_rejected": "Rechazada",
+
+  "country_FR": "Francia",
+  "country_EN": "Inglaterra",
+  "country_JP": "Japón",
+  "country_SP": "España",
+  "country_CR": "Criollo",
+  
+  "sort_recent": "Más recientes",
+  "sort_top_rated": "Mejor valoradas",
+  "badge_full_ai": "FULL IA",
+  "badge_hybrid": "HÍBRIDA",
+  
+  "untitled": "Sin título",
+  "unknown_director": "Desconocido",
+  "min": "MIN",
+  "seconds": "SEGUNDOS",
+  "director_label": "DIRECTOR",
+  "origin_label": "ORIGEN",
+  
+  "share_this_film": "Compartir esta película",
+  "direct_link": "Enlace directo",
+  "copy": "Copiar",
+  "share_text": "¡Descubre la película \"{{title}}\" generada por IA!",
+  "share_link_copied": "¡Enlace de la película copiado al portapapeles!",
+  "share_link_btn": "Enlace",
+  
+  "synopsis": "Sinopsis",
+  "no_synopsis": "No se ha proporcionado sinopsis para esta película.",
+  "no_tool": "Ninguna herramienta mencionada.",
+  "methodology": "Metodología",
+  
+  "pagination_prev": "Anterior",
+  "pagination_next": "Siguiente",
+  "pagination_info": "Página <1>{{currentPage}}</1> de <3>{{totalPages}}</3>",
+  "tech_stack_title": "Tech Stack & IA"
+
+}

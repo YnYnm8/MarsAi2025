@@ -1,0 +1,45 @@
+{
+  "back_home": "TOURNÉ AN LACÉY",
+  "title": "GALRI FILM-LA",
+  "subtitle": "Vini gadé tout sé film-la an sélektyon blot. Ti kout film pionnyé yo fè épi Entèlijans Artificyèl.",
+  "search_placeholder": "Chéché pa tit, réjisè...",
+  "error_fetch_films": "Nou pé pa chajé sé film-la. Sa ou kapab eséyé ankò pli ta.",
+  "no_films_found": "Pa ni pyès film ki ka matjé épi sa ou chaché.",
+
+  "filter_all": "Gadé tout",
+  "filter_ia_type": "Kalité IA",
+  "filter_country": "Péyi koté i sòti",
+  "filter_status": "Statou",
+  "filter_sort": "Triyé",
+  "status_submitted": "Soumèt",
+  "status_pending": "Ka atann",
+  "status_selected": "Chwazi",
+  "status_rejected": "Refizé",
+
+  "country_FR": "Fwas",
+  "country_EN": "Anglété",
+  "country_JP": "Japoni",
+  "country_SP": "Espay",
+  "country_CR": "Kréyol",
+
+  "sort_recent": "Pi récen",
+  "sort_top_rated": "Pi byen noté",
+  "badge_full_ai": "FULL IA",
+  "badge_hybrid": "IBRID",
+
+  "untitled": "San tit",
+  "unknown_director": "Pa konnet",
+  "min": "MIN",
+  "director_label": "RÉJISÈ",
+  "origin_label": "ORIJIN",
+
+  "share_text": "Vini dèkouvè film \"{{title}}\" yo fè épi IA-a !",
+  "share_link_copied": "Lyen film-la kopi an prés-papyé-a !",
+  "share_link_btn": "Lyen",
+
+  "pagination_prev": "Avan",
+  "pagination_next": "Apré",
+  "pagination_info": "Paj <1>{{currentPage}}</1> asou <3>{{totalPages}}</3>",
+  "tech_stack_title": "Tech Stack & IA"
+
+}

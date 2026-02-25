@@ -1,0 +1,22 @@
+{
+  "val_email_invalid": "Fòm email-la pa bon",
+  "val_pwd_required": "Fò ni an modpas",
+  "val_pwd_min": "Omwen 8 karaktè",
+  "val_pwd_upper": "Omwen 1 lèt majiskil oblijé",
+  "val_pwd_lower": "Omwen 1 lèt miniskil oblijé",
+  "val_pwd_num": "Omwen 1 chif oblijé",
+  "val_pwd_special": "Omwen 1 karaktè espesyal oblijé",
+  "error_login_failed": "Email oben modpas pa korek",
+  "error_network": "Sévè-a pa ka réponn. Gadé si i ka tjilé.",
+  "success_login": "Koneksyon rivé bien ! Byenvini.",
+  "title": "KONEKSYON",
+  "subtitle": "ESPA MANM MARS.A.I",
+  "label_email": "ADRÈS EMAIL",
+  "placeholder_email": "EMAIL@EXAMPLE.COM",
+  "label_password": "MODPAS",
+  "btn_submitting": "KA KONEKTÉ...",
+  "btn_submit": "ANTRÉ AN ESPA-OU",
+  "new_user": "PREMYÉ FWA ASOU MARS.A.I ?",
+  "register_link": "ENSKRIW",
+  "back_home": "← TOUNEN LAKAY"
+}

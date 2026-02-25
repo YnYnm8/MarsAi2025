@@ -1,6 +1,9 @@
 import { useState, useEffect } from "react";
 import DrapeauEn from "/src/assets/drapeauEn.png";
 import DrapeauFr from "/src/assets/drapeauFr.png";
+import Drapeaujp from "/src/assets/drapeauJp.png";
+import DrapeauSp from "/src/assets/drapeauSp.png";
+import DrapeauCr from "/src/assets/drapeauCr.png";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from 'react-i18next';
 
@@ -48,7 +51,7 @@ const TopNavbar = () => {
   };
 
   const toggleLanguage = () => {
-    const newLang = i18n.language === 'fr' ? 'en' : 'fr';
+    const newLang = i18n.language === 'fr' ? 'en': i18n.language === 'en' ? 'jp': i18n.language === 'jp' ? 'sp': i18n.language === 'sp' ? 'cr': 'fr';
     i18n.changeLanguage(newLang);
   };
 
@@ -72,7 +75,7 @@ const TopNavbar = () => {
             className="flex items-center gap-2 cursor-pointer hover:opacity-80 transition-opacity"
           >
             <img
-              src={i18n.language === 'en' ? DrapeauEn : DrapeauFr}
+              src={i18n.language === 'en' ? DrapeauEn : i18n.language === 'jp' ? Drapeaujp : i18n.language === 'sp' ? DrapeauSp : i18n.language === 'cr' ? DrapeauCr : DrapeauFr}
               alt="Changer de langue"
               className="h-8 w-11 object-cover rounded-sm shadow-sm"
             />

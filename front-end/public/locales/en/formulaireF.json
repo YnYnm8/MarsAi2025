@@ -1,0 +1,63 @@
+{
+  "alerts": {
+    "confirmSubmit": "Are you sure you want to submit this film? Make sure all the information is correct before continuing.",
+    "errorUnknown": "Unknown error",
+    "networkError": "Network error",
+    "successSubmit": "Film submitted successfully!"
+  },
+  "header": {
+    "callForProjects": "Call for Projects 2026",
+    "submitTitle1": "Submit a ",
+    "submitTitle2": "film",
+    "description1": "Submit the technical elements, the use of AI, and the composition of your team.",
+    "description2": "All fields marked with an asterisk (*) are mandatory."
+  },
+  "options": {
+    "fullAi": "Full Generation (100% AI)",
+    "hybrid": "Hybrid Production (Live action + AI inputs)"
+  },
+  "step1": {
+    "title": "01. Film Identity",
+    "titleLabel": "TITLE *",
+    "titlePlaceholder": "TITLE",
+    "durationLabel": "EXACT DURATION (IN SECONDS) *",
+    "durationPlaceholder": "EX:60",
+    "synopsisLabel": "MANIFESTO / SYNOPSIS * (MAX. 300 CHARACTERS)",
+    "synopsisPlaceholder": "Summarize the intent of your film and the story it tells in a few lines..."
+  },
+  "step2": {
+    "title": "02. AI Usage Declaration",
+    "transparencyText": "MARS.A.I requires total transparency regarding the use of Artificial Intelligence. Select all generative tools used in your creative process.",
+    "classificationLabel": "Artwork Classification: * Exclusive choice between:",
+    "stackLabel": "Technology Stack *",
+    "stackPlaceholder": "List the tools used (e.g. Midjourney for visuals, ElevenLabs for voices, Runway for animation...)",
+    "methodologyLabel": "Creative Methodology",
+    "methodologyPlaceholder": "Describe the interaction between human and machine in this process.."
+  },
+  "step3": {
+    "title": "03. Deliverables & Accessibility",
+    "youtubeLabel": "YouTube Link (Public / Unlisted) *",
+    "posterLabel": "Official Thumbnail (16:9) *",
+    "galleryLabel": "Media Gallery (Stills - Max 2)"
+  },
+  "step4": {
+    "title": "04. Team Composition",
+    "mr": "Mr.",
+    "mrs": "Ms.",
+    "namePlaceholder": "EX: JOHN DOE",
+    "addCollaborator": "+ Add a collaborator"
+  },
+  "footer": {
+    "certificateTitle": "Certificate of Ownership",
+    "certificateText": "By submitting this application, you swear on your honor that you are the original author of the work and hold all distribution rights.",
+    "submitBtn": "Finalize my submission"
+  },
+  "dynamicInput": {
+  "addButton": "Add",
+  "subtitleLabel": "Subtitles (Stills - Max 5)",
+  "typeFile": "File",
+  "typeLink": "Link",
+  "chooseFile": "Choose an .SRT file",
+  "pasteLink": "Paste the link"
+}
+}
