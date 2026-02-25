@@ -1,12 +1,11 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPencil, faPlus, faTrash, faFilm, faMicrochip, faSave, faUsers, faCloudUploadAlt, faInfo } from '@fortawesome/free-solid-svg-icons';
 import { useEffect, useState } from "react";
 import ImagesPreview from "../../components/imagesPreview";
 import VideoUpload from "../../components/videoPreview";
 import { DynamicSubtitleInput } from "../../components/DynamicInput";
 import { Toast } from "../../components/toastMessage";
-
+import { faPencil, faPlus, faTrash, faFilm, faMicrochip, faSave, faUsers, faCloudUploadAlt, faInfo } from '@fortawesome/free-solid-svg-icons';
 import defaultImg from "../../assets/image-default.png";
 
 

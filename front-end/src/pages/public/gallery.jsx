@@ -257,7 +257,7 @@ const Gallery = () => {
                     <i className="fa-brands fa-facebook text-[#1877F2] text-[16px] w-4 text-center"></i> Facebook
                   </button>
                   <button onClick={(e) => shareToNetwork(e, "x", film)} className="flex items-center gap-2 px-2 py-2 hover:bg-gray-800 rounded-lg text-xs text-gray-300 transition-colors">
-                    <img width="16" height="16" src="https://img.icons8.com/material-outlined/24/ffffff/twitterx--v1.png" alt="X"/> X
+                    <img width="16" height="16" src="https://img.icons8.com/material-outlined/24/ffffff/twitterx--v1.png" alt="X" /> X
                   </button>
                   <button onClick={(e) => shareToNetwork(e, "linkedin", film)} className="flex items-center gap-2 px-2 py-2 hover:bg-gray-800 rounded-lg text-xs text-gray-300 transition-colors">
                     <i className="fa-brands fa-linkedin text-[#0A66C2] text-[16px] w-4 text-center"></i> LinkedIn
@@ -419,7 +419,7 @@ const Gallery = () => {
                 <span className="font-bold text-[16px] text-gray-300 flex-grow">
                   {activeFilters.iaType
                     ? iaOptions.find((o) => o.value === activeFilters.iaType)
-                        ?.label
+                      ?.label
                     : "Type d'IA"}
                 </span>
                 <span className="text-gray-500">▼</span>

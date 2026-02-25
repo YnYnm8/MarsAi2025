@@ -16,6 +16,8 @@ import FilmSponsor from "./FilmSponsor.mjs";
 
 
 
+
+
 // === User ===
 User.hasMany(Film, { foreignKey: 'UserId', onDelete: "CASCADE" });
 Film.belongsTo(User, { foreignKey: 'UserId' });
@@ -23,11 +25,14 @@ Film.belongsTo(User, { foreignKey: 'UserId' });
 User.hasMany(Playlist, {onDelete: "CASCADE" });
 Playlist.belongsTo(User);
 
-User.belongsToMany(Film, { through: Note, as: 'Notes' });
-Film.belongsToMany(User, { through: Note, as: 'Notes' });
+User.belongsToMany(Film, { through: Note, as: 'Notes' , onUpdate: "CASCADE" });
+Film.belongsToMany(User, { through: Note, as: 'Notes' , onUpdate: "CASCADE"});
 
 User.belongsToMany(Film, { through: Annotation, as: 'Annotators' });
 Film.belongsToMany(User, { through: Annotation, as: 'Annotators' });
+
+User.hasMany(Playlist, { foreignKey: { allowNull: true }, onDelete: "SET NULL" });
+Playlist.belongsTo(User, { foreignKey: { allowNull: true }, onDelete: "SET NULL" });
 
 User.hasMany(Workshop);
 Workshop.belongsTo(User);
@@ -49,7 +54,7 @@ Film.belongsToMany(Sponsor, { through: FilmSponsor });
 Sponsor.belongsToMany(Film, { through: FilmSponsor });
 
 Film.belongsToMany(Selection, { through: "SelectionFilm" });
-Selection.belongsToMany(Film, { through: "SelectionFilm", as:"Films" });
+Selection.belongsToMany(Film, { through: "SelectionFilm" });
 
 // === Sponsor / Price ===
 Sponsor.hasMany(Price );
@@ -67,9 +72,22 @@ Notification.belongsTo(Workshop);
 Price.hasMany(Notification);
 Notification.belongsTo(Price);
 
+// PlaylistFilm (履歴テーブル) から参照
+PlaylistFilm.belongsTo(Playlist);
+PlaylistFilm.belongsTo(Film );
+PlaylistFilm.belongsTo(User);
+
+
+
+// Playlist → PlaylistFilm
+Playlist.hasMany(PlaylistFilm);
+Film.hasMany(PlaylistFilm);
+User.hasMany(PlaylistFilm);
+
+
 // === Export ===
 export {
   User, Film, Playlist, Selection,Note, Annotation,
   File, Price, Sponsor, Workshop, WorkshopCategory,
-  Notification
+  Notification, PlaylistFilm, FilmSponsor
 };

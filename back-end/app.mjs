@@ -1,6 +1,6 @@
-import sequelize from './config/database.mjs';
-import express from 'express';
-import cors from 'cors';
+import sequelize from "./config/database.mjs";
+import express from "express";
+import cors from "cors";
 import dotenv from "dotenv";
 import cookieParser from 'cookie-parser';
 import helmet from 'helmet';
@@ -8,20 +8,21 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 
 import "./models/index.mjs";
-import comiteRouter from './routes/committeeRoutes.mjs';
-import workshopRoutes from './routes/workshopRoutes.mjs';
-import authRoute from './routes/authRoutes.mjs';
-import filmRoutes from './routes/filmRoutes.mjs';
-import profileRoutes from './routes/profileRoutes.mjs';
+import comiteRouter from "./routes/comiteRoutes.mjs";
+import workshopRoutes from "./routes/workshopRoutes.mjs";
+import authRoute from "./routes/authRoutes.mjs";
+import filmRoutes from "./routes/filmRoutes.mjs";
+import profileRoutes from "./routes/profileRoutes.mjs";
 import adminRoutes from "./routes/adminRoutes.mjs";
 import { userSeed } from './seeds/userSeed.mjs';
 import { seedAll } from './seeds/seedAll.mjs';
 import { WorkshopSeed } from './seeds/workshopSeed.mjs';
 import publicRoutes from './routes/publicRoutes.mjs';
+// import seedFilmsPlaylist from "./seeds/seedFilmsPlaylist.mjs";
 
 dotenv.config();
 
-// Configuration pour __dirname 
+// Configuration pour __dirname
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
@@ -45,6 +46,7 @@ app.use(cors({
 
 app.use(cookieParser());
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 app.use('/uploads', express.static(path.join(__dirname, '../front-end/public/uploads')));
 
@@ -68,8 +70,9 @@ app.use(helmet({
 
 // Routes
 app.use('/api', publicRoutes);
-app.use("/api", workshopRoutes);
+app.use("/api",  workshopRoutes);
 app.use("/", authRoute);
+
 app.use("/admin", adminRoutes);
 app.use("/films", filmRoutes);
 app.use("/comite", comiteRouter);
@@ -100,7 +103,9 @@ try {
   // Seed
   await userSeed();
   await seedAll();
-  await WorkshopSeed();
+  await WorkshopSeed();  
+  // await seedFilmsPlaylist();
+
   console.log(" ");
   console.log("      💾 Seeds insérés avec succès  ✅");
 

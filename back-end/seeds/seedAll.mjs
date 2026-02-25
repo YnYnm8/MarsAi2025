@@ -7,7 +7,7 @@ import Sponsor from "../models/Sponsor.mjs";
 import Notification from "../models/Notification.mjs";
 import Annotation from "../models/Annotation.mjs";
 import FilmSponsor from "../models/FilmSponsor.mjs";
-import Note from "../models/Note.mjs";
+// import Note from "../models/Note.mjs";
 import PlaylistFilm from "../models/PlaylistFilm.mjs";
 
 export async function seedAll() {
@@ -104,10 +104,10 @@ export async function seedAll() {
                 description: 'Documental sobre la vida marina.',
                 generateAi: 'hybrid',
                 collaborateur: 'Jane Doe',
-                Files: [{
-                    subtitle: 'English',
-                    film_url: sampleVideo,
-                    poster_url: 'https://picsum.photos/seed/ocean/800/1200',
+                Files: [{ 
+                    subtitle: 'English', 
+                    film_url: sampleVideo, 
+                    poster_url: 'https://picsum.photos/seed/ocean/800/1200', 
                     outil_Ai: 'Midjourney',
                     creativeMethodology: 'Génération de fonds sous-marins.'
                 }]
@@ -197,7 +197,8 @@ export async function seedAll() {
         ], {
             include: [File],
             returning: true
-        });
+        })
+
 
 
         const playlists = await Playlist.bulkCreate([
@@ -228,26 +229,26 @@ export async function seedAll() {
             { UserId: 2, FilmId: films[5].id, content: 'Vérifier la colorimétrie' }
         ]);
 
-        await Note.bulkCreate([
-            {
-                UserId: 1,
-                FilmId: films[2].id,
-                score: 8,
-                comment: "Excelente documental!",
-            },
-            {
-                UserId: 2,
-                FilmId: films[1].id,
-                score: 9,
-                comment: "Muy interesante!",
-            },
-            {
-                UserId: 3,
-                FilmId: films[0].id,
-                score: 7,
-                comment: "Gran iluminación en la escena final.",
-            },
-        ]);
+        // await Note.bulkCreate([
+        //     {
+        //         UserId: 1,
+        //         FilmId: films[2].id,
+        //         score: 8,
+        //         comment: "Excelente documental!",
+        //     },
+        //     {
+        //         UserId: 2,
+        //         FilmId: films[1].id,
+        //         score: 9,
+        //         comment: "Muy interesante!",
+        //     },
+        //     {
+        //         UserId: 3,
+        //         FilmId: films[0].id,
+        //         score: 7,
+        //         comment: "Gran iluminación en la escena final.",
+        //     },
+        // ]);
 
         await FilmSponsor.bulkCreate([
             { FilmId: films[0].id, SponsorId: sponsors[0].id },
@@ -259,6 +260,7 @@ export async function seedAll() {
         ]);
 
         console.log('✅ SEED TERMINÉE AVEC SUCCÈS ! (' + films.length + ' films créés)');
+
 
     } catch (err) {
         console.error("❌ Erreur dans seedAll :");

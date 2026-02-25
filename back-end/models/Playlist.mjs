@@ -1,21 +1,27 @@
 import sequelize from "../config/database.mjs";
 import { DataTypes } from "sequelize";
 
-const Playlist = sequelize.define("Playlist", {
+const Playlist = sequelize.define(
+  "Playlist",
+  {
     id: {
-        type: DataTypes.INTEGER,
-        primaryKey: true,
-        autoIncrement: true
+      type: DataTypes.INTEGER,
+      primaryKey: true,
+      autoIncrement: true,
     },
     status: {
-        type: DataTypes.STRING,
-        allowNull: false,
-    }
-},
-    {
-
-        timestamps: true
-    });
-
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    year: {
+      type: DataTypes.STRING,
+      allowNull: true, 
+    },
+    
+  },
+  {
+    timestamps: true, 
+  }
+);
 
 export default Playlist;

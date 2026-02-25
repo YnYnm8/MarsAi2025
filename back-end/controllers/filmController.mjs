@@ -2,6 +2,8 @@ import Film from "../models/Films.mjs";
 import User from "../models/User.mjs";
 import File from "../models/File.mjs";
 import Selection from "../models/Selection.mjs";
+import Playlist from "../models/Playlist.mjs";
+import PlaylistFilm from "../models/PlaylistFilm.mjs";
 import { catchError } from "../helpers/errorHandler.mjs";
 import { updateFilmSchema } from "../validators/filmValidator.mjs";
 import { handleFileProcessing } from "../helpers/proccesFiles.mjs"
@@ -21,6 +23,13 @@ export async function getFilms(req, res) {
                 {
                     model: User, 
                     attributes: ['firstName', 'lastName', 'country', 'avatar'] 
+                },
+              
+                {
+                    model:Playlist,
+                },{
+                    
+                    model:PlaylistFilm,
                 }
             ],
             order: [['createdAt', 'DESC']]
@@ -36,10 +45,12 @@ export async function getFilms(req, res) {
         return catchError(res, err)
     }
 }
-/*
- *  GET  /films/:id
- *   Recuperation d'un film par son id
- */
+/**
+ *     GET  /films/:id
+ *  Recuperation d'un film par son id*/
+
+  
+
 export async function getFilmById(req, res) {
     try {
         const id = Number(req.params.id);

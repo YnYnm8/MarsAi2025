@@ -1,10 +1,10 @@
 // import { useState } from 'react'
 import { Routes, Route } from "react-router-dom";
 import Note from "./pages/films/note.jsx";
-import PostFilm from "./pages/films/post-movie";
-import Register from './pages/auth/register.jsx';
-import Logout from './pages/auth/logout.jsx'
-import Login from './pages/auth/login.jsx';
+import PostFilm from "./pages/films/post-movie.jsx";
+import Register from "./pages/auth/register.jsx";
+import Logout from "./pages/auth/logout.jsx";
+import Login from "./pages/auth/login.jsx";
 import Profile from "./pages/auth/profile.jsx";
 import Dashboard from "./pages/dashboard/dashboard.jsx";
 import Home from "./pages/auth/home.jsx";
@@ -26,7 +26,6 @@ import Footer from "./components/footer.jsx";
 
 
 function App() {
-
   return (
     <>
       <main>
@@ -70,4 +69,4 @@ function App() {
   );
 }
 
-export default App
+export default App;
