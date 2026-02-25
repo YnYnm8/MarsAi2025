@@ -1,11 +1,9 @@
-import TopNavbar from "../../components/navbar";
 
 
 function Jury() {
   return (
     
     <div className="bg-[#282828] min-h-screen py-8">
- <TopNavbar/>
 
 
       

@@ -1,11 +1,10 @@
 // import { useState } from 'react'
-import { Routes, Route } from "react-router-dom";
-import Film from "./pages/films/film.jsx";
+import { Routes, Route, useLocation } from "react-router-dom";
 import Note from "./pages/films/note.jsx";
-import PostFilm from "./pages/films/post-movie";
-import Register from './pages/auth/register.jsx';
-import Logout from './pages/auth/logout.jsx'
-import Login from './pages/auth/login.jsx';
+import PostFilm from "./pages/films/post-movie.jsx";
+import Register from "./pages/auth/register.jsx";
+import Logout from "./pages/auth/logout.jsx";
+import Login from "./pages/auth/login.jsx";
 import Profile from "./pages/auth/profile.jsx";
 import Dashboard from "./pages/dashboard/dashboard.jsx";
 import Home from "./pages/auth/home.jsx";
@@ -23,12 +22,17 @@ import Gallery from "./pages/public/gallery.jsx";
 import EditFilm from "./pages/films/editFilm.jsx";
 // import AdminProfile from "./pages/admin/adminprofile.jsx";
 import AdminAllFilms from "./pages/admin/adminallfilm.jsx"
+import TopNavbar from "./components/navbar.jsx";
+import Footer from "./components/footer.jsx";
 
 
 function App() {
+  const location = useLocation(); 
+  const isNotePage = location.pathname === "/note"; 
 
   return (
     <>
+      <TopNavbar />
       <main>
         <Routes>
           {/* PUBLIC */}
@@ -37,11 +41,10 @@ function App() {
           <Route path="/top-rated" element={<Gallery />} />
 
           {/* FILMS*/}
-          <Route path="/film" element={<Film />} />
           <Route path="/films/:id" element={<FilmsDetails />} />
           <Route path="/note" element={<Note />} />
           <Route path="/form-movie" element={<PostFilm />} />
-          <Route path="/edit/:id" element={<EditFilm/>} />
+          <Route path="/edit/:id" element={<EditFilm />} />
 
           {/* USER */}
           <Route path="/login" element={<Login />} />
@@ -69,8 +72,8 @@ function App() {
 
         </Routes>                                                                              
       </main>
-    </>
+      {!isNotePage && <Footer />}    </>
   );
 }
 
-export default App
+export default App;

@@ -2,10 +2,11 @@ import Film from "../models/Films.mjs";
 import User from "../models/User.mjs";
 import File from "../models/File.mjs";
 import Selection from "../models/Selection.mjs";
+import Playlist from "../models/Playlist.mjs";
+import PlaylistFilm from "../models/PlaylistFilm.mjs";
 import { catchError } from "../helpers/errorHandler.mjs";
-import { partialFilmSchema } from "../validators/filmValidator.mjs";
-
-
+import { updateFilmSchema } from "../validators/filmValidator.mjs";
+import { handleFileProcessing } from "../helpers/proccesFiles.mjs"
 /*
 *  GET  /films
 * Recuperation des tous les films
@@ -22,6 +23,13 @@ export async function getFilms(req, res) {
                 {
                     model: User, 
                     attributes: ['firstName', 'lastName', 'country', 'avatar'] 
+                },
+              
+                {
+                    model:Playlist,
+                },{
+                    
+                    model:PlaylistFilm,
                 }
             ],
             order: [['createdAt', 'DESC']]
@@ -37,10 +45,12 @@ export async function getFilms(req, res) {
         return catchError(res, err)
     }
 }
-/*
- *  GET  /films/:id
- *   Recuperation d'un film par son id
- */
+/**
+ *     GET  /films/:id
+ *  Recuperation d'un film par son id*/
+
+  
+
 export async function getFilmById(req, res) {
     try {
         const id = Number(req.params.id);
@@ -141,41 +151,32 @@ export async function createFilm(req, res) {
  */
 export async function updateFilm(req, res) {
     try {
-        const FilmId = parseInt(req.params.id);
+        const filmId = req.params.id;
+        const film = await Film.findByPk(filmId, { include: File });
 
-        // Vérification que l'ID est valide
-        if (!FilmId || isNaN(FilmId)) {
-            return res.status(400).json({ message: "Film non trouvé" });
-        }
+        if (!film) return res.status(404).json({ message: "Film non trouvé" });
+        if (req.user.id !== film.UserId) return res.status(403).json({ message: "Accès refusé" });
 
-        // Récupération du film avec ses fichiers
-        const film = await Film.findByPk(FilmId, { include: File });
-        if (!film) {
-            return res.status(404).json({ message: "Film non trouvé" });
-        }
 
-        // Vérification que seul le réalisateur (auteur) peut modifier
-        if (req.user.id !== film.UserId) {
-            return res.status(403).json({
-                message: "Accès refusé : seul le réalisateur peut modifier ce film"
-            });
-        }
-
-        // Validation des données entrantes (validation partielle pour les mises à jour)
-
-        const validation = partialFilmSchema.safeParse(req.body);
+        const validation = updateFilmSchema.safeParse({ ...req.body, ...req.files });
+        
         if (!validation.success) {
-            return res.status(400).json({
-                errors: validation.error.issues.map(issue => ({
-                    field: issue.path.join(".") || "global",
-                    message: issue.message
-                }))
-            });
+            const errors = validation.error.issues.map(issue => ({
+                field: issue.path.join(".") || "global",
+                message: issue.message
+            }));
+            return res.status(400).json({ errors });
         }
 
-        // Actualization du film en base de données
         await film.update(validation.data);
 
+       
+        const existingFileRecord = await File.findOne({ where: { FilmId: film.id } });
+        
+        
+        await handleFileProcessing(film.id, req.files, existingFileRecord);
+
+       
         const updatedFilm = await Film.findByPk(film.id, { include: File });
         return res.status(200).json(updatedFilm);
 

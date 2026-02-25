@@ -97,7 +97,7 @@ export function DynamicSubtitleInput({ subtitles, setSubtitles}) {
                         <select
                             value={sub.type}
                             onChange={(e) => handleTypeChange(index, e.target.value)}
-                            className="p-4 rounded-lg cursor-pointer  bg-[#F2F2F2]"
+                            className="p-4 rounded-lg cursor-pointer text-black bg-[#FFF]"
                         >
                             <option value="file">Fichier</option>
                             <option value="url">Lien</option>
@@ -127,7 +127,7 @@ export function DynamicSubtitleInput({ subtitles, setSubtitles}) {
                                 placeholder="Collez le lien"
                                 value={sub.value || ""}
                                 onChange={(e) => handleValueChange(index, e.target.value)}
-                                className="bg-[#F2F2F2] p-4 rounded-lg text-sm flex-1"
+                                className=" p-4 bg-[#6a7075]  cursor-pointer rounded-lg text-lg font-bold  flex-1"
                             />
                         )}
 
@@ -135,7 +135,7 @@ export function DynamicSubtitleInput({ subtitles, setSubtitles}) {
                             <button
                                 type="button"
                                 onClick={() => handleRemove(index)}
-                                className="bg-red-500 text-white p-4 rounded-lg"
+                                className="bg-red-500  cursor-pointer text-white p-4 rounded-lg"
                             >
                                 X
                             </button>

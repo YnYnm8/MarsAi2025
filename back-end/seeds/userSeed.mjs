@@ -1,4 +1,3 @@
-
 import User from '../models/User.mjs';
 
 export async function userSeed() {
@@ -111,5 +110,5 @@ export async function userSeed() {
             console.error(error);
         }
         throw error; // On propage l'erreur pour que l'app s'arrête proprement
-    }
-}
+    }}
+    
