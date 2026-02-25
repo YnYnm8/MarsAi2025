@@ -1,6 +1,13 @@
 import { z } from "zod";
 import { filesSchema } from "./fileValidator.mjs";
 
+const updateFilesSchema = z.object({
+    film: z.array(z.any()).optional().nullable(),
+    poster: z.array(z.any()).optional().nullable(),
+    subtitle: z.array(z.any()).optional().nullable(),
+    galerie: z.array(z.any()).optional().nullable(),
+});
+
 export const filmSchema = z.object({
 
     collaborateur: z.string().optional(),
@@ -34,7 +41,8 @@ export const filmSchema = z.object({
 });
 
 // Validation partielle pour les mises à jour de film (PUT /films/:id)
-export const partialFilmSchema = filmSchema.partial();
+export const updateFilmSchema = filmSchema.partial().extend(updateFilesSchema.shape);
+
 export const createFilmSchema = filmSchema.extend({
     ...filesSchema.shape
 });

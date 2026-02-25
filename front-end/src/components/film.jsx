@@ -1,13 +1,22 @@
-import React from 'react';
-
 
 export const FilmComponent = ({ data, variant = "details" }) => {
 
     if (!data) return null;
 
+    //variables
     const isCard = variant === "card";
-   // Accès sécurisé au premier fichier du tableau
     const mainFile = data.Files?.[0] || {};
+
+    // URL base backend
+    const API_URL = "http://localhost:3000";
+
+    // Función para resolver la ruta de archivos 
+    const getFileUrl = (path) => {
+        if (!path) return "";
+        if (path.startsWith('http')) return path;
+        const cleanPath = path.startsWith('/') ? path.substring(1) : path;
+        return `${API_URL}/${cleanPath}`;
+    };
 
     const containerStyles = isCard
         ? "bg-[#0F0F0F] rounded-2xl overflow-hidden border border-gray-800 hover:border-gray-600 transition group flex flex-col cursor-pointer relative"
@@ -18,7 +27,6 @@ export const FilmComponent = ({ data, variant = "details" }) => {
 
             {/* --- SECCIÓN VISUAL (POSTER O VIDEO) --- */}
             <div className={`relative ${isCard ? 'h-48' : 'w-full mb-8'}`}>
-                {/* Badges Flotantes */}
                 <div className="absolute top-3 left-3 flex gap-2 z-10">
                     <span className={`px-2 py-1 rounded-md text-[10px] font-bold uppercase tracking-wide border backdrop-blur-md ${data.generateAi === 'fullAi' ? 'bg-purple-600/80 border-purple-400' : 'bg-cyan-600/80 border-cyan-400'}`}>
                         {data.generateAi === 'fullAi' ? 'Full AI' : 'Hybrid'}
@@ -32,14 +40,14 @@ export const FilmComponent = ({ data, variant = "details" }) => {
 
                 {isCard ? (
                     <img
-                        src={mainFile.poster_url || "../assets/image-default.png"}
+                        src={mainFile.poster_url ? getFileUrl(mainFile.poster_url) : "../assets/image-default.png"}
                         alt={data.title}
                         className="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition duration-500"
                     />
                 ) : (
                     <div className="rounded-2xl overflow-hidden border border-gray-700 bg-black aspect-video shadow-2xl">
                         {mainFile.film_url ? (
-                            <video src={mainFile.film_url} controls className="w-full h-full"></video>
+                            <video src={getFileUrl(mainFile.film_url)} controls className=" cursor-pointer w-full h-full"></video>
                         ) : (
                             <div className="w-full h-full flex items-center justify-center text-gray-500">Vidéo non disponible</div>
                         )}
@@ -70,7 +78,10 @@ export const FilmComponent = ({ data, variant = "details" }) => {
                     {data.collaborateur && data.collaborateur !== "no" && (
                         <div className="text-[12px] text-gray-400 bg-gray-800/50 px-2 py-1 rounded border border-gray-700">
                             Feat. <span className="text-white font-bold">
-                                {isCard ? data.collaborateur.split(',')[0] : data.collaborateur}
+                                {isCard
+                                    ? data.collaborateur.split(',')[0].replace(/^(M\.|Mrs\.)\s*/, '') // Limpia el primero para la card
+                                    : data.collaborateur // Muestra todo en el detalle
+                                }
                             </span>
                         </div>
                     )}
@@ -80,7 +91,6 @@ export const FilmComponent = ({ data, variant = "details" }) => {
                     {data.description}
                 </p>
 
-                {/* --- MÉTHODOLOGIE (Solo en detalles) --- */}
                 {!isCard && mainFile.creativeMethodology && (
                     <div className="p-6 bg-gradient-to-br from-gray-900 to-[#0B0B0B] border border-gray-800 rounded-2xl shadow-inner">
                         <h3 className="text-blue-500 font-bold uppercase text-[10px] tracking-widest mb-3">Méthodologie Créative</h3>
@@ -90,23 +100,32 @@ export const FilmComponent = ({ data, variant = "details" }) => {
                     </div>
                 )}
 
-                {/* --- POSTER & GALERIE (Solo en detalles) --- */}
+                {/* --- POSTER & GALERIE --- */}
                 {!isCard && (
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-8 py-6 border-t border-gray-800">
                         <div>
                             <h3 className="text-sm font-bold text-gray-500 uppercase mb-4 tracking-widest">Poster Officiel</h3>
-                            <img src={mainFile.poster_url} className="rounded-xl border border-gray-700 w-full max-w-xs shadow-lg" alt="Poster" />
+                            <img src={getFileUrl(mainFile.poster_url)} className="rounded-xl border border-gray-700 w-full max-w-xs shadow-lg" alt="Poster" />
                         </div>
                         {mainFile.galerie_url && (
                             <div>
                                 <h3 className="text-sm font-bold text-gray-500 uppercase mb-4 tracking-widest">Galerie d'images</h3>
-                                <img src={mainFile.galerie_url} className="rounded-xl border border-gray-700 w-full shadow-lg" alt="Galerie" />
+                                <div className="grid grid-cols-2 gap-2">
+                                    {Array.isArray(mainFile.galerie_url) && mainFile.galerie_url.map((img, idx) => (
+                                        <img
+                                            key={idx}
+                                            src={getFileUrl(img)}
+                                            className="rounded-xl border border-gray-700 w-full shadow-lg h-32 object-cover"
+                                            alt={`Galerie ${idx + 1}`}
+                                        />
+                                    ))}
+                                </div>
                             </div>
                         )}
                     </div>
                 )}
 
-                {/* --- COMMENTAIRES / ANNOTATORS (Solo en detalles) --- */}
+                {/* --- COMMENTAIRES --- */}
                 {!isCard && data.Annotators && data.Annotators.length > 0 && (
                     <div className="mt-12 border-t border-gray-800 pt-8">
                         <h3 className="text-xl font-bold text-white mb-6 flex items-center gap-2">
@@ -132,7 +151,7 @@ export const FilmComponent = ({ data, variant = "details" }) => {
                     </div>
                 )}
 
-                {/* --- FOOTER (Stats + Date) --- */}
+                {/* --- FOOTER --- */}
                 <div className={`flex items-center justify-between border-t border-gray-800 pt-4 ${isCard ? 'mt-auto' : 'mt-8'}`}>
                     <div className="flex gap-4">
                         <div className="flex items-center gap-1.5 text-xs text-gray-400">
@@ -146,7 +165,7 @@ export const FilmComponent = ({ data, variant = "details" }) => {
                     </div>
                     <div className="text-[10px] text-gray-600 flex flex-col items-end">
                         <span>Créé le {new Date(data.createdAt).toLocaleDateString('fr-FR')}</span>
-                         <span>Modifie le {new Date(data.updatedAt).toLocaleDateString('fr-FR')}</span>
+                        <span>Modifié le {new Date(data.updatedAt).toLocaleDateString('fr-FR')}</span>
                     </div>
                 </div>
             </div>

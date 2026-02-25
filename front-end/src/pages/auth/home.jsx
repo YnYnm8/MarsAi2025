@@ -1,13 +1,11 @@
-
 import bgImg from "../../assets/accueilbg.png";
-import TopNavbar from "../../components/navbar";
 import logo from "/src/assets/icon-stars.png"
 
 
 const Home = () => {
     return (
         <div>
-            <TopNavbar />
+           
             <div className="relative min-h-screen w-full flex flex-col font-sans text-white overflow-hidden">
 
                 <div
@@ -60,9 +58,9 @@ const Home = () => {
                     </div>
                 </main>
 
-                {/* Espace vide en bas pour équilibrer le centrage vertical */}
-                <div className="relative z-10 h-80"></div>
+
             </div>
+
         </div>
     );
 };

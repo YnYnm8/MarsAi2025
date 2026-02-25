@@ -9,8 +9,8 @@ import { catchError } from "../helpers/errorHandler.mjs";
 export const uploadMiddleware = async (req, res, next) => {
 
     try {
-         console.log("BODY RECEIVED:", req.body); 
-         console.log("FILES RECEIVED:", req.files);
+        console.log("BODY RECEIVED:", req.body);
+        console.log("FILES RECEIVED:", req.files);
         // Validation des données du film avec zod
         const bodyValidation = filmSchema.safeParse(req.body);
         if (!bodyValidation.success) {
@@ -37,14 +37,21 @@ export const uploadMiddleware = async (req, res, next) => {
         await Promise.all(
             req.files.poster.map(async (file) => {
                 const resizedPath = `${file.destination}/resized-${file.filename}`;
+
                 await sharp(file.path)
                     .resize(800, 600, { fit: "inside" })
                     .toFile(resizedPath);
 
-                fs.unlinkSync(file.path),
-                    file.path = resizedPath
+                // Borramos el original físicamente
+                if (fs.existsSync(file.path)) {
+                    fs.unlinkSync(file.path);
+                }
+
+                // Actualizamos las propiedades del objeto 'file' directamente
+                file.path = resizedPath;
+                file.filename = `resized-${file.filename}`;
             })
-        )
+        );
 
         // Creation du film en base de données
         const {
@@ -56,7 +63,7 @@ export const uploadMiddleware = async (req, res, next) => {
 
         const newFilm = await Film.create({
 
-            UserId: req.user?.id || 1, // Utilisateur par défaut si pas d'authentification
+            UserId: req.user.id,
             title,
             description,
             duration,
@@ -72,13 +79,23 @@ export const uploadMiddleware = async (req, res, next) => {
         const galerieFiles = req.files.galerie || [];
         const { creativeMethodology } = bodyValidation.data;
 
+
+        //Limpieza de ruta
+        //const clean = (f) => (f && f.path) ? `/uploads/${f.path.split('/').pop()}` : null;
+
+        const clean = (f) => {
+            if (!f) return null;
+            const fileName = f.filename || (f.path ? f.path.split('/').pop() : null);
+            return fileName ? `/uploads/${fileName}` : null;
+        };
+
         await File.create({
             FilmId: newFilm.id,
-            film_url: filmFile.path,
-            poster_url: posterFiles.path,
-            subtitle: subtitleFiles.map(f => f.path).join(","),
+            film_url: clean(filmFile),
+            poster_url: clean(posterFiles),
+            subtitle: subtitleFiles ? subtitleFiles.map(f => clean(f)).join(",") : "",
             outil_Ai,
-            galerie_url: galerieFiles.map(f => f.path).join(","), 
+            galerie_url: galerieFiles.map(f => clean(f)).filter(Boolean),
             creativeMethodology
         })
 

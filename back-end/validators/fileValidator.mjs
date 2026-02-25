@@ -40,15 +40,23 @@ export const filesSchema = z.preprocess(
       )
       .min(1, "Au moins 1 fichier de sous-titres est obligatoire"),
 
+
     galerie: z
       .array(
-        z.object({
-          mimetype: z.enum(["image/jpeg", "image/png"]),
-          size: z.number(),
-          path: z.string(),
-        })
+        z.union([
+          z.string(),
+          z.object({
+            mimetype: z.string(),
+            size: z.number(),
+            path: z.string(),
+            filename: z.string().optional()
+          })
+        ])
       )
-      .max(2, "Maximum 2 images pour la gallery")
+      .max(2, "Maximum 2 images pour la galerie")
       .optional(),
-  })
-);
+
+  }
+  )
+)
+

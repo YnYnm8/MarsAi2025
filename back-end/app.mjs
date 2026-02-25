@@ -2,10 +2,10 @@ import sequelize from "./config/database.mjs";
 import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
-import cookieParser from "cookie-parser";
-import helmet from "helmet";
-import path from "path";
-import { fileURLToPath } from "url";
+import cookieParser from 'cookie-parser';
+import helmet from 'helmet';
+import path from 'path';
+import { fileURLToPath } from 'url';
 
 import "./models/index.mjs";
 import comiteRouter from "./routes/comiteRoutes.mjs";
@@ -33,53 +33,40 @@ const FRONTEND_URL = (process.env.FRONTEND_URL || 'http://localhost:5173')
 
 
 // Configuration CORS
-app.use(
-  cors({
-    origin: [
-      "http://localhost:5173".replace(/\/$/, ""),
-      process.env.FRONTEND_URL,
-    ].filter(Boolean),
-    credentials: true,
-    methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
-    allowedHeaders: [
-      "Content-Type",
-      "Authorization",
-      "X-Requested-With",
-      "Accept",
-      "Origin",
-    ],
-  }),
-);
+app.use(cors({
+  origin: [
+    'http://localhost:5173'
+      .replace(/\/$/, ''),
+    process.env.FRONTEND_URL
+  ].filter(Boolean),
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept', 'Origin']
+}));
 
 app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.use("/uploads", express.static(path.join(__dirname, "uploads")));
+app.use('/uploads', express.static(path.join(__dirname, '../front-end/public/uploads')));
 
 // Middleware HELMET
-app.use(
-  helmet({
-    contentSecurityPolicy: {
-      directives: {
-        defaultSrc: ["'self'"],
-        styleSrc: ["'self'", "'unsafe-inline'"],
-        scriptSrc: ["'self'"],
-        // On autorise les images venant de 'self' (localhost:3000) et data: (base64)
-        imgSrc: ["'self'", "data:", "blob:", "http://localhost:3000"],
-        connectSrc: [
-          "'self'",
-          "http://localhost:5173",
-          "http://localhost:3000",
-        ],
-      },
-    },
-    crossOriginResourcePolicy: { policy: "cross-origin" },
-    frameguard: { action: "deny" },
-    noSniff: true,
-    xssFilter: true,
-  }),
-);
+app.use(helmet({
+  contentSecurityPolicy: {
+    directives: {
+      defaultSrc: ["'self'"],
+      styleSrc: ["'self'", "'unsafe-inline'"],
+      scriptSrc: ["'self'"],
+      // On autorise les images venant de 'self' (localhost:3000) et data: (base64)
+      imgSrc: ["'self'", 'data:', 'blob:', 'http://localhost:3000'],
+      connectSrc: ["'self'", "http://localhost:5173", "http://localhost:3000"]
+    }
+  },
+  crossOriginResourcePolicy: { policy: 'cross-origin' },
+  frameguard: { action: 'deny' },
+  noSniff: true,
+  xssFilter: true
+}));
 
 // Routes
 app.use('/api', publicRoutes);
@@ -98,17 +85,22 @@ app.get("/", (req, res) => {
   res.send("API OK");
 });
 
+app.get(/.*/, (req, res) => {
+  res.sendFile(path.join(__dirname, "../front-end/dist/index.html"));
+});
+
 // serveur + BDD
 try {
   await sequelize.authenticate();
   console.log(" ");
   console.log("      🗄️ Connexion à la BDD réussie ✅");
 
+
   await sequelize.sync({ force: true });
   console.log(" ");
   console.log("      🧩 Tables créées avec succès  ✅");
 
-  //Seed
+  // Seed
   await userSeed();
   await seedAll();
   await WorkshopSeed();  
@@ -117,8 +109,8 @@ try {
   console.log(" ");
   console.log("      💾 Seeds insérés avec succès  ✅");
 
-  app.listen(PORT, () => { 
-    
+  app.listen(PORT, () => {
+
     console.log(" ");
     console.log(`    🚀 Serveur démarré sur http://localhost:${PORT} 🔌`);
   });
@@ -126,14 +118,9 @@ try {
   console.error(" ");
   console.error("    ❌ Erreur au démarrage de l'API");
 
-  if (
-    error.name === "SequelizeValidationError" ||
-    error.name === "SequelizeUniqueConstraintError"
-  ) {
-    error.errors.forEach((err) => {
-      console.error(
-        `    👉 [VALIDATION] Champ: ${err.path} | Message: ${err.message} | Valeur: ${err.value}`,
-      );
+  if (error.name === 'SequelizeValidationError' || error.name === 'SequelizeUniqueConstraintError') {
+    error.errors.forEach(err => {
+      console.error(`    👉 [VALIDATION] Champ: ${err.path} | Message: ${err.message} | Valeur: ${err.value}`);
     });
   } else {
     console.error(`    👉 [ERREUR]: ${error.message}`);

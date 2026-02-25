@@ -8,7 +8,6 @@ import logo from "/src/assets/icon-stars.png"; // Vérifie tes chemins d'import
 import profile from "/src/assets/profil.png";
 import mailIcon from "/src/assets/mail.png";
 import cadenaIcon from "/src/assets/cadena.png";
-import TopNavbar from "../../components/navbar";
 
 const registerSchema = z.object({
   firstName: z.string().min(2, "Le prénom doit faire au moins 2 caractères"),
@@ -83,7 +82,6 @@ const Register = () => {
 
     return ( 
         <div className="min-h-screen bg-black text-white font-sans selection:bg-purple-500 selection:text-white">
-            <TopNavbar />
             
             <div className="h-48 w-full bg-gradient-to-r from-blue-900 via-purple-900 to-black absolute top-0 left-0 z-0">
                 <div className="absolute inset-0 bg-black/40"></div>

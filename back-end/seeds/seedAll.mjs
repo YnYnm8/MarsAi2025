@@ -104,10 +104,10 @@ export async function seedAll() {
                 description: 'Documental sobre la vida marina.',
                 generateAi: 'hybrid',
                 collaborateur: 'Jane Doe',
-                Files: [{
-                    subtitle: 'English',
-                    film_url: sampleVideo,
-                    poster_url: 'https://picsum.photos/seed/ocean/800/1200',
+                Files: [{ 
+                    subtitle: 'English', 
+                    film_url: sampleVideo, 
+                    poster_url: 'https://picsum.photos/seed/ocean/800/1200', 
                     outil_Ai: 'Midjourney',
                     creativeMethodology: 'Génération de fonds sous-marins.'
                 }]
@@ -197,7 +197,8 @@ export async function seedAll() {
         ], {
             include: [File],
             returning: true
-        });
+        })
+
 
 
         const playlists = await Playlist.bulkCreate([
@@ -259,6 +260,7 @@ export async function seedAll() {
         ]);
 
         console.log('✅ SEED TERMINÉE AVEC SUCCÈS ! (' + films.length + ' films créés)');
+
 
     } catch (err) {
         console.error("❌ Erreur dans seedAll :");
