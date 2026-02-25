@@ -1,0 +1,22 @@
+{
+  "val_email_invalid": "Formato de correo electrónico no válido",
+  "val_pwd_required": "Se requiere una contraseña",
+  "val_pwd_min": "Mínimo 8 caracteres",
+  "val_pwd_upper": "Se requiere al menos 1 letra mayúscula",
+  "val_pwd_lower": "Se requiere al menos 1 letra minúscula",
+  "val_pwd_num": "Se requiere al menos 1 número",
+  "val_pwd_special": "Se requiere al menos 1 carácter especial",
+  "error_login_failed": "Correo o contraseña incorrectos",
+  "error_network": "El servidor no responde. Verifique que esté en funcionamiento.",
+  "success_login": "¡Inicio de sesión exitoso! Bienvenido.",
+  "title": "INICIAR SESIÓN",
+  "subtitle": "ÁREA DE MIEMBROS DE MARS.A.I",
+  "label_email": "DIRECCIÓN DE CORREO ELECTRÓNICO",
+  "placeholder_email": "EMAIL@EXAMPLE.COM",
+  "label_password": "CONTRASEÑA",
+  "btn_submitting": "INICIANDO SESIÓN...",
+  "btn_submit": "ACCEDER A TU ESPACIO",
+  "new_user": "¿NUEVO EN MARS.A.I?",
+  "register_link": "REGISTRARSE",
+  "back_home": "← VOLVER AL INICIO"
+}

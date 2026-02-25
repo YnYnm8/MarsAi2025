@@ -1,0 +1,63 @@
+{
+  "alerts": {
+    "confirmSubmit": "¿Estás seguro de que deseas enviar esta película? Asegúrate de que toda la información sea correcta antes de continuar.",
+    "errorUnknown": "Error desconocido",
+    "networkError": "Error de red",
+    "successSubmit": "¡Película enviada con éxito!"
+  },
+  "header": {
+    "callForProjects": "Convocatoria de Proyectos 2026",
+    "submitTitle1": "Enviar una ",
+    "submitTitle2": "película",
+    "description1": "Transmite los elementos técnicos, el uso de IA y la composición de tu equipo.",
+    "description2": "Todos los campos marcados con un asterisco (*) son obligatorios."
+  },
+  "options": {
+    "fullAi": "Generación integral (100% IA)",
+    "hybrid": "Producción híbrida (Acción real + aportes de IA)"
+  },
+  "step1": {
+    "title": "01. Identidad de la Película",
+    "titleLabel": "TÍTULO *",
+    "titlePlaceholder": "TÍTULO",
+    "durationLabel": "DURACIÓN EXACTA (EN SEGUNDOS) *",
+    "durationPlaceholder": "EJ:60",
+    "synopsisLabel": "MANIFIESTO / SINOPSIS * (MÁX. 300 CARACTERES)",
+    "synopsisPlaceholder": "Resume la intención de tu película y la historia que cuenta en unas pocas líneas..."
+  },
+  "step2": {
+    "title": "02. Declaración de Uso de IA",
+    "transparencyText": "MARS.A.I exige total transparencia sobre el uso de la Inteligencia Artificial. Selecciona todas las herramientas generativas utilizadas en tu proceso creativo.",
+    "classificationLabel": "Clasificación de la Obra: * Elección exclusiva entre:",
+    "stackLabel": "Stack Tecnológico *",
+    "stackPlaceholder": "Enumera las herramientas utilizadas (ej: Midjourney para visuales, ElevenLabs para voces, Runway para animación...)",
+    "methodologyLabel": "Metodología Creativa",
+    "methodologyPlaceholder": "Describe la interacción entre el humano y la máquina en este proceso.."
+  },
+  "step3": {
+    "title": "03. Entregables y Accesibilidad",
+    "youtubeLabel": "Enlace de YouTube (Público / Oculto) *",
+    "posterLabel": "Miniatura Oficial (16:9) *",
+    "galleryLabel": "Galería de Medios (Imágenes - Máx 2)"
+  },
+  "step4": {
+    "title": "04. Composición del Equipo",
+    "mr": "Sr.",
+    "mrs": "Sra.",
+    "namePlaceholder": "EJ: JUAN PÉREZ",
+    "addCollaborator": "+ Añadir un colaborador"
+  },
+  "footer": {
+    "certificateTitle": "Certificado de Propiedad",
+    "certificateText": "Al enviar este formulario, certificas por tu honor ser el autor original de la obra y poseer la totalidad de los derechos de difusión.",
+    "submitBtn": "Finalizar mi envío"
+  },
+  "dynamicInput": {
+  "addButton": "Añadir",
+  "subtitleLabel": "Subtítulos (Imágenes - Máx 5)",
+  "typeFile": "Archivo",
+  "typeLink": "Enlace",
+  "chooseFile": "Elegir un archivo .SRT",
+  "pasteLink": "Pega el enlace"
+}
+}

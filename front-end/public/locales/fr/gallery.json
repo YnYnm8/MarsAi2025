@@ -1,0 +1,55 @@
+{
+  "back_home": "RETOUR ACCUEIL",
+  "back_gallery": "RETOUR GALERIE",
+  "title": "LA GALERIE DES FILMS",
+  "subtitle": "Explorez l'intégralité de la sélection officielle. Des visions uniques, des courts-métrages pionniers créés avec l'Intelligence Artificielle.",
+  "search_placeholder": "Rechercher par titre, réalisateur...",
+  "error_fetch_films": "Impossible de charger les films. Veuillez réessayer plus tard.",
+  "no_films_found": "Aucun film ne correspond à vos critères.",
+  
+  "filter_all": "Tout voir",
+  "filter_ia_type": "Type d'IA",
+  "filter_country": "Pays d'origine",
+  "filter_status": "Statut",
+  "filter_sort": "Trier par",
+  
+  "status_submitted": "Soumis",
+  "status_pending": "En attente",
+  "status_selected": "Sélectionné",
+  "status_rejected": "Refusé",
+
+  "country_FR": "France",
+  "country_EN": "Angleterre",
+  "country_JP": "Japon",
+  "country_SP": "Espagne",
+  "country_CR": "Créole",
+  
+  "sort_recent": "Plus récents",
+  "sort_top_rated": "Mieux notés",
+  "badge_full_ai": "FULL AI",
+  "badge_hybrid": "HYBRIDE",
+  
+  "untitled": "Sans titre",
+  "unknown_director": "Inconnu",
+  "min": "MIN",
+  "seconds": "SECONDES",
+  "director_label": "RÉALISATEUR",
+  "origin_label": "ORIGINE",
+  
+  "share_this_film": "Partager ce film",
+  "direct_link": "Lien Direct",
+  "copy": "Copier",
+  "share_text": "Découvrez le film \"{{title}}\" généré par IA !",
+  "share_link_copied": "Lien du film copié dans le presse-papier !",
+  "share_link_btn": "Lien",
+  
+  "synopsis": "Synopsis",
+  "no_synopsis": "Aucun synopsis n'a été renseigné pour ce film.",
+  "no_tool": "Aucun outil mentionné.",
+  "methodology": "Méthodologie",
+  
+  "pagination_prev": "Précédent",
+  "pagination_next": "Suivant",
+  "pagination_info": "Page <1>{{currentPage}}</1> sur <3>{{totalPages}}</3>",
+  "tech_stack_title": "Tech Stack & IA"
+}

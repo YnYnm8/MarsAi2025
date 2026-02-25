@@ -1,0 +1,56 @@
+{
+  "back_home": "BACK TO HOME",
+  "back_gallery": "BACK TO GALLERY",
+  "title": "FILM GALLERY",
+  "subtitle": "Explore the full official selection. Unique visions, pioneering short films created with Artificial Intelligence.",
+  "search_placeholder": "Search by title, director...",
+  "error_fetch_films": "Unable to load films. Please try again later.",
+  "no_films_found": "No films match your criteria.",
+  
+  "filter_all": "Show all",
+  "filter_ia_type": "AI type",
+  "filter_country": "Country of origin",
+  "filter_status": "Status",
+  "filter_sort": "Sort by",
+  
+  "status_submitted": "Submitted",
+  "status_pending": "Pending",
+  "status_selected": "Selected",
+  "status_rejected": "Rejected",
+
+  "country_FR": "France",
+  "country_EN": "England",
+  "country_JP": "Japan",
+  "country_SP": "Spain",
+  "country_CR": "Creole",
+  
+  "sort_recent": "Most recent",
+  "sort_top_rated": "Top rated",
+  "badge_full_ai": "FULL AI",
+  "badge_hybrid": "HYBRID",
+  
+  "untitled": "Untitled",
+  "unknown_director": "Unknown",
+  "min": "MIN",
+  "seconds": "SECONDS",
+  "director_label": "DIRECTOR",
+  "origin_label": "ORIGIN",
+  
+  "share_this_film": "Share this film",
+  "direct_link": "Direct link",
+  "copy": "Copy",
+  "share_text": "Discover the AI-generated film \"{{title}}\"!",
+  "share_link_copied": "Film link copied to clipboard!",
+  "share_link_btn": "Link",
+  
+  "synopsis": "Synopsis",
+  "no_synopsis": "No synopsis has been provided for this film.",
+  "no_tool": "No tool mentioned.",
+  "methodology": "Methodology",
+  
+  "pagination_prev": "Previous",
+  "pagination_next": "Next",
+  "pagination_info": "Page <1>{{currentPage}}</1> of <3>{{totalPages}}</3>",
+  "tech_stack_title": "Tech Stack & IA"
+
+}

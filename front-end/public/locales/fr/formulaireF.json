@@ -1,0 +1,63 @@
+{
+  "alerts": {
+    "confirmSubmit": "Êtes-vous sûr de vouloir soumettre ce film ? Assurez-vous que toutes les informations sont correctes avant de continuer.",
+    "errorUnknown": "Erreur inconnue",
+    "networkError": "Erreur réseau",
+    "successSubmit": "Film soumis avec succès !"
+  },
+  "header": {
+    "callForProjects": "Appel à Projets 2026",
+    "submitTitle1": "Soumettre un ",
+    "submitTitle2": "film",
+    "description1": "Transmettez les éléments techniques, l'usage de l'IA et la composition de votre équipe.",
+    "description2": "Tous les champs marqués d'une étoile (*) sont obligatoires."
+  },
+  "options": {
+    "fullAi": "Génération intégrale (100% IA)",
+    "hybrid": "Production hybride (Prises de vues réelles + apports IA)"
+  },
+  "step1": {
+    "title": "01. Identité du Film",
+    "titleLabel": "TITRE *",
+    "titlePlaceholder": "TITRE",
+    "durationLabel": "DURÉE EXACTE (EN SECONDES) *",
+    "durationPlaceholder": "EX:60",
+    "synopsisLabel": "MANIFESTE / SYNOPSIS * (MAX. 300 CARACTÈRES)",
+    "synopsisPlaceholder": "Résumez l’intention de votre film et l’histoire qu’il raconte en quelques lignes..."
+  },
+  "step2": {
+    "title": "02. Déclaration Usage de l'IA",
+    "transparencyText": "MARS.A.I exige une transparence totale sur l'utilisation de l'Intelligence Artificielle. Sélectionnez tous les outils génératifs sollicités dans votre processus créatif.",
+    "classificationLabel": "Classification de l'Œuvre : * Choix exclusif entre :",
+    "stackLabel": "Stack Technologique *",
+    "stackPlaceholder": "Listez les outils utilisés (ex: Midjourney pour les visuels, ElevenLabs pour les voix, Runway pour l'animation...)",
+    "methodologyLabel": "Méthodologie Créative",
+    "methodologyPlaceholder": "Décrivez l'interaction entre l'humain et la machine dans ce processus.."
+  },
+  "step3": {
+    "title": "03. Livrables & Accessibilité",
+    "youtubeLabel": "Lien YouTube (Public / Non-répertorié) *",
+    "posterLabel": "Vignette Officielle (16:9) *",
+    "galleryLabel": "Galerie Médias (Stills - Max 2)"
+  },
+  "step4": {
+    "title": "04. Composition de l'Équipe",
+    "mr": "M.",
+    "mrs": "Mme",
+    "namePlaceholder": "EX: JEAN DUPOND",
+    "addCollaborator": "+ Ajouter un collaborateur"
+  },
+  "footer": {
+    "certificateTitle": "Certificat de Propriété",
+    "certificateText": "En soumettant ce dossier, vous certifiez sur l'honneur être l'auteur original de l'œuvre et détenir l'intégralité des droits de diffusion.",
+    "submitBtn": "Finaliser ma soumission"
+  },
+  "dynamicInput": {
+  "addButton": "Ajouter",
+  "subtitleLabel": "Sous-titres (Stills - Max 5)",
+  "typeFile": "Fichier",
+  "typeLink": "Lien",
+  "chooseFile": "Choisir un fichier .SRT",
+  "pasteLink": "Collez le lien"
+}
+}

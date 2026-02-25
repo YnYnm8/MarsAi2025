@@ -1,0 +1,63 @@
+{
+  "alerts": {
+    "confirmSubmit": "この映画を提出してもよろしいですか？続行する前にすべての情報が正しいことを確認してください。",
+    "errorUnknown": "不明なエラー",
+    "networkError": "ネットワークエラー",
+    "successSubmit": "映画が正常に提出されました！"
+  },
+  "header": {
+    "callForProjects": "2026年プロジェクト募集",
+    "submitTitle1": "提出する ",
+    "submitTitle2": "映画",
+    "description1": "技術的要素、AIの使用状況、チーム構成を送信してください。",
+    "description2": "星印（*）の付いた項目はすべて必須です。"
+  },
+  "options": {
+    "fullAi": "完全生成（100% AI）",
+    "hybrid": "ハイブリッド制作（実写 + AI入力）"
+  },
+  "step1": {
+    "title": "01. 映画のアイデンティティ",
+    "titleLabel": "タイトル *",
+    "titlePlaceholder": "タイトル",
+    "durationLabel": "正確な長さ（秒）*",
+    "durationPlaceholder": "例:60",
+    "synopsisLabel": "マニフェスト / あらすじ *（最大300文字）",
+    "synopsisPlaceholder": "映画の意図とそれが語る物語を数行で要約してください..."
+  },
+  "step2": {
+    "title": "02. AI使用の宣言",
+    "transparencyText": "MARS.A.Iは人工知能の使用に関して完全な透明性を求めています。制作プロセスで使用したすべての生成ツールを選択してください。",
+    "classificationLabel": "作品の分類 : * 以下のいずれかを選択 :",
+    "stackLabel": "テクノロジースタック *",
+    "stackPlaceholder": "使用したツールをリストアップしてください（例：視覚用のMidjourney、音声用のElevenLabs、アニメーション用のRunwayなど）",
+    "methodologyLabel": "クリエイティブな方法論",
+    "methodologyPlaceholder": "このプロセスにおける人間と機械の相互作用を説明してください.."
+  },
+  "step3": {
+    "title": "03. 納品物とアクセシビリティ",
+    "youtubeLabel": "YouTubeリンク（公開 / 限定公開）*",
+    "posterLabel": "公式サムネイル（16:9）*",
+    "galleryLabel": "メディアギャラリー（静止画 - 最大2枚）"
+  },
+  "step4": {
+    "title": "04. チーム構成",
+    "mr": "氏",
+    "mrs": "様",
+    "namePlaceholder": "例: 山田 太郎",
+    "addCollaborator": "+ 共同制作者を追加"
+  },
+  "footer": {
+    "certificateTitle": "所有権証明書",
+    "certificateText": "この申請書を提出することにより、あなたが作品の原作者であり、すべての配信権を保持していることを宣誓します。",
+    "submitBtn": "提出を完了する"
+  },
+"dynamicInput": {
+  "addButton": "追加",
+  "subtitleLabel": "字幕 (最大5つ)",
+  "typeFile": "ファイル",
+  "typeLink": "リンク",
+  "chooseFile": ".SRTファイルを選択",
+  "pasteLink": "リンクを貼り付け"
+}
+}

@@ -1,0 +1,22 @@
+{
+  "val_email_invalid": "Invalid email format",
+  "val_pwd_required": "Password is required",
+  "val_pwd_min": "Min 8 characters",
+  "val_pwd_upper": "Min 1 uppercase letter required",
+  "val_pwd_lower": "Min 1 lowercase letter required",
+  "val_pwd_num": "Min 1 number required",
+  "val_pwd_special": "Min 1 special character required",
+  "error_login_failed": "Incorrect email or password",
+  "error_network": "Server not responding. Please check if it's running.",
+  "success_login": "Login successful! Welcome.",
+  "title": "LOGIN",
+  "subtitle": "MARS.A.I MEMBER AREA",
+  "label_email": "EMAIL ADDRESS",
+  "placeholder_email": "EMAIL@EXAMPLE.COM",
+  "label_password": "PASSWORD",
+  "btn_submitting": "LOGGING IN...",
+  "btn_submit": "ACCESS YOUR SPACE",
+  "new_user": "NEW TO MARS.A.I?",
+  "register_link": "REGISTER",
+  "back_home": "← BACK TO HOME"
+}

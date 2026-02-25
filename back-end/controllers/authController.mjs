@@ -31,13 +31,13 @@ export const register = async (req, res) => {
 
     // 1. Validation basique des champs requis
     if (!email || !password) {
-      return res.status(400).json({ message: "Email et mot de passe requis" });
+      return res.status(400).json({ message: "ERR_MISSING_CREDENTIALS" });
     }
 
     // 2. Vérification si l'email existe déjà
     const existingUser = await User.findOne({ where: { email } });
     if (existingUser) {
-      return res.status(400).json({ message: "Cet email est déjà utilisé" });
+      return res.status(400).json({ message: "ERR_EMAIL_EXISTS" });
     }
 
     // 3. Création de l'utilisateur
@@ -51,10 +51,10 @@ export const register = async (req, res) => {
       country: "FR",
     });
 
-    res.status(201).json({ message: "Inscription réussie" });
+    res.status(201).json({ message: "SUCCESS_REGISTER" });
   } catch (error) {
     console.error("Register Error:", error);
-    res.status(500).json({ message: "Erreur serveur" });
+    res.status(500).json({ message: "ERR_SERVER" });
   }
 };
 
@@ -69,18 +69,18 @@ export const login = async (req, res) => {
     const user = await User.findOne({ where: { email } });
 
     if (!user) {
-      return res.status(400).json({ message: "Email ou mot de passe incorrect" });
+      return res.status(400).json({ message: "ERR_INVALID_CREDENTIALS" });
     }
 
     // 2. Vérification du mot de passe (via méthode du modèle User qui utilise Argon2)
     const isMatch = await user.validatePassword(password);
     if (!isMatch) {
-      return res.status(400).json({ message: "Email ou mot de passe incorrect" });
+      return res.status(400).json({ message: "ERR_INVALID_CREDENTIALS" });
     }
 
     // 3. Vérification si le compte est actif
     if (!user.isActive) {
-      return res.status(403).json({ message: "Compte désactivé" });
+      return res.status(403).json({ message: "ERR_ACCOUNT_DISABLED" });
     }
 
     // 4. Mise à jour de la date de dernière connexion
@@ -104,13 +104,13 @@ export const login = async (req, res) => {
     delete userResponse.password;
 
     res.status(200).json({
-      message: "Connexion réussie",
+      message: "SUCCESS_LOGIN",
       user: userResponse,
       token, // On renvoie aussi le token si le front veut le stocker autrement (ex: header Authorization)
     });
   } catch (error) {
     console.error("Login Error:", error);
-    res.status(500).json({ message: "Erreur serveur" });
+    res.status(500).json({ message: "ERR_SERVER" });
   }
 };
 
@@ -123,7 +123,7 @@ export const logout = (req, res) => {
     secure: process.env.NODE_ENV === "production",
     sameSite: "strict",
   });
-  res.status(200).json({ message: "Déconnexion réussie" });
+  res.status(200).json({ message: "SUCCESS_LOGOUT" });
 };
 
 // --- GESTION DU PROFIL ---
@@ -136,13 +136,13 @@ export const updateProfile = async (req, res) => {
   try {
     // 1. Vérification de sécurité (req.user est rempli par le middleware authMiddleware)
     if (!req.user || !req.user.id) {
-      return res.status(401).json({ message: "Non authentifié" });
+      return res.status(401).json({ message: "ERR_UNAUTHORIZED" });
     }
 
     const user = await User.findByPk(req.user.id);
 
     if (!user) {
-      return res.status(404).json({ message: "Utilisateur introuvable" });
+      return res.status(404).json({ message: "ERR_USER_NOT_FOUND" });
     }
 
     // 2. GESTION DE L'AVATAR (via Multer)
@@ -190,13 +190,13 @@ export const updateProfile = async (req, res) => {
 
     res.status(200).json({
       success: true,
-      message: "Profil mis à jour avec succès",
+      message: "SUCCESS_PROFILE_UPDATE",
       user: cleanUser,
     });
 
   } catch (error) {
     console.error("UpdateProfile error:", error);
-    res.status(500).json({ message: "Erreur serveur lors de la mise à jour" });
+    res.status(500).json({ message: "ERR_SERVER_UPDATE" });
   }
 };
 
@@ -210,12 +210,12 @@ export const getCurrentUser = async (req, res) => {
       attributes: { exclude: ["password"] }, // On ne renvoie jamais le mot de passe
     });
 
-    if (!user) return res.status(404).json({ message: "Utilisateur introuvable" });
+    if (!user) return res.status(404).json({ message: "ERR_USER_NOT_FOUND" });
 
     res.status(200).json({ user });
   } catch (error) {
     console.error("Me Error:", error);
-    res.status(500).json({ message: "Erreur serveur" });
+    res.status(500).json({ message: "ERR_SERVER" });
   }
 };
 
@@ -228,7 +228,7 @@ export const getMyFilms = async (req, res) => {
         const currentUserId = req.user?.id;
 
         if (!currentUserId) {
-            return res.status(401).json({ message: "Utilisateur non authentifié" });
+            return res.status(401).json({ message: "ERR_UNAUTHORIZED" });
         }
 
         // Requête Sequelize avec Jointure (Include)
@@ -252,7 +252,7 @@ export const getMyFilms = async (req, res) => {
 
     } catch (err) {
         console.error("Erreur getMyFilms:", err);
-        return res.status(500).json({ message: "Erreur serveur", error: err.message });
+        return res.status(500).json({ message: "ERR_SERVER", error: err.message });
     }
 };
 
@@ -269,7 +269,7 @@ export const getNotifications = async (req, res) => {
     });
     res.json(notifications);
   } catch (error) {
-    res.status(500).json({ message: "Erreur serveur" });
+    res.status(500).json({ message: "ERR_SERVER" });
   }
 };
 
@@ -282,8 +282,8 @@ export const markReadAll = async (req, res) => {
       { isRead: true },
       { where: { userId: req.user.id, isRead: false } }
     );
-    res.json({ message: "Notifications marquées comme lues" });
+    res.json({ message: "SUCCESS_NOTIFICATIONS_READ" });
   } catch (error) {
-    res.status(500).json({ message: "Erreur serveur" });
+    res.status(500).json({ message: "ERR_SERVER" });
   }
 };

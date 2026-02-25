@@ -9,9 +9,6 @@ import FilmShare from "../models/FilmShare.mjs";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
-/**
- * CA 3 : Incrémenter le compteur de partages (Unique par IP et Film)
- */
 export const incrementShare = async (req, res) => {
   try {
     const { id } = req.params;
@@ -22,7 +19,7 @@ export const incrementShare = async (req, res) => {
     const film = await Film.findByPk(id);
 
     if (!film) {
-      return res.status(404).json({ success: false, message: 'Film non trouvé' });
+      return res.status(404).json({ success: false, message: 'ERR_FILM_NOT_FOUND' });
     }
 
     // On vérifie si ce couple (IP, Film) a déjà partagé
@@ -31,19 +28,16 @@ export const incrementShare = async (req, res) => {
     });
 
     if (existingShare) {
-      // Le CA 3 bloque ici : on renvoie le nombre actuel sans l'incrémenter
       return res.status(200).json({ 
         success: true, 
-        message: 'Film déjà partagé par cet utilisateur', 
+        message: 'MSG_ALREADY_SHARED', 
         shares: film.shares, 
         incremented: false 
       });
     }
 
-    // C'est un nouveau partage pour cette IP : on l'enregistre
     await FilmShare.create({ filmId: id, ipAddress });
 
-    // On incrémente le compteur global du film
     film.shares = (film.shares || 0) + 1;
     await film.save();
 
@@ -55,13 +49,13 @@ export const incrementShare = async (req, res) => {
 
   } catch (error) {
     console.error('incrementShare error:', error);
-    res.status(500).json({ success: false, message: 'Erreur lors du partage' });
+    res.status(500).json({ success: false, message: 'ERR_SHARE_FAILED' });
   }
 };
 
 /**
  * GetFilmsPublic - Récupérer les films publics avec pagination
- * @route GET /api/public/films?page=1&limit=10&search=&iaType=&country=
+ * @route GET /api/public/films
  */
 export const getFilmsPublic = async (req, res) => {
   try {
@@ -73,25 +67,21 @@ export const getFilmsPublic = async (req, res) => {
 
     const offset = (page - 1) * limit;
 
-    // Filtres de base : on ne veut que les films validés
     const where = {
       status: { [Op.in]: ['approved', 'selected', 'finalist', 'winner'] },
-      // isPublished: true // Décommente si tu as une colonne isPublished
     };
 
-    // Recherche texte (Titre FR, EN ou Description)
     if (search && typeof search === 'string') {
       const searchTerm = search.trim().toLowerCase();
       where[Op.or] = [
         sequelize.where(sequelize.fn('LOWER', sequelize.col('title')), 'LIKE', `%${searchTerm}%`),
-        // Adapte les colonnes selon ton modèle réel (ex: description, etc.)
         sequelize.where(sequelize.fn('LOWER', sequelize.col('description')), 'LIKE', `%${searchTerm}%`)
       ];
     }
 
     // Filtre type IA
     if (iaType && typeof iaType === 'string') {
-      where.iaType = iaType.trim(); // Assure-toi que la colonne s'appelle bien iaType dans ton modèle Film
+      where.iaType = iaType.trim(); 
     }
 
     // Filtre pays
@@ -131,7 +121,7 @@ export const getFilmsPublic = async (req, res) => {
     console.error('getFilmsPublic error:', error);
     res.status(500).json({
       success: false,
-      message: process.env.NODE_ENV === 'development' ? error.message : 'Failed to fetch films'
+      message: 'ERR_FETCH_FILMS'
     });
   }
 };
@@ -144,12 +134,10 @@ export const getFilmDetail = async (req, res) => {
   try {
     const { id } = req.params;
 
-    // Validation ID
     if (!id || isNaN(parseInt(id))) {
-      return res.status(400).json({ message: 'ID film invalide' });
+      return res.status(400).json({ message: 'ERR_INVALID_FILM_ID' });
     }
 
-    // 1. D'ABORD, on récupère le film dans la BDD
     const film = await Film.findByPk(parseInt(id), {
       include: [
         {
@@ -160,28 +148,23 @@ export const getFilmDetail = async (req, res) => {
       ]
     });
 
-    // 2. On vérifie s'il existe
     if (!film) {
-      return res.status(404).json({ message: 'Film non trouvé' });
+      return res.status(404).json({ message: 'ERR_FILM_NOT_FOUND' });
     }
 
-    // 3. Vérifier les permissions (Si le film n'est pas public)
     const publicStatuses = ['approved', 'selected', 'finalist', 'winner'];
     
     if (!publicStatuses.includes(film.status)) {
       if (!req.user || req.user.role !== 'admin') {
-        return res.status(403).json({ message: 'Accès refusé' });
+        return res.status(403).json({ message: 'ERR_ACCESS_DENIED' });
       }
     }
-
-    // 4. ENSUITE SEULEMENT, on incrémente les vues
 
     if (film.views !== undefined) {
         film.views += 1;
         await film.save();
     }
 
-    // 5. On renvoie la réponse
     res.status(200).json({
       success: true,
       film
@@ -191,7 +174,7 @@ export const getFilmDetail = async (req, res) => {
     console.error('getFilmDetail error:', error);
     res.status(500).json({
       success: false,
-      message: process.env.NODE_ENV === 'development' ? error.message : 'Failed to fetch film'
+      message: 'ERR_FETCH_FILM'
     });
   }
 };
@@ -228,7 +211,7 @@ export const getTopRatedFilms = async (req, res) => {
     console.error('getTopRatedFilms error:', error);
     res.status(500).json({
       success: false,
-      message: process.env.NODE_ENV === 'development' ? error.message : 'Failed to fetch top rated films'
+      message: 'ERR_FETCH_TOP_FILMS'
     });
   }
 };
@@ -241,18 +224,18 @@ export const subscribeNewsletter = async (req, res) => {
     const { email } = req.body;
 
     if (!email || typeof email !== 'string') {
-      return res.status(400).json({ message: 'Email requis' });
+      return res.status(400).json({ message: 'ERR_EMAIL_REQUIRED' });
     }
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
-      return res.status(400).json({ message: 'Format email invalide' });
+      return res.status(400).json({ message: 'ERR_INVALID_EMAIL_FORMAT' });
     }
 
     // Vérifier si déjà abonné
     const existing = await Subscriber.findOne({ where: { email } });
     if (existing) {
-      return res.status(409).json({ message: 'Cet email est déjà abonné' });
+      return res.status(409).json({ message: 'ERR_ALREADY_SUBSCRIBED' });
     }
 
     // Créer l'abonnement
@@ -278,11 +261,11 @@ export const subscribeNewsletter = async (req, res) => {
       console.log(`Email de bienvenue envoyé avec succès : ${data.id}`); 
     }
 
-    res.status(201).json({ success: true, message: "Abonnement réussi" });
+    res.status(201).json({ success: true, message: "SUCCESS_SUBSCRIBE" });
 
   } catch (error) {
     console.error("Erreur Newsletter :", error);
-    res.status(500).json({ message: "Erreur serveur" });
+    res.status(500).json({ message: "ERR_SERVER" });
   }
 };
 
@@ -294,26 +277,26 @@ export const unsubscribeNewsletter = async (req, res) => {
     const { email } = req.body;
 
     if (!email || typeof email !== 'string') {
-      return res.status(400).json({ message: 'Email requis' });
+      return res.status(400).json({ message: 'ERR_EMAIL_REQUIRED' });
     }
 
     const subscriber = await Subscriber.findOne({ where: { email } });
     if (!subscriber) {
-      return res.status(404).json({ message: 'Abonnement non trouvé' });
+      return res.status(404).json({ message: 'ERR_SUB_NOT_FOUND' });
     }
 
     await subscriber.destroy();
 
     res.status(200).json({
       success: true,
-      message: 'Désabonnement réussi'
+      message: 'SUCCESS_UNSUBSCRIBE'
     });
 
   } catch (error) {
     console.error('unsubscribeNewsletter error:', error);
     res.status(500).json({
       success: false,
-      message: process.env.NODE_ENV === 'development' ? error.message : 'Unsubscription failed'
+      message: 'ERR_UNSUBSCRIBE_FAILED'
     });
   }
 };
@@ -326,12 +309,12 @@ export const getContent = async (req, res) => {
     const { slug } = req.params;
 
     if (!slug || typeof slug !== 'string') {
-      return res.status(400).json({ message: 'Slug requis' });
+      return res.status(400).json({ message: 'ERR_SLUG_REQUIRED' });
     }
 
     const content = await SiteContent.findByPk(slug.trim());
     if (!content) {
-      return res.status(404).json({ message: 'Contenu non trouvé' });
+      return res.status(404).json({ message: 'ERR_CONTENT_NOT_FOUND' });
     }
 
     res.status(200).json({
@@ -343,7 +326,7 @@ export const getContent = async (req, res) => {
     console.error('getContent error:', error);
     res.status(500).json({
       success: false,
-      message: process.env.NODE_ENV === 'development' ? error.message : 'Failed to fetch content'
+      message: 'ERR_FETCH_CONTENT'
     });
   }
 };

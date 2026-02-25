@@ -1,0 +1,22 @@
+{
+  "val_email_invalid": "メールアドレスの形式が無効です",
+  "val_pwd_required": "パスワードは必須です",
+  "val_pwd_min": "最低8文字が必要です",
+  "val_pwd_upper": "少なくとも1つの大文字が必要です",
+  "val_pwd_lower": "少なくとも1つの小文字が必要です",
+  "val_pwd_num": "少なくとも1つの数字が必要です",
+  "val_pwd_special": "少なくとも1つの特殊文字が必要です",
+  "error_login_failed": "メールアドレスまたはパスワードが正しくありません",
+  "error_network": "サーバーが応答していません。稼働中か確認してください。",
+  "success_login": "ログインに成功しました！ようこそ。",
+  "title": "ログイン",
+  "subtitle": "MARS.A.I メンバーエリア",
+  "label_email": "メールアドレス",
+  "placeholder_email": "EMAIL@EXAMPLE.COM",
+  "label_password": "パスワード",
+  "btn_submitting": "ログイン中...",
+  "btn_submit": "あなたのスペースにアクセス",
+  "new_user": "MARS.A.I が初めてですか？",
+  "register_link": "登録する",
+  "back_home": "← ホームに戻る"
+}

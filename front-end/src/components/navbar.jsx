@@ -1,15 +1,19 @@
 import { useState, useEffect } from "react";
-import drapeauIcon from "/src/assets/drapeau.png";
+import DrapeauEn from "/src/assets/drapeauEn.png";
+import DrapeauFr from "/src/assets/drapeauFr.png";
+import Drapeaujp from "/src/assets/drapeauJp.png";
+import DrapeauSp from "/src/assets/drapeauSp.png";
+import DrapeauCr from "/src/assets/drapeauCr.png";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from 'react-i18next';
 
 const TopNavbar = () => {
   const navigate = useNavigate();
   const [menuOpen, setMenuOpen] = useState(false);
-
-  // Nouvel état pour savoir si on est connecté
+  
+  const { t, i18n } = useTranslation('common');
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
-  // 1. Au chargement, on vérifie si l'utilisateur est connecté
   useEffect(() => {
     const checkAuth = async () => {
       try {
@@ -46,6 +50,11 @@ const TopNavbar = () => {
     }
   };
 
+  const toggleLanguage = () => {
+    const newLang = i18n.language === 'fr' ? 'en': i18n.language === 'en' ? 'jp': i18n.language === 'jp' ? 'sp': i18n.language === 'sp' ? 'cr': 'fr';
+    i18n.changeLanguage(newLang);
+  };
+
   return (
     <>
       <nav className="flex items-center justify-between px-6 py-4 bg-white shadow-sm rounded-b-2xl relative z-50 w-full">
@@ -58,12 +67,22 @@ const TopNavbar = () => {
         </div>
 
         {/* ICONS & MENU BUTTON */}
-        <div className="flex items-center gap-3">
-          <img
-            src={drapeauIcon}
-            alt="LogoDrapeau"
-            className="h-8 w-11 object-cover cursor-pointer rounded-sm"
-          />
+        <div className="flex items-center gap-4">
+          
+          {/* Le bouton de changement de langue */}
+          <div 
+            onClick={toggleLanguage} 
+            className="flex items-center gap-2 cursor-pointer hover:opacity-80 transition-opacity"
+          >
+            <img
+              src={i18n.language === 'en' ? DrapeauEn : i18n.language === 'jp' ? Drapeaujp : i18n.language === 'sp' ? DrapeauSp : i18n.language === 'cr' ? DrapeauCr : DrapeauFr}
+              alt="Changer de langue"
+              className="h-8 w-11 object-cover rounded-sm shadow-sm"
+            />
+            <span className="font-bold text-gray-700 uppercase text-sm">
+              {i18n.language}
+            </span>
+          </div>
 
           <button
             onClick={() => setMenuOpen(true)}
@@ -89,10 +108,9 @@ const TopNavbar = () => {
           menuOpen ? "translate-x-0" : "translate-x-full"
         }`}
       >
-        {/* HEADER DU MENU */}
         <div className="p-6 flex justify-between items-center border-b border-gray-100">
           <span className="font-bold text-lg text-[#1F66B1]">MARS.A.I</span>
-          <button onClick={() => setMenuOpen(false)} className="text-black">
+          <button onClick={() => setMenuOpen(false)} className="text-black hover:text-red-500 transition-colors">
             <i className="fa-solid fa-xmark text-xl"></i>
           </button>
         </div>
@@ -100,13 +118,10 @@ const TopNavbar = () => {
         {/* LIENS DU MENU */}
         <div className="p-6 flex flex-col gap-6">
           <button
-            onClick={() => {
-              navigate("/");
-              setMenuOpen(false);
-            }}
+            onClick={() => { navigate("/"); setMenuOpen(false); }}
             className="text-left text-gray-800 hover:text-blue-500 font-bold uppercase text-sm tracking-widest"
           >
-            HOME
+            {t('navbar.home')}
           </button>
 
           <button
@@ -116,21 +131,18 @@ const TopNavbar = () => {
             }}
             className="text-left cursor-pointer  text-gray-800 hover:text-blue-500 font-bold uppercase text-sm tracking-widest"
           >
-            GALERIE
+            {t('navbar.gallery')}
           </button>
 
-          <button className="text-left cursor-pointer  text-gray-800 hover:text-blue-500 font-bold uppercase text-sm tracking-widest">
-            PROGRAMMES & INFOS
+          <button className="text-left text-gray-800 hover:text-blue-500 font-bold uppercase text-sm tracking-widest">
+            {t('navbar.programs')}
           </button>
 
           <button
-            onClick={() => {
-              navigate("/jury");
-              setMenuOpen(false);
-            }}
-            className="text-left cursor-pointer  text-gray-800 hover:text-blue-500 font-bold uppercase text-sm tracking-widest"
+            onClick={() => { navigate("/jury"); setMenuOpen(false); }}
+            className="text-left text-gray-800 hover:text-blue-500 font-bold uppercase text-sm tracking-widest"
           >
-            JURY
+            {t('navbar.jury')}
           </button>
 
           <hr className="border-gray-200" />
@@ -145,50 +157,38 @@ const TopNavbar = () => {
                 }}
                 className="text-left cursor-pointer  text-gray-800 hover:text-blue-500 font-bold uppercase text-sm tracking-widest"
               >
-                SOUMETTRE
+                {t('navbar.submit')}
               </button>
 
               <button
-                onClick={() => {
-                  navigate("/profile");
-                  setMenuOpen(false);
-                }}
-                className="text-left cursor-pointer  text-gray-800 hover:text-blue-500 font-bold uppercase text-sm tracking-widest"
+                onClick={() => { navigate("/profile"); setMenuOpen(false); }}
+                className="text-left text-gray-800 hover:text-blue-500 font-bold uppercase text-sm tracking-widest"
               >
-                PROFILE
+                {t('navbar.profile')}
               </button>
 
               <button
-                onClick={() => {
-                  handleLogout();
-                  setMenuOpen(false);
-                }}
-                className="text-left cursor-pointer  text-red-600 hover:text-red-800 font-bold uppercase text-sm tracking-widest"
+                onClick={() => { handleLogout(); setMenuOpen(false); }}
+                className="text-left text-red-600 hover:text-red-800 font-bold uppercase text-sm tracking-widest"
               >
-                SE DÉCONNECTER
+                {t('navbar.logout')}
               </button>
             </>
           ) : (
             /* --- BLOC NON CONNECTÉ --- */
             <>
               <button
-                onClick={() => {
-                  navigate("/register");
-                  setMenuOpen(false);
-                }}
-                className="text-left text-gray-800 cursor-pointer  hover:text-blue-500 font-bold uppercase text-sm tracking-widest"
+                onClick={() => { navigate("/register"); setMenuOpen(false); }}
+                className="text-left text-gray-800 hover:text-blue-500 font-bold uppercase text-sm tracking-widest"
               >
-                REGISTER
+                {t('navbar.register')}
               </button>
 
               <button
-                onClick={() => {
-                  navigate("/login");
-                  setMenuOpen(false);
-                }}
-                className="text-left text-gray-800 cursor-pointer  hover:text-blue-500 font-bold uppercase text-sm tracking-widest"
+                onClick={() => { navigate("/login"); setMenuOpen(false); }}
+                className="text-left text-gray-800 hover:text-blue-500 font-bold uppercase text-sm tracking-widest"
               >
-                LOGIN
+                {t('navbar.login')}
               </button>
             </>
           )}
