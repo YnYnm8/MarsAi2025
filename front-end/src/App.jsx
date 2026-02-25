@@ -16,11 +16,12 @@ import FilmsDetails from "./pages/films/filmsDetails.jsx";
 import AdminSelection from "./pages/admin/adminselection.jsx";
 import Adminrejected from "./pages/admin/adminrejected.jsx";
 import Adminpending from "./pages/admin/adminpending.jsx";
-// import AdminPending from "./pages/admin/adminpending.jsx";
 import Reservation from "./pages/reservation/reservation.jsx";
 import Jury from "./pages/jury/jury.jsx";
 import Gallery from "./pages/public/gallery.jsx";
 import EditFilm from "./pages/films/editFilm.jsx";
+// import AdminProfile from "./pages/admin/adminprofile.jsx";
+import AdminAllFilms from "./pages/admin/adminallfilm.jsx"
 import TopNavbar from "./components/navbar.jsx";
 import Footer from "./components/footer.jsx";
 
@@ -63,9 +64,13 @@ function App() {
           <Route path="/admin/films/rejected" element={<Adminrejected />} />
           <Route path="/admin/films/pending" element={<Adminpending />} />
 
-          <Route path="/reservation" element={<Reservation />} />
-          <Route path="/jury" element={<Jury />} />
-        </Routes>
+          <Route path="/reservation" element={<Reservation/>}/>
+          <Route path="/jury" element={<Jury/>}/>
+          {/* <Route path="/admin/profile" element={<AdminProfile />} /> */}
+          <Route path="/admin/films" element={<AdminAllFilms />} />
+          <Route path="/admin/films/:status" element={<AdminAllFilms />} />
+
+        </Routes>                                                                              
       </main>
       {!isNotePage && <Footer />}    </>
   );

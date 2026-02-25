@@ -192,7 +192,7 @@ const Profile = () => {
             case 'approved': return 'APPROVED';
             case 'rejected': return 'REJECTED';
             case 'submitted': return 'SUBMITTED';
-            default: return 'SUBMITTED'; 
+            default: return 'SUBMITTED';
         }
     };
 

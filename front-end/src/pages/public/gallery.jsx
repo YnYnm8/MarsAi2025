@@ -179,7 +179,7 @@ const Gallery = () => {
 
         <div className="absolute top-[24px] right-[24px] px-[12px] py-[4px] bg-[#246BAD]/80 border border-white/10 rounded-full backdrop-blur-md shadow-md">
           <span className="font-bold text-[10px] uppercase text-white tracking-wide">
-            {film.status || "SUBMITTED"}
+            {film.status || "PENDING"}
           </span>
         </div>
 
