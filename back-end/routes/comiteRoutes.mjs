@@ -19,7 +19,7 @@ import {
 } from "../controllers/comiteController.mjs";
 
 const comiteRouter = express.Router()
-comiteRouter.get("/select", getAllOfficialSelection);
+comiteRouter.post("/select", getAllOfficialSelection);
 comiteRouter.post("/review/:FilmId", reviewFilm);
 comiteRouter.get("/allplaylists",getAllPlaylists)
 comiteRouter.post("/create/playlist",createPlaylist);

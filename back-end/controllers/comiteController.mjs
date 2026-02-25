@@ -3,35 +3,48 @@ import PlaylistFilm from "../models/PlaylistFilm.mjs";
 import Film from "../models/Films.mjs";
 import Note from "../models/Note.mjs";
 import { catchError } from "../helpers/errorHandler.mjs";
+import Selection from "../models/Selection.mjs";
 
-//  GET /comite/select
+//  POST /comite/select
 // 公式セレクションに選ばれた映画の限定リスト。（選考済み作品）
+// ACCEPTEDに登録されると自動で登録される
 
 export async function getAllOfficialSelection(req, res) {
   try {
-    const selectedPlaylistId = 1; // 例えばID=1がACCEPTED
+    const { UserId } = req.body;
+    if (!UserId) {
+      return res.status(401).json({ message: "ユーザーが認証されていません" });
+    }
 
+    const selectedPlaylistId = 2; // ACCEPTED
     const selectedFilms = await PlaylistFilm.findAll({
       where: { UserId, PlaylistId: selectedPlaylistId },
-      include: [
-        {
-          model: Film,
-        },
-      ],
+      include: [{ model: Film }],
       order: [["createdAt", "DESC"]],
     });
 
-    if (selectedFilms.length === 0) {
-      return res
-        .status(404)
-        .json({ message: "公式セレクションが存在しません" });
+    if (!selectedFilms.length) {
+      return res.status(404).json({ message: "公式セレクションが存在しません" });
     }
-    res.json(selectedFilms);
+
+    // Selection に登録
+    const selectionData = selectedFilms.map((pf) => ({
+      FilmId: pf.Film.id,
+      UserId,
+    }));
+
+    const savedSelections = await Selection.bulkCreate(selectionData, {
+      ignoreDuplicates: true, // 既存の場合は無視
+    });
+
+    return res.status(200).json({
+      message: "公式セレクションを登録しました",
+      selections: savedSelections,
+    });
   } catch (err) {
     return catchError(res, err);
   }
 }
-
 export async function reviewFilm(req, res) {
   try {
     const { UserId, score, comment, status } = req.body;
@@ -198,39 +211,43 @@ export async function addNote(req, res) {
 
 // プレイリストを削除し中身をTO＿DISCUSSに移動させる
 // PATCH/comite/delitestatus
+
 export async function deletePlaylist(req, res) {
   try {
-    const { UserId, FilmId } = req.body;
+    const { UserId, targetPlaylistId } = req.body;
 
-    // ① FilmId に紐づく Playlist を取得
+    // ① プレイリストに入っている映画を取得
     const playlistFilms = await PlaylistFilm.findAll({
-      where: { FilmId }
+      where: { PlaylistId: targetPlaylistId },
     });
 
-    if (!playlistFilms.length)
-      return res.status(400).json({ message: "No playlist found" });
+    // ② 映画がある場合 → TO_DISCUSS(4) に移動
+    if (playlistFilms.length > 0) {
+      const filmIds = playlistFilms.map((pf) => pf.FilmId);
 
-    // ② PlaylistId を配列にする
-    const playlistIds = playlistFilms.map(pf => pf.PlaylistId);
+      await PlaylistFilm.update(
+        { PlaylistId: 4 }, // TO_DISCUSS
+        {
+          where: {
+            FilmId: filmIds,
+          },
+        },
+      );
+    }
 
-    // ③ Playlist を更新（UserId も条件に入れる）
-    await Playlist.update(
-      { status: 4 },
-      {
-        where: {
-          id: playlistIds,
-          UserId
-        }
-      }
-    );
+    // ③ プレイリスト自体を削除
+    await Playlist.destroy({
+      where: {
+        id: targetPlaylistId,
+        UserId,
+      },
+    });
 
-    return res.json({ message: "Status changed to TO_DISCUSS" });
-
+    return res.json({ message: "Playlist deleted successfully" });
   } catch (error) {
     return catchError(res, error);
   }
 }
-
 // POST /comite/select/:FilmId
 // 映画を公式セレクションに追加
 export async function acceptedFilm(req, res) {
@@ -272,6 +289,8 @@ export async function acceptedFilm(req, res) {
 }
 // POST /comite/refused/:FilmId // 映画を却下リストに追加
 export async function refuseFilm(req, res) {
+  console.log("BODY:", req.body);
+  console.log("targetPlaylistId:", targetPlaylistId);
   try {
     const { UserId } = req.body;
     const { FilmId } = req.params;
