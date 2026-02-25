@@ -6,7 +6,9 @@ import {
   getAllFilms,        
   getRejectedFilms,   
   getPendingFilms,
-  getAcceptedFilms 
+  getSelectedFilms,
+  updateFilmStatus,
+ 
 } from "../controllers/adminController.mjs";
 
 
@@ -22,8 +24,13 @@ router.patch("/users/:id/role", updateUserRole);
 
 router.get("/films", getAllFilms); 
 
-router.get("/films/selected", getAcceptedFilms); 
+// Status films
+router.get("/films/selected", getSelectedFilms); 
 router.get("/films/rejected", getRejectedFilms); 
 router.get("/films/pending", getPendingFilms);
+
+// changement de status
+router.patch("/films/:id/status", updateFilmStatus);
+
 
 export default router;

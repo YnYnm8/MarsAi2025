@@ -64,10 +64,10 @@ export const getAllFilms = async (req, res) => {
   }
 };
 
-// GET /admin/films/accepted
-export const getAcceptedFilms = async (req, res) => {
+// GET /admin/films/selected
+export const getSelectedFilms = async (req, res) => {
   try {
-    const films = await adminService.fetchAcceptedFilms();
+    const films = await adminService.fetchSelectedFilms();
     res.json({ success: true, data: films });
   } catch (err) {
     res.status(500).json({ success: false, message: err.message });
@@ -93,3 +93,16 @@ export const getPendingFilms = async (req, res) => {
     res.status(500).json({ success: false, message: err.message });
   }
 };
+
+// PATCH /admin/id/status
+export const updateFilmStatus = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { status } = req.body;
+    const result = await adminService.updateFilmStatus(id, status);
+    res.json({ success: true, data: result });
+  } catch (error) {
+    res.status(400).json({ success: false, message: error.message });
+  }
+};
+

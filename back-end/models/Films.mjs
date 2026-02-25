@@ -48,3 +48,4 @@ const Film = sequelize.define("Film", {
 });
 
 export default Film;
+

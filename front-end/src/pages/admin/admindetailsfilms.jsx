@@ -34,10 +34,8 @@ const AdminDetailsFilms = () => {
     );
 
     return (
-        // Structure en Flex pour intégrer la sidebar
         <div className="flex min-h-screen bg-slate-50">
 
-            {/* Rappel de la Sidebar */}
             <Sidebar />
 
             {/* Contenu principal */}
@@ -70,7 +68,6 @@ const AdminDetailsFilms = () => {
                                         #{film.id.toString().slice(0, 8)}
                                     </td>
 
-                                    {/* USER ID - Correction apportée ici */}
                                     <td className="px-6 py-4 font-mono text-[10px] text-green-700 bg-blue-50/10 border-l border-slate-100">
                                         {film.User?.id || film.userId || 'N/A'}
                                     </td>
@@ -89,7 +86,6 @@ const AdminDetailsFilms = () => {
                                     </td>
 
                                     <td className="px-6 py-4 text-[11px] font-bold text-slate-500">
-                                        {/* On va chercher le pays DANS l'objet User que ton contrôleur envoie */}
                                         {film.User?.country || "Pays non renseigné"}
                                     </td>
 
