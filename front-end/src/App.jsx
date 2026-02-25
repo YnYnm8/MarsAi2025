@@ -26,8 +26,8 @@ import Footer from "./components/footer.jsx";
 
 
 function App() {
-  const location = useLocation(); // 2. Obtén la ubicación actual
-  const isNotePage = location.pathname === "/note";
+  const location = useLocation(); 
+  const isNotePage = location.pathname === "/note"; 
 
   return (
     <>
