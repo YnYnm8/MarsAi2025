@@ -30,7 +30,7 @@ const Sidebar = () => {
         },
         {
             name: 'GESTION FILMS',
-            path: '/admin/stats',
+            path: '/admin/films',
             isDropdown: true,
             icon: <img src={film} alt="" className="w-8 h-8 object-contain" />,
             subItems: [
@@ -65,6 +65,7 @@ const Sidebar = () => {
     const handleNavClick = (item) => {
         if (item.isDropdown) {
             setIsFilmsOpen(!isFilmsOpen);
+            navigate(item.path);
         } else {
             navigate(item.path);
         }

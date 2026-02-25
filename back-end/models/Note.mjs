@@ -19,5 +19,4 @@ const Note = sequelize.define("Note", {
     {
         timestamps: true
     });
-
 export default Note;

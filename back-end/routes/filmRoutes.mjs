@@ -14,8 +14,8 @@ router.get('/my-submissions/list', authMiddleware, getFilmsByUser); // realisate
 
 router.get('/:id', getFilmById); //public
 
-router.post('/',  uploadFields, validate(createFilmSchema), uploadMiddleware, createFilm); //realisateur
-router.put('/:id', authMiddleware,  updateFilm); // realisateur 
+router.post('/', authMiddleware, uploadFields,  validate(createFilmSchema), uploadMiddleware, createFilm); //realisateur
+router.put('/:id', authMiddleware, uploadFields, updateFilm); // realisateur edit
 router.delete('/:id',authMiddleware, deleteFilm); //realisateur / admin
 
 export default router;

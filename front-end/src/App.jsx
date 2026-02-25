@@ -1,11 +1,10 @@
 // import { useState } from 'react'
-import { Routes, Route } from "react-router-dom";
-import Film from "./pages/films/film.jsx";
+import { Routes, Route, useLocation } from "react-router-dom";
 import Note from "./pages/films/note.jsx";
-import PostFilm from "./pages/films/post-movie";
-import Register from './pages/auth/register.jsx';
-import Logout from './pages/auth/logout.jsx'
-import Login from './pages/auth/login.jsx';
+import PostFilm from "./pages/films/post-movie.jsx";
+import Register from "./pages/auth/register.jsx";
+import Logout from "./pages/auth/logout.jsx";
+import Login from "./pages/auth/login.jsx";
 import Profile from "./pages/auth/profile.jsx";
 import Dashboard from "./pages/dashboard/dashboard.jsx";
 import Home from "./pages/auth/home.jsx";
@@ -17,17 +16,23 @@ import FilmsDetails from "./pages/films/filmsDetails.jsx";
 import AdminSelection from "./pages/admin/adminselection.jsx";
 import Adminrejected from "./pages/admin/adminrejected.jsx";
 import Adminpending from "./pages/admin/adminpending.jsx";
-// import AdminPending from "./pages/admin/adminpending.jsx";
 import Reservation from "./pages/reservation/reservation.jsx";
 import Jury from "./pages/jury/jury.jsx";
 import Gallery from "./pages/public/gallery.jsx";
 import EditFilm from "./pages/films/editFilm.jsx";
+// import AdminProfile from "./pages/admin/adminprofile.jsx";
+import AdminAllFilms from "./pages/admin/adminallfilm.jsx"
+import TopNavbar from "./components/navbar.jsx";
+import Footer from "./components/footer.jsx";
 
 
 function App() {
+  const location = useLocation(); 
+  const isNotePage = location.pathname === "/note"; 
 
   return (
     <>
+      <TopNavbar />
       <main>
         <Routes>
           {/* PUBLIC */}
@@ -36,11 +41,10 @@ function App() {
           <Route path="/top-rated" element={<Gallery />} />
 
           {/* FILMS*/}
-          <Route path="/film" element={<Film />} />
           <Route path="/films/:id" element={<FilmsDetails />} />
           <Route path="/note" element={<Note />} />
           <Route path="/form-movie" element={<PostFilm />} />
-          <Route path="/edit/:id" element={<EditFilm/>} />
+          <Route path="/edit/:id" element={<EditFilm />} />
 
           {/* USER */}
           <Route path="/login" element={<Login />} />
@@ -62,10 +66,14 @@ function App() {
 
           <Route path="/reservation" element={<Reservation/>}/>
           <Route path="/jury" element={<Jury/>}/>
+          {/* <Route path="/admin/profile" element={<AdminProfile />} /> */}
+          <Route path="/admin/films" element={<AdminAllFilms />} />
+          <Route path="/admin/films/:status" element={<AdminAllFilms />} />
+
         </Routes>                                                                              
       </main>
-    </>
+      {!isNotePage && <Footer />}    </>
   );
 }
 
-export default App
+export default App;

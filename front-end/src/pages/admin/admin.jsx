@@ -78,7 +78,6 @@ const Admin = () => {
     return (
         <div className="flex min-h-screen bg-slate-50">
 
-            {/* Affichage de la Sidebar */}
             <Sidebar />
 
             {/* Contenu principal (tes stats et ton tableau) */}
@@ -100,7 +99,7 @@ const Admin = () => {
 
                 <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-4 gap-6 ">
 
-                    {/* --- Sidebar Stats --- */}
+                    {/* Sidebar Stats */}
                     <div className="lg:col-span-1 space-y-4">
                         <h2 className="text-xs font-bold text-slate-400 uppercase tracking-widest px-1 ">Global Stats</h2>
 
@@ -182,7 +181,7 @@ const Admin = () => {
                         </div>
                     </div>
 
-                    {/* --- Table Utilisateurs --- */}
+                    {/* Table Utilisateurs */}
                     <div className="lg:col-span-3">
                         <div className="bg-white border border-slate-200 rounded-xl shadow-sm overflow-hidden hover:border-indigo-400">
                             <div className="p-5 border-b border-slate-100 bg-white flex justify-between items-center">
@@ -246,7 +245,7 @@ const Admin = () => {
     );
 };
 
-// Composant Statistique Simple
+// Composant Statistique 
 const CompactStat = ({ label, value, color }) => {
     const colorMap = {
         blue: "text-blue-600",

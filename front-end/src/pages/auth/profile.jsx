@@ -172,6 +172,15 @@ const Profile = () => {
   const avatarSrc = previewUrl 
     ? previewUrl 
     : (user.avatar ? `http://localhost:3000/${user.avatar.replace(/\\/g, "/")}` : null);
+    // Retourne le texte à afficher selon le statut
+    const getStatusLabel = (status) => {
+        switch(status) {
+            case 'approved': return 'APPROVED';
+            case 'rejected': return 'REJECTED';
+            case 'submitted': return 'SUBMITTED';
+            default: return 'SUBMITTED';
+        }
+    };
 
   return (
     <div className="min-h-screen bg-black text-white font-sans selection:bg-purple-500 selection:text-white">

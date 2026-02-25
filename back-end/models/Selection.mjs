@@ -1,6 +1,5 @@
-import sequelize from "../config/database.mjs"
 import { DataTypes } from "sequelize";
-
+import sequelize from "../config/database.mjs";
 const Selection = sequelize.define("Selection", {
 
   id: {
@@ -10,11 +9,12 @@ const Selection = sequelize.define("Selection", {
   },
 
   name: {
-    type: DataTypes.STRING(200),
+    type: DataTypes.STRING,
     allowNull: false,
   },
-
+  year: {
+    type: DataTypes.INTEGER,
+    allowNull: true,
+  },
 });
-
-
 export default Selection;

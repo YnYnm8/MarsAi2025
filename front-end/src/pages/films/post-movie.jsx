@@ -6,7 +6,6 @@ import defaultImg from "../../assets/image-default.png";
 import VideoUpload from "../../components/videoPreview";
 import { useNavigate } from "react-router";
 import { Toast } from "../../components/toastMessage";
-import TopNavbar from "../../components/navbar";
 import { faPlus, faTrash, faFilm, faMicrochip, faSave, faUsers, faCloudUploadAlt } from '@fortawesome/free-solid-svg-icons';
 
 export default function PostFilm() {
@@ -68,6 +67,16 @@ const { t } = useTranslation("formulaireF");
             formData.append(`collaborateurs[${i}][name]`, c.name);
         });
 
+        const namesWithGenre = collaborateurs
+            .filter(c => c.name && c.name.trim() !== "") // Evita vacíos
+            .map(c => {
+                const prefix = c.genre === 'female' ? 'Mrs.' : 'M.';
+                return `${prefix} ${c.name.trim()}`;
+            })
+            .join(", ");
+
+        formData.set("collaborateur", namesWithGenre);
+        
         if (selected) formData.append("generateAi", selected);
 
         if (posterFile) formData.append("poster", posterFile);
@@ -102,7 +111,6 @@ const { t } = useTranslation("formulaireF");
 
     return (
         <div className="bg-black-primary min-h-screen text-white">
-            <TopNavbar />
 
             <div className="flex flex-col m-8 flex-wrap">
                 <div className="font-display text-center flex items-center flex-col ">
@@ -170,7 +178,7 @@ const { t } = useTranslation("formulaireF");
                                         key={index}
                                         type="button"
                                         onClick={() => setSelected(option.value)}
-                                        className={`uppercase p-10 rounded-box border transition-all duration-200
+                                        className={`uppercase p-10 cursor-pointer rounded-box border transition-all duration-200
                                              ${selected === option.value
                                                 ? "bg-blue-tertiary text-white border-blue-500 shadow-glow-blue"
                                                 : "bg-black/50 text-white/50 border-gray-700 hover:bg-gray-800"
@@ -211,7 +219,8 @@ const { t } = useTranslation("formulaireF");
                                 id="videoUrl" />
 
                             <div className="text-white/50 flex flex-col">
-                                <DynamicSubtitleInput subtitles={subtitles} setSubtitles={setSubtitles} />
+                                <DynamicSubtitleInput subtitles={subtitles}
+                                    setSubtitles={setSubtitles} />
                             </div>
                             
                             <ImagesPreview
@@ -248,7 +257,7 @@ const { t } = useTranslation("formulaireF");
                                     <input type="text" placeholder={t("step4.namePlaceholder")} className="bg-black border border-gray-700 p-5 w-200 rounded-box mt-5 text-white outline-none focus:border-blue-tertiary"
                                         value={collab.name} onChange={(e) => handleCollabChange(index, "name", e.target.value)} />
                                     {collaborateurs.length > 1 && (
-                                        <button type="button" onClick={() => removeCollaborateur(index)} className="bg-red-900/40 text-red-500 p-7 rounded-lg hover:bg-red-600 hover:text-white transition-all">X</button>
+                                        <button type="button" onClick={() => removeCollaborateur(index)} className="bg-red-900/40 cursor-pointer text-red-500 p-7 rounded-lg hover:bg-red-600 hover:text-white transition-all">X</button>
                                     )}
                                 </div>
                             ))}

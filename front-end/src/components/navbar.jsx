@@ -125,8 +125,11 @@ const TopNavbar = () => {
           </button>
 
           <button
-            onClick={() => { navigate("/gallery"); setMenuOpen(false); }}
-            className="text-left text-gray-800 hover:text-blue-500 font-bold uppercase text-sm tracking-widest"
+            onClick={() => {
+              navigate("/gallery");
+              setMenuOpen(false);
+            }}
+            className="text-left cursor-pointer  text-gray-800 hover:text-blue-500 font-bold uppercase text-sm tracking-widest"
           >
             {t('navbar.gallery')}
           </button>
@@ -148,8 +151,11 @@ const TopNavbar = () => {
           {isLoggedIn ? (
             <>
               <button
-                onClick={() => { navigate("/form-movie"); setMenuOpen(false); }}
-                className="text-left text-gray-800 hover:text-blue-500 font-bold uppercase text-sm tracking-widest"
+                onClick={() => {
+                  navigate("/form-movie");
+                  setMenuOpen(false);
+                }}
+                className="text-left cursor-pointer  text-gray-800 hover:text-blue-500 font-bold uppercase text-sm tracking-widest"
               >
                 {t('navbar.submit')}
               </button>
