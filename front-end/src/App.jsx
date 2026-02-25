@@ -1,5 +1,5 @@
 // import { useState } from 'react'
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, useLocation } from "react-router-dom";
 import Note from "./pages/films/note.jsx";
 import PostFilm from "./pages/films/post-movie.jsx";
 import Register from "./pages/auth/register.jsx";
@@ -26,10 +26,13 @@ import Footer from "./components/footer.jsx";
 
 
 function App() {
+  const location = useLocation(); // 2. Obtén la ubicación actual
+  const isNotePage = location.pathname === "/note";
+
   return (
     <>
+      <TopNavbar />
       <main>
-        <TopNavbar />
         <Routes>
           {/* PUBLIC */}
           <Route path="/gallery" element={<Gallery />} />
@@ -64,8 +67,7 @@ function App() {
           <Route path="/jury" element={<Jury />} />
         </Routes>
       </main>
-      <Footer />
-    </>
+      {!isNotePage && <Footer />}    </>
   );
 }
 
