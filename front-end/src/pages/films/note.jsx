@@ -16,7 +16,6 @@ export default function Note() {
   const [showModal, setShowModal] = useState(false);
   const [newListName, setNewListName] = useState("");
 
-
   // データ取得
   const fetchFilmAndPlaylists = async () => {
     try {
@@ -82,63 +81,63 @@ export default function Note() {
     });
   }, [films, playlist]);
 
-  const handleSavereview = async (clickedStatus) => {
-    if (!selectedFilm) return alert("No film selected!");
-    if (!value || value < 1) return alert("Please note your film!");
-    if (!clickedStatus) return alert("Please select ACCEPTED, REFUSED or TO_DISCUSS");
+ const handleSavereview = async (clickedStatus) => {
+  if (!selectedFilm) return alert("No film selected!");
+  if (!value || value < 1) return alert("Please note your film!");
+  if (!clickedStatus) return alert("Please select ACCEPTED, REFUSED or TO_DISCUSS");
 
-    try {
-      // 1️⃣ レビューを登録
-      const reviewResponse = await fetch(
-        `http://localhost:3000/comite/review/${selectedFilm.id}`,
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            UserId: 3,
-            score: value,
-            comment: comment,
-            status: clickedStatus,
-          }),
-        }
-      );
+  try {
+    // 1️⃣ レビューを登録
+    const reviewResponse = await fetch(
+      `http://localhost:3000/comite/review/${selectedFilm.id}`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          UserId: 3,
+          score: value,
+          comment: comment,
+          status: clickedStatus,
+        }),
+      }
+    );
 
-      if (!reviewResponse.ok) {
-        const errorData = await reviewResponse.json();
-        throw new Error(errorData.message || "Failed to save review");
+    if (!reviewResponse.ok) {
+      const errorData = await reviewResponse.json();
+      throw new Error(errorData.message || "Failed to save review");
+    }
+
+    await reviewResponse.json();
+
+    // 2️⃣ ACCEPTEDなら公式セレクションに登録
+    if (clickedStatus === "ACCEPTED") {
+      const selectionResponse = await fetch("http://localhost:3000/comite/select", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ UserId: 3 }), // 必要に応じてログインユーザーID
+      });
+
+      if (!selectionResponse.ok) {
+        const errorData = await selectionResponse.json();
+        throw new Error(errorData.message || "公式セレクションの登録に失敗しました");
       }
 
-      await reviewResponse.json();
-
-      // 2️⃣ ACCEPTEDなら公式セレクションに登録
-      // if (clickedStatus === "ACCEPTED") {
-      //   const selectionResponse = await fetch("http://localhost:3000/comite/select", {
-      //     method: "POST",
-      //     headers: { "Content-Type": "application/json" },
-      //     body: JSON.stringify({ UserId: 3 }), // 必要に応じてログインユーザーID
-      //   });
-
-      //   if (!selectionResponse.ok) {
-      //     const errorData = await selectionResponse.json();
-      //     throw new Error(errorData.message || "公式セレクションの登録に失敗しました");
-      //   }
-
-      //   const selectionData = await selectionResponse.json();
-      //   console.log("公式セレクション登録成功:", selectionData);
-      //   // alert("公式セレクションに登録しました！");
-      // }
-
-      // 3️⃣ UI更新
-      await fetchFilmAndPlaylists();
-      setComment("");
-      setValue(0);
-      setStatus(null);
-
-    } catch (error) {
-      console.error(error);
-      alert("Error: " + error.message);
+      const selectionData = await selectionResponse.json();
+      console.log("公式セレクション登録成功:", selectionData);
+      alert("公式セレクションに登録しました！");
     }
-  };
+
+    // 3️⃣ UI更新
+    await fetchFilmAndPlaylists();
+    setComment("");
+    setValue(0);
+    setStatus(null);
+
+  } catch (error) {
+    console.error(error);
+    alert("Error: " + error.message);
+  }
+};
 
   const handleCreateList = async () => {
     if (!newListName.trim()) return alert("Please enter a name for the list");
@@ -149,7 +148,7 @@ export default function Note() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           status: newListName,
-          UserId: 3,
+          UserId: 4,
           FilmId: selectedFilm ? selectedFilm.id : null,
         }),
       });
@@ -166,89 +165,43 @@ export default function Note() {
     }
   };
 
-  // const handleAddToPlaylistWithNote = async (playlistId) => {
-  //   if (!selectedFilm) return alert("No film selected!");
-
-  //   try {
-  //     const playlistResponse = await fetch("http://localhost:3000/comite/film/list", {
-  //       method: "POST",
-  //       headers: { "Content-Type": "application/json" },
-  //       body: JSON.stringify({
-  //         UserId: 3,
-  //         FilmId: selectedFilm.id,
-  //         status:playlistId
-  //       }),
-  //     });
-  //     if (!playlistResponse.ok) throw new Error("Failed to add film to playlist");
-  //     await playlistResponse.json();
-
-  //     const noteResponse = await fetch("http://localhost:3000/comite/note", {
-  //       method: "POST",
-  //       headers: { "Content-Type": "application/json" },
-  //       body: JSON.stringify({
-  //         UserId: 3,
-  //         FilmId: selectedFilm.id,
-  //         score: value,
-  //         comment: comment,
-  //       }),
-  //     });
-  //     if (!noteResponse.ok) throw new Error("Fail to add your note to the film");
-  //     await noteResponse.json();
-
-  //     await fetchFilmAndPlaylists();
-  //     setValue(0);
-
-  //   } catch (error) {
-  //     console.error("Error adding film to playlist:", error);
-  //     // alert("Error adding film to playlist");
-  //   }
-  // };
   const handleAddToPlaylistWithNote = async (playlistId) => {
-  if (!selectedFilm) return alert("No film selected!");
+    if (!selectedFilm) return alert("No film selected!");
 
-  try {
-    // プレイリストIDを送信
-    const playlistResponse = await fetch("http://localhost:3000/comite/film/list", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        UserId: 3,
-        FilmId: selectedFilm.id,
-        PlaylistId: playlistId  // status → PlaylistId に変更
-      }),
-    });
+    try {
+      const playlistResponse = await fetch("http://localhost:3000/comite/film/list", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          UserId: 3,
+          FilmId: selectedFilm.id,
+          targetPlaylistId: playlistId,
+        }),
+      });
+      if (!playlistResponse.ok) throw new Error("Failed to add film to playlist");
+      await playlistResponse.json();
 
-    if (!playlistResponse.ok) {
-      const errData = await playlistResponse.json();
-      throw new Error(errData.error || "Failed to add film to playlist");
+      const noteResponse = await fetch("http://localhost:3000/comite/note", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          UserId: 3,
+          FilmId: selectedFilm.id,
+          score: value,
+          comment: comment,
+        }),
+      });
+      if (!noteResponse.ok) throw new Error("Fail to add your note to the film");
+      await noteResponse.json();
+
+      await fetchFilmAndPlaylists();
+      setValue(0);
+
+    } catch (error) {
+      console.error("Error adding film to playlist:", error);
+      alert("Error adding film to playlist");
     }
-
-    await playlistResponse.json();
-
-    // ノートも同時に追加
-    const noteResponse = await fetch("http://localhost:3000/comite/note", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        UserId: 3,
-        FilmId: selectedFilm.id,
-        score: value,
-        comment: comment,
-      }),
-    });
-
-    if (!noteResponse.ok) throw new Error("Fail to add your note to the film");
-    await noteResponse.json();
-
-    await fetchFilmAndPlaylists();
-    setValue(0);
-    setComment("");
-
-  } catch (error) {
-    console.error("Error adding film to playlist:", error);
-    alert(error.message);
-  }
-};
+  };
 
   const handleDeletePlaylist = async (playlistId) => {
     if (!playlistId) return alert("No playlist selected to delete!");
@@ -259,7 +212,7 @@ export default function Note() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           UserId: 3,               // ログインユーザーID
-          targetPlaylistId: playlistId, 
+          targetPlaylistId: playlistId, // 修正済み
         }),
       });
 
@@ -270,17 +223,25 @@ export default function Note() {
 
       await response.json();
       await fetchFilmAndPlaylists();
-      
-     
+      alert("Playlist deleted successfully!");
 
     } catch (error) {
       console.error("Error deleting playlist", error);
-      // alert("Error deleting playlist: " + error.message);
+      alert("Error deleting playlist: " + error.message);
     }
   };
 
   return (
     <div className="flex flex-col h-screen bg-black font-sans">
+      {/* Header */}
+      <header className="flex items-center justify-between bg-white px-4 py-3 shadow">
+        <button className="text-sm text-gray-500">← Retour</button>
+        <div className="text-sm font-semibold text-blue-600">MARS.AI</div>
+        <div className="flex items-center gap-2">
+          <span className="text-sm font-medium">PAUL MICHEL</span>
+          <img src="https://via.placeholder.com/32" className="rounded-full" alt="User avatar" />
+        </div>
+      </header>
 
       {/* Main Layout */}
       <div className="flex flex-col md:flex-row flex-1 overflow-hidden">
@@ -478,10 +439,7 @@ export default function Note() {
                   </button>
 
                   <button
-                    onClick={() => {
-                      handleDeletePlaylist(p.id)
-                    }}
-
+                    onClick={() => handleDeletePlaylist(p.id)}
                     className="bg-gray-600 text-white px-3 py-2 rounded-lg text-xs hover:bg-gray-800"
                   >
                     DELETE
