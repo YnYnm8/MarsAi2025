@@ -520,6 +520,7 @@ const Gallery = () => {
               <h1 className="font-extrabold text-[40px] md:text-[64px] leading-tight uppercase text-white">
                 {t("title")}
               </h1>
+              
               <p className="font-medium text-[18px] md:text-[20px] text-gray-400 max-w-[780px]">
                 {t("subtitle")}
               </p>
