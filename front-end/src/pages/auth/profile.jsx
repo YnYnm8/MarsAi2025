@@ -143,14 +143,14 @@ const Profile = () => {
     }
   };
 
-  const getStatusLabel = (status) => {
-    switch(status) {
-      case 'approved': return t("status_approved");
-      case 'rejected': return t("status_rejected");
-      case 'submitted': return t("status_submitted");
-      default: return t("status_submitted"); 
-    }
-  };
+  // const getStatusLabel = (status) => {
+  //   switch(status) {
+  //     case 'approved': return t("status_approved");
+  //     case 'rejected': return t("status_rejected");
+  //     case 'submitted': return t("status_submitted");
+  //     default: return t("status_submitted"); 
+  //   }
+  // };
 
   const formatDate = (dateString) => {
     if (!dateString) return "";
