@@ -24,11 +24,12 @@ import EditFilm from "./pages/films/editFilm.jsx";
 import AdminAllFilms from "./pages/admin/adminallfilm.jsx"
 import TopNavbar from "./components/navbar.jsx";
 import Footer from "./components/footer.jsx";
+import Contact from "./contact/Contact.jsx";
 
 
 function App() {
-  const location = useLocation(); 
-  const isNotePage = location.pathname === "/note"; 
+  const location = useLocation();
+  const isNotePage = location.pathname === "/note";
 
   return (
     <>
@@ -64,13 +65,18 @@ function App() {
           <Route path="/admin/films/rejected" element={<Adminrejected />} />
           <Route path="/admin/films/pending" element={<Adminpending />} />
 
-          <Route path="/reservation" element={<Reservation/>}/>
-          <Route path="/jury" element={<Jury/>}/>
+          {/* CONTACT */}
+          <Route path="/contact" element={<Contact/>} />
+
+          <Route path="/reservation" element={<Reservation />} />
+          <Route path="/jury" element={<Jury />} />
           {/* <Route path="/admin/profile" element={<AdminProfile />} /> */}
           <Route path="/admin/films" element={<AdminAllFilms />} />
           <Route path="/admin/films/:status" element={<AdminAllFilms />} />
 
-        </Routes>                                                                              
+
+
+        </Routes>
       </main>
       {!isNotePage && <Footer />}    </>
   );

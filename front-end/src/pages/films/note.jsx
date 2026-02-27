@@ -87,7 +87,7 @@ export default function Note() {
   if (!clickedStatus) return alert("Please select ACCEPTED, REFUSED or TO_DISCUSS");
 
   try {
-    // 1️⃣ レビューを登録
+    //  レビューを登録
     const reviewResponse = await fetch(
       `http://localhost:3000/comite/review/${selectedFilm.id}`,
       {
@@ -109,25 +109,25 @@ export default function Note() {
 
     await reviewResponse.json();
 
-    // 2️⃣ ACCEPTEDなら公式セレクションに登録
-    if (clickedStatus === "ACCEPTED") {
-      const selectionResponse = await fetch("http://localhost:3000/comite/select", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ UserId: 3 }), // 必要に応じてログインユーザーID
-      });
+    // // ACCEPTEDなら公式セレクションに登録
+    // if (clickedStatus === "ACCEPTED") {
+    //   const selectionResponse = await fetch("http://localhost:3000/comite/select", {
+    //     method: "POST",
+    //     headers: { "Content-Type": "application/json" },
+    //     body: JSON.stringify({ UserId: 3 }), // 必要に応じてログインユーザーID
+    //   });
 
-      if (!selectionResponse.ok) {
-        const errorData = await selectionResponse.json();
-        throw new Error(errorData.message || "公式セレクションの登録に失敗しました");
-      }
+    //   if (!selectionResponse.ok) {
+    //     const errorData = await selectionResponse.json();
+    //     throw new Error(errorData.message || "公式セレクションの登録に失敗しました");
+    //   }
 
-      const selectionData = await selectionResponse.json();
-      console.log("公式セレクション登録成功:", selectionData);
-      alert("公式セレクションに登録しました！");
-    }
+    //   const selectionData = await selectionResponse.json();
+    //   console.log("公式セレクション登録成功:", selectionData);
+    //   alert("公式セレクションに登録しました！");
+    // }
 
-    // 3️⃣ UI更新
+    // UI更新
     await fetchFilmAndPlaylists();
     setComment("");
     setValue(0);
