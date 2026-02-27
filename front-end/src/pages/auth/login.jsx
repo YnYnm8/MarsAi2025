@@ -26,7 +26,7 @@ const Login = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const [serverError, setServerError] = useState("");
-  const { refreshAuth } = useAuth(); // ✅ destructuré
+  const { refreshAuth } = useAuth(); 
 
   const successMessage = location.state?.successMessage;
 
@@ -57,10 +57,10 @@ const Login = () => {
         } else {
           setServerError(t("error_login_failed"));
         }
-        return; // ✅ on s'arrête ici si erreur
+        return; 
       }
 
-      // ✅ refreshAuth au bon endroit, après le return
+      
       console.log("Connexion réussie !");
       await refreshAuth();
       navigate("/profile", { 

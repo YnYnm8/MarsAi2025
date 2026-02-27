@@ -29,8 +29,6 @@ export const User = sequelize.define(
       type: DataTypes.ENUM("visitor", "director", "admin", "committee"),
       defaultValue: "visitor",
     },
-
-    // INFOS PROFIL (Liées à la personne)
     bio: {
       type: DataTypes.TEXT,
       allowNull: true,
