@@ -1,6 +1,8 @@
 // import { useState } from 'react'
 import { Routes, Route, useLocation } from "react-router-dom";
 import Note from "./pages/films/note.jsx";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+
 import PostFilm from "./pages/films/post-movie.jsx";
 import Register from "./pages/auth/register.jsx";
 import Logout from "./pages/auth/logout.jsx";
