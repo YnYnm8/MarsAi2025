@@ -1,10 +1,22 @@
 import FilmCard from "./FilmCard";
 
-export default function ListFilms({ films = [], filter, setSelectedFilm }) {
-  // Filtrer les films selon le statut choisi
-  const filteredFilms = films.filter(film => film.status === filter);
+export default function ListFilms({ films = [], searchTerm = "", filter, setSelectedFilm }) {
+  // フィルター＋検索
+  const filteredFilms = films.filter((film) => {
+    // 1️⃣ ステータスでフィルター
+    const matchesFilter = filter ? film.status === filter : true;
 
-  // Si aucun film correspond, on peut retourner un message (optionnel)
+    // 2️⃣ 検索ワードでIDまたはタイトルを検索
+    const lowerSearch = searchTerm.toLowerCase();
+    const matchesSearch =
+      !searchTerm ||
+      film.title?.toLowerCase().includes(lowerSearch) ||
+      film.id?.toString().includes(lowerSearch);
+
+    return matchesFilter && matchesSearch;
+  });
+
+  // 該当映画がない場合
   if (filteredFilms.length === 0) {
     return <p className="text-gray-500 text-sm px-4">Aucun film pour ce filtre.</p>;
   }

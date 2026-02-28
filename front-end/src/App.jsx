@@ -24,7 +24,8 @@ import EditFilm from "./pages/films/editFilm.jsx";
 import AdminAllFilms from "./pages/admin/adminallfilm.jsx"
 import TopNavbar from "./components/navbar.jsx";
 import Footer from "./components/footer.jsx";
-import Contact from "./contact/Contact.jsx";
+import Contact from "./pages/auth/Contact.jsx";
+import ComiteProfile from "./pages/films/ComiteProfile.jsx";
 
 
 function App() {
@@ -44,6 +45,9 @@ function App() {
           {/* FILMS*/}
           <Route path="/films/:id" element={<FilmsDetails />} />
           <Route path="/note" element={<Note />} />
+           <Route path="/comiteprofile" element={<ComiteProfile />} />
+
+          
           <Route path="/form-movie" element={<PostFilm />} />
           <Route path="/edit/:id" element={<EditFilm />} />
 

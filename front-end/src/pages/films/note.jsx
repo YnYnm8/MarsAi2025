@@ -2,19 +2,24 @@ import { useState, useEffect, useMemo } from "react";
 import { useParams } from "react-router-dom";
 import ListFilms from "./ListFilms";
 import { FilmComponent } from "../../components/film";
+import { useNavigate } from "react-router-dom";
+
 
 export default function Note() {
   const { id } = useParams();
   const [films, setFilms] = useState([]);
+  const [playlist, setPlaylist] = useState([]);
   const [selectedFilm, setSelectedFilm] = useState(null);
   const [filter, setFilter] = useState("NOT_WATCHED");
   const [value, setValue] = useState(0);
   const [comment, setComment] = useState("");
   const [status, setStatus] = useState(null);
-  const [playlist, setPlaylist] = useState([]);
-  const [selectedPlaylist, setSelectedPlaylist] = useState("");
   const [showModal, setShowModal] = useState(false);
   const [newListName, setNewListName] = useState("");
+  const [searchTerm, setSearchTerm] = useState("");
+  const navigate = useNavigate();
+
+  // const [selectedPlaylist, setSelectedPlaylist] = useState("");
 
   // データ取得
   const fetchFilmAndPlaylists = async () => {
@@ -81,63 +86,63 @@ export default function Note() {
     });
   }, [films, playlist]);
 
- const handleSavereview = async (clickedStatus) => {
-  if (!selectedFilm) return alert("No film selected!");
-  if (!value || value < 1) return alert("Please note your film!");
-  if (!clickedStatus) return alert("Please select ACCEPTED, REFUSED or TO_DISCUSS");
+  const handleSavereview = async (clickedStatus) => {
+    if (!selectedFilm) return alert("No film selected!");
+    if (!value || value < 1) return alert("Please note your film!");
+    if (!clickedStatus) return alert("Please select ACCEPTED, REFUSED or TO_DISCUSS");
 
-  try {
-    //  レビューを登録
-    const reviewResponse = await fetch(
-      `http://localhost:3000/comite/review/${selectedFilm.id}`,
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          UserId: 3,
-          score: value,
-          comment: comment,
-          status: clickedStatus,
-        }),
+    try {
+      //  レビューを登録
+      const reviewResponse = await fetch(
+        `http://localhost:3000/comite/review/${selectedFilm.id}`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            UserId: 3,
+            score: value,
+            comment: comment,
+            status: clickedStatus,
+          }),
+        }
+      );
+
+      if (!reviewResponse.ok) {
+        const errorData = await reviewResponse.json();
+        throw new Error(errorData.message || "Failed to save review");
       }
-    );
 
-    if (!reviewResponse.ok) {
-      const errorData = await reviewResponse.json();
-      throw new Error(errorData.message || "Failed to save review");
+      await reviewResponse.json();
+
+      // // ACCEPTEDなら公式セレクションに登録
+      // if (clickedStatus === "ACCEPTED") {
+      //   const selectionResponse = await fetch("http://localhost:3000/comite/select", {
+      //     method: "POST",
+      //     headers: { "Content-Type": "application/json" },
+      //     body: JSON.stringify({ UserId: 3 }), // 必要に応じてログインユーザーID
+      //   });
+
+      //   if (!selectionResponse.ok) {
+      //     const errorData = await selectionResponse.json();
+      //     throw new Error(errorData.message || "公式セレクションの登録に失敗しました");
+      //   }
+
+      //   const selectionData = await selectionResponse.json();
+      //   console.log("公式セレクション登録成功:", selectionData);
+      //   alert("公式セレクションに登録しました！");
+      // }
+
+      // UI更新
+      await fetchFilmAndPlaylists();
+      setComment("");
+      setValue(0);
+      setStatus(null);
+
+    } catch (error) {
+      console.error(error);
+      alert("Error: " + error.message);
     }
-
-    await reviewResponse.json();
-
-    // // ACCEPTEDなら公式セレクションに登録
-    // if (clickedStatus === "ACCEPTED") {
-    //   const selectionResponse = await fetch("http://localhost:3000/comite/select", {
-    //     method: "POST",
-    //     headers: { "Content-Type": "application/json" },
-    //     body: JSON.stringify({ UserId: 3 }), // 必要に応じてログインユーザーID
-    //   });
-
-    //   if (!selectionResponse.ok) {
-    //     const errorData = await selectionResponse.json();
-    //     throw new Error(errorData.message || "公式セレクションの登録に失敗しました");
-    //   }
-
-    //   const selectionData = await selectionResponse.json();
-    //   console.log("公式セレクション登録成功:", selectionData);
-    //   alert("公式セレクションに登録しました！");
-    // }
-
-    // UI更新
-    await fetchFilmAndPlaylists();
-    setComment("");
-    setValue(0);
-    setStatus(null);
-
-  } catch (error) {
-    console.error(error);
-    alert("Error: " + error.message);
-  }
-};
+  };
 
   const handleCreateList = async () => {
     if (!newListName.trim()) return alert("Please enter a name for the list");
@@ -230,18 +235,58 @@ export default function Note() {
       alert("Error deleting playlist: " + error.message);
     }
   };
+  const filteredFilms = useMemo(() => {
+    if (!searchTerm.trim()) return films;
+
+    const lowerSearch = searchTerm.toLowerCase();
+
+    return films.filter((film) => {
+      const matchTitle = film.title?.toLowerCase().includes(lowerSearch);
+      const matchId = film.id?.toString().includes(lowerSearch);
+      return matchTitle || matchId;
+    });
+  }, [films, searchTerm]);
+  const handleSaveComment = async () => {
+  if (!selectedFilm) return alert("Aucun film sélectionné !");
+  if (!comment.trim()) return alert("Veuillez entrer un commentaire.");
+
+  try {
+    const response = await fetch(`http://localhost:3000/comite/note`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        UserId: 3,             // ログインユーザーID
+        FilmId: selectedFilm.id,
+        score: value || null,  // スコアは空でもOKにする
+        comment: comment,
+      }),
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.message || "Erreur lors de l'enregistrement du commentaire");
+    }
+
+    await response.json();
+    alert("Commentaire enregistré !");
+    setComment("");  // 入力欄をクリア
+    await fetchFilmAndPlaylists(); // UIを更新
+
+  } catch (error) {
+    console.error(error);
+    alert("Erreur: " + error.message);
+  }
+};
+
 
   return (
     <div className="flex flex-col h-screen bg-black font-sans">
-      {/* Header */}
-      <header className="flex items-center justify-between bg-white px-4 py-3 shadow">
-        <button className="text-sm text-gray-500">← Retour</button>
-        <div className="text-sm font-semibold text-blue-600">MARS.AI</div>
-        <div className="flex items-center gap-2">
-          <span className="text-sm font-medium">PAUL MICHEL</span>
-          <img src="https://via.placeholder.com/32" className="rounded-full" alt="User avatar" />
-        </div>
-      </header>
+      <button
+        onClick={() => navigate("/comiteprofile")}
+        className="bg-purple-600 px-6 py-2 rounded-lg font-semibold"
+      >
+        VOIR MES ÉVALUATIONS
+      </button>
 
       {/* Main Layout */}
       <div className="flex flex-col md:flex-row flex-1 overflow-hidden">
@@ -251,6 +296,8 @@ export default function Note() {
             <input
               type="text"
               placeholder="Rechercher un film..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
               className="w-full rounded border px-3 py-2 text-sm"
             />
           </div>
@@ -268,7 +315,11 @@ export default function Note() {
           ))}
 
           {/* 映画リスト */}
-          <ListFilms films={films} filter={filter} setSelectedFilm={setSelectedFilm} />
+          <ListFilms
+            films={films}
+            filter={filter}
+            searchTerm={searchTerm}
+            setSelectedFilm={setSelectedFilm} />
         </aside>
 
         {/* Main Content */}
@@ -282,7 +333,7 @@ export default function Note() {
               Sélectionnez un film dans la liste à gauche
             </p>
             <div className="mt-2 flex flex-col md:flex-row justify-center gap-2 md:gap-6 text-sm">
-              <span className="font-bold">150</span>
+              <span className="font-bold">{films.filter(f => f.status === "NOT_WATCHED").length}</span>
               <span className="text-gray-500">FILM A NOTER</span>
               <span className="text-[#FF5845] font-semibold">15 JUIN 2026</span>
               <span className="text-gray-500">CLUTURE</span>
@@ -290,7 +341,7 @@ export default function Note() {
           </div>
 
           {/* Video Card */}
-          <div className="max-w-3xl mx-auto bg-white rounded-xl shadow p-4 md:p-6 mb-6">
+          <div className="max-w-3xl mx-auto p-4 md:p-6 mb-6">
             {selectedFilm?.Files?.[0]?.film_url ? (
               <video
                 src={selectedFilm.Files[0].film_url}
@@ -346,7 +397,7 @@ export default function Note() {
 
           {/* コメント欄 */}
           <div className="mb-4">
-            <label htmlFor="comment" className="block text-sm font-medium text-gray-800 mb-1">
+            <label htmlFor="comment" className="block text-sm font-medium text-[#246BAD] mb-4">
               Commentaire (optionnel)
             </label>
             <textarea
@@ -357,6 +408,13 @@ export default function Note() {
               className="w-full rounded border px-3 py-2 text-sm text-gray-200 bg-gray-800 placeholder-gray-400"
               placeholder="Ajouter un commentaire sur le film..."
             />
+            <button
+              onClick={handleSaveComment}
+              className="bg-green-600 text-white px-4 py-2 rounded-lg text-sm font-semibold mt-2"
+            >
+              Enregistrer le commentaire
+            </button>
+
           </div>
 
           {/* 選択・リストボタン */}
@@ -483,6 +541,7 @@ export default function Note() {
             </div>
           </div>
         )}
+
       </div>
     </div>
   );

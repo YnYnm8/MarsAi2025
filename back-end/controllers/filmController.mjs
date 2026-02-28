@@ -6,7 +6,8 @@ import Playlist from "../models/Playlist.mjs";
 import PlaylistFilm from "../models/PlaylistFilm.mjs";
 import { catchError } from "../helpers/errorHandler.mjs";
 import { updateFilmSchema } from "../validators/filmValidator.mjs";
-import { handleFileProcessing } from "../helpers/proccesFiles.mjs"
+import { handleFileProcessing } from "../helpers/proccesFiles.mjs";
+import Note from "../models/Note.mjs";
 /*
 *  GET  /films
 * Recuperation des tous les films
@@ -22,7 +23,7 @@ export async function getFilms(req, res) {
                 },
                 {
                     model: User, 
-                    attributes: ['firstName', 'lastName', 'country', 'avatar'] 
+                    attributes: [ 'firstName', 'lastName', 'country', 'avatar'] 
                 },
               
                 {
@@ -30,8 +31,18 @@ export async function getFilms(req, res) {
                 },{
                     
                     model:PlaylistFilm,
+                },{
+                    model: Note, as:"NotesDirect",
+                    attributes: ['id', 'UserId', 'score', 'comment'],
+                    include: [
+                        {
+                            model: User,  
+                            attributes: ['firstName', 'lastName']
+                        }
+                    ]
                 }
             ],
+            
             order: [['createdAt', 'DESC']]
         });
         if (FilmData.length == 0) {
