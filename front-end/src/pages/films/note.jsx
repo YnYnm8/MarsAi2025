@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom";
 import ListFilms from "./ListFilms";
 import { FilmComponent } from "../../components/film";
 import { useNavigate } from "react-router-dom";
-
+import { useRef } from "react";
 
 export default function Note() {
   const { id } = useParams();
@@ -19,7 +19,7 @@ export default function Note() {
   const [searchTerm, setSearchTerm] = useState("");
   const navigate = useNavigate();
 
-  // const [selectedPlaylist, setSelectedPlaylist] = useState("");
+
 
   // データ取得
   const fetchFilmAndPlaylists = async () => {
@@ -247,36 +247,44 @@ export default function Note() {
     });
   }, [films, searchTerm]);
   const handleSaveComment = async () => {
-  if (!selectedFilm) return alert("Aucun film sélectionné !");
-  if (!comment.trim()) return alert("Veuillez entrer un commentaire.");
+    if (!selectedFilm) return alert("Aucun film sélectionné !");
+    if (!comment.trim()) return alert("Veuillez entrer un commentaire.");
 
-  try {
-    const response = await fetch(`http://localhost:3000/comite/note`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        UserId: 3,             // ログインユーザーID
-        FilmId: selectedFilm.id,
-        score: value || null,  // スコアは空でもOKにする
-        comment: comment,
-      }),
-    });
+    try {
+      const response = await fetch(`http://localhost:3000/comite/note`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          UserId: 3,             // ログインユーザーID
+          FilmId: selectedFilm.id,
+          score: value || null,  // スコアは空でもOKにする
+          comment: comment,
+        }),
+      });
 
-    if (!response.ok) {
-      const errorData = await response.json();
-      throw new Error(errorData.message || "Erreur lors de l'enregistrement du commentaire");
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || "Erreur lors de l'enregistrement du commentaire");
+      }
+
+      await response.json();
+      alert("Commentaire enregistré !");
+      setComment("");  // 入力欄をクリア
+      await fetchFilmAndPlaylists(); // UIを更新
+
+    } catch (error) {
+      console.error(error);
+      alert("Erreur: " + error.message);
     }
+  };
 
-    await response.json();
-    alert("Commentaire enregistré !");
-    setComment("");  // 入力欄をクリア
-    await fetchFilmAndPlaylists(); // UIを更新
+  const videoRef = useRef(null);
 
-  } catch (error) {
-    console.error(error);
-    alert("Erreur: " + error.message);
-  }
-};
+  const setSpeed = (speed) => {
+    if (videoRef.current) {
+      videoRef.current.playbackRate = speed;
+    }
+  };
 
 
   return (
@@ -319,7 +327,9 @@ export default function Note() {
             films={films}
             filter={filter}
             searchTerm={searchTerm}
-            setSelectedFilm={setSelectedFilm} />
+            selectedFilm={selectedFilm}
+            setSelectedFilm={setSelectedFilm}
+          />
         </aside>
 
         {/* Main Content */}
@@ -343,11 +353,30 @@ export default function Note() {
           {/* Video Card */}
           <div className="max-w-3xl mx-auto p-4 md:p-6 mb-6">
             {selectedFilm?.Files?.[0]?.film_url ? (
-              <video
-                src={selectedFilm.Files[0].film_url}
-                controls
-                className="w-full rounded-lg"
-              />
+              <>
+                <video
+                  ref={videoRef}
+                  src={selectedFilm.Files[0].film_url}
+                  controls
+                  className="w-full rounded-lg"
+                />
+                <div className="mt-3 flex gap-3 justify-center">
+                 
+                  <button
+                    onClick={() => setSpeed(1.5)}
+                    className="px-4 py-2 bg-gray-700 text-white rounded-lg hover:bg-gray-800"
+                  >
+                    1.5x
+                  </button>
+
+                  <button
+                    onClick={() => setSpeed(2)}
+                    className="px-4 py-2 bg-gray-700 text-white rounded-lg hover:bg-gray-800"
+                  >
+                    2x
+                  </button>
+                </div>
+              </>
             ) : (
               <img
                 src={selectedFilm?.Files?.[0]?.poster_url || "/youtubeimg.webp"}
