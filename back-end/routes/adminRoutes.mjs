@@ -8,9 +8,11 @@ import {
   getPendingFilms,
   getSelectedFilms,
   updateFilmStatus,
- 
+  getPlaylistDetails
+
 } from "../controllers/adminController.mjs";
 
+import { getAllPlaylists } from "../controllers/comiteController.mjs";
 
 const router = express.Router();
 
@@ -30,7 +32,9 @@ router.get("/films/rejected", getRejectedFilms);
 router.get("/films/pending", getPendingFilms);
 
 // changement de status
-router.patch("/films/:id/status", updateFilmStatus);
+router.put("/films/:id/status", updateFilmStatus);
+router.get("/playlists", getAllPlaylists);
+router.get("/playlist/:id", getPlaylistDetails);
 
 
 export default router;

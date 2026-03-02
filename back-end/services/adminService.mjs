@@ -70,8 +70,8 @@ const fetchDashboardStats = async () => {
 
 // Uniquement les films validés 
 const fetchSelectedFilms = async () => {
-  return await PlaylistFilm.findAll({
-    where: { PlaylistId:2 },
+  return await Film.findAll({
+    where: { status: 'selected' },
     include: [
         { 
           model: User, 

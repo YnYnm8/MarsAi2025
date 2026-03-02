@@ -16,6 +16,42 @@ import { notifyFilmSubmitted, notifyFilmSelected } from "../services/notificatio
 * GET  /films
 * Recuperation des tous les films
 */
+// export async function getFilms(req, res) {
+//     try {
+//         const FilmData = await Film.findAll({
+//             include: [
+//                 {
+//                     model: File,
+//                     as: "Files",
+//                     attributes: ['id', 'film_url', 'poster_url', 'galerie_url', 'creativeMethodology', 'subtitle', 'outil_Ai']
+//                 },
+//                 {
+//                     model: User, 
+//                     attributes: ['firstName', 'lastName', 'country', 'avatar'] 
+//                 },
+              
+//                 {
+//                     model:Playlist,
+//                 }
+//                 ,{
+                    
+//                     model:PlaylistFilm,
+//                 }
+//             ],
+//             order: [['createdAt', 'DESC']]
+//         });
+//         if (FilmData.length == 0) {
+//             return res.status(200).json({
+//                 message: "Aucun film disponible",
+//                 data: [],
+//             });
+//         }
+//         return res.status(200).json(FilmData);
+//     } catch (err) {
+//         return catchError(res, err)
+//     }
+// }
+
 export async function getFilms(req, res) {
     try {
         const FilmData = await Film.findAll({
@@ -29,7 +65,7 @@ export async function getFilms(req, res) {
                     model: User, 
                     attributes: [ 'firstName', 'lastName', 'country', 'avatar'] 
                 },
-              
+               
                 {
                     model: Playlist,
                 },{
@@ -49,22 +85,19 @@ export async function getFilms(req, res) {
             
             order: [['createdAt', 'DESC']]
         });
-        if (FilmData.length == 0) {
-            return res.status(200).json({
-                message: "Aucun film disponible",
-                data: [],
-            });
-        }
+
         return res.status(200).json(FilmData);
+
     } catch (err) {
+        console.error("Erreur dans getFilms:", err);
         return catchError(res, err);
     }
 }
 
+
 /**
- * GET  /films/:id
- * Recuperation d'un film par son id
- */
+ *     GET  /films/:id
+ *  Recuperation d'un film par son id*/
 export async function getFilmById(req, res) {
     try {
         const id = Number(req.params.id);
@@ -142,33 +175,64 @@ export async function getFilmsSelect(req, res) {
     }
 }
 
-/*
-* POST  /films
-* Creation d'un nouveau film
-*/
+// export async function createFilm(req, res) {
+//     try {
+//         const film = await Film.findByPk(req.newFilm.id, {
+//             include: [{ model: File }],
+//         });
+
+//         return res.status(201).json(film);
+//     } catch (err) {
+//         return catchError(res, err);
+//     }
+// }
+
+
 export async function createFilm(req, res) {
     try {
-        const film = await Film.findByPk(req.newFilm.id, {
+        // 1. Création du Film en base de données
+        const newFilm = await Film.create({
+            ...req.body,
+            userId: req.user.id
+        });
+
+        // 2. Création de l'entrée File et liaison avec le Film
+        // On vérifie req.files (rempli par ton middleware Multer)
+        if (req.files && req.files.poster) {
+            await File.create({
+                poster_url: req.files.poster[0].filename, 
+                FilmId: newFilm.id                        
+            });
+        }
+
+        // 3. Récupération du film complet avec ses relations pour la suite
+        const film = await Film.findByPk(newFilm.id, {
             include: [{ model: File }, { model: User }], 
         });
 
-        // --- NOTIFICATION AU RÉALISATEUR ---
+        // 4. NOTIFICATION AU RÉALISATEUR 
         if (film && film.User) {
             try {
                 const deps = { models: req.app.locals.models, io: req.app.locals.io };
-                // Appel réel de la fonction
+                // Appel de la fonction de notification
                 await notifyFilmSubmitted({ director: film.User, film, deps });
             } catch (notifError) {
                 console.error("Erreur notification createFilm:", notifError);
+                // On ne bloque pas la réponse client si seule la notification échoue
             }
         }
-        // -----------------------------------
 
+        // 5. Renvoi du film créé et complet au front-end
         return res.status(201).json(film);
+
     } catch (err) {
-        return catchError(res, err);
+        console.error("Erreur globale createFilm:", err);
+        return res.status(500).json({ message: err.message });
     }
 }
+
+
+
 
 /*
  * PUT  /films/:id

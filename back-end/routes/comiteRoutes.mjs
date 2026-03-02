@@ -13,11 +13,11 @@ import {
   deletePlaylist,
   getAllOfficialSelection,
   // modifyPlaylistStatus,
-  // getFilmsByPlaylist,
   // getOfficialSelectionById,
   // getRefusedFilmsById,
   
 } from "../controllers/comiteController.mjs";
+import { getPlaylistDetails } from "../controllers/adminController.mjs";
 
 const comiteRouter = express.Router()
 comiteRouter.post("/select", getAllOfficialSelection);
@@ -31,6 +31,8 @@ comiteRouter.post("/film/list", addFilmToPlaylist);
 comiteRouter.get("/sort/history/:userId", getComiteSortHistory);
 comiteRouter.post("/note", addNote);
 comiteRouter.patch("/deletestatus",deletePlaylist);
+
+comiteRouter.get("/playlist/:id", getPlaylistDetails);
 
 // comiteRouter.post("/select/:playlist_id", modifyPlaylistStatus);
 // Object.function(String,function)

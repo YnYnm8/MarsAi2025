@@ -4,6 +4,9 @@ import Sidebar from '../../components/sidebar';
 const AdminDetailsFilms = () => {
     const [films, setFilms] = useState([]);
     const [loading, setLoading] = useState(true);
+    
+    const [currentPage, setCurrentPage] = useState(1);
+    const filmsPerPage = 20;
 
     useEffect(() => {
         const fetchFilms = async () => {
@@ -20,7 +23,11 @@ const AdminDetailsFilms = () => {
         fetchFilms();
     }, []);
     
-    console.log(films[0]);
+    // CALCUL DE LA PAGINATION 
+    const totalPages = Math.ceil(films.length / filmsPerPage);
+    const indexOfLastFilm = currentPage * filmsPerPage;
+    const indexOfFirstFilm = indexOfLastFilm - filmsPerPage;
+    const currentFilms = films.slice(indexOfFirstFilm, indexOfLastFilm);
 
     if (loading) return (
         <div className="flex min-h-screen bg-slate-50">
@@ -35,10 +42,8 @@ const AdminDetailsFilms = () => {
 
     return (
         <div className="flex min-h-screen bg-slate-50">
-
             <Sidebar />
 
-            {/* Contenu principal */}
             <div className="flex-1 p-6 md:p-10 font-sans overflow-y-auto">
                 <header className="max-w-7xl mx-auto mb-8">
                     <h1 className="text-3xl font-bold text-slate-900">
@@ -61,21 +66,17 @@ const AdminDetailsFilms = () => {
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-slate-100">
-                            {films.map((film) => (
+                            {currentFilms.map((film) => (
                                 <tr key={film.id} className="hover:bg-slate-50/80 transition-colors">
-                                    {/* FILM ID */}
                                     <td className="px-6 py-4 font-mono text-[10px] text-red-600 bg-slate-50/30">
                                         #{film.id.toString().slice(0, 8)}
                                     </td>
-
                                     <td className="px-6 py-4 font-mono text-[10px] text-green-700 bg-blue-50/10 border-l border-slate-100">
                                         {film.User?.id || film.userId || 'N/A'}
                                     </td>
-
                                     <td className="px-6 py-4 font-bold text-slate-800 italic uppercase text-xs tracking-tight">
                                         {film.title}
                                     </td>
-
                                     <td className="px-6 py-4">
                                         <div className="text-sm font-bold text-slate-700 leading-none">
                                             {film.User ? `${film.User.firstName} ${film.User.lastName}` : "Anonyme"}
@@ -84,17 +85,14 @@ const AdminDetailsFilms = () => {
                                             {film.User?.email}
                                         </div>
                                     </td>
-
                                     <td className="px-6 py-4 text-[11px] font-bold text-slate-500">
                                         {film.User?.country || "Pays non renseigné"}
                                     </td>
-
                                     <td className="px-6 py-4">
                                         <span className="text-[9px] px-2 py-0.5 rounded border border-slate-200 bg-white text-slate-600 font-black uppercase">
                                             {film.generateAi}
                                         </span>
                                     </td>
-
                                     <td className="px-6 py-4 text-right font-mono text-xs text-blue-600 font-bold">
                                         {(film.views || 0).toLocaleString()}
                                     </td>
@@ -106,6 +104,36 @@ const AdminDetailsFilms = () => {
                     {films.length === 0 && (
                         <div className="p-12 text-center text-slate-400 text-sm italic font-medium">
                             Aucune donnée disponible dans la filmographie.
+                        </div>
+                    )}
+
+                    {!loading && films.length > 0 && (
+                        <div className="px-6 py-4 bg-slate-50/50 border-t border-slate-100 flex items-center justify-between">
+                            <div className="text-[10px] font-black text-slate-400 uppercase tracking-widest">
+                                {indexOfFirstFilm + 1} - {Math.min(indexOfLastFilm, films.length)} SUR {films.length}
+                            </div>
+                            <div className="flex gap-2">
+                                <button 
+                                    onClick={() => {
+                                        setCurrentPage(prev => Math.max(prev - 1, 1));
+                                        window.scrollTo(0, 0);
+                                    }} 
+                                    disabled={currentPage === 1} 
+                                    className={`px-4 py-2 text-[10px] font-black uppercase rounded-xl transition-all ${currentPage === 1 ? 'text-slate-200' : 'text-slate-600 hover:bg-white hover:shadow-sm border border-transparent hover:border-slate-200'}`}
+                                >
+                                    Précédent
+                                </button>
+                                <button 
+                                    onClick={() => {
+                                        setCurrentPage(prev => Math.min(prev + 1, totalPages));
+                                        window.scrollTo(0, 0);
+                                    }} 
+                                    disabled={currentPage === totalPages || totalPages === 0} 
+                                    className={`px-4 py-2 text-[10px] font-black uppercase rounded-xl transition-all ${(currentPage === totalPages || totalPages === 0) ? 'text-slate-200' : 'text-slate-600 hover:bg-white hover:shadow-sm border border-transparent hover:border-slate-200'}`}
+                                >
+                                    Suivant
+                                </button>
+                            </div>
                         </div>
                     )}
                 </div>

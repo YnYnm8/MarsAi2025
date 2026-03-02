@@ -10,7 +10,7 @@ const AdminSelected = () => {
     
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [selectedFilmId, setSelectedFilmId] = useState(null);
-    // pagination
+    
     const [currentPage, setCurrentPage] = useState(1);
     const filmsPerPage = 20;
 
@@ -22,6 +22,7 @@ const AdminSelected = () => {
                 credentials: 'include'
             });
             const json = await response.json();
+            // récupére le tableau data
             let data = Array.isArray(json) ? json : (json.data || []);
             setSelectedFilms(data);
         } catch (err) {
@@ -39,30 +40,33 @@ const AdminSelected = () => {
         setCurrentPage(1);
     }, [searchTerm]);
 
-    // Ouvre la modale de confirmation
     const openModal = (id) => {
         setSelectedFilmId(id);
         setIsModalOpen(true);
     };
 
-    // Confirme le passage en "Discussion" (Pending)
     const confirmMoveToPending = async () => {
-        try {
-            const response = await fetch(`http://localhost:3000/admin/films/${selectedFilmId}/status`, {
-                method: 'PATCH',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ status: 'pending' }),
-                credentials: 'include'
-            });
-            if (response.ok) {
-                setSelectedFilms(prev => prev.filter(f => f.id !== selectedFilmId));
-                setIsModalOpen(false);
-                setSelectedFilmId(null);
-            }
-        } catch (err) {
-            console.error("Erreur changement statut:", err);
+    try {
+        const response = await fetch(`http://localhost:3000/admin/films/${selectedFilmId}/status`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ playlistId: 4 }),
+            credentials: 'include'
+        });
+
+        const text = await response.text(); 
+        console.log(" données:", text);
+
+        const json = JSON.parse(text); 
+        
+        if (response.ok) {
+            setSelectedFilms(prev => prev.filter(f => f.id !== selectedFilmId));
+            setIsModalOpen(false);
         }
-    };
+    } catch (err) {
+        console.error("Détail de l'erreur :", err);
+    }
+};
 
     const formatDate = (dateString) => {
         if (!dateString) return "N/C";
@@ -108,16 +112,16 @@ const AdminSelected = () => {
                     <table className="w-full text-left border-collapse">
                         <thead>
                             <tr className="text-[10px] text-gray-400 uppercase tracking-widest border-b border-gray-50 text-left">
-                                <th className="pb-6 pl-4 text-left">Affiche</th>
-                                <th className="pb-6 text-left">Titre</th>
-                                <th className="pb-6 text-left">Réalisateur</th>
+                                <th className="pb-6 pl-4">Affiche</th>
+                                <th className="pb-6">Titre</th>
+                                <th className="pb-6">Réalisateur</th>
                                 <th className="pb-6 text-center">Statut</th>
                                 <th className="pb-6 text-center">Date</th>
-                                <th className="pb-6 text-center">PENDING</th>
-                                <th className="pb-6 text-right pr-4 text-right">Action</th>
+                                <th className="pb-6 text-center">Discussion</th>
+                                <th className="pb-6 text-right pr-4">Action</th>
                             </tr>
                         </thead>
-                        <tbody className="divide-y divide-gray-50 text-left">
+                        <tbody className="divide-y divide-gray-50">
                             {loading ? (
                                 [...Array(5)].map((_, i) => (
                                     <tr key={i}><td colSpan="7" className="py-4"><Skeleton className="h-12 w-full rounded-xl" /></td></tr>
@@ -127,22 +131,36 @@ const AdminSelected = () => {
                             ) : (
                                 currentFilms.map((film) => {
                                     const poster = film.Files?.[0]?.poster_url || film.poster_url || "/src/assets/youtube.png";
+                                    // Utilisation du statut réel 
                                     const { label, classes } = getStatusDetails(film.status);
+                                    
                                     return (
                                         <tr key={film.id} className="group hover:bg-gray-50/50 transition-colors">
-                                            <td className="py-5 pl-4 text-left">
+                                            <td className="py-5 pl-4">
                                                 <div className="w-14 h-9 overflow-hidden rounded-lg bg-gray-100 shadow-sm border border-gray-50">
                                                     <img src={poster} className="h-full w-full object-cover" alt="poster" onError={(e) => { e.target.src = "/src/assets/youtube.png"; }} />
                                                 </div>
                                             </td>
-                                            <td className="py-5 text-left"><p className="font-black text-[11px] text-black uppercase leading-tight">{film.title || "SANS TITRE"}</p></td>
-                                            <td className="py-5 text-left text-[10px] font-bold text-gray-800 uppercase">{film.User ? `${film.User.firstName} ${film.User.lastName}` : "N/A"}</td>
-                                            <td className="py-5 text-center">
-                                                <span className={`px-3 py-1 rounded-full text-[9px] font-black uppercase border ${classes}`}>{label}</span>
+                                            <td className="py-5 text-left">
+                                                <p className="font-black text-[11px] text-black uppercase leading-tight">{film.title || "SANS TITRE"}</p>
                                             </td>
-                                            <td className="py-5 text-center text-[10px] font-bold text-gray-400">{formatDate(film.createdAt)}</td>
+                                            <td className="py-5 text-left text-[10px] font-bold text-gray-800 uppercase">
+                                                {film.User ? `${film.User.firstName} ${film.User.lastName}` : "N/A"}
+                                            </td>
                                             <td className="py-5 text-center">
-                                                <button onClick={() => openModal(film.id)} className="p-2 rounded-full bg-amber-50 text-amber-600 hover:bg-amber-100 transition-colors mx-auto flex items-center justify-center">
+                                                <span className={`px-3 py-1 rounded-full text-[9px] font-black uppercase border ${classes}`}>
+                                                    {label}
+                                                </span>
+                                            </td>
+                                            <td className="py-5 text-center text-[10px] font-bold text-gray-400">
+                                                {formatDate(film.createdAt)}
+                                            </td>
+                                            <td className="py-5 text-center">
+                                                <button 
+                                                    onClick={() => openModal(film.id)} 
+                                                    className="p-2 rounded-full bg-amber-50 text-amber-600 hover:bg-amber-100 transition-colors mx-auto flex items-center justify-center"
+                                                    title="Rétrograder en Discussion"
+                                                >
                                                     <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
                                                         <path strokeLinecap="round" strokeLinejoin="round" d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6" />
                                                     </svg>
@@ -164,7 +182,7 @@ const AdminSelected = () => {
 
                     {!loading && filteredFilms.length > 0 && (
                         <div className="mt-8 flex items-center justify-between px-4 py-4 border-t border-gray-50">
-                            <div className="text-[10px] font-bold text-gray-400 uppercase tracking-widest text-left">
+                            <div className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">
                                 {indexOfFirstFilm + 1} - {Math.min(indexOfLastFilm, filteredFilms.length)} SUR {filteredFilms.length}
                             </div>
                             <div className="flex gap-2">
@@ -179,30 +197,20 @@ const AdminSelected = () => {
             {/* MODALE DE CONFIRMATION */}
             {isModalOpen && (
                 <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/40 backdrop-blur-md p-4">
-                    <div className="bg-white rounded-[2.5rem] p-10 max-w-sm w-full shadow-2xl text-center border border-white/20 animate-in fade-in zoom-in duration-200">
-                        <div className="mx-auto flex items-center justify-center h-16 w-16 rounded-full bg-amber-50 mb-6 text-left">
+                    <div className="bg-white rounded-[2.5rem] p-10 max-w-sm w-full shadow-2xl text-center animate-in fade-in zoom-in duration-200">
+                        <div className="mx-auto flex items-center justify-center h-16 w-16 rounded-full bg-amber-50 mb-6">
                             <svg className="h-8 w-8 text-amber-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                                 <path strokeLinecap="round" strokeLinejoin="round" d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6" />
                             </svg>
                         </div>
                         <h3 className="text-2xl font-black text-black uppercase tracking-tighter mb-3">Rétrograder ?</h3>
                         <p className="text-[13px] text-gray-500 mb-10 font-medium leading-relaxed">
-                            Ce film ne sera plus affiché comme <span className="text-emerald-600 font-bold uppercase">Sélectionné</span>. Il retournera en <span className="text-amber-600 font-bold uppercase">Discussion</span>.
+                            Ce film ne sera plus <span className="text-emerald-600 font-bold uppercase">Sélectionné</span>. Il retournera en <span className="text-amber-600 font-bold uppercase">Discussion</span>.
                         </p>
                         
                         <div className="flex gap-4">
-                            <button 
-                                onClick={() => setIsModalOpen(false)}
-                                className="flex-1 py-4 px-6 rounded-2xl text-[10px] font-black uppercase text-gray-400 hover:bg-gray-100 transition-all"
-                            >
-                                Annuler
-                            </button>
-                            <button 
-                                onClick={confirmMoveToPending}
-                                className="flex-1 py-4 px-6 rounded-2xl text-[10px] font-black uppercase bg-black text-white hover:bg-gray-900 shadow-xl shadow-gray-200 transition-all"
-                            >
-                                Confirmer
-                            </button>
+                            <button onClick={() => setIsModalOpen(false)} className="flex-1 py-4 px-6 rounded-2xl text-[10px] font-black uppercase text-gray-400 hover:bg-gray-100 transition-all">Annuler</button>
+                            <button onClick={confirmMoveToPending} className="flex-1 py-4 px-6 rounded-2xl text-[10px] font-black uppercase bg-black text-white hover:bg-gray-900 shadow-xl shadow-gray-200 transition-all">Confirmer</button>
                         </div>
                     </div>
                 </div>

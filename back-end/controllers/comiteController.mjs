@@ -71,9 +71,9 @@ export async function reviewFilm(req, res) {
 
     // ② status → PlaylistId に変換
     let PlaylistId;
-    if (status === "ACCEPTED") PlaylistId = 2;
-    else if (status === "REFUSED") PlaylistId = 3;
-    else if (status === "TO_DISCUSS") PlaylistId = 4;
+    if (status === "selected") PlaylistId = 2;
+    else if (status === "rejected") PlaylistId = 3;
+    else if (status === "pending") PlaylistId = 4;
     else PlaylistId = 1;
 
     // ③ すでに登録されているか確認
@@ -110,8 +110,8 @@ export async function reviewFilm(req, res) {
   }
 }
 
-// GET /comite/allplaylists
-// プレイリストを取得するためのもの
+//GET /comite/allplaylists
+//プレイリストを取得するためのもの
 export async function getAllPlaylists(req, res) {
   try {
     const playlists = await Playlist.findAll();
@@ -123,6 +123,9 @@ export async function getAllPlaylists(req, res) {
     res.status(500).json({ error: err.message });
   }
 }
+
+
+
 
 //POST /comite/create/playlist
 //選考委員が自分のプレイリストを作成するAPI
@@ -155,7 +158,7 @@ export async function createPlaylist(req, res) {
 export async function getAllRefusedFilms(req, res) {
   try {
     // REFUSED プレイリストのIDを取得しておく
-    const refusedPlaylistId = 2; // 例えばID=2がREFUSED
+    const refusedPlaylistId = 3; // 例えばID=2がREFUSED
 
     const refusedFilms = await PlaylistFilm.findAll({
       where: { PlaylistId: refusedPlaylistId },
@@ -180,7 +183,7 @@ export async function getRefusedFilmsById(req, res) {
 
   try {
     // REFUSED プレイリストのIDを取得しておく
-    const refusedPlaylistId = 2; // 例えばID=2がREFUSED
+    const refusedPlaylistId = 3; // 例えばID=2がREFUSED
 
     const refusedFilms = await PlaylistFilm.findAll({
       where: { PlaylistId: refusedPlaylistId },
@@ -359,7 +362,7 @@ export async function refuseFilm(req, res) {
     // ------------------------------------------------------------------------------
 
     return res.json({
-      message: "映画を REFUSED に更新しました",
+      message: "映画を REJECTED に更新しました",
       data: playlistFilm,
     });
   } catch (err) {

@@ -14,7 +14,9 @@ const Sidebar = () => {
     const location = useLocation();
 
     // État pour gérer l'ouverture du sous-menu "Gestion Films"
-    const [isFilmsOpen, setIsFilmsOpen] = useState(location.pathname.startsWith('/admin/films'));
+    const [isFilmsOpen, setIsFilmsOpen] = useState(
+    location.pathname.startsWith('/admin/films') || location.pathname.startsWith('/admin/playlists')
+);
 
     const menuItems = [
         {
@@ -37,6 +39,7 @@ const Sidebar = () => {
                 { name: 'SÉLECTION OFFICIELLE', path: '/admin/films/selected' },
                 { name: 'REFUSÉ', path: '/admin/films/rejected' },
                 { name: 'A DISCUTER', path: '/admin/films/pending' },
+                { name: 'PLAYLISTS', path: '/admin/playlists' },
             ],
         },
 
