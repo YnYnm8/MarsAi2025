@@ -537,35 +537,35 @@ export default function Note() {
                 >
                   + CREATE YOUR PLAYLIST
                 </button>
-              </div>
-            </div>
 
-          {/* 自作プレイリスト */}
+                {/* 自作プレイリスト */}
 
 
-            <div className="flex flex-col md:flex">
-              {playlist.slice(4).map((p) => (
-                <div key={p.id} className="flex gap-2 items-center">
-                  <button
-                    onClick={() => handleAddToPlaylistWithNote(p.id)}
-                    disabled={!value || value < 1}
-                    className={`bg-[#246BAD] text-white px-4 py-2 rounded-lg text-sm font-semibold ${!value || value < 1 ? "opacity-50 cursor-not-allowed" : ""
-                    }`}
-                    >
-                    {p.status}
-                  </button>
+                <div className="flex flex-col md:flex">
+                  {playlist.slice(4).map((p) => (
+                    <div key={p.id} className="flex gap-2 items-center">
+                      <button
+                        onClick={() => handleAddToPlaylistWithNote(p.id)}
+                        disabled={!value || value < 1}
+                        className={`bg-[#246BAD] text-white px-4 py-2 rounded-lg text-sm font-semibold ${!value || value < 1 ? "opacity-50 cursor-not-allowed" : ""
+                          }`}
+                      >
+                        {p.status}
+                      </button>
 
-                  <button
-                    onClick={() => handleDeletePlaylist(p.id)}
-                    className="bg-gray-600 text-shadow-red-600 px-3 py-2 rounded-lg text-xs hover:bg-gray-800"
-                    >
-                    X
-                  </button>
+                      <button
+                        onClick={() => handleDeletePlaylist(p.id)}
+                        className="flex-1 px-4 bg-gray-600 text-shadow-red-600 py-2 rounded-lg text-xs hover:bg-gray-800"
+                      >
+                        X
+                      </button>
+                    </div>
+                  ))}
                 </div>
-              ))}
-            </div>
               </div>
-         
+            </div>
+          </div>
+
         </main>
 
         {/* モーダル */}

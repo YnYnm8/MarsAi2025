@@ -5,35 +5,66 @@ export default function ComiteProfile() {
   const navigate = useNavigate();
   const [films, setFilms] = useState([]);
   const [filter, setFilter] = useState("NOT_WATCHED");
+  const [playlists, setPlaylist] = useState([]);
 
   const user = {
     name: "PAUL MICHEL",
     avatar: "https://via.placeholder.com/40"
   };
 
-  // useEffect(() => {
-  //   fetchUserFilms();
-  // }, []);
+  useEffect(() => {
+    fetchFilmAndPlaylists();
+  }, []);
 
-  // const fetchUserFilms = async () => {
-  //   try {
-  //     const res = await fetch("http://localhost:3000/comite/user/3");
-  //     const data = await res.json();
-  //     setFilms(data);
-  //   } catch (err) {
-  //     console.error(err);
-  //   }
-  // };
+  const fetchFilmAndPlaylists = async () => {
+    try {
+      const filmRes = await fetch("http://localhost:3000/films");
+      if (!filmRes.ok) throw new Error("Failed to fetch film data");
+      const filmsData = await filmRes.json();
+      
+      const playlistRes = await fetch("http://localhost:3000/comite/allplaylists");
+      if (!playlistRes.ok) throw new Error("Failed to fetch playlists");
+      const playlistsData = await playlistRes.json();
+   
+      const playlistsWithName = playlistsData.map(p => ({
+        ...p,
+        name: p.name || p.status || "Sans nom",
+        filmCount: 0
+      }));
+      
+      const filmsWithStatus = filmsData.map(film => {
+        if (!film.PlaylistFilms || film.PlaylistFilms.length === 0) {
+          return { ...film, status: "NOT_WATCHED", playlistName: "なし" };
+        }
+        
+        const latestPlaylistFilm = film.PlaylistFilms[film.PlaylistFilms.length - 1];
+        const playlistObj = playlistsData.find(p => p.id === latestPlaylistFilm.PlaylistId);
+       
+        
+        return {
+          ...film,
+          status: playlistObj?.status || "NOT_WATCHED",
+          playlistName: playlistObj?.name || "なし",
+        };
+      });
+
+      setFilms(filmsWithStatus);
+      setPlaylist(playlistsWithName);
+
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
 
   const filteredFilms = films.filter(film => film.status === filter);
 
   return (
-   <div className="flex min-h-screen bg-black text-white">
+    <div className="flex min-h-screen bg-black text-white">
 
       {/* 左側：ユーザー情報 */}
       <div className="absolute top-4 left-4 flex items-center gap-2">
-        <img src={user.avatar} className="rounded-full w-10 h-10" />
-        <span className="font-semibold">{user.name}</span>
+        {/* <img src={user.avatar} className="rounded-full w-10 h-10" /> */}
+        <span className="font-semibold">{films[0]?.User?.firstName}</span>
       </div>
 
       {/* メインコンテンツ */}
@@ -50,14 +81,14 @@ export default function ComiteProfile() {
               className="bg-gray-800 rounded-xl p-4 shadow"
             >
               <img
-                src={film.poster_url}
+                src={film.Files[0]?.poster_url}
                 className="w-full h-40 object-cover rounded"
               />
               <h2 className="mt-2 font-bold">{film.title}</h2>
               <p className="text-sm text-gray-400">
-                Score : {film.score}/10
+                Score : {film.NoteDirect?.[0]?.score ?? 0}/10
               </p>
-              <p className="text-sm mt-1">{film.comment}</p>
+              <p className="text-sm mt-1">{film.NoteDirect?.[0]?.comment ??"Nocomment"}</p>
             </div>
           ))}
         </div>
@@ -81,11 +112,10 @@ export default function ComiteProfile() {
           <button
             key={status}
             onClick={() => setFilter(status)}
-            className={`block w-full text-left px-4 py-2 rounded mb-2 ${
-              filter === status
+            className={`block w-full text-left px-4 py-2 rounded mb-2 ${filter === status
                 ? "bg-blue-600"
                 : "bg-gray-800 hover:bg-gray-700"
-            }`}
+              }`}
           >
             {status}
           </button>
