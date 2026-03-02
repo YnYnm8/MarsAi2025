@@ -189,58 +189,58 @@ export async function seedAll() {
                 UserId: 2, title: 'Symphony in Code', duration: 21, status: 'selected', description: 'Un orchestre virtuel joue une partition générée.', generateAi: 'fullAi', collaborateur: 'Suno AI',
                 Files: [{ subtitle: 'None', film_url: sampleVideo, poster_url: 'https://picsum.photos/seed/film4/800/1200', outil_Ai: 'Suno + Pika', creativeMethodology: 'Musique IA synchronisée avec vidéo.' }]
             },
-            // {
-            //     UserId: 2, title: 'Epstein', duration: 21, status: 'selected', description: 'Un orchestre virtuel joue une partition générée.', generateAi: 'fullAi', collaborateur: 'Suno AI',
-            //     Files: [{ subtitle: 'None', film_url: sampleVideo, poster_url: 'https://picsum.photos/seed/film4/800/1200', outil_Ai: 'Suno + Pika', creativeMethodology: 'Musique IA synchronisée avec vidéo.' }]
-            // },
-            // {
-            //     UserId: 2, title: 'Epstein', duration: 21, status: 'selected', description: 'Un orchestre virtuel joue une partition générée.', generateAi: 'fullAi', collaborateur: 'Suno AI',
-            //     Files: [{ subtitle: 'None', film_url: sampleVideo, poster_url: 'https://picsum.photos/seed/film4/800/1200', outil_Ai: 'Suno + Pika', creativeMethodology: 'Musique IA synchronisée avec vidéo.' }]
-            // },
-            // {
-            //     UserId: 2, title: 'Epstein', duration: 21, status: 'selected', description: 'Un orchestre virtuel joue une partition générée.', generateAi: 'fullAi', collaborateur: 'Suno AI',
-            //     Files: [{ subtitle: 'None', film_url: sampleVideo, poster_url: 'https://picsum.photos/seed/film4/800/1200', outil_Ai: 'Suno + Pika', creativeMethodology: 'Musique IA synchronisée avec vidéo.' }]
-            // },
-            // {
-            //     UserId: 2, title: 'Epstein', duration: 21, status: 'selected', description: 'Un orchestre virtuel joue une partition générée.', generateAi: 'fullAi', collaborateur: 'Suno AI',
-            //     Files: [{ subtitle: 'None', film_url: sampleVideo, poster_url: 'https://picsum.photos/seed/film4/800/1200', outil_Ai: 'Suno + Pika', creativeMethodology: 'Musique IA synchronisée avec vidéo.' }]
-            // },
-            // {
-            //     UserId: 2, title: 'Epstein', duration: 21, status: 'selected', description: 'Un orchestre virtuel joue une partition générée.', generateAi: 'fullAi', collaborateur: 'Suno AI',
-            //     Files: [{ subtitle: 'None', film_url: sampleVideo, poster_url: 'https://picsum.photos/seed/film4/800/1200', outil_Ai: 'Suno + Pika', creativeMethodology: 'Musique IA synchronisée avec vidéo.' }]
-            // },
-            // {
-            //     UserId: 2, title: 'Epstein', duration: 21, status: 'selected', description: 'Un orchestre virtuel joue une partition générée.', generateAi: 'fullAi', collaborateur: 'Suno AI',
-            //     Files: [{ subtitle: 'None', film_url: sampleVideo, poster_url: 'https://picsum.photos/seed/film4/800/1200', outil_Ai: 'Suno + Pika', creativeMethodology: 'Musique IA synchronisée avec vidéo.' }]
-            // },
-            // {
-            //     UserId: 2, title: 'Epstein', duration: 21, status: 'selected', description: 'Un orchestre virtuel joue une partition générée.', generateAi: 'fullAi', collaborateur: 'Suno AI',
-            //     Files: [{ subtitle: 'None', film_url: sampleVideo, poster_url: 'https://picsum.photos/seed/film4/800/1200', outil_Ai: 'Suno + Pika', creativeMethodology: 'Musique IA synchronisée avec vidéo.' }]
-            // },
-            // {
-            //     UserId: 2, title: 'Epstein', duration: 21, status: 'selected', description: 'Un orchestre virtuel joue une partition générée.', generateAi: 'fullAi', collaborateur: 'Suno AI',
-            //     Files: [{ subtitle: 'None', film_url: sampleVideo, poster_url: 'https://picsum.photos/seed/film4/800/1200', outil_Ai: 'Suno + Pika', creativeMethodology: 'Musique IA synchronisée avec vidéo.' }]
-            // },
-            // {
-            //     UserId: 2, title: 'Epstein', duration: 21, status: 'selected', description: 'Un orchestre virtuel joue une partition générée.', generateAi: 'fullAi', collaborateur: 'Suno AI',
-            //     Files: [{ subtitle: 'None', film_url: sampleVideo, poster_url: 'https://picsum.photos/seed/film4/800/1200', outil_Ai: 'Suno + Pika', creativeMethodology: 'Musique IA synchronisée avec vidéo.' }]
-            // },
-            // {
-            //     UserId: 2, title: 'Epstein', duration: 21, status: 'selected', description: 'Un orchestre virtuel joue une partition générée.', generateAi: 'fullAi', collaborateur: 'Suno AI',
-            //     Files: [{ subtitle: 'None', film_url: sampleVideo, poster_url: 'https://picsum.photos/seed/film4/800/1200', outil_Ai: 'Suno + Pika', creativeMethodology: 'Musique IA synchronisée avec vidéo.' }]
-            // },
-            // {
-            //     UserId: 2, title: 'Epstein', duration: 21, status: 'selected', description: 'Un orchestre virtuel joue une partition générée.', generateAi: 'fullAi', collaborateur: 'Suno AI',
-            //     Files: [{ subtitle: 'None', film_url: sampleVideo, poster_url: 'https://picsum.photos/seed/film4/800/1200', outil_Ai: 'Suno + Pika', creativeMethodology: 'Musique IA synchronisée avec vidéo.' }]
-            // },
-            // {
-            //     UserId: 2, title: 'Epstein', duration: 21, status: 'selected', description: 'Un orchestre virtuel joue une partition générée.', generateAi: 'fullAi', collaborateur: 'Suno AI',
-            //     Files: [{ subtitle: 'None', film_url: sampleVideo, poster_url: 'https://picsum.photos/seed/film4/800/1200', outil_Ai: 'Suno + Pika', creativeMethodology: 'Musique IA synchronisée avec vidéo.' }]
-            // },
-            // {
-            //     UserId: 2, title: 'Epstein', duration: 21, status: 'selected', description: 'Un orchestre virtuel joue une partition générée.', generateAi: 'fullAi', collaborateur: 'Suno AI',
-            //     Files: [{ subtitle: 'None', film_url: sampleVideo, poster_url: 'https://picsum.photos/seed/film4/800/1200', outil_Ai: 'Suno + Pika', creativeMethodology: 'Musique IA synchronisée avec vidéo.' }]
-            // },
+            {
+                UserId: 2, title: 'Epstein', duration: 21, status: 'selected', description: 'Un orchestre virtuel joue une partition générée.', generateAi: 'fullAi', collaborateur: 'Suno AI',
+                Files: [{ subtitle: 'None', film_url: sampleVideo, poster_url: 'https://picsum.photos/seed/film4/800/1200', outil_Ai: 'Suno + Pika', creativeMethodology: 'Musique IA synchronisée avec vidéo.' }]
+            },
+            {
+                UserId: 2, title: 'Epstein', duration: 21, status: 'selected', description: 'Un orchestre virtuel joue une partition générée.', generateAi: 'fullAi', collaborateur: 'Suno AI',
+                Files: [{ subtitle: 'None', film_url: sampleVideo, poster_url: 'https://picsum.photos/seed/film4/800/1200', outil_Ai: 'Suno + Pika', creativeMethodology: 'Musique IA synchronisée avec vidéo.' }]
+            },
+            {
+                UserId: 2, title: 'Epstein', duration: 21, status: 'selected', description: 'Un orchestre virtuel joue une partition générée.', generateAi: 'fullAi', collaborateur: 'Suno AI',
+                Files: [{ subtitle: 'None', film_url: sampleVideo, poster_url: 'https://picsum.photos/seed/film4/800/1200', outil_Ai: 'Suno + Pika', creativeMethodology: 'Musique IA synchronisée avec vidéo.' }]
+            },
+            {
+                UserId: 2, title: 'Epstein', duration: 21, status: 'selected', description: 'Un orchestre virtuel joue une partition générée.', generateAi: 'fullAi', collaborateur: 'Suno AI',
+                Files: [{ subtitle: 'None', film_url: sampleVideo, poster_url: 'https://picsum.photos/seed/film4/800/1200', outil_Ai: 'Suno + Pika', creativeMethodology: 'Musique IA synchronisée avec vidéo.' }]
+            },
+            {
+                UserId: 2, title: 'Epstein', duration: 21, status: 'selected', description: 'Un orchestre virtuel joue une partition générée.', generateAi: 'fullAi', collaborateur: 'Suno AI',
+                Files: [{ subtitle: 'None', film_url: sampleVideo, poster_url: 'https://picsum.photos/seed/film4/800/1200', outil_Ai: 'Suno + Pika', creativeMethodology: 'Musique IA synchronisée avec vidéo.' }]
+            },
+            {
+                UserId: 2, title: 'Epstein', duration: 21, status: 'selected', description: 'Un orchestre virtuel joue une partition générée.', generateAi: 'fullAi', collaborateur: 'Suno AI',
+                Files: [{ subtitle: 'None', film_url: sampleVideo, poster_url: 'https://picsum.photos/seed/film4/800/1200', outil_Ai: 'Suno + Pika', creativeMethodology: 'Musique IA synchronisée avec vidéo.' }]
+            },
+            {
+                UserId: 2, title: 'Epstein', duration: 21, status: 'selected', description: 'Un orchestre virtuel joue une partition générée.', generateAi: 'fullAi', collaborateur: 'Suno AI',
+                Files: [{ subtitle: 'None', film_url: sampleVideo, poster_url: 'https://picsum.photos/seed/film4/800/1200', outil_Ai: 'Suno + Pika', creativeMethodology: 'Musique IA synchronisée avec vidéo.' }]
+            },
+            {
+                UserId: 2, title: 'Epstein', duration: 21, status: 'selected', description: 'Un orchestre virtuel joue une partition générée.', generateAi: 'fullAi', collaborateur: 'Suno AI',
+                Files: [{ subtitle: 'None', film_url: sampleVideo, poster_url: 'https://picsum.photos/seed/film4/800/1200', outil_Ai: 'Suno + Pika', creativeMethodology: 'Musique IA synchronisée avec vidéo.' }]
+            },
+            {
+                UserId: 2, title: 'Epstein', duration: 21, status: 'selected', description: 'Un orchestre virtuel joue une partition générée.', generateAi: 'fullAi', collaborateur: 'Suno AI',
+                Files: [{ subtitle: 'None', film_url: sampleVideo, poster_url: 'https://picsum.photos/seed/film4/800/1200', outil_Ai: 'Suno + Pika', creativeMethodology: 'Musique IA synchronisée avec vidéo.' }]
+            },
+            {
+                UserId: 2, title: 'Epstein', duration: 21, status: 'selected', description: 'Un orchestre virtuel joue une partition générée.', generateAi: 'fullAi', collaborateur: 'Suno AI',
+                Files: [{ subtitle: 'None', film_url: sampleVideo, poster_url: 'https://picsum.photos/seed/film4/800/1200', outil_Ai: 'Suno + Pika', creativeMethodology: 'Musique IA synchronisée avec vidéo.' }]
+            },
+            {
+                UserId: 2, title: 'Epstein', duration: 21, status: 'selected', description: 'Un orchestre virtuel joue une partition générée.', generateAi: 'fullAi', collaborateur: 'Suno AI',
+                Files: [{ subtitle: 'None', film_url: sampleVideo, poster_url: 'https://picsum.photos/seed/film4/800/1200', outil_Ai: 'Suno + Pika', creativeMethodology: 'Musique IA synchronisée avec vidéo.' }]
+            },
+            {
+                UserId: 2, title: 'Epstein', duration: 21, status: 'selected', description: 'Un orchestre virtuel joue une partition générée.', generateAi: 'fullAi', collaborateur: 'Suno AI',
+                Files: [{ subtitle: 'None', film_url: sampleVideo, poster_url: 'https://picsum.photos/seed/film4/800/1200', outil_Ai: 'Suno + Pika', creativeMethodology: 'Musique IA synchronisée avec vidéo.' }]
+            },
+            {
+                UserId: 2, title: 'Epstein', duration: 21, status: 'selected', description: 'Un orchestre virtuel joue une partition générée.', generateAi: 'fullAi', collaborateur: 'Suno AI',
+                Files: [{ subtitle: 'None', film_url: sampleVideo, poster_url: 'https://picsum.photos/seed/film4/800/1200', outil_Ai: 'Suno + Pika', creativeMethodology: 'Musique IA synchronisée avec vidéo.' }]
+            },
             {
                 UserId: 4, title: 'The Architect', duration: 55, status: 'selected', description: 'Création d\'un monde de A à Z.', generateAi: 'fullAi', collaborateur: 'Visionary',
                 Files: [{ subtitle: 'English', film_url: sampleVideo, poster_url: 'https://picsum.photos/seed/film20/800/1200', outil_Ai: 'Sora', creativeMethodology: 'Workflow complet text-to-video.' }]
@@ -268,26 +268,6 @@ export async function seedAll() {
             { PlaylistId: 1, FilmId: films[5].id },
             { PlaylistId: 1, FilmId: films[6].id },
             { PlaylistId: 1, FilmId: films[7].id },
-            { PlaylistId: 1, FilmId: films[8].id },
-            { PlaylistId: 1, FilmId: films[9].id },
-            { PlaylistId: 1, FilmId: films[10].id },
-            { PlaylistId: 1, FilmId: films[11].id },
-            { PlaylistId: 1, FilmId: films[12].id },
-            { PlaylistId: 1, FilmId: films[13].id },
-            { PlaylistId: 1, FilmId: films[14].id },
-            { PlaylistId: 1, FilmId: films[15].id },
-            { PlaylistId: 1, FilmId: films[16].id },
-            { PlaylistId: 1, FilmId: films[17].id },
-            { PlaylistId: 1, FilmId: films[18].id },
-            { PlaylistId: 1, FilmId: films[19].id },
-            { PlaylistId: 1, FilmId: films[20].id },
-            { PlaylistId: 1, FilmId: films[21].id },
-            { PlaylistId: 1, FilmId: films[22].id },
-            { PlaylistId: 1, FilmId: films[23].id },
-            { PlaylistId: 1, FilmId: films[24].id },
-            // { PlaylistId: 1, FilmId: films[25].id },
-           
-
         ]);
 
         const prices = await Price.bulkCreate([
@@ -327,8 +307,47 @@ export async function seedAll() {
         ]);
 
         await Notification.bulkCreate([
-            { UserId: 1, PriceId: prices[0].id }
-        ]);
+    { 
+        userId: 1, 
+        type: 'SYSTEM', //
+        title: 'Félicitations !', 
+        message: 'Vous avez remporté un prix pour votre film.',
+        // Si tu as bien une colonne PriceId dans Notification, tu peux la laisser :
+        PriceId: prices[0].id 
+    },
+        { 
+        userId: 2, 
+        type: 'SYSTEM', //
+        title: 'Félicitations !', 
+        message: 'Vous avez remporté un prix pour votre film.',
+        // Si tu as bien une colonne PriceId dans Notification, tu peux la laisser :
+        PriceId: prices[0].id 
+    },
+        { 
+        userId: 3, 
+        type: 'SYSTEM', //
+        title: 'Félicitations !', 
+        message: 'Vous avez remporté un prix pour votre film.',
+        // Si tu as bien une colonne PriceId dans Notification, tu peux la laisser :
+        PriceId: prices[0].id 
+    },
+        { 
+        userId: 4, 
+        type: 'SYSTEM', //
+        title: 'Félicitations !', 
+        message: 'Vous avez remporté un prix pour votre film.',
+        // Si tu as bien une colonne PriceId dans Notification, tu peux la laisser :
+        PriceId: prices[0].id 
+    },
+        { 
+        userId: 5, 
+        type: 'SYSTEM', //
+        title: 'Félicitations !', 
+        message: 'Vous avez remporté un prix pour votre film.',
+        // Si tu as bien une colonne PriceId dans Notification, tu peux la laisser :
+        PriceId: prices[0].id 
+    }
+]);
 
         console.log('✅ SEED TERMINÉE AVEC SUCCÈS ! (' + films.length + ' films créés)');
 

@@ -1,8 +1,6 @@
 // import { useState } from 'react'
 import { Routes, Route, useLocation } from "react-router-dom";
-import Note from "./pages/films/note.jsx";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-
+import Note from "./pages/comite/note.jsx";
 import PostFilm from "./pages/films/post-movie.jsx";
 import Register from "./pages/auth/register.jsx";
 import Logout from "./pages/auth/logout.jsx";
@@ -26,12 +24,11 @@ import EditFilm from "./pages/films/editFilm.jsx";
 import AdminAllFilms from "./pages/admin/adminallfilm.jsx"
 import TopNavbar from "./components/navbar.jsx";
 import Footer from "./components/footer.jsx";
-import AdminPlaylist from './pages/admin/adminplaylist.jsx'; 
+import AdminPlaylist from './pages/admin/adminplaylist.jsx';
 import AdminPlaylistDetail from './pages/admin/adminplaylistdetail.jsx';
- 
+
 import Contact from "./pages/auth/Contact.jsx";
-import ComiteProfile from "./pages/films/ComiteProfile.jsx";
-import Contact from "./pages/contact/Contact.jsx";
+import ComiteProfile from "./pages/comite/ComiteProfile.jsx";
 
 
 function App() {
@@ -50,12 +47,12 @@ function App() {
 
           {/* FILMS*/}
           <Route path="/films/:id" element={<FilmsDetails />} />
-          <Route path="/comite/note" element={<Note />} />
-          <Route path="/note" element={<Note />} />
-           <Route path="/comite/profile" element={<ComiteProfile />} />
-
           <Route path="/form-movie" element={<PostFilm />} />
           <Route path="/edit/:id" element={<EditFilm />} />
+
+          {/* COMITE*/}
+          <Route path="/comite/note" element={<Note />} />
+          <Route path="/comite/profile" element={<ComiteProfile />} />
 
           {/* USER */}
           <Route path="/login" element={<Login />} />
@@ -76,7 +73,7 @@ function App() {
           <Route path="/admin/films/pending" element={<Adminpending />} />
 
           {/* CONTACT */}
-          <Route path="/contact" element={<Contact/>} />
+          <Route path="/contact" element={<Contact />} />
 
           <Route path="/reservation" element={<Reservation />} />
           <Route path="/jury" element={<Jury />} />

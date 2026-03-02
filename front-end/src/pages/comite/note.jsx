@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo } from "react";
 import { useParams } from "react-router-dom";
-import ListFilms from "./ListFilms";
+import ListFilms from "../comite/ListFilms";
 import { FilmComponent } from "../../components/film";
 import { useNavigate } from "react-router-dom";
 import { useRef } from "react";
@@ -320,7 +320,7 @@ export default function Note() {
         <aside className="w-full md:w-72 bg-black border-b md:border-b-0 md:border-r overflow-y-auto p-4 flex flex-col gap-4">
           {/* 上部のアクションボタン */}
           <button
-            onClick={() => navigate("/comiteprofile")}
+            onClick={() => navigate("/comite/profile")}
             className="bg-white text-black px-4 py-1 rounded-md font-semibold text-sm hover:bg-gray-100 transition"
           >
             VOIR MES ÉVALUATIONS
@@ -537,35 +537,35 @@ export default function Note() {
                 >
                   + CREATE YOUR PLAYLIST
                 </button>
-              </div>
-            </div>
 
-          {/* 自作プレイリスト */}
+                {/* 自作プレイリスト */}
 
 
-            <div className="flex flex-col md:flex">
-              {playlist.slice(4).map((p) => (
-                <div key={p.id} className="flex gap-2 items-center">
-                  <button
-                    onClick={() => handleAddToPlaylistWithNote(p.id)}
-                    disabled={!value || value < 1}
-                    className={`bg-[#246BAD] text-white px-4 py-2 rounded-lg text-sm font-semibold ${!value || value < 1 ? "opacity-50 cursor-not-allowed" : ""
-                    }`}
-                    >
-                    {p.status}
-                  </button>
+                <div className="flex flex-col md:flex">
+                  {playlist.slice(4).map((p) => (
+                    <div key={p.id} className="flex gap-2 items-center">
+                      <button
+                        onClick={() => handleAddToPlaylistWithNote(p.id)}
+                        disabled={!value || value < 1}
+                        className={`bg-[#246BAD] text-white px-4 py-2 rounded-lg text-sm font-semibold ${!value || value < 1 ? "opacity-50 cursor-not-allowed" : ""
+                          }`}
+                      >
+                        {p.status}
+                      </button>
 
-                  <button
-                    onClick={() => handleDeletePlaylist(p.id)}
-                    className="bg-gray-600 text-shadow-red-600 px-3 py-2 rounded-lg text-xs hover:bg-gray-800"
-                    >
-                    X
-                  </button>
+                      <button
+                        onClick={() => handleDeletePlaylist(p.id)}
+                        className="flex-1 px-4 bg-gray-600 text-shadow-red-600 py-2 rounded-lg text-xs hover:bg-gray-800"
+                      >
+                        X
+                      </button>
+                    </div>
+                  ))}
                 </div>
-              ))}
-            </div>
               </div>
-         
+            </div>
+          </div>
+
         </main>
 
         {/* モーダル */}
