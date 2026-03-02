@@ -227,7 +227,7 @@ export async function addNote(req, res) {
 
 export async function deletePlaylist(req, res) {
   try {
-    const { UserId, targetPlaylistId } = req.body;
+    const { targetPlaylistId } = req.body;
 
     // ① プレイリストに入っている映画を取得
     const playlistFilms = await PlaylistFilm.findAll({
@@ -236,15 +236,9 @@ export async function deletePlaylist(req, res) {
 
     // ② 映画がある場合 → TO_DISCUSS(4) に移動
     if (playlistFilms.length > 0) {
-      const filmIds = playlistFilms.map((pf) => pf.FilmId);
-
       await PlaylistFilm.update(
         { PlaylistId: 4 }, // TO_DISCUSS
-        {
-          where: {
-            FilmId: filmIds,
-          },
-        },
+        { where: { PlaylistId: targetPlaylistId } }
       );
     }
 
@@ -252,7 +246,6 @@ export async function deletePlaylist(req, res) {
     await Playlist.destroy({
       where: {
         id: targetPlaylistId,
-        UserId,
       },
     });
 
