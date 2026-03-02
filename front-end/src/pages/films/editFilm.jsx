@@ -209,7 +209,7 @@ export default function EditFilm() {
     // Archivos actuales para previsualización
 
     return (
-        <div className="bg-black-primary min-h-screen text-white pb-20">
+        <div className="bg-black-primary min-h-screen  text-white pb-20">
 
             <div className="flex flex-col m-8 max-w-7xl mx-auto">
                 {/* Cabecera */}
@@ -316,6 +316,7 @@ export default function EditFilm() {
                                 label="Fichier Vidéo / URL *"
                                 name="film"
                                 id="videoUrl"
+                                onDurationError={(msg) => setToastMessages([msg])}
                                 defaultValue={movie.Files[0].film_url}
                             />
 
@@ -369,9 +370,9 @@ export default function EditFilm() {
                             <p className="uppercase tracking-widest font-bold text-lg">04. Composition de l'Équipe</p>
                         </div>
 
-                        <div className="flex flex-col gap-4">
+                        <div className="flex flex-col gap-3">
                             {collaborateurs.map((collab, index) => (
-                                <div key={index} className="flex gap-4 items-center bg-black/20 p-4 rounded-2xl border border-white/5">
+                                <div key={index} className="bg-black/40 p-5 flex justify-center gap-5 font-bold rounded-box tracking-wider text-sm">
                                     <select
                                         className="bg-black border border-gray-800 p-4 rounded-xl text-white outline-none"
                                         value={collab.genre}
@@ -385,13 +386,13 @@ export default function EditFilm() {
                                             type="text"
                                             value={collab.name || ""}
                                             onChange={(e) => handleCollabChange(index, "name", e.target.value)}
-                                            className="w-full bg-black border border-gray-800 p-4 pr-12 rounded-xl outline-none focus:border-blue-tertiary"
+                                            className="bg-black border border-gray-700 p-5 w-200 rounded-box mt-5 text-white outline-none focus:border-blue-tertiary"
                                             placeholder="NOM COMPLET"
                                         />
-                                        <FontAwesomeIcon icon={faPencil} className="absolute right-4 top-1/2 -translate-y-1/2 text-blue-tertiary/30" />
+                                        <FontAwesomeIcon icon={faPencil} className="absolute  top-1/2 -translate-y-1/2 text-blue-tertiary/30" />
                                     </div>
                                     {collaborateurs.length > 1 && (
-                                        <button type="button" onClick={() => removeCollaborateur(index)} className="text-red-500  cursor-pointer bg-red-500/10 w-12 h-12 rounded-xl hover:bg-red-500 hover:text-white transition-all">
+                                        <button type="button" onClick={() => removeCollaborateur(index)} className="text-red-500  cursor-pointer bg-red-500/10  p-8 text-xl rounded-xl hover:bg-red-500 hover:text-white transition-all">
                                             <FontAwesomeIcon icon={faTrash} />
                                         </button>
                                     )}
