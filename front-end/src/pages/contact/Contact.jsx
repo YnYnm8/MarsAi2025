@@ -1,4 +1,6 @@
 import { useActionState, useState } from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faClock } from '@fortawesome/free-solid-svg-icons';
 
 
 
@@ -41,16 +43,16 @@ export default function Contact() {
     <div className="item-center text-gray-900 min-h-screen">
 
       {/* Header */}
-      <header className="flex items-center px-10 py-6 ">
-        <section className="text-center py-20 px-6">
-          <h1 className="text-4xl font-bold mb-9 text-[#FF5845]">CONTACT US!</h1>
-          <p className="max-w-2xl mx-auto text-lg text-[#246BAD] leading-relaxed">
-            Notre site vous plaît ? <br />
-            Pour toute question ou préoccupation, veuillez nous contacter ici.<br /> Nous vous répondrons. Merci
-          </p>
-        </section>
 
-      </header>
+      <section className="text-center py-20 px-6">
+        <h1 className="text-4xl font-bold mb-9 text-[#FF5845]">CONTACT US!</h1>
+        <p className="max-w-2xl mx-auto text-lg text-[#246BAD] leading-relaxed">
+          Notre site vous plaît ? <br />
+          Pour toute question ou préoccupation, veuillez nous contacter ici.<br /> Nous vous répondrons. Merci
+        </p>
+      </section>
+
+
 
       {/* Contact Section */}
       <section className="relative flex flex-col items-center justify-center py-20 overflow-hidden">
@@ -64,8 +66,8 @@ export default function Contact() {
           </h2>
 
           <form className="space-y-4 flex-col">
-           {/* {emailSent ?( */}
-         
+            {/* {emailSent ?( */}
+
             <input
               type="text"
               placeholder="Enter your name"
@@ -78,7 +80,7 @@ export default function Contact() {
               placeholder="Enter your email"
               className="w-full border-2 border-black rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-700"
             />
-           
+
             <textarea
               type="text"
               placeholder="Message"
@@ -87,11 +89,8 @@ export default function Contact() {
               className="w-full border-2 border-black rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-700"
             />
             {/* {isSending ? ( */}
-              <img
-                src="../src/assets/clock.png"
-                alt="watch"
-                className=""
-              />
+            {/* <FontAwesomeIcon icon={faClock} /> */}
+
 
             {/* ) : ( */}
             <button className="flex justify-end bg-black text-white px-6 py-2 rounded-full hover:bg-gray-800 transition">

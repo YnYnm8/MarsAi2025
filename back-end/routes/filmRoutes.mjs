@@ -10,8 +10,6 @@ const router = express.Router();
 
 router.get('/', getFilms); // public
 router.get('/select/list', getFilmsSelect); //public
-router.get('/my-submissions/list', authMiddleware, getFilmsByUser); // realisateur
-
 router.get('/:id', getFilmById); //public
 
 router.post('/', authMiddleware, uploadFields,  validate(createFilmSchema), uploadMiddleware, createFilm); //realisateur

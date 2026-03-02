@@ -234,14 +234,7 @@ export default function Note() {
   return (
     <div className="flex flex-col h-screen bg-black font-sans">
       {/* Header */}
-      <header className="flex items-center justify-between bg-white px-4 py-3 shadow">
-        <button className="text-sm text-gray-500">← Retour</button>
-        <div className="text-sm font-semibold text-blue-600">MARS.AI</div>
-        <div className="flex items-center gap-2">
-          <span className="text-sm font-medium">PAUL MICHEL</span>
-          <img src="https://via.placeholder.com/32" className="rounded-full" alt="User avatar" />
-        </div>
-      </header>
+    
 
       {/* Main Layout */}
       <div className="flex flex-col md:flex-row flex-1 overflow-hidden">

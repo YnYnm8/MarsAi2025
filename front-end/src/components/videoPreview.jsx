@@ -1,7 +1,8 @@
-import React, { useEffect,useState } from "react";
+import React, { useEffect, useState } from "react";
 
-export default function VideoUpload({ label, id, defaultValue }) {
+export default function VideoUpload({ label, id, defaultValue, onDurationError }) {
   const [videoPreview, setVideoPreview] = useState(null);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     if (defaultValue) {
@@ -11,12 +12,41 @@ export default function VideoUpload({ label, id, defaultValue }) {
 
   const handleVideoChange = (e) => {
     const file = e.target.files[0];
-    if (file) setVideoPreview(URL.createObjectURL(file));
+    setError(null)
+    if (file) {
+      //duration
+      const video = document.createElement('video');
+      video.preload = 'metadata';
+
+      video.onloadedmetadata = () => {
+   
+        window.URL.revokeObjectURL(video.src);
+
+        if (video.duration > 120) {
+          e.target.value = "";
+          setVideoPreview(null);
+
+        
+          if (onDurationError) {
+            onDurationError("La vidéo est trop longue (max 2 minutes)");
+          }
+          return;
+        }
+        
+        setVideoPreview(URL.createObjectURL(file));
+      };
+
+      video.onerror = () => {
+        setError("Fichier vidéo invalide");
+        e.target.value = "";
+      };
+
+      video.src = URL.createObjectURL(file);
+    }
   };
-  
 
   return (
-<div className="flex flex-col">
+    <div className="flex flex-col">
       <span className="text-white-primary p-3 uppercase text-xs font-bold opacity-50">{label}</span>
 
       {videoPreview ? (
@@ -26,13 +56,13 @@ export default function VideoUpload({ label, id, defaultValue }) {
             controls
             className="w-full max-h-80 rounded-lg mb-4 border border-white/10"
           />
-          <p className="text-[10px] text-blue-tertiary uppercase mt-[-10px] mb-4 font-bold">
+          <p className="text-[10px] text-blue-tertiary uppercase mt-2.5 mb-4 font-bold">
             {videoPreview.startsWith('http') ? "Vidéo actuelle" : "Nouvelle vidéo sélectionnée"}
           </p>
         </div>
       ) : (
         <div className="w-full h-48 border-2 border-dashed border-white/10 rounded-lg flex items-center justify-center mb-4 bg-white/5">
-           <p className="text-white/20 text-xs uppercase">Aucune vidéo</p>
+          <p className="text-white/20 text-xs uppercase">Aucune vidéo</p>
         </div>
       )}
 

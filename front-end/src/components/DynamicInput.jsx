@@ -1,4 +1,4 @@
-import { useTranslation } from "react-i18next"; 
+import { useTranslation } from "react-i18next";
 
 export function DynamicInputList({
     label,
@@ -30,7 +30,7 @@ export function DynamicInputList({
 
     return (
         <div className="flex flex-col gap-3">
-            
+
             <label className="pb-2 text-white-primary uppercase font-bold">{label}</label>
             {array.map((value, index) => (
                 <div key={index} className="flex gap-2">
@@ -58,7 +58,7 @@ export function DynamicInputList({
                     onClick={handleAdd}
                     className="btn self-center bg-[#246BAD] text-white p-7 font-bold text-base tracking-widest mt-5 rounded-xl uppercase cursor-pointer"
                 >
-                    {t("dynamicInput.addButton", "Ajouter")}
+                    {t("dynamicInput.addButton", "Ajouter d'autres sous-titres")}
                 </button>
             )}
         </div>
@@ -66,7 +66,7 @@ export function DynamicInputList({
 }
 
 
-export function DynamicSubtitleInput({ subtitles, setSubtitles}) {
+export function DynamicSubtitleInput({ subtitles, setSubtitles }) {
     const { t } = useTranslation("formulaireF");
 
     // Array de subtítulos: cada elemento tiene { type: "file"|"url", value: File|String }
@@ -154,9 +154,11 @@ export function DynamicSubtitleInput({ subtitles, setSubtitles}) {
                     onClick={handleAdd}
                     className="self-center bg-[#246BAD] text-white p-5 font-bold text-base tracking-widest mt-5 rounded-xl uppercase cursor-pointer"
                 >
-                    {t("dynamicInput.addButton", "Ajouter")}
+                    {t("dynamicInput.addButton", "Ajouter d'autres sous-titres")}
                 </button>
             )}
         </div>
     );
 }
+
+

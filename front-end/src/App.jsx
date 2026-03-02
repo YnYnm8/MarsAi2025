@@ -26,7 +26,7 @@ import EditFilm from "./pages/films/editFilm.jsx";
 import AdminAllFilms from "./pages/admin/adminallfilm.jsx"
 import TopNavbar from "./components/navbar.jsx";
 import Footer from "./components/footer.jsx";
-import Contact from "./contact/Contact.jsx";
+import Contact from "./pages/contact/Contact.jsx";
 
 
 function App() {
@@ -45,7 +45,7 @@ function App() {
 
           {/* FILMS*/}
           <Route path="/films/:id" element={<FilmsDetails />} />
-          <Route path="/note" element={<Note />} />
+          <Route path="/comite/note" element={<Note />} />
           <Route path="/form-movie" element={<PostFilm />} />
           <Route path="/edit/:id" element={<EditFilm />} />
 
