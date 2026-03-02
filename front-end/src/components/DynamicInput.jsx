@@ -45,7 +45,7 @@ export function DynamicInputList({
                         <button
                             type="button"
                             onClick={() => handleRemove(index)}
-                            className="bg-red-500 text-white p-4 rounded-lg"
+                            className="bg-red-500 cursor-pointer text-white p-4 rounded-lg"
                         >
                             X
                         </button>
@@ -56,7 +56,7 @@ export function DynamicInputList({
                 <button
                     type="button"
                     onClick={handleAdd}
-                    className="btn self-center bg-[#246BAD] text-white p-7 font-bold text-base tracking-widest mt-5 rounded-xl uppercase cursor-pointer"
+                    className="btn self-center bg-brand-blue text-white p-7 font-bold text-base tracking-widest mt-5 rounded-xl uppercase cursor-pointer"
                 >
                     {t("dynamicInput.addButton", "Ajouter d'autres sous-titres")}
                 </button>
@@ -140,7 +140,7 @@ export function DynamicSubtitleInput({ subtitles, setSubtitles }) {
                         <button
                             type="button"
                             onClick={() => handleRemove(index)}
-                            className="bg-red-500 text-white p-4 rounded-lg"
+                            className="bg-red-500 text-white p-4 cursor-pointer rounded-lg"
                         >
                             X
                         </button>
@@ -152,7 +152,7 @@ export function DynamicSubtitleInput({ subtitles, setSubtitles }) {
                 <button
                     type="button"
                     onClick={handleAdd}
-                    className="self-center bg-[#246BAD] text-white p-5 font-bold text-base tracking-widest mt-5 rounded-xl uppercase cursor-pointer"
+                    className="self-center bg-brand-blue text-white p-5 font-bold text-base tracking-widest mt-5 rounded-xl uppercase cursor-pointer"
                 >
                     {t("dynamicInput.addButton", "Ajouter d'autres sous-titres")}
                 </button>

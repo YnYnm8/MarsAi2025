@@ -181,46 +181,41 @@ export async function getFilmsSelect(req, res) {
 * Creation d'un nouveau film
 */
 export async function createFilm(req, res) {
-    try {
-        // 1. Création du Film en base de données
-        const newFilm = await Film.create({
-            ...req.body,
-            userId: req.user.id
-        });
+  try {
+    const newFilm = req.newFilm;
 
-        // 2. Création de l'entrée File et liaison avec le Film
-        // On vérifie req.files (rempli par ton middleware Multer)
-        if (req.files && req.files.poster) {
-            await File.create({
-                poster_url: req.files.poster[0].filename, 
-                FilmId: newFilm.id                        
-            });
-        }
-
-        // 3. Récupération du film complet avec ses relations pour la suite
-        const film = await Film.findByPk(newFilm.id, {
-            include: [{ model: File }, { model: User }], 
-        });
-
-        // 4. NOTIFICATION AU RÉALISATEUR 
-        if (film && film.User) {
-            try {
-                const deps = { models: req.app.locals.models, io: req.app.locals.io };
-                // Appel de la fonction de notification
-                await notifyFilmSubmitted({ director: film.User, film, deps });
-            } catch (notifError) {
-                console.error("Erreur notification createFilm:", notifError);
-                // On ne bloque pas la réponse client si seule la notification échoue
-            }
-        }
-
-        // 5. Renvoi du film créé et complet au front-end
-        return res.status(201).json(film);
-
-    } catch (err) {
-        console.error("Erreur globale createFilm:", err);
-        return res.status(500).json({ message: err.message });
+    // 2. Création de l'entrée File et liaison avec le Film
+    // On vérifie req.files (rempli par ton middleware Multer)
+    if (!newFilm) {
+      return res.status(400).json({ message: "Le film n'a pas pu être créé." });
     }
+
+    // 3. Récupération du film complet avec ses relations pour la suite
+    const film = await Film.findByPk(newFilm.id, {
+      include: [
+        { model: File },
+        { model: User }
+      ],
+    });
+    // 4. NOTIFICATION AU RÉALISATEUR 
+    if (film && film.User) {
+      try {
+        const deps = { models: req.app.locals.models, io: req.app.locals.io };
+        // Appel de la fonction de notification
+        await notifyFilmSubmitted({ director: film.User, film, deps });
+      } catch (notifError) {
+        console.error("Erreur notification createFilm:", notifError);
+        // On ne bloque pas la réponse client si seule la notification échoue
+      }
+    }
+
+    // 5. Renvoi du film créé et complet au front-end
+    return res.status(201).json(film);
+
+  } catch (err) {
+    console.error("Erreur globale createFilm:", err);
+    return res.status(500).json({ message: err.message });
+  }
 }
 
 

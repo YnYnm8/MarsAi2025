@@ -298,7 +298,7 @@ const Gallery = () => {
             </div>
             <div className="rounded-2xl overflow-hidden shadow-2xl border border-gray-800 bg-black flex justify-center">
               {getFilmUrl(selectedFilm) && getFilmUrl(selectedFilm).endsWith('.mp4') ? (
-                <video controls className="w-full max-h-[500px] object-contain" poster={getPosterUrl(selectedFilm)}>
+                <video controls className="w-full cursor-pointer max-h-[500px] object-contain" poster={getPosterUrl(selectedFilm)}>
                   <source src={getFilmUrl(selectedFilm)} type="video/mp4" />
                   Votre navigateur ne supporte pas la lecture de vidéos.
                 </video>
@@ -378,7 +378,7 @@ const Gallery = () => {
                     />
                     <button
                       onClick={() => copyToClipboard(selectedFilm.id)}
-                      className="px-6 py-2 bg-gray-200 hover:bg-white text-black font-extrabold uppercase tracking-widest rounded-xl text-xs transition-colors"
+                      className="px-6 py-2 cursor-pointer bg-gray-200 hover:bg-white text-black font-extrabold uppercase tracking-widest rounded-xl text-xs transition-colors"
                     >
                       {t("copy", "Copier")}
                     </button>

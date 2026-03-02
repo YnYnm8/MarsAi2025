@@ -50,14 +50,14 @@ export default function Footer() {
   };
 
   return (
-    <footer className="bg-[#282828] flex flex-col justify-center items-center py-[96px] px-[10px] w-full">
-      <div className="flex flex-col justify-center items-center gap-[80px] w-full max-w-[1160px]">
-        <div className="flex flex-col lg:flex-row items-center lg:items-start lg:justify-between gap-[80px] w-full max-w-[1140px]">
+    <footer className="bg-[#282828] flex flex-col justify-center items-center py-24 px-2.5 w-full">
+      <div className="flex flex-col justify-center items-center gap-20 w-full max-w-290">
+        <div className="flex flex-col lg:flex-row items-center lg:items-start lg:justify-between gap-20 w-full max-w-285">
           
           {/* Left Content */}
-          <div className="flex flex-col items-start gap-[36px] w-full max-w-[530px] p-[10px]">
-            <div className="flex flex-row justify-center items-center p-[20px] w-[125px] h-[60px] bg-[#246BAD] rounded-[12px]">
-              <span className="font-['Inter'] font-[800] text-[18px] leading-[22px] uppercase text-[#FFFFFF]">
+          <div className="flex flex-col items-start gap-9 w-full max-w-132.5 p-2.5">
+            <div className="flex flex-row justify-center items-center p-5 w-31.25 h-15 bg-brand-blue rounded-xl">
+              <span className="font-['Inter'] font-extrabold text-[18px] leading-5.5 uppercase text-[#FFFFFF]">
                 MARS.A.I
               </span>
             </div>
@@ -106,7 +106,7 @@ export default function Footer() {
                 <button
                   type="submit"
                   disabled={status === "loading"}
-                  className="flex flex-row justify-center items-center py-[10px] px-[24px] bg-[#246BAD] rounded-[999px] font-['Inter'] font-[700] text-[14px] leading-[17px] uppercase text-[#FFFFFF] hover:bg-[#1a5287] transition-colors disabled:opacity-70 whitespace-nowrap"
+                  className="flex flex-row justify-center items-center cursor-pointer py-[10px] px-[24px] bg-[#246BAD] rounded-[999px] font-['Inter'] font-[700] text-[14px] leading-[17px] uppercase text-[#FFFFFF] hover:bg-[#1a5287] transition-colors disabled:opacity-70 whitespace-nowrap"
                 >
                   {status === "loading" ? t('footer.newsletter_loading') : t('footer.newsletter_btn')}
                 </button>
@@ -125,25 +125,25 @@ export default function Footer() {
           <div className="flex flex-row flex-wrap justify-center items-center gap-[40px] md:gap-[80px]">
             <Link
               to="/content/mentions-legales"
-              className="font-['Plus_Jakarta_Sans'] font-[700] text-[14px] leading-[18px] uppercase text-[#64748B] hover:text-[#FFFFFF] transition-colors"
+              className="font-['Plus_Jakarta_Sans'] cursor-pointer font-[700] text-[14px] leading-[18px] uppercase text-[#64748B] hover:text-[#FFFFFF] transition-colors"
             >
               {t('footer.link_legal')}
             </Link>
             <Link
               to="/content/presse"
-              className="font-['Plus_Jakarta_Sans'] font-[700] text-[14px] leading-[18px] uppercase text-[#64748B] hover:text-[#FFFFFF] transition-colors"
+              className="font-['Plus_Jakarta_Sans'] cursor-pointer font-[700] text-[14px] leading-[18px] uppercase text-[#64748B] hover:text-[#FFFFFF] transition-colors"
             >
               {t('footer.link_press')}
             </Link>
             <Link
               to="/contact"
-              className="font-['Plus_Jakarta_Sans'] font-[700] text-[14px] leading-[18px] uppercase text-[#64748B] hover:text-[#FFFFFF] transition-colors"
+              className="font-['Plus_Jakarta_Sans'] cursor-pointer font-[700] text-[14px] leading-[18px] uppercase text-[#64748B] hover:text-[#FFFFFF] transition-colors"
             >
               {t('footer.link_contact')}
             </Link>
           </div>
 
-          <div className="font-['Plus_Jakarta_Sans'] font-[700] text-[14px] leading-[18px] uppercase text-[#64748B]">
+          <div className="font-['Plus_Jakarta_Sans'] cursor-pointer font-[700] text-[14px] leading-[18px] uppercase text-[#64748B]">
             © {new Date().getFullYear()} MARS.A.I
           </div>
         </div>

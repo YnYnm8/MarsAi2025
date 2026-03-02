@@ -135,7 +135,7 @@ const NotificationBell = ({ isLoggedIn }) => {
       >
         <i className="fa-solid fa-bell text-gray-700 text-lg"></i>
         {unreadCount > 0 && (
-          <span className="absolute -top-1 -right-1 bg-[#1F66B1] text-white text-[10px] font-bold rounded-full min-w-[18px] h-[18px] flex items-center justify-center px-1 leading-none">
+          <span className="absolute -top-1 -right-1 bg-[#1F66B1] cursor-pointer  text-white text-[10px] font-bold rounded-full min-w-[18px] h-[18px] flex items-center justify-center px-1 leading-none">
             {unreadCount > 9 ? "9+" : unreadCount}
           </span>
         )}
@@ -148,7 +148,7 @@ const NotificationBell = ({ isLoggedIn }) => {
             {unreadCount > 0 && (
               <button
                 onClick={markAllRead}
-                className="text-xs text-[#1F66B1] hover:text-blue-700 font-medium transition-colors cursor-pointer"
+                className="text-xs text-[#1F66B1] cursor-pointer hover:text-blue-700 font-medium transition-colors cursor-pointer"
               >
                 Tout marquer comme lu
               </button>
@@ -253,36 +253,36 @@ const TopNavbar = () => {
 
         <div className="flex items-center gap-4">
           <div className="hidden md:flex items-center gap-6">
-            <button onClick={() => navigate("/")} className="text-gray-800 hover:text-blue-500 transition-colors font-bold uppercase text-xs tracking-widest">
+            <button onClick={() => navigate("/")} className="text-gray-800 cursor-pointer hover:text-blue-500 transition-colors font-bold uppercase text-xs tracking-widest">
               {t("navbar.home")}
             </button>
-            <button onClick={() => navigate("/gallery")} className="text-gray-800 hover:text-blue-500 transition-colors font-bold uppercase text-xs tracking-widest">
+            <button onClick={() => navigate("/gallery")} className="text-gray-800 cursor-pointer hover:text-blue-500 transition-colors font-bold uppercase text-xs tracking-widest">
               {t("navbar.gallery")}
             </button>
-            <button onClick={() => navigate("/programs")} className="text-gray-800 hover:text-blue-500 transition-colors font-bold uppercase text-xs tracking-widest">
+            <button onClick={() => navigate("/programs")} className="text-gray-800 cursor-pointer hover:text-blue-500 transition-colors font-bold uppercase text-xs tracking-widest">
               {t("navbar.programs")}
             </button>
-            <button onClick={() => navigate("/jury")} className="text-gray-800 hover:text-blue-500 transition-colors font-bold uppercase text-xs tracking-widest">
+            <button onClick={() => navigate("/jury")} className="text-gray-800 cursor-pointer hover:text-blue-500 transition-colors font-bold uppercase text-xs tracking-widest">
               {t("navbar.jury")}
             </button>
             {isLoggedIn ? (
               <>
-                <button onClick={() => navigate("/form-movie")} className="text-gray-800 hover:text-blue-500 transition-colors font-bold uppercase text-xs tracking-widest">
+                <button onClick={() => navigate("/form-movie")} className="text-gray-800 cursor-pointer hover:text-blue-500 transition-colors font-bold uppercase text-xs tracking-widest">
                   {t("navbar.submit")}
                 </button>
-                <button onClick={() => navigate("/profile")} className="text-gray-800 hover:text-blue-500 transition-colors font-bold uppercase text-xs tracking-widest">
+                <button onClick={() => navigate("/profile")} className="text-gray-800 cursor-pointer hover:text-blue-500 transition-colors font-bold uppercase text-xs tracking-widest">
                   {t("navbar.profile")}
                 </button>
-                <button onClick={handleLogout} className="text-red-600 hover:text-red-800 transition-colors font-bold uppercase text-xs tracking-widest">
+                <button onClick={handleLogout} className="text-red-600 hover:text-red-800 cursor-pointer transition-colors font-bold uppercase text-xs tracking-widest">
                   {t("navbar.logout")}
                 </button>
               </>
             ) : (
               <>
-                <button onClick={() => navigate("/register")} className="text-gray-800 hover:text-blue-500 transition-colors font-bold uppercase text-xs tracking-widest">
+                <button onClick={() => navigate("/register")} className="text-gray-800 cursor-pointer hover:text-blue-500 transition-colors font-bold uppercase text-xs tracking-widest">
                   {t("navbar.register")}
                 </button>
-                <button onClick={() => navigate("/login")} className="text-gray-800 hover:text-blue-500 transition-colors font-bold uppercase text-xs tracking-widest">
+                <button onClick={() => navigate("/login")} className="text-gray-800 cursor-pointer hover:text-blue-500 transition-colors font-bold uppercase text-xs tracking-widest">
                   {t("navbar.login")}
                 </button>
               </>
@@ -339,16 +339,16 @@ const TopNavbar = () => {
         </div>
 
         <div className="p-6 flex flex-col gap-6">
-          <button onClick={() => { navigate("/"); setMenuOpen(false); }} className="text-left text-gray-800 hover:text-blue-500 active:text-blue-600 transition-colors font-bold uppercase text-sm tracking-widest">
+          <button onClick={() => { navigate("/"); setMenuOpen(false); }} className="text-left cursor-pointer text-gray-800 hover:text-blue-500 active:text-blue-600 transition-colors font-bold uppercase text-sm tracking-widest">
             {t("navbar.home")}
           </button>
-          <button onClick={() => { navigate("/gallery"); setMenuOpen(false); }} className="text-left text-gray-800 hover:text-blue-500 active:text-blue-600 transition-colors font-bold uppercase text-sm tracking-widest">
+          <button onClick={() => { navigate("/gallery"); setMenuOpen(false); }} className="text-left cursor-pointer text-gray-800 hover:text-blue-500 active:text-blue-600 transition-colors font-bold uppercase text-sm tracking-widest">
             {t("navbar.gallery")}
           </button>
-          <button onClick={() => { navigate("/programs"); setMenuOpen(false); }} className="text-left text-gray-800 hover:text-blue-500 active:text-blue-600 transition-colors font-bold uppercase text-sm tracking-widest">
+          <button onClick={() => { navigate("/programs"); setMenuOpen(false); }} className="text-left cursor-pointer text-gray-800 hover:text-blue-500 active:text-blue-600 transition-colors font-bold uppercase text-sm tracking-widest">
             {t("navbar.programs")}
           </button>
-          <button onClick={() => { navigate("/jury"); setMenuOpen(false); }} className="text-left text-gray-800 hover:text-blue-500 active:text-blue-600 transition-colors font-bold uppercase text-sm tracking-widest">
+          <button onClick={() => { navigate("/jury"); setMenuOpen(false); }} className="text-left cursor-pointer text-gray-800 hover:text-blue-500 active:text-blue-600 transition-colors font-bold uppercase text-sm tracking-widest">
             {t("navbar.jury")}
           </button>
 
@@ -358,22 +358,22 @@ const TopNavbar = () => {
 
           {isLoggedIn ? (
             <>
-              <button onClick={() => { navigate("/form-movie"); setMenuOpen(false); }} className="text-left text-gray-800 hover:text-blue-500 active:text-blue-600 transition-colors font-bold uppercase text-sm tracking-widest">
+              <button onClick={() => { navigate("/form-movie"); setMenuOpen(false); }} className="text-left cursor-pointer text-gray-800 hover:text-blue-500 active:text-blue-600 transition-colors font-bold uppercase text-sm tracking-widest">
                 {t("navbar.submit")}
               </button>
-              <button onClick={() => { navigate("/profile"); setMenuOpen(false); }} className="text-left text-gray-800 hover:text-blue-500 active:text-blue-600 transition-colors font-bold uppercase text-sm tracking-widest">
+              <button onClick={() => { navigate("/profile"); setMenuOpen(false); }} className="text-left cursor-pointer text-gray-800 hover:text-blue-500 active:text-blue-600 transition-colors font-bold uppercase text-sm tracking-widest">
                 {t("navbar.profile")}
               </button>
-              <button onClick={() => { handleLogout(); setMenuOpen(false); }} className="text-left text-red-600 hover:text-red-800 active:text-red-900 transition-colors font-bold uppercase text-sm tracking-widest">
+              <button onClick={() => { handleLogout(); setMenuOpen(false); }} className="text-left cursor-pointer text-red-600 hover:text-red-800 active:text-red-900 transition-colors font-bold uppercase text-sm tracking-widest">
                 {t("navbar.logout")}
               </button>
             </>
           ) : (
             <>
-              <button onClick={() => { navigate("/register"); setMenuOpen(false); }} className="text-left text-gray-800 hover:text-blue-500 active:text-blue-600 transition-colors font-bold uppercase text-sm tracking-widest">
+              <button onClick={() => { navigate("/register"); setMenuOpen(false); }} className="text-left cursor-pointer text-gray-800 hover:text-blue-500 active:text-blue-600 transition-colors font-bold uppercase text-sm tracking-widest">
                 {t("navbar.register")}
               </button>
-              <button onClick={() => { navigate("/login"); setMenuOpen(false); }} className="text-left text-gray-800 hover:text-blue-500 active:text-blue-600 transition-colors font-bold uppercase text-sm tracking-widest">
+              <button onClick={() => { navigate("/login"); setMenuOpen(false); }} className="text-left cursor-pointer text-gray-800 hover:text-blue-500 active:text-blue-600 transition-colors font-bold uppercase text-sm tracking-widest">
                 {t("navbar.login")}
               </button>
             </>

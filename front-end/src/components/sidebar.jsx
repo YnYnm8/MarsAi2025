@@ -93,7 +93,7 @@ const Sidebar = () => {
                         <div key={item.name} className="flex flex-col">
                             <button
                                 onClick={() => handleNavClick(item)}
-                                className={`w-full flex items-center gap-4 px-4 py-3 rounded-xl text-[10px] font-bold transition-all duration-200 group
+                                className={`w-full flex items-center gap-4 px-4 py-3 cursor-pointer rounded-xl text-[10px] font-bold transition-all duration-200 group
                   ${isActive && !item.isDropdown
                                         ? 'bg-blue-600 text-white shadow-lg shadow-blue-600/20'
                                         : (isActive && isFilmsOpen) ? 'bg-blue-500/90 text-white' : 'hover:bg-slate-800/50 hover:text-slate-200'}`}
@@ -113,7 +113,7 @@ const Sidebar = () => {
                                             <button
                                                 key={sub.name}
                                                 onClick={() => navigate(sub.path)}
-                                                className={`flex items-center gap-4 px-8 py-2 text-[9px] font-bold tracking-widest transition-all
+                                                className={`flex items-center cursor-pointer gap-4 px-8 py-2 text-[9px] font-bold tracking-widest transition-all
                           ${isSubActive ? 'text-white' : 'text-slate-500 hover:text-blue-300'}`}
                                             >
                                                 <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M7 4v16M17 4v16M3 8h4m10 0h4M3 12h18M3 16h4m10 0h4M4 20h16a1 1 0 001-1V5a1 1 0 00-1-1H4a1 1 0 00-1 1v14a1 1 0 001 1z" /></svg>

@@ -306,48 +306,7 @@ export async function seedAll() {
             { FilmId: films[4].id, SponsorId: sponsors[2].id }
         ]);
 
-        await Notification.bulkCreate([
-    { 
-        userId: 1, 
-        type: 'SYSTEM', //
-        title: 'Félicitations !', 
-        message: 'Vous avez remporté un prix pour votre film.',
-        // Si tu as bien une colonne PriceId dans Notification, tu peux la laisser :
-        PriceId: prices[0].id 
-    },
-        { 
-        userId: 2, 
-        type: 'SYSTEM', //
-        title: 'Félicitations !', 
-        message: 'Vous avez remporté un prix pour votre film.',
-        // Si tu as bien une colonne PriceId dans Notification, tu peux la laisser :
-        PriceId: prices[0].id 
-    },
-        { 
-        userId: 3, 
-        type: 'SYSTEM', //
-        title: 'Félicitations !', 
-        message: 'Vous avez remporté un prix pour votre film.',
-        // Si tu as bien une colonne PriceId dans Notification, tu peux la laisser :
-        PriceId: prices[0].id 
-    },
-        { 
-        userId: 4, 
-        type: 'SYSTEM', //
-        title: 'Félicitations !', 
-        message: 'Vous avez remporté un prix pour votre film.',
-        // Si tu as bien une colonne PriceId dans Notification, tu peux la laisser :
-        PriceId: prices[0].id 
-    },
-        { 
-        userId: 5, 
-        type: 'SYSTEM', //
-        title: 'Félicitations !', 
-        message: 'Vous avez remporté un prix pour votre film.',
-        // Si tu as bien une colonne PriceId dans Notification, tu peux la laisser :
-        PriceId: prices[0].id 
-    }
-]);
+       
 
         console.log('✅ SEED TERMINÉE AVEC SUCCÈS ! (' + films.length + ' films créés)');
 

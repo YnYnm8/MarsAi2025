@@ -246,15 +246,15 @@ const Profile = () => {
           <div className="flex items-center gap-3 mt-6">
             {isEditing ? (
               <>
-                <button onClick={handleSubmit(onSubmit)} disabled={isSubmitting} className="bg-green-600 text-white font-bold py-2 px-6 rounded-full text-xs hover:bg-green-500 transition">
+                <button onClick={handleSubmit(onSubmit)} disabled={isSubmitting} className="bg-green-600 cursor-pointer text-white font-bold py-2 px-6 rounded-full text-xs hover:bg-green-500 transition">
                   {t("btn_save")}
                 </button>
-                <button onClick={() => { setIsEditing(false); setPreviewUrl(null); setSelectedFile(null); }} className="bg-gray-800 text-white font-bold py-2 px-4 rounded-full text-xs border border-gray-700">
+                <button onClick={() => { setIsEditing(false); setPreviewUrl(null); setSelectedFile(null); }} className="bg-gray-800 cursor-pointer text-white font-bold py-2 px-4 rounded-full text-xs border border-gray-700">
                   {t("btn_cancel")}
                 </button>
               </>
             ) : (
-              <button onClick={() => setIsEditing(true)} className="px-4 py-2 border border-gray-700 rounded-full text-xs text-gray-300 hover:bg-gray-900 transition flex items-center gap-2">
+              <button onClick={() => setIsEditing(true)} className="px-4 py-2 border border-gray-700 rounded-full text-xs cursor-pointer text-gray-300 hover:bg-gray-900 transition flex items-center gap-2">
                 <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" /></svg>
                 {t("btn_edit")}
               </button>
@@ -354,7 +354,7 @@ const Profile = () => {
           
           <button 
             onClick={() => navigate("/form-movie")}
-            className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 text-white font-bold py-2 px-5 rounded-full text-xs shadow-[0_0_15px_rgba(168,85,247,0.4)] hover:shadow-[0_0_20px_rgba(168,85,247,0.6)] transform hover:-translate-y-0.5 transition-all duration-300 flex items-center gap-2"
+            className="bg-gradient-to-r from-blue-600 to-purple-600 cursor-pointer hover:from-blue-500 hover:to-purple-500 text-white font-bold py-2 px-5 rounded-full text-xs shadow-[0_0_15px_rgba(168,85,247,0.4)] hover:shadow-[0_0_20px_rgba(168,85,247,0.6)] transform hover:-translate-y-0.5 transition-all duration-300 flex items-center gap-2"
           >
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4v16m8-8H4" />
@@ -401,7 +401,7 @@ const Profile = () => {
                     <div>
                       <h4 className="text-lg font-bold text-white leading-tight mb-1">{film.title}</h4>
                       <span className="text-[10px] text-blue-400 font-bold uppercase tracking-wider">
-                        {film.category} • {film.duration} min
+                        {film.category} • {film.duration} secondes
                       </span>
                     </div>
                     {film.collaborateur && (
