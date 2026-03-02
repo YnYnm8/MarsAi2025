@@ -200,6 +200,27 @@ export async function getRefusedFilmsById(req, res) {
 // POST /comite/note
 // 委員会基準ごとの評価（1〜10）および／またはコメントを保存する。
 
+// export async function addNote(req, res) {
+//   try {
+//     const { UserId, FilmId, score, comment } = req.body;
+
+//     const existsNote = await Note.findOne({ where: { UserId, FilmId } });
+
+//     if (existsNote) {
+//       // 更新
+//       existsNote.score = score;
+//       existsNote.comment = comment;
+//       await existsNote.save();
+//       return res.json({ message: "評価を更新しました", note: existsNote });
+//     }
+
+//     // 新規作成
+//     const newNote = await Note.create({ UserId, FilmId, score, comment });
+//     res.status(201).json(newNote);
+//   } catch (error) {
+//     return catchError(res, error);
+//   }
+// }
 export async function addNote(req, res) {
   try {
     const { UserId, FilmId, score, comment } = req.body;
@@ -207,20 +228,22 @@ export async function addNote(req, res) {
     const existsNote = await Note.findOne({ where: { UserId, FilmId } });
 
     if (existsNote) {
-      // 更新
-      existsNote.score = score;
-      existsNote.comment = comment;
+      // 更新：score が null の場合は変更しない
+      if (score !== null && score !== undefined) existsNote.score = score;
+      if (comment !== undefined) existsNote.comment = comment;
       await existsNote.save();
-      return res.json({ message: "評価を更新しました", note: existsNote });
+      return res.json({ message: "Note mise à jour", note: existsNote });
     }
 
     // 新規作成
     const newNote = await Note.create({ UserId, FilmId, score, comment });
     res.status(201).json(newNote);
+
   } catch (error) {
     return catchError(res, error);
   }
 }
+
 
 // プレイリストを削除し中身をTO＿DISCUSSに移動させる
 // PATCH/comite/delitestatus

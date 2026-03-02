@@ -4,9 +4,8 @@ export default function FilmCard({ film, isActive }) {
 
   return (
     <div   // ← ここを div に変更
-      className={`flex items-center gap-3 rounded-lg p-2 cursor-pointer ${
-        isActive ? "bg-black" : "hover:bg-gray-400"
-      }`}
+      className={`flex items-center gap-3 rounded-lg p-2 cursor-pointer ${isActive ? "bg-black" : "hover:bg-gray-400"
+        }`}
     >
       <img
         src={posterUrl}
@@ -17,7 +16,8 @@ export default function FilmCard({ film, isActive }) {
       <div>
         <p className="text-[#246BAD]">{film.id}</p>
         <p className="text-sm font-semibold text-[#FF5845]">{film.title}</p>
-        <p className="text-xs text-gray-5OO">{film.duration} min.</p>
+        <p className="text-sm font-semibold text-[#FF5845]"> SCORE :  {film.NotesDirect?.[0]?.score || "Non evalué"}</p>
+        <p className="text-xs text-gray-5OO">{film.duration} sec.</p>
         <p className="text-xs text-gray-500">
           {film.User.lastName} –  ORIGIN  {film.User.country}
         </p>

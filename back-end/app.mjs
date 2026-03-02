@@ -20,6 +20,7 @@ import { userSeed } from './seeds/userSeed.mjs';
 import { seedAll } from './seeds/seedAll.mjs';
 import { WorkshopSeed } from './seeds/workshopSeed.mjs';
 import publicRoutes from './routes/publicRoutes.mjs';
+import contctRoutes from './routes/contactRoute.mjs';
 import notificationRoute from "./routes/notificationRoutes.mjs";
 
 dotenv.config();
@@ -95,6 +96,7 @@ app.use("/", authRoute);
 app.use("/admin", adminRoutes);
 app.use("/films", filmRoutes);
 app.use("/comite", comiteRouter);
+app.use("/contact", contctRoutes);
 app.use("/", profileRoutes);
 app.use("/notifications", notificationRoute);
 

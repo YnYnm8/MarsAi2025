@@ -42,6 +42,9 @@ Playlist.belongsTo(User);
 User.belongsToMany(Film, { through: Note, as: 'Notes' , onUpdate: "CASCADE" });
 Film.belongsToMany(User, { through: Note, as: 'Notes' , onUpdate: "CASCADE"});
 
+User.hasMany(Note);
+Note.belongsTo(User);
+
 User.belongsToMany(Film, { through: Annotation, as: 'Annotators' });
 Film.belongsToMany(User, { through: Annotation, as: 'Annotators' });
 
@@ -70,6 +73,8 @@ Sponsor.belongsToMany(Film, { through: FilmSponsor });
 Film.belongsToMany(Selection, { through: "SelectionFilm" });
 Selection.belongsToMany(Film, { through: "SelectionFilm" });
 
+Film.hasMany(Note, { as: "NotesDirect" });
+Note.belongsTo(Film);
 // === Sponsor / Price ===
 Sponsor.hasMany(Price );
 Price.belongsTo(Sponsor);
