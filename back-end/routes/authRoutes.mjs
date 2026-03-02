@@ -5,8 +5,6 @@ import {
   logout,
   updateProfile,
   getCurrentUser,
-  getNotifications,
-  markReadAll,
   getMyFilms,
 } from "../controllers/authController.mjs";
 
@@ -23,10 +21,9 @@ router.post("/register", authLimiter, validate(registerSchema), register);
 router.post("/login", authLimiter, validate(loginSchema), login);
 router.post("/logout", logout);
 
-// Routes Protégées (Nécessitent une connexion)
+// Routes Protégées 
 router.get("/me", authMiddleware, getCurrentUser);
-
-// 👇 ROUTE PROFIL MISE À JOUR
+// Route Maj profile
 router.put(
   "/profile",
   authMiddleware, // 1. On vérifie qui c'est
@@ -34,8 +31,6 @@ router.put(
   updateProfile, // 3. On met à jour la base de données
 );
 
-router.get("/notifications", authMiddleware, getNotifications);
-router.patch("/notifications/read-all", authMiddleware, markReadAll);
 router.get("/my-films", authMiddleware, getMyFilms);
 
 export default router;

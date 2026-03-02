@@ -18,7 +18,7 @@ import Adminrejected from "./pages/admin/adminrejected.jsx";
 import Adminpending from "./pages/admin/adminpending.jsx";
 import Reservation from "./pages/reservation/reservation.jsx";
 import Jury from "./pages/jury/jury.jsx";
-import Gallery from "./pages/public/gallery.jsx";
+import Gallery from "./pages/gallery/Gallery.jsx";
 import EditFilm from "./pages/films/editFilm.jsx";
 // import AdminProfile from "./pages/admin/adminprofile.jsx";
 import AdminAllFilms from "./pages/admin/adminallfilm.jsx"

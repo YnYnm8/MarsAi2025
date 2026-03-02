@@ -1,3 +1,5 @@
+import { createServer } from "http";
+import { Server } from "socket.io";
 import sequelize from "./config/database.mjs";
 import express from "express";
 import cors from "cors";
@@ -6,8 +8,8 @@ import cookieParser from 'cookie-parser';
 import helmet from 'helmet';
 import path from 'path';
 import { fileURLToPath } from 'url';
-
-import "./models/index.mjs";
+import * as db from "./models/index.mjs";
+import { initSocket } from "./config/socket.mjs";
 import comiteRouter from "./routes/comiteRoutes.mjs";
 import workshopRoutes from "./routes/workshopRoutes.mjs";
 import authRoute from "./routes/authRoutes.mjs";
@@ -19,105 +21,114 @@ import { seedAll } from './seeds/seedAll.mjs';
 import { WorkshopSeed } from './seeds/workshopSeed.mjs';
 import publicRoutes from './routes/publicRoutes.mjs';
 import contctRoutes from './routes/contactRoute.mjs';
+import notificationRoute from "./routes/notificationRoutes.mjs";
+
 dotenv.config();
 
-// Configuration pour __dirname
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-
 const app = express();
 const PORT = process.env.PORT || 3000;
-const FRONTEND_URL = (process.env.FRONTEND_URL || 'http://localhost:5173')
-  .replace(/\/$/, '');
+const FRONTEND_URL = (process.env.FRONTEND_URL || 'http://localhost:5173').replace(/\/$/, '');
 
+// Créer le serveur HTTP à partir d'Express
+const httpServer = createServer(app);
 
-// Configuration CORS
+// Initialiser Socket.io sur le serveur HTTP
+const io = new Server(httpServer, {
+  cors: {
+    origin: ['http://localhost:5173', FRONTEND_URL].filter(Boolean),
+    credentials: true,
+    methods: ['GET', 'POST'],
+  },
+});
+
+// Rendre `io` et `db` accessibles dans tous les contrôleurs
+app.locals.io = io;
+app.locals.models = db;
+
+// Brancher les handlers Socket.io
+initSocket(io, db);
+
+// MIDDLEWARES
+
 app.use(cors({
-  origin: [
-    'http://localhost:5173'
-      .replace(/\/$/, ''),
-    process.env.FRONTEND_URL
-  ].filter(Boolean),
+  origin: ['http://localhost:5173', FRONTEND_URL].filter(Boolean),
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept', 'Origin']
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept', 'Origin'],
 }));
 
 app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-
 app.use('/uploads', express.static(path.join(__dirname, '../front-end/public/uploads')));
 
-// Middleware HELMET
 app.use(helmet({
   contentSecurityPolicy: {
     directives: {
       defaultSrc: ["'self'"],
       styleSrc: ["'self'", "'unsafe-inline'"],
       scriptSrc: ["'self'"],
-      // On autorise les images venant de 'self' (localhost:3000) et data: (base64)
       imgSrc: ["'self'", 'data:', 'blob:', 'http://localhost:3000'],
-      connectSrc: ["'self'", "http://localhost:5173", "http://localhost:3000"]
-    }
+      connectSrc: [
+        "'self'",
+        "http://localhost:5173",
+        "http://localhost:3000",
+        "ws://localhost:3000",   // WebSocket Socket.io
+        "wss://localhost:3000",
+        FRONTEND_URL.replace('http', 'ws'),
+        FRONTEND_URL.replace('http', 'wss'),
+      ],
+    },
   },
   crossOriginResourcePolicy: { policy: 'cross-origin' },
   frameguard: { action: 'deny' },
   noSniff: true,
-  xssFilter: true
+  xssFilter: true,
 }));
 
-// Routes
-app.use('/api', publicRoutes);
-app.use("/api",  workshopRoutes);
-app.use("/", authRoute);
+// ROUTES 
 
+app.use('/api', publicRoutes);
+app.use("/api", workshopRoutes);
+app.use("/", authRoute);
 app.use("/admin", adminRoutes);
 app.use("/films", filmRoutes);
 app.use("/comite", comiteRouter);
 app.use("/contact", contctRoutes);
 app.use("/", profileRoutes);
+app.use("/notifications", notificationRoute);
 
-console.log(" ");
-console.log("      ⏱️ Tables synchronisées  ✅ ");
+app.get("/", (req, res) => res.send("API OK"));
 
-app.get("/", (req, res) => {
-  res.send("API OK");
+// Gestionnaire 404 propre pour l'API
+app.use((req, res) => {
+  res.status(404).json({ message: "Route introuvable sur l'API" });
 });
 
-app.get(/.*/, (req, res) => {
-  res.sendFile(path.join(__dirname, "../front-end/dist/index.html"));
-});
+// DÉMARRAGE
 
-// serveur + BDD
 try {
   await sequelize.authenticate();
-  console.log(" ");
-  console.log("      🗄️ Connexion à la BDD réussie ✅");
-
+  console.log("\n      🗄️ Connexion à la BDD réussie ✅");
 
   await sequelize.sync({ force: true });
-  console.log(" ");
-  console.log("      🧩 Tables créées avec succès  ✅");
+  console.log("\n      🧩 Tables créées avec succès  ✅");
 
-  // Seed
   await userSeed();
   await seedAll();
-  await WorkshopSeed();  
-  // await seedFilmsPlaylist();
+  await WorkshopSeed();
+  console.log("\n      💾 Seeds insérés avec succès  ✅");
 
-  console.log(" ");
-  console.log("      💾 Seeds insérés avec succès  ✅");
-
-  app.listen(PORT, () => {
-
-    console.log(" ");
-    console.log(`    🚀 Serveur démarré sur http://localhost:${PORT} 🔌`);
+  // httpServer.listen()
+  httpServer.listen(PORT, () => {
+    console.log(`\n    🚀 Serveur démarré sur http://localhost:${PORT} 🔌`);
+    console.log(`    🔔 Socket.io actif sur ws://localhost:${PORT}`);
   });
-} catch (error) {
-  console.error(" ");
-  console.error("    ❌ Erreur au démarrage de l'API");
 
+} catch (error) {
+  console.error("\n    ❌ Erreur au démarrage de l'API");
   if (error.name === 'SequelizeValidationError' || error.name === 'SequelizeUniqueConstraintError') {
     error.errors.forEach(err => {
       console.error(`    👉 [VALIDATION] Champ: ${err.path} | Message: ${err.message} | Valeur: ${err.value}`);

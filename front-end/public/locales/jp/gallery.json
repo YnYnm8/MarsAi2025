@@ -1,0 +1,56 @@
+{
+  "back_home": "ホームに戻る",
+  "back_gallery": "ギャラリーに戻る",
+  "title": "映画ギャラリー",
+  "subtitle": "公式セレクションの全作品を探索しましょう。人工知能で制作された、独自のビジョンを持つ最先端の短編映画です。",
+  "search_placeholder": "タイトル、監督で検索...",
+  "error_fetch_films": "作品を読み込めませんでした。しばらくしてからもう一度お試しください。",
+  "no_films_found": "条件に一致する作品が見つかりません。",
+  
+  "filter_all": "すべて表示",
+  "filter_ia_type": "AIの種類",
+  "filter_country": "制作国",
+  "filter_status": "ステータス",
+  "filter_sort": "並び替え",
+  
+  "status_submitted": "提出済み",
+  "status_pending": "審査中",
+  "status_selected": "選出済み",
+  "status_rejected": "不採用",
+
+  "country_FR": "フランス",
+  "country_EN": "イギリス",
+  "country_JP": "日本",
+  "country_SP": "スペイン",
+  "country_CR": "クレオール",
+  
+  "sort_recent": "新しい順",
+  "sort_top_rated": "高評価順",
+  "badge_full_ai": "フルAI",
+  "badge_hybrid": "ハイブリッド",
+  
+  "untitled": "タイトル未定",
+  "unknown_director": "不明",
+  "min": "分",
+  "seconds": "秒",
+  "director_label": "監督",
+  "origin_label": "制作国",
+  
+  "share_this_film": "この作品を共有",
+  "direct_link": "ダイレクトリンク",
+  "copy": "コピー",
+  "share_text": "AIで生成された映画「{{title}}」をご覧ください！",
+  "share_link_copied": "作品リンクをクリップボードにコピーしました！",
+  "share_link_btn": "リンク",
+  
+  "synopsis": "あらすじ",
+  "no_synopsis": "この作品にはあらすじが登録されていません。",
+  "no_tool": "使用ツールは記載されていません。",
+  "methodology": "メソッド",
+  
+  "pagination_prev": "前へ",
+  "pagination_next": "次へ",
+  "pagination_info": "ページ <1>{{currentPage}}</1> / <3>{{totalPages}}</3>",
+  "tech_stack_title": "技術スタック & AI"
+
+}

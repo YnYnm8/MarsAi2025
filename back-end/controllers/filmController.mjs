@@ -1,3 +1,5 @@
+import { DataTypes } from "sequelize";
+import sequelize from "../config/database.mjs"; 
 import Film from "../models/Films.mjs";
 import User from "../models/User.mjs";
 import File from "../models/File.mjs";
@@ -8,8 +10,10 @@ import { catchError } from "../helpers/errorHandler.mjs";
 import { updateFilmSchema } from "../validators/filmValidator.mjs";
 import { handleFileProcessing } from "../helpers/proccesFiles.mjs";
 import Note from "../models/Note.mjs";
+import { notifyFilmSubmitted, notifyFilmSelected } from "../services/notificationService.mjs";
+
 /*
-*  GET  /films
+* GET  /films
 * Recuperation des tous les films
 */
 export async function getFilms(req, res) {
@@ -27,7 +31,7 @@ export async function getFilms(req, res) {
                 },
               
                 {
-                    model:Playlist,
+                    model: Playlist,
                 },{
                     
                     model:PlaylistFilm,
@@ -53,15 +57,14 @@ export async function getFilms(req, res) {
         }
         return res.status(200).json(FilmData);
     } catch (err) {
-        return catchError(res, err)
+        return catchError(res, err);
     }
 }
+
 /**
- *     GET  /films/:id
- *  Recuperation d'un film par son id*/
-
-  
-
+ * GET  /films/:id
+ * Recuperation d'un film par son id
+ */
 export async function getFilmById(req, res) {
     try {
         const id = Number(req.params.id);
@@ -99,14 +102,14 @@ export async function getFilmById(req, res) {
         }
         return res.status(200).json(FilmData);
     } catch (err) {
-        return catchError(res, err)
+        return catchError(res, err);
     }
 }
+
 /*
  * GET  /films/select  == /films/select/list
- *  Récupération de tous les films de la table Selection
+ * Récupération de tous les films de la table Selection
  */
-
 export async function getFilmsSelect(req, res) {
     try {
         const selectData = await Selection.findAll({
@@ -123,7 +126,6 @@ export async function getFilmsSelect(req, res) {
                             attributes: ['id', 'firstName', 'lastName']
                         },
                         {
-                            // poster_url
                             model: File,
                             as: 'Files', 
                             attributes: ['poster_url'],
@@ -139,16 +141,28 @@ export async function getFilmsSelect(req, res) {
         res.status(500).json({ message: err.message });
     }
 }
-/*
-*  POST  /films
-*   Creation d'un nouveau film
-*/
 
+/*
+* POST  /films
+* Creation d'un nouveau film
+*/
 export async function createFilm(req, res) {
     try {
         const film = await Film.findByPk(req.newFilm.id, {
-            include: [{ model: File }],
+            include: [{ model: File }, { model: User }], 
         });
+
+        // --- NOTIFICATION AU RÉALISATEUR ---
+        if (film && film.User) {
+            try {
+                const deps = { models: req.app.locals.models, io: req.app.locals.io };
+                // Appel réel de la fonction
+                await notifyFilmSubmitted({ director: film.User, film, deps });
+            } catch (notifError) {
+                console.error("Erreur notification createFilm:", notifError);
+            }
+        }
+        // -----------------------------------
 
         return res.status(201).json(film);
     } catch (err) {
@@ -168,7 +182,6 @@ export async function updateFilm(req, res) {
         if (!film) return res.status(404).json({ message: "Film non trouvé" });
         if (req.user.id !== film.UserId) return res.status(403).json({ message: "Accès refusé" });
 
-
         const validation = updateFilmSchema.safeParse({ ...req.body, ...req.files });
         
         if (!validation.success) {
@@ -181,13 +194,10 @@ export async function updateFilm(req, res) {
 
         await film.update(validation.data);
 
-       
         const existingFileRecord = await File.findOne({ where: { FilmId: film.id } });
-        
         
         await handleFileProcessing(film.id, req.files, existingFileRecord);
 
-       
         const updatedFilm = await Film.findByPk(film.id, { include: File });
         return res.status(200).json(updatedFilm);
 
@@ -196,12 +206,10 @@ export async function updateFilm(req, res) {
     }
 }
 
-
 /**
  * DELETE  /films/:id
  * Suppression d'un film existant
  */
-
 export async function deleteFilm(req, res) {
     try {
         const filmId = parseInt(req.params.id);
@@ -231,7 +239,6 @@ export async function deleteFilm(req, res) {
  * GET /films/my-submissions
  * Récupérer les films créés par l'utilisateur connecté
 */
-
 export async function getFilmsByUser(req, res) {
     try {
         const UserId = req.user?.id;
@@ -242,7 +249,7 @@ export async function getFilmsByUser(req, res) {
 
         const FilmData = await Film.findAll({
             where: {
-                userId: UserId
+                UserId: UserId
             },
             include: [
                 {
@@ -251,7 +258,8 @@ export async function getFilmsByUser(req, res) {
                 }
             ],
             order: [['createdAt', 'DESC']]
-        })
+        });
+        
         if (!FilmData || FilmData.length === 0) {
             return res.status(200).json({
                 message: "Vous n'avez aucun film pour le moment",
@@ -261,8 +269,6 @@ export async function getFilmsByUser(req, res) {
         return res.status(200).json(FilmData);
 
     } catch (err) {
-        return catchError(res, err)
+        return catchError(res, err);
     }
-
 }
-
