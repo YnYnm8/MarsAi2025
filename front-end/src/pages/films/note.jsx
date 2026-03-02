@@ -289,17 +289,12 @@ export default function Note() {
 
   return (
     <div className="flex flex-col h-screen bg-black font-sans">
-      <button
-        onClick={() => navigate("/comiteprofile")}
-        className="bg-purple-600 px-6 py-2 rounded-lg font-semibold"
-      >
-        VOIR MES ÉVALUATIONS
-      </button>
+
 
       {/* Main Layout */}
-      <div className="flex flex-col md:flex-row flex-1 overflow-hidden">
-        {/* Sidebar */}
-        <aside className="w-full md:w-72 bg-black border-b md:border-b-0 md:border-r overflow-y-auto">
+      {/* <div className="flex flex-col md:flex-row flex-1 overflow-hidden"> */}
+      {/* Sidebar */}
+      {/* <aside className="w-full md:w-72 bg-black border-b md:border-b-0 md:border-r overflow-y-auto">
           <div className="p-4">
             <input
               type="text"
@@ -311,7 +306,7 @@ export default function Note() {
           </div>
 
           {/* フィルター */}
-          {playlistsWithCounts.map((p) => (
+      {/* {playlistsWithCounts.map((p) => (
             <button
               key={p.id}
               onClick={() => setFilter(p.status)}
@@ -320,7 +315,39 @@ export default function Note() {
             >
               {p.status} ({p.filmCount})
             </button>
-          ))}
+          ))}  */}
+      <div className="flex flex-col md:flex-row flex-1 overflow-hidden">
+        <aside className="w-full md:w-72 bg-black border-b md:border-b-0 md:border-r overflow-y-auto p-4 flex flex-col gap-4">
+          {/* 上部のアクションボタン */}
+          <button
+            onClick={() => navigate("/comiteprofile")}
+            className="bg-white text-black px-4 py-1 rounded-md font-semibold text-sm hover:bg-gray-100 transition"
+          >
+            VOIR MES ÉVALUATIONS
+          </button>
+
+          {/* 検索ボックス */}
+          <input
+            type="text"
+            placeholder="Rechercher un film..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="w-full rounded border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+
+          {/* フィルター */}
+          <div className="flex flex-col gap-2 mt-2">
+            {playlistsWithCounts.map((p) => (
+              <button
+                key={p.id}
+                onClick={() => setFilter(p.status)}
+                className={`w-full text-left px-3 py-2 rounded-md text-sm font-medium transition 
+          ${filter === p.status ? "bg-[#246BAD] text-white" : "bg-gray-800 text-gray-200 hover:bg-gray-700"}`}
+              >
+                {p.status} ({p.filmCount})
+              </button>
+            ))}
+          </div>
 
           {/* 映画リスト */}
           <ListFilms
@@ -361,7 +388,8 @@ export default function Note() {
                   className="w-full rounded-lg"
                 />
                 <div className="mt-3 flex gap-3 justify-center">
-                 
+
+
                   <button
                     onClick={() => setSpeed(1.5)}
                     className="px-4 py-2 bg-gray-700 text-white rounded-lg hover:bg-gray-800"
@@ -425,27 +453,28 @@ export default function Note() {
           </div>
 
           {/* コメント欄 */}
-          <div className="mb-4">
-            <label htmlFor="comment" className="block text-sm font-medium text-[#246BAD] mb-4">
-              Commentaire (optionnel)
+          <div className="mb-6">
+            <label className="block text-sm font-medium text-blue-400 mb-3">
+              Commentaire
             </label>
-            <textarea
-              id="comment"
-              rows="4"
-              value={comment}
-              onChange={(e) => setComment(e.target.value)}
-              className="w-full rounded border px-3 py-2 text-sm text-gray-200 bg-gray-800 placeholder-gray-400"
-              placeholder="Ajouter un commentaire sur le film..."
-            />
-            <button
-              onClick={handleSaveComment}
-              className="bg-green-600 text-white px-4 py-2 rounded-lg text-sm font-semibold mt-2"
-            >
-              Enregistrer le commentaire
-            </button>
 
+            <div className="relative">
+              <textarea
+                rows="4"
+                value={comment}
+                onChange={(e) => setComment(e.target.value)}
+                className="w-full rounded-xl bg-[#0f172a] border border-gray-600 px-4 py-3 pr-32 text-sm focus:outline-none focus:ring-2 focus:ring-[#246BAD] transition"
+                placeholder="Ajouter un commentaire sur le film..."
+              />
+
+              <button
+                onClick={handleSaveComment}
+                className="absolute bottom-3 right-3 bg-[#246BAD] hover:bg-blue-600 text-white px-4 py-1.5 rounded-lg text-xs font-semibold transition"
+              >
+                Enregistrer
+              </button>
+            </div>
           </div>
-
           {/* 選択・リストボタン */}
           <div className="bg-gray-800 rounded-xl shadow p-4 flex flex-col md:flex-row justify-between items-center gap-6 mt-4">
             <span className="flex items-center gap-2 text-white font-semibold">
@@ -460,81 +489,83 @@ export default function Note() {
               SÉLECTIONNER OU TRIER
             </span>
 
-            <div className="flex flex-wrap items-center gap-2 mb-2">
-              {(!value || value < 1) && <span className="text-white text-sm">PLEASE NOTE BEFORE</span>}
+            <div className="flex flex-col items-center gap-4 w-full">
+              {/* 注意文 */}
+              {(!value || value < 1) && (
+                <span className="text-center text-white text-sm font-medium">
+                  PLEASE NOTE BEFORE
+                </span>
+              )}
 
-              <button
-                onClick={() => handleSavereview("ACCEPTED")}
-                disabled={!value || value < 1}
-                className={`bg-[#246BAD] text-white rounded-lg px-6 py-2 text-sm font-semibold ${!value || value < 1 ? "opacity-50 cursor-not-allowed" : ""
-                  }`}
-              >
-                ACCEPTED
-              </button>
+              {/* 横並びのボタン */}
+              <div className="flex gap-4 w-full max-w-md">
+                <button
+                  onClick={() => handleSavereview("ACCEPTED")}
+                  disabled={!value || value < 1}
+                  className={`flex-1 px-4 py-2 rounded-lg text-sm font-semibold text-white transition-colors ${!value || value < 1
+                    ? "bg-blue-800/50 cursor-not-allowed"
+                    : "bg-blue-800 hover:bg-blue-700"
+                    }`}
+                >
+                  ACCEPTED
+                </button>
 
-              <button
-                onClick={() => handleSavereview("REFUSED")}
-                disabled={!value || value < 1}
-                className={`bg-[#FF5845] text-white rounded-lg px-6 py-2 text-sm font-semibold ${!value || value < 1 ? "opacity-50 cursor-not-allowed" : ""
-                  }`}
-              >
-                REFUSED
-              </button>
+                <button
+                  onClick={() => handleSavereview("REFUSED")}
+                  disabled={!value || value < 1}
+                  className={`flex-1 px-4 py-2 rounded-lg text-sm font-semibold text-white transition-colors ${!value || value < 1
+                    ? "bg-blue-600/50 cursor-not-allowed"
+                    : "bg-blue-600 hover:bg-blue-500"
+                    }`}
+                >
+                  REFUSED
+                </button>
 
-              <button
-                onClick={() => handleSavereview("TO_DISCUSS")}
-                disabled={!value || value < 1}
-                className={`bg-green-300 text-white rounded-lg px-6 py-2 text-sm font-semibold ${!value || value < 1 ? "opacity-50 cursor-not-allowed" : ""
-                  }`}
-              >
-                TO_DISCUSS
-              </button>
-
-              <button
-                onClick={() => setShowModal(true)}
-                className="bg-gray-900 text-white rounded-lg px-6 py-2 text-sm font-semibold"
-              >
-                + CREATE YOUR PLAYLIST
-              </button>
+                <button
+                  onClick={() => handleSavereview("TO_DISCUSS")}
+                  disabled={!value || value < 1}
+                  className={`flex-1 px-4 py-2 rounded-lg text-sm font-semibold text-white transition-colors ${!value || value < 1
+                    ? "bg-blue-400/50 cursor-not-allowed"
+                    : "bg-blue-400 hover:bg-blue-300"
+                    }`}
+                >
+                  TO_DISCUSS
+                </button>
+                <button
+                  onClick={() => setShowModal(true)}
+                  className="bg-gray-900 text-white rounded-lg px-6 py-2 text-sm font-semibold"
+                >
+                  + CREATE YOUR PLAYLIST
+                </button>
+              </div>
             </div>
-          </div>
 
           {/* 自作プレイリスト */}
-          <div className="bg-gray-800 rounded-xl shadow p-4 mt-4">
-            <span className="flex items-center gap-2 text-white font-semibold mb-2">
-              <svg
-                className="w-6 h-6 text-[#FF5845]"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-              </svg>
-              YOUR ORIGINAL PLAYLIST
-            </span>
 
-            <div className="flex flex-col md:flex-row gap-2 w-full md:w-auto mt-2 justify-end">
+
+            <div className="flex flex-col md:flex">
               {playlist.slice(4).map((p) => (
                 <div key={p.id} className="flex gap-2 items-center">
                   <button
                     onClick={() => handleAddToPlaylistWithNote(p.id)}
                     disabled={!value || value < 1}
-                    className={`bg-[#FF5845] text-white px-4 py-2 rounded-lg text-sm font-semibold ${!value || value < 1 ? "opacity-50 cursor-not-allowed" : ""
-                      }`}
-                  >
+                    className={`bg-[#246BAD] text-white px-4 py-2 rounded-lg text-sm font-semibold ${!value || value < 1 ? "opacity-50 cursor-not-allowed" : ""
+                    }`}
+                    >
                     {p.status}
                   </button>
 
                   <button
                     onClick={() => handleDeletePlaylist(p.id)}
-                    className="bg-gray-600 text-white px-3 py-2 rounded-lg text-xs hover:bg-gray-800"
-                  >
-                    DELETE
+                    className="bg-gray-600 text-shadow-red-600 px-3 py-2 rounded-lg text-xs hover:bg-gray-800"
+                    >
+                    X
                   </button>
                 </div>
               ))}
             </div>
-          </div>
+              </div>
+         
         </main>
 
         {/* モーダル */}

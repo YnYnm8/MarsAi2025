@@ -2,6 +2,30 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 export default function ComiteProfile() {
+  const navigate = useNavigate();
+  const [films, setFilms] = useState([]);
+  const [filter, setFilter] = useState("NOT_WATCHED");
+
+  const user = {
+    name: "PAUL MICHEL",
+    avatar: "https://via.placeholder.com/40"
+  };
+
+  // useEffect(() => {
+  //   fetchUserFilms();
+  // }, []);
+
+  // const fetchUserFilms = async () => {
+  //   try {
+  //     const res = await fetch("http://localhost:3000/comite/user/3");
+  //     const data = await res.json();
+  //     setFilms(data);
+  //   } catch (err) {
+  //     console.error(err);
+  //   }
+  // };
+
+  const filteredFilms = films.filter(film => film.status === filter);
 
   return (
    <div className="flex min-h-screen bg-black text-white">
