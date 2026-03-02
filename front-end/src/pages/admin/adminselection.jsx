@@ -46,25 +46,29 @@ const AdminSelected = () => {
     };
 
     const confirmMoveToPending = async () => {
+    if (!selectedFilmId) return;
+    
+    console.log("Tentative de réexamen pour le film ID:", selectedFilmId);
+
     try {
         const response = await fetch(`http://localhost:3000/admin/films/${selectedFilmId}/status`, {
             method: 'PUT',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ playlistId: 4 }),
+            body: JSON.stringify({ playlistId: 4 }), // 4 = Discussion/Pending
             credentials: 'include'
         });
 
-        const text = await response.text(); 
-        console.log(" données:", text);
+        const result = await response.json();
 
-        const json = JSON.parse(text); 
-        
-        if (response.ok) {
-            setSelectedFilms(prev => prev.filter(f => f.id !== selectedFilmId));
+        if (response.ok && result.success) {
+            setRejectedFilms(prev => prev.filter(f => f.id !== selectedFilmId));
             setIsModalOpen(false);
+            setSelectedFilmId(null);
+        } else {
+            alert("Erreur : " + (result.message || "Problème serveur"));
         }
     } catch (err) {
-        console.error("Détail de l'erreur :", err);
+        console.error("Erreur Fetch:", err);
     }
 };
 
