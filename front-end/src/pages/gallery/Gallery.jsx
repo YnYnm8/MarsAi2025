@@ -1,9 +1,9 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { useTranslation } from "react-i18next"; 
+import { useTranslation } from "react-i18next";
 const Gallery = () => {
   const navigate = useNavigate();
-  const { t } = useTranslation("gallery", "common"); 
+  const { t } = useTranslation("gallery", "common");
   const [films, setFilms] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -21,7 +21,7 @@ const Gallery = () => {
     { label: t("badge_full_ai"), value: "fullAi" },
     { label: t("badge_hybrid"), value: "hybrid" },
   ];
-  
+
   const paysOptions = [
     { label: t("country_FR", "France"), value: "France" },
     { label: t("country_JP", "Japon"), value: "Japon" },
@@ -48,7 +48,7 @@ const Gallery = () => {
         }
       } catch (err) {
         console.error("Erreur:", err);
-        setError(t("error_fetch_films")); 
+        setError(t("error_fetch_films"));
       } finally {
         setLoading(false);
       }
@@ -71,23 +71,26 @@ const Gallery = () => {
   const getPosterUrl = (film) => {
     if (film.Files && film.Files.length > 0 && film.Files[0].poster_url) {
       const url = film.Files[0].poster_url;
-      return url.startsWith("http")
-        ? url
-        : `http://localhost:3000/${url.replace(/\\/g, "/")}`;
+      if (url.startsWith("http")) return url;
+      let cleanPath = url.replace(/\\/g, "/").replace(/^(\/)?public\//, "");
+      return cleanPath.startsWith("/") ? cleanPath : `/${cleanPath}`;
     }
+
     return "https://images.unsplash.com/photo-1626814026160-2237a95fc5a0?q=80&w=2670&auto=format&fit=crop";
   };
   const getFilmUrl = (film) => {
     if (film.Files && film.Files.length > 0 && film.Files[0].film_url) {
         const url = film.Files[0].film_url;
-        return url.startsWith("http") ? url : `http://localhost:3000/${url.replace(/\\/g, "/")}`;
+        if (url.startsWith("http")) return url;
+        let cleanPath = url.replace(/\\/g, "/").replace(/^(\/)?public\//, "");
+        return cleanPath.startsWith("/") ? cleanPath : `/${cleanPath}`;
     }
     return null;
-  };
+};
   const copyToClipboard = (id) => {
-      const url = `${window.location.origin}/films/${id}`;
-      navigator.clipboard.writeText(url);
-      alert(t("share_link_copied", "Lien copié dans le presse-papier !"));
+    const url = `${window.location.origin}/films/${id}`;
+    navigator.clipboard.writeText(url);
+    alert(t("share_link_copied", "Lien copié dans le presse-papier !"));
   };
   const shareToNetwork = async (e, network, film) => {
     e.preventDefault();
@@ -140,8 +143,8 @@ const Gallery = () => {
     return () => window.removeEventListener("click", handleClickOutside);
   }, []);
   const handleFilmClick = (film) => {
-      setSelectedFilm(film);
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+    setSelectedFilm(film);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
   const FilmCard = ({ film }) => (
     <div
@@ -279,138 +282,138 @@ const Gallery = () => {
   return (
     <div className="min-h-screen bg-[#050505] font-['Plus_Jakarta_Sans'] flex flex-col items-center text-white">
       <div className="w-full">
-       
+
       </div>
       <div className="flex flex-col items-start w-full max-w-[1280px] px-[20px] py-[43px] gap-[38px] min-h-[600px]">
-        
+
         {selectedFilm ? (
           <div className="w-full max-w-4xl mx-auto space-y-8 animate-fade-in">
-              <div className="flex items-center justify-between">
-                  <p 
-                      onClick={() => setSelectedFilm(null)}
-                      className="text-sm text-[#246BAD] font-bold tracking-widest uppercase cursor-pointer hover:text-blue-400 transition-colors flex items-center gap-2 group"
-                  >
-                      <span className="text-xl group-hover:-translate-x-1 transition-transform">←</span> {t("back_gallery", "RETOUR GALERIE")}
-                  </p>
+            <div className="flex items-center justify-between">
+              <p
+                onClick={() => setSelectedFilm(null)}
+                className="text-sm text-[#246BAD] font-bold tracking-widest uppercase cursor-pointer hover:text-blue-400 transition-colors flex items-center gap-2 group"
+              >
+                <span className="text-xl group-hover:-translate-x-1 transition-transform">←</span> {t("back_gallery", "RETOUR GALERIE")}
+              </p>
+            </div>
+            <div className="rounded-2xl overflow-hidden shadow-2xl border border-gray-800 bg-black flex justify-center">
+              {getFilmUrl(selectedFilm) && getFilmUrl(selectedFilm).endsWith('.mp4') ? (
+                <video controls className="w-full max-h-[500px] object-contain" poster={getPosterUrl(selectedFilm)}>
+                  <source src={getFilmUrl(selectedFilm)} type="video/mp4" />
+                  Votre navigateur ne supporte pas la lecture de vidéos.
+                </video>
+              ) : getFilmUrl(selectedFilm) ? (
+                <iframe
+                  src={getFilmUrl(selectedFilm).replace("watch?v=", "embed/")}
+                  className="w-full h-[300px] md:h-[500px]"
+                  allowFullScreen
+                  title={selectedFilm.title}
+                ></iframe>
+              ) : (
+                <img
+                  src={getPosterUrl(selectedFilm)}
+                  alt={selectedFilm.title}
+                  className="w-full h-[300px] md:h-[500px] object-cover opacity-90"
+                />
+              )}
+            </div>
+            <div className="flex flex-wrap items-start gap-8 px-2">
+              <div className="flex items-center gap-4">
+                <img
+                  src={getDirectorObj(selectedFilm).avatar || "https://cdn-icons-png.flaticon.com/512/149/149071.png"}
+                  alt="Avatar"
+                  className="bg-orange-500 rounded-full w-12 h-12 flex-shrink-0 object-cover border border-gray-700"
+                />
+                <div className="flex flex-col">
+                  <p className="text-xs text-gray-500 font-bold uppercase tracking-widest">{t("director_label", "Réalisateur")}</p>
+                  <h2 className="font-bold text-lg text-gray-200">{getDirectorName(selectedFilm)}</h2>
+                </div>
               </div>
-              <div className="rounded-2xl overflow-hidden shadow-2xl border border-gray-800 bg-black flex justify-center">
-                  {getFilmUrl(selectedFilm) && getFilmUrl(selectedFilm).endsWith('.mp4') ? (
-                      <video controls className="w-full max-h-[500px] object-contain" poster={getPosterUrl(selectedFilm)}>
-                          <source src={getFilmUrl(selectedFilm)} type="video/mp4" />
-                          Votre navigateur ne supporte pas la lecture de vidéos.
-                      </video>
-                  ) : getFilmUrl(selectedFilm) ? (
-                      <iframe 
-                          src={getFilmUrl(selectedFilm).replace("watch?v=", "embed/")} 
-                          className="w-full h-[300px] md:h-[500px]" 
-                          allowFullScreen 
-                          title={selectedFilm.title}
-                      ></iframe>
-                  ) : (
-                      <img
-                          src={getPosterUrl(selectedFilm)}
-                          alt={selectedFilm.title}
-                          className="w-full h-[300px] md:h-[500px] object-cover opacity-90"
-                      />
+              <div className="flex items-center gap-4">
+                <div className="w-12 h-12 bg-gray-800 rounded-full flex items-center justify-center text-xl border border-gray-700">
+                  🌍
+                </div>
+                <div className="flex flex-col">
+                  <p className="text-xs text-gray-500 font-bold uppercase tracking-widest">{t("origin_label", "Origine")}</p>
+                  <h2 className="font-bold text-lg text-gray-200 uppercase">
+                    {t(`country_${getDirectorObj(selectedFilm).country || "FR"}`, getDirectorObj(selectedFilm).country || "FR")}
+                  </h2>
+                </div>
+              </div>
+            </div>
+            <div className="bg-[#0F0F0F] border border-gray-800 rounded-2xl shadow-xl p-6 md:p-8 space-y-6 flex flex-col md:flex-row justify-between items-start md:items-center">
+              <div className="space-y-3">
+                <h2 className="text-2xl md:text-3xl font-extrabold uppercase tracking-wide">
+                  {selectedFilm.title || t("untitled", "Sans titre")}
+                </h2>
+                <div className="flex gap-3">
+                  <span className="px-3 py-1 bg-[#246BAD]/20 text-[#246BAD] rounded-full text-[10px] font-bold uppercase tracking-widest border border-[#246BAD]/30">
+                    {selectedFilm.generateAi === "fullAi" ? t("badge_full_ai", "Génération 100% IA") : t("badge_hybrid", "Hybride")}
+                  </span>
+                  {selectedFilm.duration && (
+                    <span className="px-3 py-1 bg-red-500/20 text-red-500 rounded-full text-[10px] font-bold uppercase tracking-widest border border-red-500/30">
+                      {selectedFilm.duration} {t("seconds", "SECONDES")}
+                    </span>
                   )}
+                </div>
               </div>
-              <div className="flex flex-wrap items-start gap-8 px-2">
-                  <div className="flex items-center gap-4">
-                      <img 
-                          src={getDirectorObj(selectedFilm).avatar || "https://cdn-icons-png.flaticon.com/512/149/149071.png"} 
-                          alt="Avatar" 
-                          className="bg-orange-500 rounded-full w-12 h-12 flex-shrink-0 object-cover border border-gray-700" 
-                      />
-                      <div className="flex flex-col">
-                          <p className="text-xs text-gray-500 font-bold uppercase tracking-widest">{t("director_label", "Réalisateur")}</p>
-                          <h2 className="font-bold text-lg text-gray-200">{getDirectorName(selectedFilm)}</h2>
-                      </div>
+              <div className="flex flex-col gap-4 w-full md:w-auto">
+                <div className="flex items-center gap-4">
+                  <h3 className="text-xs text-gray-500 font-bold uppercase tracking-widest whitespace-nowrap">
+                    {t("share_this_film", "Partager ce film")}
+                  </h3>
+                  <div className="flex gap-3">
+                    <i onClick={(e) => shareToNetwork(e, 'facebook', selectedFilm)} className="fa-brands fa-facebook text-[#1877F2] text-2xl cursor-pointer hover:scale-110 transition-transform"></i>
+                    <img onClick={(e) => shareToNetwork(e, 'x', selectedFilm)} src="https://img.icons8.com/material-outlined/24/ffffff/twitterx--v1.png" alt="X" className="w-6 h-6 cursor-pointer hover:scale-110 transition-transform" />
+                    <i onClick={(e) => shareToNetwork(e, 'whatsapp', selectedFilm)} className="fa-brands fa-whatsapp text-[#25D366] text-2xl cursor-pointer hover:scale-110 transition-transform"></i>
                   </div>
-                  <div className="flex items-center gap-4">
-                      <div className="w-12 h-12 bg-gray-800 rounded-full flex items-center justify-center text-xl border border-gray-700">
-                          🌍
-                      </div>
-                      <div className="flex flex-col">
-                          <p className="text-xs text-gray-500 font-bold uppercase tracking-widest">{t("origin_label", "Origine")}</p>
-                          <h2 className="font-bold text-lg text-gray-200 uppercase">
-                              {t(`country_${getDirectorObj(selectedFilm).country || "FR"}`, getDirectorObj(selectedFilm).country || "FR")}
-                          </h2>
-                      </div>
+                </div>
+                <div className="space-y-2">
+                  <p className="text-[10px] text-gray-500 font-bold tracking-widest uppercase">{t("direct_link", "Lien Direct")}</p>
+                  <div className="flex gap-2">
+                    <input
+                      className="flex-1 bg-black border border-gray-700 rounded-xl px-4 py-2 text-sm text-gray-400 outline-none focus:border-[#246BAD]"
+                      value={`${window.location.origin}/films/${selectedFilm.id}`}
+                      readOnly
+                    />
+                    <button
+                      onClick={() => copyToClipboard(selectedFilm.id)}
+                      className="px-6 py-2 bg-gray-200 hover:bg-white text-black font-extrabold uppercase tracking-widest rounded-xl text-xs transition-colors"
+                    >
+                      {t("copy", "Copier")}
+                    </button>
                   </div>
+                </div>
               </div>
-              <div className="bg-[#0F0F0F] border border-gray-800 rounded-2xl shadow-xl p-6 md:p-8 space-y-6 flex flex-col md:flex-row justify-between items-start md:items-center">
-                  <div className="space-y-3">
-                      <h2 className="text-2xl md:text-3xl font-extrabold uppercase tracking-wide">
-                          {selectedFilm.title || t("untitled", "Sans titre")}
-                      </h2>
-                      <div className="flex gap-3">
-                          <span className="px-3 py-1 bg-[#246BAD]/20 text-[#246BAD] rounded-full text-[10px] font-bold uppercase tracking-widest border border-[#246BAD]/30">
-                              {selectedFilm.generateAi === "fullAi" ? t("badge_full_ai", "Génération 100% IA") : t("badge_hybrid", "Hybride")}
-                          </span>
-                          {selectedFilm.duration && (
-                              <span className="px-3 py-1 bg-red-500/20 text-red-500 rounded-full text-[10px] font-bold uppercase tracking-widest border border-red-500/30">
-                                  {selectedFilm.duration} {t("seconds", "SECONDES")}
-                              </span>
-                          )}
-                      </div>
-                  </div>
-                  <div className="flex flex-col gap-4 w-full md:w-auto">
-                      <div className="flex items-center gap-4">
-                          <h3 className="text-xs text-gray-500 font-bold uppercase tracking-widest whitespace-nowrap">
-                              {t("share_this_film", "Partager ce film")}
-                          </h3>
-                          <div className="flex gap-3">
-                              <i onClick={(e) => shareToNetwork(e, 'facebook', selectedFilm)} className="fa-brands fa-facebook text-[#1877F2] text-2xl cursor-pointer hover:scale-110 transition-transform"></i>
-                              <img onClick={(e) => shareToNetwork(e, 'x', selectedFilm)} src="https://img.icons8.com/material-outlined/24/ffffff/twitterx--v1.png" alt="X" className="w-6 h-6 cursor-pointer hover:scale-110 transition-transform" />
-                              <i onClick={(e) => shareToNetwork(e, 'whatsapp', selectedFilm)} className="fa-brands fa-whatsapp text-[#25D366] text-2xl cursor-pointer hover:scale-110 transition-transform"></i>
-                          </div>
-                      </div>
-                      <div className="space-y-2">
-                          <p className="text-[10px] text-gray-500 font-bold tracking-widest uppercase">{t("direct_link", "Lien Direct")}</p>
-                          <div className="flex gap-2">
-                              <input
-                                  className="flex-1 bg-black border border-gray-700 rounded-xl px-4 py-2 text-sm text-gray-400 outline-none focus:border-[#246BAD]"
-                                  value={`${window.location.origin}/films/${selectedFilm.id}`}
-                                  readOnly
-                              />
-                              <button 
-                                  onClick={() => copyToClipboard(selectedFilm.id)}
-                                  className="px-6 py-2 bg-gray-200 hover:bg-white text-black font-extrabold uppercase tracking-widest rounded-xl text-xs transition-colors"
-                              >
-                                  {t("copy", "Copier")}
-                              </button>
-                          </div>
-                      </div>
-                  </div>
+            </div>
+            <div className="grid md:grid-cols-2 gap-6">
+              <div className="bg-[#0F0F0F] border border-gray-800 rounded-2xl p-6 md:p-8 space-y-4">
+                <div className="flex items-center gap-3">
+                  <i className="fa-solid fa-book-open text-orange-500 text-xl"></i>
+                  <h3 className="font-extrabold uppercase tracking-widest text-sm text-orange-500">{t("synopsis", "Synopsis")}</h3>
+                </div>
+                <p className="text-gray-300 leading-relaxed text-sm md:text-base whitespace-pre-wrap">
+                  {selectedFilm.description || t("no_synopsis", "Aucun synopsis n'a été renseigné pour ce film.")}
+                </p>
               </div>
-              <div className="grid md:grid-cols-2 gap-6">
-                  <div className="bg-[#0F0F0F] border border-gray-800 rounded-2xl p-6 md:p-8 space-y-4">
-                      <div className="flex items-center gap-3">
-                          <i className="fa-solid fa-book-open text-orange-500 text-xl"></i>
-                          <h3 className="font-extrabold uppercase tracking-widest text-sm text-orange-500">{t("synopsis", "Synopsis")}</h3>
-                      </div>
-                      <p className="text-gray-300 leading-relaxed text-sm md:text-base whitespace-pre-wrap">
-                          {selectedFilm.description || t("no_synopsis", "Aucun synopsis n'a été renseigné pour ce film.")}
-                      </p>
+              <div className="bg-[#0F0F0F] border border-gray-800 rounded-2xl p-6 md:p-8 space-y-4">
+                <div className="flex items-center gap-3">
+                  <i className="fa-solid fa-microchip text-blue-400 text-xl"></i>
+                  <h3 className="font-extrabold uppercase tracking-widest text-sm text-blue-400">{t("tech_stack_title", "Tech Stack & IA")}</h3>
+                </div>
+                <p className="text-gray-300 leading-relaxed text-sm md:text-base whitespace-pre-wrap">
+                  {(selectedFilm.Files && selectedFilm.Files[0]?.outil_Ai) || t("no_tool", "Aucun outil mentionné.")}
+                </p>
+                {selectedFilm.Files && selectedFilm.Files[0]?.creativeMethodology && (
+                  <div className="mt-4 pt-4 border-t border-gray-800/50 space-y-2">
+                    <h4 className="text-xs text-gray-500 font-bold uppercase tracking-widest">{t("methodology", "Méthodologie")}</h4>
+                    <p className="text-gray-400 text-sm italic">
+                      {selectedFilm.Files[0].creativeMethodology}
+                    </p>
                   </div>
-                  <div className="bg-[#0F0F0F] border border-gray-800 rounded-2xl p-6 md:p-8 space-y-4">
-                      <div className="flex items-center gap-3">
-                          <i className="fa-solid fa-microchip text-blue-400 text-xl"></i>
-                          <h3 className="font-extrabold uppercase tracking-widest text-sm text-blue-400">{t("tech_stack_title", "Tech Stack & IA")}</h3>
-                      </div>
-                      <p className="text-gray-300 leading-relaxed text-sm md:text-base whitespace-pre-wrap">
-                          {(selectedFilm.Files && selectedFilm.Files[0]?.outil_Ai) || t("no_tool", "Aucun outil mentionné.")}
-                      </p>
-                      {selectedFilm.Files && selectedFilm.Files[0]?.creativeMethodology && (
-                          <div className="mt-4 pt-4 border-t border-gray-800/50 space-y-2">
-                              <h4 className="text-xs text-gray-500 font-bold uppercase tracking-widest">{t("methodology", "Méthodologie")}</h4>
-                              <p className="text-gray-400 text-sm italic">
-                                  {selectedFilm.Files[0].creativeMethodology}
-                              </p>
-                          </div>
-                      )}
-                  </div>
+                )}
               </div>
+            </div>
           </div>
         ) : (
           <>
@@ -440,16 +443,16 @@ const Gallery = () => {
             )}
             <div className="flex flex-wrap gap-[20px] w-full justify-center relative z-20">
               <div className="flex flex-wrap gap-[20px] w-full max-w-[1060px] items-center">
-              <input
-                type="text"
-                placeholder={t("search_placeholder")}
-                className="flex-1 min-w-[200px] px-[28px] py-[23px] bg-[#0F0F0F] border border-gray-800 rounded-[20px] h-[66px] text-gray-400 focus:border-[#246BAD] focus:outline-none transition-colors"
-                onChange={(e) => {
-                  setActiveFilters((prev) => ({ ...prev, search: e.target.value }));
-                  setCurrentPage(1);
-                }}
-                value={activeFilters.search}
-              />
+                <input
+                  type="text"
+                  placeholder={t("search_placeholder")}
+                  className="flex-1 min-w-[200px] px-[28px] py-[23px] bg-[#0F0F0F] border border-gray-800 rounded-[20px] h-[66px] text-gray-400 focus:border-[#246BAD] focus:outline-none transition-colors"
+                  onChange={(e) => {
+                    setActiveFilters((prev) => ({ ...prev, search: e.target.value }));
+                    setCurrentPage(1);
+                  }}
+                  value={activeFilters.search}
+                />
                 {/* FILTRE 1: TYPE D'IA */}
                 <div className="relative flex-1 min-w-[200px]">
                   <div
@@ -498,8 +501,8 @@ const Gallery = () => {
                   >
                     <span className="w-5 h-5 bg-gray-600 rounded-full flex items-center justify-center text-[10px]">🌍</span>
                     <span className="font-bold text-[16px] text-gray-300 flex-grow uppercase">
-                      {activeFilters.country 
-                        ? paysOptions.find((o) => o.value === activeFilters.country)?.label || activeFilters.country 
+                      {activeFilters.country
+                        ? paysOptions.find((o) => o.value === activeFilters.country)?.label || activeFilters.country
                         : t("filter_country")}
                     </span>
                     <span className="text-gray-500">▼</span>
@@ -554,10 +557,10 @@ const Gallery = () => {
                     </button>
                     <span className="font-medium text-gray-400">
                       {t("pagination_info", { currentPage, totalPages }).split(/<[0-9]+>|<\/[0-9]+>/).map((part, i) => {
-                          if (part === currentPage.toString() || part === totalPages.toString()) {
-                              return <span key={i} className="text-white">{part}</span>
-                          }
-                          return part;
+                        if (part === currentPage.toString() || part === totalPages.toString()) {
+                          return <span key={i} className="text-white">{part}</span>
+                        }
+                        return part;
                       })}
                     </span>
                     <button

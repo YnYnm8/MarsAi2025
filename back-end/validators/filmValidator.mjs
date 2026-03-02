@@ -10,7 +10,6 @@ const updateFilesSchema = z.object({
 
 export const filmSchema = z.object({
 
-    collaborateur: z.string().optional(),
 
     title: z
         .string()
@@ -32,6 +31,7 @@ export const filmSchema = z.object({
             message: "Il est obligatoire de choisir une option"
         }),
 
+    collaborateur: z.string().optional(),
     outil_Ai: z
         .string()
         .min(2, "Outil AI obligatoire minimum 2 caractères"),

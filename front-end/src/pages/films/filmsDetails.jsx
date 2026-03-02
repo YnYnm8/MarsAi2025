@@ -13,7 +13,7 @@ export default function FilmsDetails() {
 
     const handleDeleteFilm = async (filmId, e) => {
 
-        e.stopPropagation(); // Empêche le clic de traverser et d'ouvrir la page du film
+        if (e) e.stopPropagation(); // Empêche le clic de traverser et d'ouvrir la page du film
         if (!window.confirm("Voulez-vous vraiment supprimer ce film définitivement ?")) return;
 
         try {
@@ -22,8 +22,10 @@ export default function FilmsDetails() {
                 credentials: 'include'
             });
             if (res.ok) {
-                // Mise à jour optimiste : on filtre le film supprimé de la liste locale pour un effet immédiat
-                setFilms(prevFilms => prevFilms.filter(film => film.id !== filmId));
+                navigate("/me", {
+                    state: { successMessage: "Le film a été supprimé." },
+                    replace: true 
+                });
             } else {
                 alert("Impossible de supprimer ce film.");
             }
@@ -90,7 +92,7 @@ export default function FilmsDetails() {
 
                         {/* Botón Borrar */}
                         <button
-                            onClick={() => handleDeleteFilm(movie.id)}
+                            onClick={(e) => handleDeleteFilm(movie.id, e)}
                             className="flex items-center gap-2 cursor-pointer bg-red-600/20 hover:bg-red-600 border border-red-500/50 text-red-400 hover:text-white px-4 py-2 rounded-xl transition-all text-sm font-medium"
                         >
                             <FontAwesomeIcon icon={faTrashCan} />

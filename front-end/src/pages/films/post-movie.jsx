@@ -6,13 +6,15 @@ import defaultImg from "../../assets/image-default.png";
 import VideoUpload from "../../components/videoPreview";
 import { useNavigate } from "react-router";
 import { Toast } from "../../components/toastMessage";
+
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus, faTrash, faFilm, faMicrochip, faSave, faUsers, faCloudUploadAlt } from '@fortawesome/free-solid-svg-icons';
 
 export default function PostFilm() {
-const { t } = useTranslation("formulaireF");
-    
+    const { t } = useTranslation("formulaireF");
+
     const [posterFile, setPosterFile] = useState(null);
-    const [collaborateurs, setCollaborateurs] = useState([{ genre: "", name: "" }]);
+    const [collaborateurs, setCollaborateurs] = useState([{ genre: "male", name: "" }]);
     const [selected, setSelected] = useState(null);
     const [toastMessages, setToastMessages] = useState([]);
     const [subtitles, setSubtitles] = useState([{ type: "file", value: null }]);
@@ -62,10 +64,7 @@ const { t } = useTranslation("formulaireF");
             }
         });
 
-        collaborateurs.forEach((c, i) => {
-            formData.append(`collaborateurs[${i}][genre]`, c.genre);
-            formData.append(`collaborateurs[${i}][name]`, c.name);
-        });
+        // Append de colaboradores
 
         const namesWithGenre = collaborateurs
             .filter(c => c.name && c.name.trim() !== "") // Evita vacíos
@@ -74,11 +73,12 @@ const { t } = useTranslation("formulaireF");
                 return `${prefix} ${c.name.trim()}`;
             })
             .join(", ");
+        formData.delete("collaborateur");
+        formData.append("collaborateur", namesWithGenre);
 
-        formData.set("collaborateur", namesWithGenre);
-        
+        // Append de generateAi, poster
+
         if (selected) formData.append("generateAi", selected);
-
         if (posterFile) formData.append("poster", posterFile);
 
         try {
@@ -129,7 +129,7 @@ const { t } = useTranslation("formulaireF");
                 </div>
 
                 <form className="m-5 font-display flex flex-col" onSubmit={handleSubmit} encType="multipart/form-data">
-                    
+
                     {/* 01. Identité */}
                     <fieldset className="fieldset bg-dark-card border-dark-border rounded-box m-7 border p-10">
                         <div className="flex pb-5">
@@ -143,7 +143,7 @@ const { t } = useTranslation("formulaireF");
                             </div>
                             <div className="flex flex-col">
                                 <label htmlFor="durationInput" className="pb-2 text-white/50">{t("step1.durationLabel")}</label>
-                                <input type="number" name="duration" id="durationInput" className="bg-black border border-dark-border p-3 rounded-lg text-sm outline-none focus:border-blue-tertiary" placeholder={t("step1.durationPlaceholder")} />
+                                <input type="number" name="duration" id="durationInput" min={1} className="bg-black border border-dark-border p-3 rounded-lg text-sm outline-none focus:border-blue-tertiary" placeholder={t("step1.durationPlaceholder")} />
                             </div>
                         </div>
 
@@ -216,13 +216,14 @@ const { t } = useTranslation("formulaireF");
                             <VideoUpload
                                 label={t("step3.youtubeLabel")}
                                 name="film"
+                                onDurationError={(msg) => setToastMessages([msg])}
                                 id="videoUrl" />
 
                             <div className="text-white/50 flex flex-col">
                                 <DynamicSubtitleInput subtitles={subtitles}
                                     setSubtitles={setSubtitles} />
                             </div>
-                            
+
                             <ImagesPreview
                                 id="fichier-vignette"
                                 label={t("step3.posterLabel")}
@@ -250,18 +251,27 @@ const { t } = useTranslation("formulaireF");
                         <div className="flex flex-col gap-3">
                             {collaborateurs.map((collab, index) => (
                                 <div key={index} className="bg-black/40 p-5 flex justify-center gap-5 font-bold rounded-box tracking-wider text-sm">
-                                    <select className="bg-black border border-gray-700 p-5 rounded-box mt-5 text-white" value={collab.genre} onChange={(e) => handleCollabChange(index, "genre", e.target.value)}>
+                                    <select className="bg-black border border-gray-700 p-5 rounded-box mt-5 text-white"
+                                        value={collab.genre}
+                                        onChange={(e) => handleCollabChange(index, "genre", e.target.value)}>
                                         <option value="male">{t("step4.mr")}</option>
                                         <option value="female">{t("step4.mrs")}</option>
                                     </select>
+
                                     <input type="text" placeholder={t("step4.namePlaceholder")} className="bg-black border border-gray-700 p-5 w-200 rounded-box mt-5 text-white outline-none focus:border-blue-tertiary"
                                         value={collab.name} onChange={(e) => handleCollabChange(index, "name", e.target.value)} />
                                     {collaborateurs.length > 1 && (
-                                        <button type="button" onClick={() => removeCollaborateur(index)} className="bg-red-900/40 cursor-pointer text-red-500 p-7 rounded-lg hover:bg-red-600 hover:text-white transition-all">X</button>
-                                    )}
+                                        <button type="button" onClick={() => removeCollaborateur(index)} className="text-red-500  cursor-pointer bg-red-500/10 p-8 text-xl rounded-xl hover:bg-red-500 hover:text-white transition-all">
+                                            <FontAwesomeIcon icon={faTrash} />
+                                        </button>)}
+
+
                                 </div>
                             ))}
-                            <button type="button" onClick={addCollaborateur} className="mt-2 self-center bg-blue-tertiary font-bold font-display text-base uppercase text-white p-5 rounded-lg shadow-lg">
+                            <button type="button"
+                                onClick={addCollaborateur}
+                                className="mt-4 cursor-pointer self-center bg-blue-tertiary/10 border border-blue-tertiary/40 text-blue-tertiary px-8 py-4 rounded-xl font-bold uppercase text-xs flex items-center gap-2 hover:bg-blue-tertiary hover:text-white transition-all"
+                            >
                                 {t("step4.addCollaborator")}
                             </button>
                         </div>
@@ -275,7 +285,7 @@ const { t } = useTranslation("formulaireF");
                         </div>
                     </div>
 
-                    <button className="btn self-center bg-blue-tertiary text-white p-8 font-bold text-base tracking-widest rounded-xl uppercase shadow-glow-blue hover:scale-105 transition-all mb-20" type="submit">
+                    <button className="btn self-center bg-blue-tertiary cursor-pointer text-white p-8 font-bold text-base tracking-widest rounded-xl uppercase shadow-glow-blue hover:scale-105 transition-all mb-20" type="submit">
                         {t("footer.submitBtn")}
                     </button>
                 </form>
