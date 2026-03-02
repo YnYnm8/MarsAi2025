@@ -4,6 +4,7 @@ import Film from "../models/Films.mjs";
 import Workshop from "../models/Workshop.mjs";
 import { Sequelize, Op } from "sequelize";
 import File from "../models/File.mjs";
+import Playlist from "../models/Playlist.mjs";
 
 
 const fetchDashboardStats = async () => {
@@ -18,9 +19,9 @@ const fetchDashboardStats = async () => {
 
   // Films 
   const totalFilms = await Film.count();
-  const totalSelected = await Film.count({ where: { status: 'selected' } }); 
-  const totalRejected = await Film.count({ where: { status: 'rejected' } }); 
-  const totalPending = await Film.count({ where: { status: 'pending' } });   
+  const totalSelected = await Film.count({ where: { status: 'selected' } });
+  const totalRejected = await Film.count({ where: { status: 'rejected' } });
+  const totalPending = await Film.count({ where: { status: 'pending' } });
 
   const totalViews = (await Film.sum("views")) || 0;
   const totalShares = (await Film.sum("shares")) || 0;
@@ -54,9 +55,9 @@ const fetchDashboardStats = async () => {
     totalViews,
     filmsByCountry,
     totalShares,
-    totalSelected, 
-    totalRejected, 
-    totalPending,  
+    totalSelected,
+    totalRejected,
+    totalPending,
     newUsersToday,
     totalJuries: 12,
     finishedJuries,
@@ -73,11 +74,12 @@ const fetchSelectedFilms = async () => {
   return await Film.findAll({
     where: { status: 'selected' },
     include: [
-        { 
-          model: User, 
-          attributes: ["id", "firstName", "lastName", "email", "country"] },
+      {
+        model: User,
+        attributes: ["id", "firstName", "lastName", "email", "country"]
+      },
 
-        { model: File } 
+      { model: File }
     ]
   });
 };
@@ -87,9 +89,9 @@ const fetchRejectedFilms = async () => {
   return await Film.findAll({
     where: { status: 'rejected' },
     include: [
-      { 
-        model: User, 
-        attributes: ["id", "firstName", "lastName", "email", "country"] 
+      {
+        model: User,
+        attributes: ["id", "firstName", "lastName", "email", "country"]
       },
       { model: File }
     ],
@@ -102,11 +104,12 @@ const fetchFilmsToDiscuss = async () => {
   return await Film.findAll({
     where: { status: 'pending' },
     include: [
-      { model: User, 
-        attributes: ["id", "firstName", "lastName", "email", "country"] 
+      {
+        model: User,
+        attributes: ["id", "firstName", "lastName", "email", "country"]
       },
-      { model: File}
-      ],
+      { model: File }
+    ],
     order: [["createdAt", "DESC"]],
   });
 };
@@ -115,11 +118,12 @@ const fetchFilmsToDiscuss = async () => {
 const fetchAllFilms = async () => {
   return await Film.findAll({
     include: [
-      { model: User, 
-      attributes: ["id", "firstName", "lastName", "email", "country"] 
+      {
+        model: User,
+        attributes: ["id", "firstName", "lastName", "email", "country"]
       },
       { model: File }
-      ],
+    ],
     order: [["createdAt", "DESC"]],
   });
 };
@@ -139,16 +143,46 @@ const changeUserRole = async (id, role) => {
 };
 
 // changer le statut du film
-const updateFilmStatus = async (id, status) => {
-  const allowedStatus = ['pending', 'selected', 'rejected'];
-  if (!allowedStatus.includes(status)) throw new Error("Statut invalide");
-  
+const updateFilmStatus = async (id, playlistId) => {
   const film = await Film.findByPk(id);
   if (!film) throw new Error("Film introuvable");
-  
-  film.status = status;
+
+  // On convertit en nombre pour être sûr
+  const pId = parseInt(playlistId);
+
+  // On met à jour la playlist et le texte du statut
+  film.playlistId = pId;
+
+  if (pId === 4) film.status = 'pending';
+  else if (pId === 2) film.status = 'selected';
+  else if (pId === 3) film.status = 'rejected';
+
   await film.save();
   return film;
+};
+
+
+const getFilmsByPlaylistId = async (playlistId) => {
+  try {
+    // On cherche la playlist par son ID (souvent la table Playlist ou Category)
+    const playlist = await Playlist.findByPk(playlistId, {
+      include: [
+        {
+          model: Film,
+          as: 'Films',
+          include: [
+            { model: File },
+            { model: User }
+          ]
+        }
+      ]
+    });
+
+    return playlist;
+  } catch (error) {
+    console.error("Erreur dans adminService.getFilmsByPlaylistId:", error.message);
+    throw error;
+  }
 };
 
 
@@ -161,5 +195,6 @@ export default {
   fetchFilmsToDiscuss,
   fetchAllFilms,
   changeUserRole,
-  updateFilmStatus, 
+  updateFilmStatus,
+  getFilmsByPlaylistId
 };
