@@ -4,6 +4,8 @@ import Film from "../models/Films.mjs";
 import Note from "../models/Note.mjs";
 import { catchError } from "../helpers/errorHandler.mjs";
 import Selection from "../models/Selection.mjs";
+import { notifyFilmNotSelected } from "../services/notificationService.mjs";
+import User from "../models/User.mjs";
 
 //  POST /comite/select
 // 公式セレクションに選ばれた映画の限定リスト。（選考済み作品）
@@ -50,7 +52,7 @@ export async function reviewFilm(req, res) {
     const { UserId, score, comment, status } = req.body;
     const { FilmId } = req.params;
 
-    const film = await Film.findByPk(FilmId);
+    const film = await Film.findByPk(FilmId, { include: [{ model: User }] });
     if (!film) {
       return res.status(404).json({ message: "映画が存在しません" });
     }
@@ -90,6 +92,17 @@ export async function reviewFilm(req, res) {
         PlaylistId,
       });
     }
+    // Notification si REFUSED -----------------------------------------
+    // ⚠️ Pas de notif FILM_SELECTED ici — réservé à PATCH /admin/lock/selection
+    if (status === "REFUSED" && film.User) {
+      try {
+        const deps = { models: req.app.locals.models, io: req.app.locals.io };
+        await notifyFilmNotSelected({ director: film.User, film, deps });
+      } catch (notifError) {
+        console.error("[comiteController] reviewFilm notification error:", notifError.message);
+      }
+    }
+    // ---------------------------------------------------------------------
 
     return res.json({ message: "レビューとステータスを保存しました" });
   } catch (err) {
@@ -187,6 +200,27 @@ export async function getRefusedFilmsById(req, res) {
 // POST /comite/note
 // 委員会基準ごとの評価（1〜10）および／またはコメントを保存する。
 
+// export async function addNote(req, res) {
+//   try {
+//     const { UserId, FilmId, score, comment } = req.body;
+
+//     const existsNote = await Note.findOne({ where: { UserId, FilmId } });
+
+//     if (existsNote) {
+//       // 更新
+//       existsNote.score = score;
+//       existsNote.comment = comment;
+//       await existsNote.save();
+//       return res.json({ message: "評価を更新しました", note: existsNote });
+//     }
+
+//     // 新規作成
+//     const newNote = await Note.create({ UserId, FilmId, score, comment });
+//     res.status(201).json(newNote);
+//   } catch (error) {
+//     return catchError(res, error);
+//   }
+// }
 export async function addNote(req, res) {
   try {
     const { UserId, FilmId, score, comment } = req.body;
@@ -194,20 +228,22 @@ export async function addNote(req, res) {
     const existsNote = await Note.findOne({ where: { UserId, FilmId } });
 
     if (existsNote) {
-      // 更新
-      existsNote.score = score;
-      existsNote.comment = comment;
+      // 更新：score が null の場合は変更しない
+      if (score !== null && score !== undefined) existsNote.score = score;
+      if (comment !== undefined) existsNote.comment = comment;
       await existsNote.save();
-      return res.json({ message: "評価を更新しました", note: existsNote });
+      return res.json({ message: "Note mise à jour", note: existsNote });
     }
 
     // 新規作成
     const newNote = await Note.create({ UserId, FilmId, score, comment });
     res.status(201).json(newNote);
+
   } catch (error) {
     return catchError(res, error);
   }
 }
+
 
 // プレイリストを削除し中身をTO＿DISCUSSに移動させる
 // PATCH/comite/delitestatus
@@ -283,7 +319,7 @@ export async function acceptedFilm(req, res) {
 // POST /comite/refused/:FilmId // 映画を却下リストに追加
 export async function refuseFilm(req, res) {
   console.log("BODY:", req.body);
-  console.log("targetPlaylistId:", targetPlaylistId);
+  // console.log("targetPlaylistId:", targetPlaylistId);
   try {
     const { UserId } = req.body;
     const { FilmId } = req.params;
@@ -294,7 +330,7 @@ export async function refuseFilm(req, res) {
     //   return res.status(403).json({ message: "権限がありません" });
     // }
 
-    const film = await Film.findByPk(FilmId);
+    const film = await Film.findByPk(FilmId, { include: [{ model: User }] });
     if (!film) return res.status(404).json({ message: "映画が存在しません" });
 
     // REFUSED は PlaylistId = 3 と決め打ち
@@ -310,6 +346,17 @@ export async function refuseFilm(req, res) {
     } else {
       playlistFilm = await PlaylistFilm.create({ FilmId, UserId, PlaylistId });
     }
+
+        // Notification refus --------------------------------------------------------
+    if (film.User) {
+      try {
+        const deps = { models: req.app.locals.models, io: req.app.locals.io };
+        await notifyFilmNotSelected({ director: film.User, film, deps });
+      } catch (notifError) {
+        console.error("[comiteController] refuseFilm notification error:", notifError.message);
+      }
+    }
+    // ------------------------------------------------------------------------------
 
     return res.json({
       message: "映画を REFUSED に更新しました",

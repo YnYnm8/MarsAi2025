@@ -1,6 +1,6 @@
 import { DataTypes, STRING } from "sequelize";
 import sequelize from "../config/database.mjs";
-const Note = sequelize.define(
+const Contact = sequelize.define(
   "Contact",
   {
     id: {
@@ -25,3 +25,4 @@ const Note = sequelize.define(
     timestamps: true,
   },
 );
+export default Contact;
