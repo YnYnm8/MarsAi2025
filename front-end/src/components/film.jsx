@@ -12,7 +12,7 @@ export const FilmComponent = ({ data, variant = "details" }) => {
         if (!path) return "";
         if (path.startsWith('http')) return path;
 
-       
+
         let cleanPath = path.replace(/^\/public/, '');
         cleanPath = cleanPath.startsWith('/') ? cleanPath : `/${cleanPath}`;
 
@@ -43,7 +43,7 @@ export const FilmComponent = ({ data, variant = "details" }) => {
                     <img
                         src={mainFile.poster_url ? getFileUrl(mainFile.poster_url) : "../assets/image-default.png"}
                         alt={data.title}
-                        className="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition duration-500"
+                        className="w-full h-full object-cover opacity-80 cursor-pointer group-hover:opacity-100 transition duration-500"
                     />
                 ) : (
                     <div className="rounded-2xl overflow-hidden border border-gray-700 bg-black aspect-video shadow-2xl">
@@ -93,9 +93,9 @@ export const FilmComponent = ({ data, variant = "details" }) => {
                 </p>
 
                 {!isCard && mainFile.creativeMethodology && (
-                    <div className="p-6 bg-gradient-to-br from-gray-900 to-[#0B0B0B] border border-gray-800 rounded-2xl shadow-inner">
+                    <div className="p-6 bg-linear-to-br from-gray-900 to-[#0B0B0B] border border-gray-800 rounded-2xl shadow-inner">
                         <h3 className="text-blue-500 font-bold uppercase text-[10px] tracking-widest mb-3">Méthodologie Créative</h3>
-                        <p className="text-gray-300 text-sm leading-relaxed italic leading-loose">
+                        <p className="text-gray-300 text-sm leading-relaxed italic">
                             "{mainFile.creativeMethodology}"
                         </p>
                     </div>

@@ -113,7 +113,7 @@ const Admin = () => {
                             </p>
                             <button
                                 onClick={() => navigate('/admin/detailsfilms')}
-                                className="mt-3 w-full py-2 bg-indigo-50 text-indigo-600 text-[10px] font-bold rounded-lg border border-indigo-100 hover:bg-indigo-600 hover:text-white transition-all uppercase tracking-tighter"
+                                className="mt-3 w-full py-2 bg-indigo-50 cursor-pointer text-indigo-600 text-[10px] font-bold rounded-lg border border-indigo-100 hover:bg-indigo-600 hover:text-white transition-all uppercase tracking-tighter"
                             >
                                 Details films →
                             </button>

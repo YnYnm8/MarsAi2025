@@ -36,12 +36,12 @@ export const NotificationBell = ({ token }) => {
       {/* Bouton cloche */}
       <button
         onClick={() => setOpen((o) => !o)}
-        className="relative p-2 rounded-full hover:bg-purple-900/40 transition-colors"
+        className="relative p-2 rounded-full cursor-pointer hover:bg-purple-900/40  transition-colors"
         aria-label={`Notifications${unreadCount > 0 ? ` (${unreadCount} non lues)` : ""}`}
       >
         <span className="text-2xl">🔔</span>
         {unreadCount > 0 && (
-          <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center font-bold">
+          <span className="absolute -top-1 -right-1 cursor-pointer bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center font-bold">
             {unreadCount > 9 ? "9+" : unreadCount}
           </span>
         )}
@@ -56,7 +56,7 @@ export const NotificationBell = ({ token }) => {
             {unreadCount > 0 && (
               <button
                 onClick={markAllRead}
-                className="text-xs text-purple-400 hover:text-purple-300 transition-colors"
+                className="text-xs text-purple-400 cursor-pointer hover:text-purple-300 transition-colors"
               >
                 Tout marquer comme lu
               </button>
@@ -104,7 +104,7 @@ export const NotificationBell = ({ token }) => {
               <button
                 onClick={fetchMore}
                 disabled={loading}
-                className="w-full py-3 text-xs text-purple-400 hover:text-purple-300 transition-colors"
+                className="w-full py-3 text-xs cursor-pointer text-purple-400 hover:text-purple-300 transition-colors"
               >
                 {loading ? "Chargement..." : "Voir plus"}
               </button>
