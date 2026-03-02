@@ -1,9 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next"; 
-import TopNavbar from "../../components/navbar";
-import Footer from "../../components/footer";
-
 const Gallery = () => {
   const navigate = useNavigate();
   const { t } = useTranslation("gallery", "common"); 
@@ -17,36 +14,21 @@ const Gallery = () => {
     search: "",
     iaType: null,
     country: null,
-    status: null,
-    sort: "recent", 
   });
   const [openDropdown, setOpenDropdown] = useState(null);
   const [activeShareId, setActiveShareId] = useState(null);
-
   const iaOptions = [
     { label: t("badge_full_ai"), value: "fullAi" },
     { label: t("badge_hybrid"), value: "hybrid" },
   ];
   
-  const sortOptions = [
-    { label: t("sort_recent"), value: "recent" },
-    { label: t("sort_top_rated"), value: "topRated" },
-  ];
-
   const paysOptions = [
-    { label: t("country_FR", "France"), value: "FR" },
-    { label: t("country_JP", "Japan"), value: "JP" },
-    { label: t("country_EN", "Angleterre"), value: "EN" },
-    { label: t("country_CR", "Créole"), value: "CR" },
-    { label: t("country_SP", "Spain"), value: "SP" },
+    { label: t("country_FR", "France"), value: "France" },
+    { label: t("country_JP", "Japon"), value: "Japon" },
+    { label: t("country_EN", "Angleterre"), value: "Angleterre" },
+    { label: t("country_CR", "Créole"), value: "Créole" },
+    { label: t("country_SP", "Espagne"), value: "Espagne" },
   ];
-
-  const statusOptions = [
-    { label: t("status_pending"), value: "PENDING" },
-    { label: t("status_selected"), value: "SELECTED" },
-    { label: t("status_rejected"), value: "REJECTED" },
-  ];
-
   useEffect(() => {
     const fetchFilms = async () => {
       try {
@@ -55,11 +37,8 @@ const Gallery = () => {
           method: "GET",
           headers: { "Content-Type": "application/json" },
         });
-
         if (!response.ok) throw new Error("Erreur réseau");
-
         const result = await response.json();
-
         if (Array.isArray(result)) {
           setFilms(result);
         } else if (result.data && Array.isArray(result.data)) {
@@ -74,12 +53,9 @@ const Gallery = () => {
         setLoading(false);
       }
     };
-
     fetchFilms();
   }, [t]);
-
   const getDirectorObj = (film) => film.User || film.user || film.director || {};
-
   const getDirectorName = (film) => {
     const director = getDirectorObj(film);
     if (director && typeof director === "object") {
@@ -92,7 +68,6 @@ const Gallery = () => {
     if (typeof director === "string") return director;
     return t("unknown_director", "Inconnu");
   };
-
   const getPosterUrl = (film) => {
     if (film.Files && film.Files.length > 0 && film.Files[0].poster_url) {
       const url = film.Files[0].poster_url;
@@ -102,7 +77,6 @@ const Gallery = () => {
     }
     return "https://images.unsplash.com/photo-1626814026160-2237a95fc5a0?q=80&w=2670&auto=format&fit=crop";
   };
-
   const getFilmUrl = (film) => {
     if (film.Files && film.Files.length > 0 && film.Files[0].film_url) {
         const url = film.Files[0].film_url;
@@ -110,23 +84,18 @@ const Gallery = () => {
     }
     return null;
   };
-
   const copyToClipboard = (id) => {
       const url = `${window.location.origin}/films/${id}`;
       navigator.clipboard.writeText(url);
       alert(t("share_link_copied", "Lien copié dans le presse-papier !"));
   };
-
   const shareToNetwork = async (e, network, film) => {
     e.preventDefault();
     e.stopPropagation();
-
     const url = `${window.location.origin}/films/${film.id}`;
     const encodedUrl = encodeURIComponent(url);
     const text = encodeURIComponent(t("share_text", { title: film.title || t("untitled") }));
-
     let shareLink = "";
-
     switch (network) {
       case "facebook":
         shareLink = `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`;
@@ -149,17 +118,13 @@ const Gallery = () => {
       default:
         break;
     }
-
     if (shareLink) {
       window.open(shareLink, "_blank", "noopener,noreferrer");
     }
-
     setActiveShareId(null);
-
     try {
       const response = await fetch(`http://localhost:3000/films/share/${film.id}`, { method: "POST" });
       const result = await response.json();
-
       if (result.success && result.incremented) {
         setFilms((prevFilms) =>
           prevFilms.map((f) => (f.id === film.id ? { ...f, shares: result.shares } : f))
@@ -169,19 +134,15 @@ const Gallery = () => {
       console.error("Erreur lors du comptage du partage:", err);
     }
   };
-
   useEffect(() => {
     const handleClickOutside = () => setActiveShareId(null);
     window.addEventListener("click", handleClickOutside);
     return () => window.removeEventListener("click", handleClickOutside);
   }, []);
-
-  // Fonction pour ouvrir la vue Détail et scroller en haut
   const handleFilmClick = (film) => {
       setSelectedFilm(film);
       window.scrollTo({ top: 0, behavior: 'smooth' });
   };
-
   const FilmCard = ({ film }) => (
     <div
       onClick={() => handleFilmClick(film)}
@@ -193,24 +154,15 @@ const Gallery = () => {
           alt={film.title || t("untitled")}
           className="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity"
         />
-
         <div className="absolute top-[24px] left-[24px] px-[12px] py-[4px] bg-black/40 border border-white/10 rounded-full backdrop-blur-md">
           <span className="font-light text-[10px] uppercase text-white tracking-wide">
             {film.generateAi === "fullAi" ? t("badge_full_ai") : t("badge_hybrid")}
           </span>
         </div>
-
-        <div className="absolute top-[24px] right-[24px] px-[12px] py-[4px] bg-[#246BAD]/80 border border-white/10 rounded-full backdrop-blur-md shadow-md">
-          <span className="font-bold text-[10px] uppercase text-white tracking-wide">
-            {t(`status_${(film.status || "PENDING").toLowerCase()}`, film.status || "PENDING")}
-          </span>
-        </div>
-
         <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[50px] h-[50px] bg-white/10 border border-white/20 rounded-full flex items-center justify-center backdrop-blur-md group-hover:bg-[#246BAD]/80 group-hover:border-[#246BAD] transition-all">
           <div className="w-0 h-0 border-t-[8px] border-t-transparent border-l-[14px] border-l-white border-b-[8px] border-b-transparent ml-1"></div>
         </div>
       </div>
-
       <div className="flex flex-col items-start p-[24px] gap-[16px] w-[318px] h-auto min-h-[140px] bg-[#0F0F0F] rounded-b-[32px] border-x border-b border-gray-800 group-hover:border-[#246BAD] transition-colors">
         <div className="flex flex-row justify-between items-center w-full">
           <h3 className="font-['Inter'] font-extrabold text-[18px] uppercase text-white truncate max-w-[180px] group-hover:text-[#246BAD] transition-colors">
@@ -218,11 +170,10 @@ const Gallery = () => {
           </h3>
           <div className="flex flex-row justify-center items-center px-[8px] py-[6px] bg-[rgba(255,88,69,0.15)] rounded-[4px]">
             <span className="font-['Inter'] font-extrabold text-[10px] uppercase text-[#FF5845]">
-              {film.duration ? `${film.duration} ${t("min")}` : "N/A"}
+              {film.duration ? `${film.duration} ${t("sec", "SEC")}` : "N/A"}
             </span>
           </div>
         </div>
-
         <div className="flex flex-col w-full gap-[12px]">
           <div className="flex flex-row justify-between w-full items-center">
             <div className="flex flex-col gap-1">
@@ -247,13 +198,11 @@ const Gallery = () => {
               </div>
             </div>
           </div>
-
           <div className="flex flex-row gap-4 items-center pt-3 border-t border-gray-800/60 relative">
             <div className="flex items-center gap-1.5 text-gray-400 transition-colors">
               <i className="fa-regular fa-eye text-[14px]"></i>
               <span className="font-bold text-[11px]">{film.views || 0}</span>
             </div>
-
             <div className="relative">
               <div
                 onClick={(e) => {
@@ -265,7 +214,6 @@ const Gallery = () => {
                 <i className="fa-solid fa-share text-[14px]"></i>
                 <span className="font-bold text-[11px]">{film.shares || 0}</span>
               </div>
-
               {activeShareId === film.id && (
                 <div
                   className="absolute bottom-full left-0 mb-2 w-56 bg-[#2C2C2D] border border-gray-700 rounded-xl shadow-2xl z-50 overflow-hidden p-2 grid grid-cols-2 gap-1"
@@ -292,7 +240,6 @@ const Gallery = () => {
                 </div>
               )}
             </div>
-
             {film.averageScore > 0 && (
               <div className="flex items-center gap-1 text-[#FFD700] absolute right-0 font-bold text-[11px]">
                 <span>★</span> {film.averageScore}
@@ -303,7 +250,6 @@ const Gallery = () => {
       </div>
     </div>
   );
-
   let processedFilms = films.filter((film) => {
     if (activeFilters.search) {
       const searchTerm = activeFilters.search.toLowerCase().trim();
@@ -313,52 +259,32 @@ const Gallery = () => {
         return false;
     }
     if (activeFilters.iaType && film.generateAi !== activeFilters.iaType) return false;
-    if (activeFilters.country && getDirectorObj(film).country?.toUpperCase() !== activeFilters.country.toUpperCase()) return false;
-    if (activeFilters.status && film.status?.toUpperCase() !== activeFilters.status.toUpperCase()) return false;
+    if (activeFilters.country && getDirectorObj(film).country?.toLowerCase() !== activeFilters.country.toLowerCase()) return false;
     return true;
   });
-
-  processedFilms.sort((a, b) => {
-    if (activeFilters.sort === "topRated") {
-      const scoreA = a.averageScore || 0;
-      const scoreB = b.averageScore || 0;
-      if (scoreB !== scoreA) return scoreB - scoreA;
-      return (b.views || 0) - (a.views || 0);
-    }
-    return b.id - a.id;
-  });
-
+  processedFilms.sort((a, b) => b.id - a.id);
   const totalPages = Math.ceil(processedFilms.length / itemsPerPage);
   const paginatedFilms = processedFilms.slice(
     (currentPage - 1) * itemsPerPage,
     currentPage * itemsPerPage
   );
-
   const handleFilterClick = (type, value) => {
     setActiveFilters((prev) => ({ ...prev, [type]: value }));
     setOpenDropdown(null);
     setCurrentPage(1);
   };
-
   const toggleDropdown = (name) => {
     setOpenDropdown(openDropdown === name ? null : name);
   };
-
   return (
     <div className="min-h-screen bg-[#050505] font-['Plus_Jakarta_Sans'] flex flex-col items-center text-white">
       <div className="w-full">
        
       </div>
-
       <div className="flex flex-col items-start w-full max-w-[1280px] px-[20px] py-[43px] gap-[38px] min-h-[600px]">
         
-        {/* SYSTÈME DE VUE (DÉTAILS DU FILM OU LISTE DES FILMS) */}
         {selectedFilm ? (
-          // ==============================
-          // VUE DÉTAIL DU FILM (Film.jsx)
-          // ==============================
           <div className="w-full max-w-4xl mx-auto space-y-8 animate-fade-in">
-              {/* EN-TÊTE : Bouton Retour */}
               <div className="flex items-center justify-between">
                   <p 
                       onClick={() => setSelectedFilm(null)}
@@ -367,8 +293,6 @@ const Gallery = () => {
                       <span className="text-xl group-hover:-translate-x-1 transition-transform">←</span> {t("back_gallery", "RETOUR GALERIE")}
                   </p>
               </div>
-
-              {/* LECTEUR VIDÉO OU POSTER */}
               <div className="rounded-2xl overflow-hidden shadow-2xl border border-gray-800 bg-black flex justify-center">
                   {getFilmUrl(selectedFilm) && getFilmUrl(selectedFilm).endsWith('.mp4') ? (
                       <video controls className="w-full max-h-[500px] object-contain" poster={getPosterUrl(selectedFilm)}>
@@ -390,8 +314,6 @@ const Gallery = () => {
                       />
                   )}
               </div>
-
-              {/* INFOS RÉALISATEUR ET ORIGINE */}
               <div className="flex flex-wrap items-start gap-8 px-2">
                   <div className="flex items-center gap-4">
                       <img 
@@ -404,7 +326,6 @@ const Gallery = () => {
                           <h2 className="font-bold text-lg text-gray-200">{getDirectorName(selectedFilm)}</h2>
                       </div>
                   </div>
-
                   <div className="flex items-center gap-4">
                       <div className="w-12 h-12 bg-gray-800 rounded-full flex items-center justify-center text-xl border border-gray-700">
                           🌍
@@ -417,8 +338,6 @@ const Gallery = () => {
                       </div>
                   </div>
               </div>
-
-              {/* CARTE CENTRALE : TITRE & PARTAGE */}
               <div className="bg-[#0F0F0F] border border-gray-800 rounded-2xl shadow-xl p-6 md:p-8 space-y-6 flex flex-col md:flex-row justify-between items-start md:items-center">
                   <div className="space-y-3">
                       <h2 className="text-2xl md:text-3xl font-extrabold uppercase tracking-wide">
@@ -435,7 +354,6 @@ const Gallery = () => {
                           )}
                       </div>
                   </div>
-
                   <div className="flex flex-col gap-4 w-full md:w-auto">
                       <div className="flex items-center gap-4">
                           <h3 className="text-xs text-gray-500 font-bold uppercase tracking-widest whitespace-nowrap">
@@ -447,7 +365,6 @@ const Gallery = () => {
                               <i onClick={(e) => shareToNetwork(e, 'whatsapp', selectedFilm)} className="fa-brands fa-whatsapp text-[#25D366] text-2xl cursor-pointer hover:scale-110 transition-transform"></i>
                           </div>
                       </div>
-
                       <div className="space-y-2">
                           <p className="text-[10px] text-gray-500 font-bold tracking-widest uppercase">{t("direct_link", "Lien Direct")}</p>
                           <div className="flex gap-2">
@@ -466,8 +383,6 @@ const Gallery = () => {
                       </div>
                   </div>
               </div>
-
-              {/* CARTE DU BAS : SYNOPSIS & TECH STACK */}
               <div className="grid md:grid-cols-2 gap-6">
                   <div className="bg-[#0F0F0F] border border-gray-800 rounded-2xl p-6 md:p-8 space-y-4">
                       <div className="flex items-center gap-3">
@@ -478,7 +393,6 @@ const Gallery = () => {
                           {selectedFilm.description || t("no_synopsis", "Aucun synopsis n'a été renseigné pour ce film.")}
                       </p>
                   </div>
-
                   <div className="bg-[#0F0F0F] border border-gray-800 rounded-2xl p-6 md:p-8 space-y-4">
                       <div className="flex items-center gap-3">
                           <i className="fa-solid fa-microchip text-blue-400 text-xl"></i>
@@ -487,7 +401,6 @@ const Gallery = () => {
                       <p className="text-gray-300 leading-relaxed text-sm md:text-base whitespace-pre-wrap">
                           {(selectedFilm.Files && selectedFilm.Files[0]?.outil_Ai) || t("no_tool", "Aucun outil mentionné.")}
                       </p>
-
                       {selectedFilm.Files && selectedFilm.Files[0]?.creativeMethodology && (
                           <div className="mt-4 pt-4 border-t border-gray-800/50 space-y-2">
                               <h4 className="text-xs text-gray-500 font-bold uppercase tracking-widest">{t("methodology", "Méthodologie")}</h4>
@@ -500,9 +413,6 @@ const Gallery = () => {
               </div>
           </div>
         ) : (
-          // ==============================
-          // VUE LISTE (FilmList / Grid)
-          // ==============================
           <>
             <div
               className="flex flex-row items-center gap-2 cursor-pointer group"
@@ -515,44 +425,39 @@ const Gallery = () => {
                 {t("back_home")}
               </span>
             </div>
-
             <div className="flex flex-col gap-4">
               <h1 className="font-extrabold text-[40px] md:text-[64px] leading-tight uppercase text-white">
                 {t("title")}
               </h1>
-              
               <p className="font-medium text-[18px] md:text-[20px] text-gray-400 max-w-[780px]">
                 {t("subtitle")}
               </p>
             </div>
-
             {error && (
               <div className="w-full p-4 bg-red-900/20 border border-red-500/50 rounded-xl text-red-200 text-center">
                 {error}
               </div>
             )}
-
-            <div className="flex flex-wrap gap-[20px] md:gap-[38px] w-full relative z-20">
+            <div className="flex flex-wrap gap-[20px] w-full justify-center relative z-20">
+              <div className="flex flex-wrap gap-[20px] w-full max-w-[1060px] items-center">
               <input
                 type="text"
                 placeholder={t("search_placeholder")}
-                className="flex-grow md:flex-grow-0 min-w-[300px] px-[28px] py-[23px] bg-[#0F0F0F] border border-gray-800 rounded-[20px] h-[66px] text-gray-400 focus:border-[#246BAD] focus:outline-none transition-colors"
+                className="flex-1 min-w-[200px] px-[28px] py-[23px] bg-[#0F0F0F] border border-gray-800 rounded-[20px] h-[66px] text-gray-400 focus:border-[#246BAD] focus:outline-none transition-colors"
                 onChange={(e) => {
                   setActiveFilters((prev) => ({ ...prev, search: e.target.value }));
                   setCurrentPage(1);
                 }}
                 value={activeFilters.search}
               />
-
-              <div className="flex flex-wrap gap-[20px] md:gap-[38px] w-full relative z-20">
                 {/* FILTRE 1: TYPE D'IA */}
-                <div className="relative flex-grow md:flex-grow-0">
+                <div className="relative flex-1 min-w-[200px]">
                   <div
                     onClick={(e) => {
                       e.stopPropagation();
                       toggleDropdown("ia");
                     }}
-                    className={`flex items-center px-[28px] py-[23px] gap-[10px] bg-[#0F0F0F] border ${openDropdown === "ia" ? "border-[#246BAD]" : "border-gray-800"} rounded-[20px] h-[66px] min-w-[300px] cursor-pointer hover:border-[#246BAD] transition-colors`}
+                    className={`flex items-center px-[28px] py-[23px] gap-[10px] bg-[#0F0F0F] border ${openDropdown === "ia" ? "border-[#246BAD]" : "border-gray-800"} rounded-[20px] h-[66px] w-full cursor-pointer hover:border-[#246BAD] transition-colors`}
                   >
                     <span className="w-5 h-5 bg-gray-600 rounded-full flex items-center justify-center text-[10px]">🤖</span>
                     <span className="font-bold text-[16px] text-gray-300 flex-grow">
@@ -582,15 +487,14 @@ const Gallery = () => {
                     </div>
                   )}
                 </div>
-
                 {/* FILTRE 2: PAYS */}
-                <div className="relative flex-grow md:flex-grow-0">
+                <div className="relative flex-1 min-w-[200px]">
                   <div
                     onClick={(e) => {
                       e.stopPropagation();
                       toggleDropdown("country");
                     }}
-                    className={`flex items-center px-[28px] py-[23px] gap-[10px] bg-[#0F0F0F] border ${openDropdown === "country" ? "border-[#246BAD]" : "border-gray-800"} rounded-[20px] h-[66px] min-w-[300px] cursor-pointer hover:border-[#246BAD] transition-colors`}
+                    className={`flex items-center px-[28px] py-[23px] gap-[10px] bg-[#0F0F0F] border ${openDropdown === "country" ? "border-[#246BAD]" : "border-gray-800"} rounded-[20px] h-[66px] w-full cursor-pointer hover:border-[#246BAD] transition-colors`}
                   >
                     <span className="w-5 h-5 bg-gray-600 rounded-full flex items-center justify-center text-[10px]">🌍</span>
                     <span className="font-bold text-[16px] text-gray-300 flex-grow uppercase">
@@ -620,85 +524,16 @@ const Gallery = () => {
                     </div>
                   )}
                 </div>
-
-                {/* FILTRE 3: STATUT */}
-                <div className="relative flex-grow md:flex-grow-0">
-                  <div
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      toggleDropdown("status");
-                    }}
-                    className={`flex items-center px-[28px] py-[23px] gap-[10px] bg-[#0F0F0F] border ${openDropdown === "status" ? "border-[#246BAD]" : "border-gray-800"} rounded-[20px] h-[66px] min-w-[300px] cursor-pointer hover:border-[#246BAD] transition-colors`}
-                  >
-                    <span className="w-5 h-5 bg-gray-600 rounded-full flex items-center justify-center text-[10px]">📌</span>
-                    <span className="font-bold text-[16px] text-gray-300 flex-grow uppercase">
-                      {activeFilters.status 
-                        ? statusOptions.find((o) => o.value === activeFilters.status)?.label || activeFilters.status 
-                        : t("filter_status")}
-                    </span>
-                    <span className="text-gray-500">▼</span>
-                  </div>
-                  {openDropdown === "status" && (
-                    <div className="absolute top-[70px] left-0 w-full bg-[#1A1A1A] border border-gray-700 rounded-2xl shadow-xl overflow-hidden z-50">
-                      <div
-                        onClick={() => handleFilterClick("status", null)}
-                        className="px-6 py-3 hover:bg-[#246BAD] cursor-pointer text-gray-400 hover:text-white transition"
-                      >
-                        {t("filter_all")}
-                      </div>
-                      {statusOptions.map((opt) => (
-                        <div
-                          key={opt.value}
-                          onClick={() => handleFilterClick("status", opt.value)}
-                          className="px-6 py-3 hover:bg-[#246BAD] cursor-pointer text-white border-t border-gray-800 transition uppercase"
-                        >
-                          {opt.label}
-                        </div>
-                      ))}
-                    </div>
-                  )}
-                </div>
-
-                {/* FILTRE 4: TRIER PAR */}
-                <div className="relative flex-grow md:flex-grow-0">
-                  <div
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      toggleDropdown("sort");
-                    }}
-                    className={`flex items-center px-[28px] py-[23px] gap-[10px] bg-[#0F0F0F] border ${openDropdown === "sort" ? "border-[#246BAD]" : "border-gray-800"} rounded-[20px] h-[66px] min-w-[300px] cursor-pointer hover:border-[#246BAD] transition-colors`}
-                  >
-                    <span className="w-5 h-5 bg-gray-600 rounded-full flex items-center justify-center text-[10px]">⭐</span>
-                    <span className="font-bold text-[16px] text-gray-300 flex-grow">
-                      {sortOptions.find((o) => o.value === activeFilters.sort)?.label || t("filter_sort")}
-                    </span>
-                    <span className="text-gray-500">▼</span>
-                  </div>
-                  {openDropdown === "sort" && (
-                    <div className="absolute top-[70px] left-0 w-full bg-[#1A1A1A] border border-gray-700 rounded-2xl shadow-xl overflow-hidden z-50">
-                      {sortOptions.map((opt) => (
-                        <div
-                          key={opt.value}
-                          onClick={() => handleFilterClick("sort", opt.value)}
-                          className={`px-6 py-3 cursor-pointer text-white border-b border-gray-800 transition ${activeFilters.sort === opt.value ? "bg-[#246BAD]" : "hover:bg-gray-800"}`}
-                        >
-                          {opt.label}
-                        </div>
-                      ))}
-                    </div>
-                  )}
-                </div>
               </div>
             </div>
-
             {/* LOADING & GRILLE */}
             {loading ? (
               <div className="w-full h-64 flex items-center justify-center">
                 <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[#246BAD]"></div>
               </div>
             ) : (
-              <div className="w-full flex flex-col gap-[38px]">
-                <div className="flex flex-wrap gap-[24px] justify-center md:justify-start w-full">
+              <div className="w-full flex flex-col gap-[38px] items-center">
+                <div className="flex flex-wrap gap-[40px] justify-center w-full max-w-[1060px]">
                   {paginatedFilms.length === 0 && !error && (
                     <div className="w-full text-center py-10 text-gray-500 border border-dashed border-gray-800 rounded-xl">
                       {t("no_films_found")}
@@ -708,7 +543,6 @@ const Gallery = () => {
                     <FilmCard key={film.id} film={film} />
                   ))}
                 </div>
-
                 {totalPages > 1 && (
                   <div className="flex justify-center items-center gap-6 w-full pt-8 pb-4">
                     <button
@@ -740,9 +574,7 @@ const Gallery = () => {
           </>
         )}
       </div>
- 
     </div>
   );
 };
-
 export default Gallery;

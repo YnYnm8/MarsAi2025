@@ -231,7 +231,7 @@ export async function getFilmsByUser(req, res) {
 
         const FilmData = await Film.findAll({
             where: {
-                userId: UserId
+                UserId: UserId
             },
             include: [
                 {

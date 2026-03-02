@@ -4,7 +4,6 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useTranslation } from "react-i18next"; 
-import TopNavbar from "../../components/navbar";
 
 const profileSchema = z.object({
   firstName: z.string().min(2, "val_min_2").optional(), 
@@ -13,11 +12,15 @@ const profileSchema = z.object({
   school: z.string().optional(),
   country: z.string().max(100).optional(),
   instagram: z.string().optional(),
+  youtube: z.string().optional(),
+  linkedin: z.string().optional(),
+  facebook: z.string().optional(),
+  tiktok: z.string().optional(),
+  x: z.string().optional(),
 });
 
 const Profile = () => {
   const { t, i18n } = useTranslation("profile"); 
-
   const [user, setUser] = useState(null);
   const [films, setFilms] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -53,13 +56,22 @@ const Profile = () => {
           setValue("bio", currentUser.bio || "");
           setValue("school", currentUser.school || "");
           setValue("country", currentUser.country || "");
+          
+          // Initialisation des réseaux sociaux
           setValue("instagram", currentUser.socialNetworks?.instagram || "");
+          setValue("youtube", currentUser.socialNetworks?.youtube || "");
+          setValue("linkedin", currentUser.socialNetworks?.linkedin || "");
+          setValue("facebook", currentUser.socialNetworks?.facebook || "");
+          setValue("tiktok", currentUser.socialNetworks?.tiktok || "");
+          setValue("x", currentUser.socialNetworks?.x || "");
         }
 
         const filmsRes = await fetch('http://localhost:3000/my-films', { credentials: 'include' });
         if (filmsRes.ok) {
           const filmsData = await filmsRes.json();
-          setFilms(Array.isArray(filmsData) ? filmsData : (filmsData.data || []));
+          const filmsArray = Array.isArray(filmsData) ? filmsData : (filmsData.data || []);
+          console.log("Films reçus de la BDD :", filmsArray); 
+          setFilms(filmsArray);
         }
 
       } catch (error) { console.error("Erreur", error); } 
@@ -88,9 +100,13 @@ const Profile = () => {
       formData.append("school", data.school || "");
       formData.append("country", data.country || "");
       
-      if (data.instagram) {
-        formData.append("instagram", data.instagram);
-      }
+      // Ajout des réseaux sociaux
+      if (data.instagram) formData.append("instagram", data.instagram);
+      if (data.youtube) formData.append("youtube", data.youtube);
+      if (data.linkedin) formData.append("linkedin", data.linkedin);
+      if (data.facebook) formData.append("facebook", data.facebook);
+      if (data.tiktok) formData.append("tiktok", data.tiktok);
+      if (data.x) formData.append("x", data.x);
 
       if (selectedFile) {
         formData.append("avatar", selectedFile);
@@ -116,7 +132,6 @@ const Profile = () => {
 
   const handleDeleteFilm = async (filmId, e) => {
     e.stopPropagation();
-    // Traduction de l'alerte
     if (!window.confirm(t("confirm_delete"))) return;
     
     try {
@@ -135,22 +150,14 @@ const Profile = () => {
   };
 
   const getStatusStyle = (status) => {
-    switch(status) {
+    const safeStatus = status ? status.toLowerCase() : 'submitted';
+    switch(safeStatus) {
       case 'approved': return 'bg-green-500/20 border-green-500 text-green-400';
       case 'rejected': return 'bg-red-500/20 border-red-500 text-red-400';
       case 'submitted': return 'bg-blue-500/20 border-blue-500 text-blue-400';
       default: return 'bg-gray-500/20 border-gray-500 text-gray-400'; 
     }
   };
-
-  // const getStatusLabel = (status) => {
-  //   switch(status) {
-  //     case 'approved': return t("status_approved");
-  //     case 'rejected': return t("status_rejected");
-  //     case 'submitted': return t("status_submitted");
-  //     default: return t("status_submitted"); 
-  //   }
-  // };
 
   const formatDate = (dateString) => {
     if (!dateString) return "";
@@ -164,7 +171,6 @@ const Profile = () => {
   if (!user) return null;
 
   const initials = (user.firstName?.[0] + (user.lastName?.[0] || "")).toUpperCase();
-  
   const filmsCount = films.length;
   const totalViews = films.reduce((acc, film) => acc + (film.views || 0), 0);
   const totalShares = films.reduce((acc, film) => acc + (film.shares || 0), 0);
@@ -172,19 +178,22 @@ const Profile = () => {
   const avatarSrc = previewUrl 
     ? previewUrl 
     : (user.avatar ? `http://localhost:3000/${user.avatar.replace(/\\/g, "/")}` : null);
-    // Retourne le texte à afficher selon le statut
-    const getStatusLabel = (status) => {
-        switch(status) {
-            case 'approved': return 'APPROVED';
-            case 'rejected': return 'REJECTED';
-            case 'submitted': return 'SUBMITTED';
-            default: return 'SUBMITTED';
-        }
-    };
+    
+  const getStatusLabel = (status) => {
+      const safeStatus = status ? status.toLowerCase() : 'submitted';
+      switch(safeStatus) {
+          case 'approved': return 'APPROVED';
+          case 'rejected': return 'REJECTED';
+          case 'submitted': return 'SUBMITTED';
+          default: return 'SUBMITTED';
+      }
+  };
+
+  // Helper pour sécuriser l'URL des réseaux 
+  const formatUrl = (url) => url.startsWith('http') ? url : `https://${url}`;
 
   return (
     <div className="min-h-screen bg-black text-white font-sans selection:bg-purple-500 selection:text-white">
-      <TopNavbar />
 
       <div className="h-48 w-full bg-gradient-to-r from-blue-900 via-purple-900 to-black relative overflow-hidden">
         <div className="absolute inset-0 bg-black/20"></div>
@@ -199,11 +208,7 @@ const Profile = () => {
             <div className="w-28 h-28 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 p-1 flex items-center justify-center shadow-xl overflow-hidden">
               <div className="w-full h-full bg-black rounded-full flex items-center justify-center text-3xl font-bold tracking-widest overflow-hidden relative">
                 {avatarSrc ? (
-                  <img 
-                    src={avatarSrc} 
-                    alt="Avatar" 
-                    className="w-full h-full object-cover" 
-                  />
+                  <img src={avatarSrc} alt="Avatar" className="w-full h-full object-cover" />
                 ) : (
                   <span>{initials}</span>
                 )}
@@ -212,12 +217,7 @@ const Profile = () => {
 
             {isEditing && (
               <label className="absolute inset-0 flex items-center justify-center bg-black/50 rounded-full cursor-pointer opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                <input 
-                  type="file" 
-                  accept="image/*" 
-                  className="hidden" 
-                  onChange={handleImageChange} 
-                />
+                <input type="file" accept="image/*" className="hidden" onChange={handleImageChange} />
                 <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
@@ -262,8 +262,8 @@ const Profile = () => {
           </div>
         </div>
 
-        {/* SECTION 2 : DETAILS */}
-        <div className="mt-6 text-center space-y-3 max-w-md mx-auto">
+        {/* SECTION 2 : DETAILS ET RESEAUX SOCIAUX */}
+        <div className="mt-6 text-center space-y-3 max-w-xl mx-auto">
           {!isEditing ? (
             <p className="text-gray-300 text-sm italic">{user.bio || ""}</p>
           ) : (
@@ -281,12 +281,52 @@ const Profile = () => {
             </div>
           </div>
 
-          {isEditing && <input {...register("instagram")} className="bg-[#111] border border-gray-700 rounded px-3 py-2 text-white text-xs w-full text-center mt-2" placeholder={t("placeholder_instagram")} />}
+          {/* INPUTS RESEAUX SOCIAUX (MODE EDITION) */}
+          {isEditing && (
+            <div className="grid grid-cols-2 gap-2 mt-4">
+              <input {...register("instagram")} className="bg-[#111] border border-gray-700 rounded px-3 py-2 text-white text-xs w-full text-center" placeholder={t("placeholder_instagram") || "Instagram URL"} />
+              <input {...register("youtube")} className="bg-[#111] border border-gray-700 rounded px-3 py-2 text-white text-xs w-full text-center" placeholder={t("placeholder_youtube") || "YouTube URL"} />
+              <input {...register("linkedin")} className="bg-[#111] border border-gray-700 rounded px-3 py-2 text-white text-xs w-full text-center" placeholder={t("placeholder_linkedin") || "LinkedIn URL"} />
+              <input {...register("facebook")} className="bg-[#111] border border-gray-700 rounded px-3 py-2 text-white text-xs w-full text-center" placeholder={t("placeholder_facebook") || "Facebook URL"} />
+              <input {...register("tiktok")} className="bg-[#111] border border-gray-700 rounded px-3 py-2 text-white text-xs w-full text-center" placeholder={t("placeholder_tiktok") || "TikTok URL"} />
+              <input {...register("x")} className="bg-[#111] border border-gray-700 rounded px-3 py-2 text-white text-xs w-full text-center" placeholder={t("placeholder_x") || "X (Twitter) URL"} />
+            </div>
+          )}
           
-          {!isEditing && user.socialNetworks?.instagram && (
-            <a href={user.socialNetworks.instagram.startsWith('http') ? user.socialNetworks.instagram : `https://${user.socialNetworks.instagram}`} target="_blank" rel="noopener noreferrer" className="inline-block text-pink-500 text-xs font-bold border border-pink-500/30 px-3 py-1 rounded-full hover:bg-pink-900/20 transition mt-2">
-              {t("link_instagram")}
-            </a>
+          {/* LIENS RESEAUX SOCIAUX (MODE LECTURE) */}
+          {!isEditing && (
+            <div className="flex flex-wrap justify-center gap-2 mt-4">
+              {user.socialNetworks?.instagram && (
+                <a href={formatUrl(user.socialNetworks.instagram)} target="_blank" rel="noopener noreferrer" className="inline-block text-pink-500 text-xs font-bold border border-pink-500/30 px-3 py-1 rounded-full hover:bg-pink-900/20 transition">
+                  {t("link_instagram") || "Instagram"}
+                </a>
+              )}
+              {user.socialNetworks?.youtube && (
+                <a href={formatUrl(user.socialNetworks.youtube)} target="_blank" rel="noopener noreferrer" className="inline-block text-red-500 text-xs font-bold border border-red-500/30 px-3 py-1 rounded-full hover:bg-red-900/20 transition">
+                  {t("link_youtube") || "YouTube"}
+                </a>
+              )}
+              {user.socialNetworks?.linkedin && (
+                <a href={formatUrl(user.socialNetworks.linkedin)} target="_blank" rel="noopener noreferrer" className="inline-block text-blue-500 text-xs font-bold border border-blue-500/30 px-3 py-1 rounded-full hover:bg-blue-900/20 transition">
+                  {t("link_linkedin") || "LinkedIn"}
+                </a>
+              )}
+              {user.socialNetworks?.facebook && (
+                <a href={formatUrl(user.socialNetworks.facebook)} target="_blank" rel="noopener noreferrer" className="inline-block text-indigo-500 text-xs font-bold border border-indigo-500/30 px-3 py-1 rounded-full hover:bg-indigo-900/20 transition">
+                  {t("link_facebook") || "Facebook"}
+                </a>
+              )}
+              {user.socialNetworks?.tiktok && (
+                <a href={formatUrl(user.socialNetworks.tiktok)} target="_blank" rel="noopener noreferrer" className="inline-block text-yellow-400 text-xs font-bold border border-teal-400/30 px-3 py-1 rounded-full hover:bg-teal-900/20 transition">
+                  {t("link_tiktok") || "TikTok"}
+                </a>
+              )}
+              {user.socialNetworks?.x && (
+                <a href={formatUrl(user.socialNetworks.x)} target="_blank" rel="noopener noreferrer" className="inline-block text-gray-300 text-xs font-bold border border-gray-500/30 px-3 py-1 rounded-full hover:bg-gray-800/50 transition">
+                  {t("link_x") || "X"}
+                </a>
+              )}
+            </div>
           )}
         </div>
 
@@ -307,9 +347,21 @@ const Profile = () => {
         </div>
 
         {/* SECTION 4 : GALERIE DES FILMS */}
-        <h3 className="text-white text-sm font-bold tracking-widest mb-4 border-l-4 border-blue-600 pl-3 flex justify-between items-end">
-          <span>{t("my_submissions")}</span>
-        </h3>
+        <div className="flex justify-between items-center mb-6">
+          <h3 className="text-white text-sm font-bold tracking-widest border-l-4 border-blue-600 pl-3">
+            {t("my_submissions")}
+          </h3>
+          
+          <button 
+            onClick={() => navigate("/form-movie")}
+            className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 text-white font-bold py-2 px-5 rounded-full text-xs shadow-[0_0_15px_rgba(168,85,247,0.4)] hover:shadow-[0_0_20px_rgba(168,85,247,0.6)] transform hover:-translate-y-0.5 transition-all duration-300 flex items-center gap-2"
+          >
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4v16m8-8H4" />
+            </svg>
+            {t("btn_new_submission") || "Nouvelle soumission"}
+          </button>
+        </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {films.length > 0 ? (
