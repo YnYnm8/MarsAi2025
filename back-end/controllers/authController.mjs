@@ -1,5 +1,6 @@
 import User from "../models/User.mjs";
 import Notification from "../models/Notification.mjs";
+import { notify } from "../services/notificationService.mjs";
 import Film from "../models/Films.mjs";
 import File from "../models/File.mjs";
 import jwt from "jsonwebtoken";
@@ -11,8 +12,6 @@ const JWT_SECRET = process.env.JWT_SECRET || "secret123";
 
 /**
  * Génère un token JWT valide pour 24h
- * @param {object} user - L'objet utilisateur (doit contenir id et role)
- * @returns {string} Le token signé
  */
 const generateToken = (user) => {
   return jwt.sign({ id: user.id, role: user.role }, JWT_SECRET, {
@@ -22,7 +21,7 @@ const generateToken = (user) => {
 
 // --- AUTHENTIFICATION (LOGIN / REGISTER / LOGOUT) ---
 
-/** * @POST /register 
+/** * @POST /register
  * Inscription d'un nouvel utilisateur
  */
 export const register = async (req, res) => {
@@ -43,12 +42,27 @@ export const register = async (req, res) => {
     // 3. Création de l'utilisateur
     const user = await User.create({
       email,
-      password, 
+      password,
       firstName: firstName || "",
       lastName: lastName || "",
-      role: "visitor", 
+      role: "visitor",
       isActive: true,
-      country: "FR",
+      country: "France",
+    });
+
+    const models = req.app.locals.models;
+    const io = req.app.locals.io;
+
+    await notify({
+      type: "SYSTEM",
+      userId: user.id,
+      emailTo: user.email,
+      data: {
+        title: "Bienvenue sur MarsAI 🎬",
+        message: `Bonjour ${user.firstName}, votre compte a bien été créé. Bonne chance pour le festival !`,
+      },
+      models,
+      io,
     });
 
     res.status(201).json({ message: "SUCCESS_REGISTER" });
@@ -58,7 +72,7 @@ export const register = async (req, res) => {
   }
 };
 
-/** * @POST /login 
+/** * @POST /login
  * Connexion utilisateur et génération du cookie/token
  */
 export const login = async (req, res) => {
@@ -114,7 +128,7 @@ export const login = async (req, res) => {
   }
 };
 
-/** * @POST /logout 
+/** * @POST /logout
  * Déconnexion (Suppression du cookie)
  */
 export const logout = (req, res) => {
@@ -128,7 +142,7 @@ export const logout = (req, res) => {
 
 // --- GESTION DU PROFIL ---
 
-/** * @PUT /profile 
+/** * @PUT /profile
  * Mise à jour du profil utilisateur (Infos textuelles + Avatar)
  * Cette fonction gère aussi l'upload de fichier via Multer (req.files)
  */
@@ -146,17 +160,25 @@ export const updateProfile = async (req, res) => {
     }
 
     // GESTION DE L'AVATAR (via Multer)
-    if (req.files && req.files['avatar'] && req.files['avatar'][0]) {
+    if (req.files && req.files["avatar"] && req.files["avatar"][0]) {
+      const fileName = req.files["avatar"][0].filename;
 
-        const fileName = req.files['avatar'][0].filename;
-        
-        user.avatar = `uploads/${fileName}`; 
+      user.avatar = `uploads/${fileName}`;
     }
 
-// AJOUT DES NOUVEAUX RESEAU
-    const { 
-      firstName, lastName, bio, school, country, 
-      instagram, youtube, linkedin, facebook, tiktok, x 
+    // AJOUT DES NOUVEAUX RESEAU
+    const {
+      firstName,
+      lastName,
+      bio,
+      school,
+      country,
+      instagram,
+      youtube,
+      linkedin,
+      facebook,
+      tiktok,
+      x,
     } = req.body;
 
     if (firstName !== undefined) user.firstName = firstName;
@@ -189,14 +211,13 @@ export const updateProfile = async (req, res) => {
       message: "SUCCESS_PROFILE_UPDATE",
       user: cleanUser,
     });
-
   } catch (error) {
     console.error("UpdateProfile error:", error);
     res.status(500).json({ message: "ERR_SERVER_UPDATE" });
   }
 };
 
-/** * @GET /me 
+/** * @GET /me
  * Récupérer les infos de l'utilisateur connecté via son token
  */
 export const getCurrentUser = async (req, res) => {
@@ -220,66 +241,37 @@ export const getCurrentUser = async (req, res) => {
  * Récupère la liste des films soumis par l'utilisateur connecté
  */
 export const getMyFilms = async (req, res) => {
-    try {
-        const currentUserId = req.user?.id;
+  try {
+    const currentUserId = req.user?.id;
 
-        if (!currentUserId) {
-            return res.status(401).json({ message: "ERR_UNAUTHORIZED" });
-        }
-
-        // Requête Sequelize avec Jointure (Include)
-        const FilmData = await Film.findAll({
-            where: { UserId: currentUserId }, // Filtre par ID utilisateur
-            include: [
-                {
-                    model: File, // On joint la table 'File' pour avoir les URLs (poster, vidéo...)
-                    attributes: [
-                        'id', 'film_url', 'poster_url', 
-                        'galerie_url', 'creativeMethodology', 
-                        'subtitle', 'outil_Ai'
-                    ]
-                }
-            ],
-            order: [['createdAt', 'DESC']] // Les plus récents en premier
-        });
-        
-        // On retourne un tableau vide [] si aucun film, pour éviter des erreurs côté front
-        return res.status(200).json(FilmData || []);
-
-    } catch (err) {
-        console.error("Erreur getMyFilms:", err);
-        return res.status(500).json({ message: "ERR_SERVER", error: err.message });
+    if (!currentUserId) {
+      return res.status(401).json({ message: "ERR_UNAUTHORIZED" });
     }
-};
 
-// --- NOTIFICATIONS ---
-
-/** * @GET /notifications 
- * Récupère les notifications de l'utilisateur
- */
-export const getNotifications = async (req, res) => {
-  try {
-    const notifications = await Notification.findAll({
-      where: { userId: req.user.id },
-      order: [["createdAt", "DESC"]],
+    // Requête Sequelize avec Jointure (Include)
+    const FilmData = await Film.findAll({
+      where: { UserId: currentUserId }, // Filtre par ID utilisateur
+      include: [
+        {
+          model: File, // On joint la table 'File' pour avoir les URLs (poster, vidéo...)
+          attributes: [
+            "id",
+            "film_url",
+            "poster_url",
+            "galerie_url",
+            "creativeMethodology",
+            "subtitle",
+            "outil_Ai",
+          ],
+        },
+      ],
+      order: [["createdAt", "DESC"]], // Les plus récents en premier
     });
-    res.json(notifications);
-  } catch (error) {
-    res.status(500).json({ message: "ERR_SERVER" });
-  }
-};
 
-/** * @PATCH /notifications/read-all 
- * Marque toutes les notifications comme lues
- */
-export const markReadAll = async (req, res) => {
-  try {
-    await Notification.update(
-      { isRead: true },
-      { where: { userId: req.user.id, isRead: false } }
-    );
-    res.json({ message: "SUCCESS_NOTIFICATIONS_READ" });
-  } catch (error) {
-    res.status(500).json({ message: "ERR_SERVER" });
+    // On retourne un tableau vide [] si aucun film, pour éviter des erreurs côté front
+    return res.status(200).json(FilmData || []);
+  } catch (err) {
+    console.error("Erreur getMyFilms:", err);
+    return res.status(500).json({ message: "ERR_SERVER", error: err.message });
   }
 };
