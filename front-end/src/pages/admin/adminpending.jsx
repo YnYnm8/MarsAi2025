@@ -69,19 +69,26 @@ const AdminPending = () => {
         });
     };
 
-    // Changement de statut
+    // Changement de statut avec mapping vers ID numériques
     const confirmDecision = async () => {
         const { filmId, newStatus } = modalConfig;
+        
+        // Mapping pour correspondre au backend
+        const playlistId = newStatus === 'selected' ? 2 : 3;
+
         try {
             const response = await fetch(`http://localhost:3000/admin/films/${filmId}/status`, {
-                method: 'PATCH',
+                method: 'PUT', 
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ status: newStatus }),
+                body: JSON.stringify({ playlistId: playlistId }), 
                 credentials: 'include'
             });
+
             if (response.ok) {
                 setSelections(prev => prev.filter(f => f.id !== filmId));
                 setModalConfig({ ...modalConfig, isOpen: false });
+            } else {
+                alert("Erreur lors de la mise à jour");
             }
         } catch (err) {
             console.error("Erreur statut:", err);
@@ -146,7 +153,7 @@ const AdminPending = () => {
                                 <tr><td colSpan="7" className="py-10 text-center text-gray-400 text-sm italic">Aucun film en attente de décision</td></tr>
                             ) : (
                                 currentFilms.map((film) => {
-                                    const poster = film.Files?.[0]?.poster_url || "/src/assets/youtube.png";
+                                    const poster = film.Files?.[0]?.poster_url || film.poster_url || "/src/assets/youtube.png";
                                     const { label, classes } = getStatusDetails(film.status);
                                     return (
                                         <tr key={film.id} className="group hover:bg-gray-50/50 transition-colors">

@@ -11,6 +11,42 @@ import { handleFileProcessing } from "../helpers/proccesFiles.mjs"
 *  GET  /films
 * Recuperation des tous les films
 */
+// export async function getFilms(req, res) {
+//     try {
+//         const FilmData = await Film.findAll({
+//             include: [
+//                 {
+//                     model: File,
+//                     as: "Files",
+//                     attributes: ['id', 'film_url', 'poster_url', 'galerie_url', 'creativeMethodology', 'subtitle', 'outil_Ai']
+//                 },
+//                 {
+//                     model: User, 
+//                     attributes: ['firstName', 'lastName', 'country', 'avatar'] 
+//                 },
+              
+//                 {
+//                     model:Playlist,
+//                 }
+//                 ,{
+                    
+//                     model:PlaylistFilm,
+//                 }
+//             ],
+//             order: [['createdAt', 'DESC']]
+//         });
+//         if (FilmData.length == 0) {
+//             return res.status(200).json({
+//                 message: "Aucun film disponible",
+//                 data: [],
+//             });
+//         }
+//         return res.status(200).json(FilmData);
+//     } catch (err) {
+//         return catchError(res, err)
+//     }
+// }
+
 export async function getFilms(req, res) {
     try {
         const FilmData = await Film.findAll({
@@ -24,33 +60,24 @@ export async function getFilms(req, res) {
                     model: User, 
                     attributes: ['firstName', 'lastName', 'country', 'avatar'] 
                 },
-              
-                {
-                    model:Playlist,
-                },{
-                    
-                    model:PlaylistFilm,
-                }
+                { model: Playlist },
+                { model: PlaylistFilm }
             ],
             order: [['createdAt', 'DESC']]
         });
-        if (FilmData.length == 0) {
-            return res.status(200).json({
-                message: "Aucun film disponible",
-                data: [],
-            });
-        }
+
         return res.status(200).json(FilmData);
+
     } catch (err) {
-        return catchError(res, err)
+        console.error("Erreur dans getFilms:", err);
+        return catchError(res, err);
     }
 }
+
+
 /**
  *     GET  /films/:id
  *  Recuperation d'un film par son id*/
-
-  
-
 export async function getFilmById(req, res) {
     try {
         const id = Number(req.params.id);
@@ -133,17 +160,47 @@ export async function getFilmsSelect(req, res) {
 *   Creation d'un nouveau film
 */
 
+// export async function createFilm(req, res) {
+//     try {
+//         const film = await Film.findByPk(req.newFilm.id, {
+//             include: [{ model: File }],
+//         });
+
+//         return res.status(201).json(film);
+//     } catch (err) {
+//         return catchError(res, err);
+//     }
+// }
+
+
 export async function createFilm(req, res) {
     try {
-        const film = await Film.findByPk(req.newFilm.id, {
-            include: [{ model: File }],
+        // Création du Film
+        const newFilm = await Film.create({
+            ...req.body,
+            userId: req.user.id
         });
 
-        return res.status(201).json(film);
+        // Création File (pour l'image/poster)
+        // On vérifie req.files (rempli par uploadFields/Multer)
+        if (req.files && req.files.poster) {
+            await File.create({
+                poster_url: req.files.poster[0].filename, 
+                FilmId: newFilm.id                        
+            });
+        }
+
+        const completeFilm = await Film.findByPk(newFilm.id, { include: [File] });
+        return res.status(201).json(completeFilm);
+
     } catch (err) {
-        return catchError(res, err);
+        console.error("Erreur création film:", err);
+        return res.status(500).json({ message: err.message });
     }
 }
+
+
+
 
 /*
  * PUT  /films/:id

@@ -254,9 +254,9 @@ export async function seedAll() {
 
         const playlists = await Playlist.bulkCreate([
             { PlaylistId: 1, status: "NOT_WATCHED" },
-            { PlaylistId: 2, status: "ACCEPTED" },
-            { PlaylistId: 3, status: "REFUSED" },
-            { PlaylistId: 4, status: "TO_DISCUSS" },
+            { PlaylistId: 2, status: "selected" },
+            { PlaylistId: 3, status: "rejected" },
+            { PlaylistId: 4, status: "pending" },
         ]);
 
         await PlaylistFilm.bulkCreate([

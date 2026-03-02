@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, } from 'react';
 import { Link } from "react-router-dom";
 import Sidebar from '../../components/sidebar';
 
+// Assets
 import filmIcon from "/src/assets/film.png";
 import juryIcon from "/src/assets/jury.png";
 import statistiqueIcon from "/src/assets/statistique.png";
@@ -14,10 +15,14 @@ const AdminDash = () => {
         totalUsers: 0,
         totalFilms: 0,
         totalSelected: 0,
-        totalRejected: 0, 
+        totalRejected: 0,
         totalPending: 0,
+        totalSubmitted: 0,
         filmsByCountry: [],
         newUsersToday: 0,
+        finishedJuries: 0,
+        totalJuries: 12,
+        workshopOccupation: 0,
         admin: { name: "Admin user", role: "Admin" }
     });
     const [loading, setLoading] = useState(true);
@@ -27,9 +32,12 @@ const AdminDash = () => {
         const fetchData = async () => {
             try {
                 const response = await fetch('http://localhost:3000/admin/stats', {
-                    credentials: 'include' // cookies/sessions
+                    credentials: 'include'
                 });
                 const json = await response.json();
+                
+                console.log("Données reçues:", json.data); 
+
                 if (json.success) {
                     setStats(prev => ({ ...prev, ...json.data }));
                 }
@@ -42,22 +50,23 @@ const AdminDash = () => {
         fetchData();
     }, []);
 
-    // initiales de l'avatar
+    // Initiales de l'avatar
     const getInitials = (name) => {
         if (!name) return "AD";
         return name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
     };
 
-    const filmProgress = Math.min(Math.round(((stats.totalSelected || 0) / 600) * 100), 100);
+    const selected = Number(stats.totalSelected || 0);
+    const rejected = Number(stats.totalRejected || 0);
+    const pending = Number(stats.totalPending || 0);
+    const submitted = Number(stats.totalSubmitted || 0);
+    
+    const totalVotes = selected + rejected + pending;
+    
+    // Barre de progression (Objectif 600) basée sur les votes + soumis
+    const filmProgress = Math.min(Math.round(((totalVotes + submitted) / 600) * 100), 100);
 
-    // Calcul pourcentages oui,non,pending
-    const totalVotes = (stats.totalSelected || 0) + (stats.totalRejected || 0) + (stats.totalPending || 0);
-    const getPercent = (value) => totalVotes > 0 ? Math.round((value / totalVotes) * 100) : 0;
-
-    // sert a charger les cmposant vide 
-    const Skeleton = ({ className }) => (
-        <div className={`animate-pulse bg-gray-200 rounded ${className}`}></div>
-    );
+    const getPercent = (value) => totalVotes > 0 ? Math.round((Number(value) / totalVotes) * 100) : 0;
 
     const calculateBestZone = () => {
         if (!stats.filmsByCountry || stats.filmsByCountry.length === 0) return "N/A";
@@ -67,7 +76,9 @@ const AdminDash = () => {
         return topEntry.country || "Inconnu";
     };
 
-    const bestZone = calculateBestZone();
+    const Skeleton = ({ className }) => (
+        <div className={`animate-pulse bg-gray-200 rounded ${className}`}></div>
+    );
 
     return (
         <div className="flex min-h-screen bg-[#F2F2F2] font-sans">
@@ -75,91 +86,31 @@ const AdminDash = () => {
 
             <main className="flex-1 p-8 lg:p-12 overflow-y-auto">
 
-                {/* HEADER PROFIL */}
-                <div className="flex justify-between items-center mb-12 relative">
-                    <h2 className="text-gray-400 tracking-widest font-bold text-xs uppercase">
-                        Back-office Officiel
-                    </h2>
-
-                    <div className="relative">
-                        <button
-                            onClick={() => setIsMenuOpen(!isMenuOpen)}
-                            className="flex items-center gap-4 bg-white p-1.5 pr-6 rounded-2xl shadow-sm border border-transparent hover:border-gray-200 transition-all cursor-pointer group"
-                        >
-                            {loading ? (
-                                <Skeleton className="w-10 h-10 rounded-xl" />
-                            ) : (
-                                <div className="w-10 h-10 rounded-xl bg-slate-900 flex items-center justify-center text-white font-black text-xs shadow-sm relative group-hover:scale-105 transition-transform">
-                                    {getInitials(stats.admin?.name)}
-                                    <span className="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-emerald-500 border-2 border-white rounded-full"></span>
-                                </div>
-                            )}
-
-                            <div className="text-left hidden sm:block">
-                                {loading ? (
-                                    <div className="space-y-1">
-                                        <Skeleton className="h-3 w-16" />
-                                        <Skeleton className="h-2 w-10" />
-                                    </div>
-                                ) : (
-                                    <>
-                                        <p className="text-sm font-black text-black leading-none mb-1">{stats.admin?.name}</p>
-                                        <p className="text-[9px] font-bold text-orange-400 uppercase tracking-tight">{stats.admin?.role}</p>
-                                    </>
-                                )}
-                            </div>
-                        </button>
-
-                        {isMenuOpen && (
-                            <>
-                                <div className="fixed inset-0 z-10" onClick={() => setIsMenuOpen(false)}></div>
-                                <div className="absolute right-0 mt-3 w-48 bg-white rounded-2xl shadow-xl border border-gray-50 py-2 z-20 overflow-hidden animate-in fade-in zoom-in duration-150 origin-top-right">
-                                    <Link to="/admin/profile" className="block px-5 py-3 text-[11px] font-bold text-gray-600 hover:bg-gray-50 transition-colors uppercase tracking-wider">
-                                        Mon Profil
-                                    </Link>
-
-                                    <Link to="/admin/setting" className="block px-5 py-3 text-[11px] font-bold text-gray-600 hover:bg-gray-50 transition-colors uppercase tracking-wider">
-                                        Paramètres
-                                    </Link>
-                                    <button
-                                        onClick={() => console.log("Déconnexion")}
-                                        className="w-full text-left px-5 py-3 text-[11px] font-bold text-red-500 hover:bg-red-50 transition-colors uppercase tracking-wider border-t border-gray-50"
-                                    >
-                                        Déconnexion
-                                    </button>
-                                </div>
-                            </>
-                        )}
-                    </div>
-                </div>
+                
 
                 <div className="mb-12">
-                    <h2 className="text-amber-500 font-bold mb-2 tracking-widest text-xs uppercase">
-                        ADMIN MANAGEMENT
-                    </h2>
-                    <h1 className="text-4xl font-black text-black mb-4 tracking-tighter">
-                        VUE D'ENSEMBLE
-                    </h1>
-                    <p className="text-gray-500 max-w-xl text-sm font-medium">
-                        Analyse détaillée de la progression du festival et des indicateurs de performance.
-                    </p>
+                    <h2 className="text-amber-500 font-bold mb-2 tracking-widest text-xs uppercase">ADMIN MANAGEMENT</h2>
+                    <h1 className="text-4xl font-black text-black mb-4 tracking-tighter">VUE D'ENSEMBLE</h1>
+                    <p className="text-gray-500 max-w-xl text-sm font-medium">Analyse détaillée de la progression du festival.</p>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
 
                     {/* CARD FILMS */}
-                    <div className="bg-white p-8 rounded-2xl shadow-sm space-y-6 group cursor-default transition-all duration-300 hover:shadow-md">
+                    <div className="bg-white p-8 rounded-2xl shadow-sm space-y-6 group transition-all duration-300 hover:shadow-md">
                         <div className="flex justify-between items-center">
-                            {loading ? <Skeleton className="w-8 h-8" /> :
-                                <img src={filmIcon} alt="" className="w-8 h-8 object-contain transition-transform duration-300 group-hover:scale-110" />
-                            }
-                            <p className="text-blue-800 font-bold text-[10px] tracking-widest uppercase bg-blue-50 px-3 py-1 rounded-full">
-                                Objectif 600
-                            </p>
+                            {loading ? <Skeleton className="w-8 h-8" /> : <img src={filmIcon} alt="" className="w-8 h-8 object-contain group-hover:scale-110 transition-transform" />}
+                            <p className="text-blue-800 font-bold text-[10px] tracking-widest uppercase bg-blue-50 px-3 py-1 rounded-full">Objectif 600</p>
                         </div>
                         <div>
-                            {loading ? <Skeleton className="h-10 w-20 mb-2" /> : <p className="text-4xl font-black text-black">{stats.totalSelected || 0}</p>}
+                            {loading ? <Skeleton className="h-10 w-20 mb-2" /> : <p className="text-4xl font-black text-black">{totalVotes}</p>}
                             <p className="text-gray-400 text-[10px] font-bold uppercase mt-1">Films évalués par le comité</p>
+                            
+                            {!loading && submitted > 0 && (
+                                <p className="text-orange-500 text-[9px] font-black uppercase mt-2 italic animate-pulse">
+                                     {submitted} nouveaux films en submitted
+                                </p>
+                            )}
                         </div>
                         <div className="flex items-center gap-4">
                             <div className="flex-1 bg-gray-100 rounded-full h-2 overflow-hidden">
@@ -170,86 +121,57 @@ const AdminDash = () => {
                     </div>
 
                     {/* CARD COMITE */}
-                    <div className="bg-white p-8 rounded-2xl shadow-sm space-y-6 group cursor-default transition-all duration-300 hover:shadow-md">
+                    <div className="bg-white p-8 rounded-2xl shadow-sm space-y-6 group transition-all duration-300 hover:shadow-md">
                         <div className="flex justify-between items-center">
-                            {loading ? <Skeleton className="w-8 h-8" /> :
-                                <img src={juryIcon} alt="" className="w-8 h-8 object-contain transition-transform duration-300 group-hover:scale-110" />
-                            }
-                            <p className="text-orange-500 font-bold text-[10px] tracking-widest uppercase bg-orange-50 px-3 py-1 rounded-full">Quota 100/Juré</p>
+                            <img src={juryIcon} alt="" className="w-8 h-8 object-contain group-hover:scale-110 transition-transform" />
+                            <p className="text-orange-500 font-bold text-[10px] uppercase bg-orange-50 px-3 py-1 rounded-full">Quota 100/Jury</p>
                         </div>
                         <div>
-                            {loading ? <Skeleton className="h-10 w-28 mb-2" /> :
-                                <p className="text-4xl font-black text-black">
-                                    {String(stats.finishedJuries || 0).padStart(2, '0')}/{String(stats.totalJuries || 12).padStart(2, '0')}
-                                </p>
-                            }
+                            <p className="text-4xl font-black text-black">
+                                {String(stats.finishedJuries || 0).padStart(2, '0')}/{String(stats.totalJuries || 12).padStart(2, '0')}
+                            </p>
                             <p className="text-gray-400 text-[10px] font-bold uppercase mt-1">Comité ayant finalisé leur lot</p>
                         </div>
                         <div className="flex items-center gap-4">
-                            <div className="flex-1 bg-gray-100 rounded-full h-2 overflow-hidden">
-                                <div
-                                    className="bg-orange-400 h-2 rounded-full transition-all duration-1000"
-                                    style={{ width: `${((stats.finishedJuries || 0) / (stats.totalJuries || 12)) * 100}%` }}
-                                />
+                            <div className="flex-1 bg-gray-100 rounded-full h-2">
+                                <div className="bg-orange-400 h-2 rounded-full transition-all" style={{ width: `${((stats.finishedJuries || 0) / (stats.totalJuries || 12)) * 100}%` }} />
                             </div>
-                            <span className="text-[10px] font-bold w-8 text-right text-gray-400">
-                                {Math.round(((stats.finishedJuries || 0) / (stats.totalJuries || 12)) * 100)}%
-                            </span>
+                            <span className="text-[10px] font-bold text-gray-400">{Math.round(((stats.finishedJuries || 0) / (stats.totalJuries || 12)) * 100)}%</span>
                         </div>
                     </div>
 
                     {/* CARD PAYS */}
-                    <div className="bg-white p-8 rounded-2xl shadow-sm group cursor-default transition-all duration-300 hover:shadow-md flex flex-col justify-between">
-                        <div className="space-y-4">
-                            <div className="flex justify-between items-start">
-                                <div className="flex items-center gap-4">
-                                    {loading ? <Skeleton className="w-6 h-6" /> :
-                                        <img src={earthIcon} alt="" className="w-6 h-6 object-contain transition-transform duration-300 group-hover:scale-110" />
-                                    }
-                                    <p className="text-gray-400 font-bold text-[10px] uppercase tracking-widest">Pays représentés</p>
-                                </div>
-                                {!loading && stats.filmsByCountry?.length > 0 && (
-                                    <span className="text-[9px] font-black bg-emerald-50 text-emerald-600 px-2 py-1 rounded-md uppercase tracking-tighter border border-emerald-100">
-                                        Top : {bestZone}
-                                    </span>
-                                )}
+                    <div className="bg-white p-8 rounded-2xl shadow-sm group transition-all duration-300 hover:shadow-md">
+                        <div className="flex justify-between items-start mb-4">
+                            <div className="flex items-center gap-4">
+                                <img src={earthIcon} alt="" className="w-6 h-6 object-contain" />
+                                <p className="text-gray-400 font-bold text-[10px] uppercase tracking-widest">Pays représentés</p>
                             </div>
-                            <div>
-                                {loading ? <Skeleton className="h-10 w-16" /> : (
-                                    <div className="flex items-baseline gap-2">
-                                        <p className="text-4xl font-black text-black">{stats.filmsByCountry?.length || 0}</p>
-                                        <span className="text-gray-400 text-[10px] font-bold uppercase tracking-widest">Nations</span>
-                                    </div>
-                                )}
-                            </div>
+                            <span className="text-[9px] font-black bg-emerald-50 text-emerald-600 px-2 py-1 rounded-md uppercase border border-emerald-100">
+                                Top : {calculateBestZone()}
+                            </span>
                         </div>
-                        <div className="w-full bg-gray-50 h-1 rounded-full mt-4 overflow-hidden">
-                            <div className="bg-emerald-400 h-full w-1/2 rounded-full opacity-50" />
+                        <div className="flex items-baseline gap-2">
+                            <p className="text-4xl font-black text-black">{stats.filmsByCountry?.length || 0}</p>
+                            <span className="text-gray-400 text-[10px] font-bold uppercase tracking-widest">Nations</span>
                         </div>
                     </div>
 
-                    {/* CARD STATS PLAYLIST */}
-                    <div className="bg-white p-8 rounded-2xl shadow-sm space-y-6 group cursor-default transition-all duration-300 hover:shadow-md">
+                    {/* CARD DETAILS VOTES */}
+                    <div className="bg-white p-8 rounded-2xl shadow-sm space-y-6 group transition-all duration-300 hover:shadow-md">
                         <div className="flex justify-between items-center">
-                            {loading ? <Skeleton className="w-6 h-6" /> :
-                                <img src={statistiqueIcon} alt="" className="w-6 h-6 object-contain transition-transform duration-300 group-hover:scale-110" />
-                            }
-                            <p className="text-blue-800 font-bold text-[10px] tracking-widest uppercase bg-blue-50 px-3 py-1 rounded-full">Détails des votes</p>
+                            <img src={statistiqueIcon} alt="" className="w-6 h-6 object-contain" />
+                            <p className="text-blue-800 font-bold text-[10px] uppercase bg-blue-50 px-3 py-1 rounded-full">Détails des votes</p>
                         </div>
                         <div className="space-y-4">
                             {[
-                                { label: "OUI", count: stats.totalSelected, color: "emerald", link: "/admin/films/selected" },
-                                { label: "NON", count: stats.totalRejected, color: "red", link: "/admin/films/rejected" },
-                                { label: "À DISCUTER", count: stats.totalPending, color: "orange", link: "/admin/films/pending" }
+                                { label: "OUI", count: selected, color: "emerald", link: "/admin/films/selected" },
+                                { label: "NON", count: rejected, color: "red", link: "/admin/films/rejected" },
+                                { label: "À DISCUTER", count: pending, color: "orange", link: "/admin/films/pending" }
                             ].map((item, index) => {
-                                // Calcul du pourcentage local
                                 const percentage = getPercent(item.count);
                                 return (
-                                    <Link
-                                        key={index}
-                                        to={item.link}
-                                        className="flex items-center gap-4 hover:bg-gray-50 p-2 -m-2 rounded-xl transition-all duration-200 hover:scale-[1.02]"
-                                    >
+                                    <Link key={index} to={item.link} className="flex items-center gap-4 hover:bg-gray-50 p-2 -m-2 rounded-xl transition-all">
                                         <div className={`flex items-center gap-2 w-24 text-${item.color}-600`}>
                                             <div className={`w-2 h-2 rounded-full bg-${item.color}-500`} />
                                             <span className="text-[10px] font-black uppercase">{item.label}</span>
@@ -265,24 +187,20 @@ const AdminDash = () => {
                     </div>
 
                     {/* CARD WORKSHOP */}
-                    <div className="bg-slate-900 text-white p-8 rounded-2xl shadow-lg space-y-6 group relative overflow-hidden transition-transform duration-300 hover:scale-[1.01]">
-                        <div className="relative z-10">
-                            <div className="flex justify-between items-start mb-4">
-                                <p className="text-blue-400 font-bold text-[10px] tracking-widest uppercase">Taux d'occupation Workshop</p>
-                                {loading ? <Skeleton className="w-6 h-6 bg-slate-700" /> :
-                                    <img src={calendarIcon} alt="" className="w-6 h-6 object-contain brightness-0 invert transition-transform duration-300 group-hover:scale-110" />
-                                }
-                            </div>
-                            {loading ? <Skeleton className="h-10 w-24 mb-3 bg-slate-700" /> : <p className="text-4xl font-black mb-3">{stats.workshopOccupation || 0}%</p>}
-                            <div className="w-full bg-slate-700 rounded-full h-1 mb-6">
-                                <div className="bg-blue-400 h-1 rounded-full" style={{ width: `${stats.workshopOccupation || 0}%` }} />
-                            </div>
-                            <Link to="/workshop">
-                                <button className="bg-blue-600 hover:bg-blue-700 transition text-white font-bold py-3 rounded-xl w-full text-sm uppercase tracking-widest active:scale-95">
-                                    Voir tous les workshops
-                                </button>
-                            </Link>
+                    <div className="bg-slate-900 text-white p-8 rounded-2xl shadow-lg space-y-6 group transition-all duration-300 hover:scale-[1.01]">
+                        <div className="flex justify-between items-start">
+                            <p className="text-blue-400 font-bold text-[10px] tracking-widest uppercase">Taux d'occupation Workshop</p>
+                            <img src={calendarIcon} alt="" className="w-6 h-6 brightness-0 invert" />
                         </div>
+                        <p className="text-4xl font-black">{stats.workshopOccupation || 0}%</p>
+                        <div className="w-full bg-slate-700 rounded-full h-1">
+                            <div className="bg-blue-400 h-1 rounded-full transition-all duration-1000" style={{ width: `${stats.workshopOccupation || 0}%` }} />
+                        </div>
+                        <Link to="/workshop" className="block w-full">
+                            <button className="bg-blue-600 hover:bg-blue-700 transition text-white font-bold py-3 rounded-xl w-full text-sm uppercase tracking-widest">
+                                Voir tous les workshops
+                            </button>
+                        </Link>
                     </div>
 
                     {/* CARD USERS INSCRITS */}

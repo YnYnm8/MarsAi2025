@@ -9,7 +9,7 @@ const AdminAllFilms = () => {
     const [searchTerm, setSearchTerm] = useState("");
     const navigate = useNavigate();
 
-    // --- ÉTATS POUR LA PAGINATION ---
+    // Etats pagination 
     const [currentPage, setCurrentPage] = useState(1);
     const filmsPerPage = 20;
 
@@ -44,7 +44,6 @@ const AdminAllFilms = () => {
                director.toLowerCase().includes(searchTerm.toLowerCase());
     });
 
-    // --- LOGIQUE DE CALCUL PAGINATION ---
     const totalPages = Math.ceil(filteredFilms.length / filmsPerPage);
     const indexOfLastFilm = currentPage * filmsPerPage;
     const indexOfFirstFilm = indexOfLastFilm - filmsPerPage;

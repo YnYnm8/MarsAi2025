@@ -94,15 +94,49 @@ export const getPendingFilms = async (req, res) => {
   }
 };
 
-// PATCH /admin/id/status
+// PUT /admin/id/status
 export const updateFilmStatus = async (req, res) => {
   try {
     const { id } = req.params;
-    const { status } = req.body;
-    const result = await adminService.updateFilmStatus(id, status);
+    const { playlistId } = req.body; 
+
+    // On passe playlistId au service
+    const result = await adminService.updateFilmStatus(id, playlistId);
+    
     res.json({ success: true, data: result });
   } catch (error) {
+    console.error("Erreur contrôleur status:", error.message);
     res.status(400).json({ success: false, message: error.message });
   }
 };
 
+
+
+// GET /admin/playlist/:id
+export const getPlaylistDetails = async (req, res) => {
+  try {
+    const { id } = req.params;
+    
+    const playlist = await adminService.getFilmsByPlaylistId(id);
+    
+    if (!playlist) {
+      return res.status(404).json({ 
+        success: false, 
+        message: "Playlist non trouvée ou vide" 
+      });
+    }
+    
+    res.json({ 
+      success: true, 
+      data: playlist 
+    });
+
+  } catch (error) {
+    console.error("Erreur contrôleur playlist:", error.message);
+    res.status(500).json({ 
+      success: false, 
+      message: "Erreur serveur", 
+      error: error.message 
+    });
+  }
+};

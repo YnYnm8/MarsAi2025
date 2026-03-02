@@ -84,7 +84,7 @@ export default function Note() {
  const handleSavereview = async (clickedStatus) => {
   if (!selectedFilm) return alert("No film selected!");
   if (!value || value < 1) return alert("Please note your film!");
-  if (!clickedStatus) return alert("Please select ACCEPTED, REFUSED or TO_DISCUSS");
+  if (!clickedStatus) return alert("Please select SELECTED, REFUSED or TO_DISCUSS");
 
   try {
     // 1️⃣ レビューを登録
@@ -110,7 +110,7 @@ export default function Note() {
     await reviewResponse.json();
 
     // 2️⃣ ACCEPTEDなら公式セレクションに登録
-    if (clickedStatus === "ACCEPTED") {
+    if (clickedStatus === "selected") {
       const selectionResponse = await fetch("http://localhost:3000/comite/select", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -377,30 +377,30 @@ export default function Note() {
               {(!value || value < 1) && <span className="text-white text-sm">PLEASE NOTE BEFORE</span>}
 
               <button
-                onClick={() => handleSavereview("ACCEPTED")}
+                onClick={() => handleSavereview("selected")}
                 disabled={!value || value < 1}
                 className={`bg-[#246BAD] text-white rounded-lg px-6 py-2 text-sm font-semibold ${!value || value < 1 ? "opacity-50 cursor-not-allowed" : ""
                   }`}
               >
-                ACCEPTED
+                SELECTED
               </button>
 
               <button
-                onClick={() => handleSavereview("REFUSED")}
+                onClick={() => handleSavereview("rejected")}
                 disabled={!value || value < 1}
                 className={`bg-[#FF5845] text-white rounded-lg px-6 py-2 text-sm font-semibold ${!value || value < 1 ? "opacity-50 cursor-not-allowed" : ""
                   }`}
               >
-                REFUSED
+                REJECTED
               </button>
 
               <button
-                onClick={() => handleSavereview("TO_DISCUSS")}
+                onClick={() => handleSavereview("pending")}
                 disabled={!value || value < 1}
                 className={`bg-green-300 text-white rounded-lg px-6 py-2 text-sm font-semibold ${!value || value < 1 ? "opacity-50 cursor-not-allowed" : ""
                   }`}
               >
-                TO_DISCUSS
+                PENDING
               </button>
 
               <button

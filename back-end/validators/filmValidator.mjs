@@ -20,7 +20,7 @@ export const filmSchema = z.object({
         .preprocess(val => Number(val), z.number().positive().max(120, "Durée maximale 2 minutes")),
 
 
-    status: z.enum(["submitted", "accepted", "rejected"]).default("submitted"),
+    status: z.enum(["submitted", "selected", "rejected"]).default("submitted"),
 
     description: z
         .string()

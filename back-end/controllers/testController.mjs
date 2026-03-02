@@ -81,8 +81,8 @@ export async function reviewFilm(req, res) {
 
     // ② ステータス変換
     let PlaylistId;
-    if (status === "ACCEPTED") PlaylistId = 2;
-    if (status === "REFUSED") PlaylistId = 3;
+    if (status === "selected") PlaylistId = 2;
+    if (status === "rejected") PlaylistId = 3;
 
     let playlistFilm = await PlaylistFilm.findOne({
       where: { FilmId, UserId },
@@ -256,7 +256,7 @@ export async function refuseFilm(req, res) {
     }
 
     return res.json({
-      message: "映画を REFUSED に更新しました",
+      message: "映画を REJECTED に更新しました",
       data: playlistFilm
     });
 

@@ -24,7 +24,9 @@ import EditFilm from "./pages/films/editFilm.jsx";
 import AdminAllFilms from "./pages/admin/adminallfilm.jsx"
 import TopNavbar from "./components/navbar.jsx";
 import Footer from "./components/footer.jsx";
-
+import AdminPlaylist from './pages/admin/adminplaylist.jsx'; 
+import AdminPlaylistDetail from './pages/admin/adminplaylistdetail.jsx';
+ 
 
 function App() {
   const location = useLocation(); 
@@ -69,6 +71,8 @@ function App() {
           {/* <Route path="/admin/profile" element={<AdminProfile />} /> */}
           <Route path="/admin/films" element={<AdminAllFilms />} />
           <Route path="/admin/films/:status" element={<AdminAllFilms />} />
+          <Route path="/admin/playlists" element={<AdminPlaylist />} />
+          <Route path="/admin/playlist/:id" element={<AdminPlaylistDetail />} />
 
         </Routes>                                                                              
       </main>

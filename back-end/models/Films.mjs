@@ -7,6 +7,7 @@ const Film = sequelize.define("Film", {
         primaryKey: true,
         autoIncrement: true
     },
+   
     title: {
         type: DataTypes.STRING,
         allowNull: false,
