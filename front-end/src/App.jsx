@@ -18,7 +18,7 @@ import Adminrejected from "./pages/admin/adminrejected.jsx";
 import Adminpending from "./pages/admin/adminpending.jsx";
 import Reservation from "./pages/reservation/reservation.jsx";
 import Jury from "./pages/jury/jury.jsx";
-import Gallery from "./pages/public/gallery.jsx";
+import Gallery from "./pages/gallery/Gallery.jsx";
 import EditFilm from "./pages/films/editFilm.jsx";
 // import AdminProfile from "./pages/admin/adminprofile.jsx";
 import AdminAllFilms from "./pages/admin/adminallfilm.jsx"
@@ -27,10 +27,13 @@ import Footer from "./components/footer.jsx";
 import AdminPlaylist from './pages/admin/adminplaylist.jsx'; 
 import AdminPlaylistDetail from './pages/admin/adminplaylistdetail.jsx';
  
+import Contact from "./pages/auth/Contact.jsx";
+import ComiteProfile from "./pages/films/ComiteProfile.jsx";
+
 
 function App() {
-  const location = useLocation(); 
-  const isNotePage = location.pathname === "/note"; 
+  const location = useLocation();
+  const isNotePage = location.pathname === "/note";
 
   return (
     <>
@@ -45,6 +48,9 @@ function App() {
           {/* FILMS*/}
           <Route path="/films/:id" element={<FilmsDetails />} />
           <Route path="/note" element={<Note />} />
+           <Route path="/comiteprofile" element={<ComiteProfile />} />
+
+          
           <Route path="/form-movie" element={<PostFilm />} />
           <Route path="/edit/:id" element={<EditFilm />} />
 
@@ -66,15 +72,20 @@ function App() {
           <Route path="/admin/films/rejected" element={<Adminrejected />} />
           <Route path="/admin/films/pending" element={<Adminpending />} />
 
-          <Route path="/reservation" element={<Reservation/>}/>
-          <Route path="/jury" element={<Jury/>}/>
+          {/* CONTACT */}
+          <Route path="/contact" element={<Contact/>} />
+
+          <Route path="/reservation" element={<Reservation />} />
+          <Route path="/jury" element={<Jury />} />
           {/* <Route path="/admin/profile" element={<AdminProfile />} /> */}
           <Route path="/admin/films" element={<AdminAllFilms />} />
           <Route path="/admin/films/:status" element={<AdminAllFilms />} />
           <Route path="/admin/playlists" element={<AdminPlaylist />} />
           <Route path="/admin/playlist/:id" element={<AdminPlaylistDetail />} />
 
-        </Routes>                                                                              
+
+
+        </Routes>
       </main>
       {!isNotePage && <Footer />}    </>
   );

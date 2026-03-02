@@ -1,3 +1,5 @@
+import { DataTypes } from "sequelize";
+import sequelize from "../config/database.mjs"; 
 import Film from "../models/Films.mjs";
 import User from "../models/User.mjs";
 import File from "../models/File.mjs";
@@ -6,9 +8,12 @@ import Playlist from "../models/Playlist.mjs";
 import PlaylistFilm from "../models/PlaylistFilm.mjs";
 import { catchError } from "../helpers/errorHandler.mjs";
 import { updateFilmSchema } from "../validators/filmValidator.mjs";
-import { handleFileProcessing } from "../helpers/proccesFiles.mjs"
+import { handleFileProcessing } from "../helpers/proccesFiles.mjs";
+import Note from "../models/Note.mjs";
+import { notifyFilmSubmitted, notifyFilmSelected } from "../services/notificationService.mjs";
+
 /*
-*  GET  /films
+* GET  /films
 * Recuperation des tous les films
 */
 // export async function getFilms(req, res) {
@@ -58,11 +63,26 @@ export async function getFilms(req, res) {
                 },
                 {
                     model: User, 
-                    attributes: ['firstName', 'lastName', 'country', 'avatar'] 
+                    attributes: [ 'firstName', 'lastName', 'country', 'avatar'] 
                 },
-                { model: Playlist },
-                { model: PlaylistFilm }
+               
+                {
+                    model: Playlist,
+                },{
+                    
+                    model:PlaylistFilm,
+                },{
+                    model: Note, as:"NotesDirect",
+                    attributes: ['id', 'UserId', 'score', 'comment'],
+                    include: [
+                        {
+                            model: User,  
+                            attributes: ['firstName', 'lastName']
+                        }
+                    ]
+                }
             ],
+            
             order: [['createdAt', 'DESC']]
         });
 
@@ -115,14 +135,14 @@ export async function getFilmById(req, res) {
         }
         return res.status(200).json(FilmData);
     } catch (err) {
-        return catchError(res, err)
+        return catchError(res, err);
     }
 }
+
 /*
  * GET  /films/select  == /films/select/list
- *  Récupération de tous les films de la table Selection
+ * Récupération de tous les films de la table Selection
  */
-
 export async function getFilmsSelect(req, res) {
     try {
         const selectData = await Selection.findAll({
@@ -139,7 +159,6 @@ export async function getFilmsSelect(req, res) {
                             attributes: ['id', 'firstName', 'lastName']
                         },
                         {
-                            // poster_url
                             model: File,
                             as: 'Files', 
                             attributes: ['poster_url'],
@@ -155,10 +174,6 @@ export async function getFilmsSelect(req, res) {
         res.status(500).json({ message: err.message });
     }
 }
-/*
-*  POST  /films
-*   Creation d'un nouveau film
-*/
 
 // export async function createFilm(req, res) {
 //     try {
@@ -175,14 +190,14 @@ export async function getFilmsSelect(req, res) {
 
 export async function createFilm(req, res) {
     try {
-        // Création du Film
+        // 1. Création du Film en base de données
         const newFilm = await Film.create({
             ...req.body,
             userId: req.user.id
         });
 
-        // Création File (pour l'image/poster)
-        // On vérifie req.files (rempli par uploadFields/Multer)
+        // 2. Création de l'entrée File et liaison avec le Film
+        // On vérifie req.files (rempli par ton middleware Multer)
         if (req.files && req.files.poster) {
             await File.create({
                 poster_url: req.files.poster[0].filename, 
@@ -190,11 +205,28 @@ export async function createFilm(req, res) {
             });
         }
 
-        const completeFilm = await Film.findByPk(newFilm.id, { include: [File] });
-        return res.status(201).json(completeFilm);
+        // 3. Récupération du film complet avec ses relations pour la suite
+        const film = await Film.findByPk(newFilm.id, {
+            include: [{ model: File }, { model: User }], 
+        });
+
+        // 4. NOTIFICATION AU RÉALISATEUR 
+        if (film && film.User) {
+            try {
+                const deps = { models: req.app.locals.models, io: req.app.locals.io };
+                // Appel de la fonction de notification
+                await notifyFilmSubmitted({ director: film.User, film, deps });
+            } catch (notifError) {
+                console.error("Erreur notification createFilm:", notifError);
+                // On ne bloque pas la réponse client si seule la notification échoue
+            }
+        }
+
+        // 5. Renvoi du film créé et complet au front-end
+        return res.status(201).json(film);
 
     } catch (err) {
-        console.error("Erreur création film:", err);
+        console.error("Erreur globale createFilm:", err);
         return res.status(500).json({ message: err.message });
     }
 }
@@ -214,7 +246,6 @@ export async function updateFilm(req, res) {
         if (!film) return res.status(404).json({ message: "Film non trouvé" });
         if (req.user.id !== film.UserId) return res.status(403).json({ message: "Accès refusé" });
 
-
         const validation = updateFilmSchema.safeParse({ ...req.body, ...req.files });
         
         if (!validation.success) {
@@ -227,13 +258,10 @@ export async function updateFilm(req, res) {
 
         await film.update(validation.data);
 
-       
         const existingFileRecord = await File.findOne({ where: { FilmId: film.id } });
-        
         
         await handleFileProcessing(film.id, req.files, existingFileRecord);
 
-       
         const updatedFilm = await Film.findByPk(film.id, { include: File });
         return res.status(200).json(updatedFilm);
 
@@ -242,12 +270,10 @@ export async function updateFilm(req, res) {
     }
 }
 
-
 /**
  * DELETE  /films/:id
  * Suppression d'un film existant
  */
-
 export async function deleteFilm(req, res) {
     try {
         const filmId = parseInt(req.params.id);
@@ -277,7 +303,6 @@ export async function deleteFilm(req, res) {
  * GET /films/my-submissions
  * Récupérer les films créés par l'utilisateur connecté
 */
-
 export async function getFilmsByUser(req, res) {
     try {
         const UserId = req.user?.id;
@@ -288,7 +313,7 @@ export async function getFilmsByUser(req, res) {
 
         const FilmData = await Film.findAll({
             where: {
-                userId: UserId
+                UserId: UserId
             },
             include: [
                 {
@@ -297,7 +322,8 @@ export async function getFilmsByUser(req, res) {
                 }
             ],
             order: [['createdAt', 'DESC']]
-        })
+        });
+        
         if (!FilmData || FilmData.length === 0) {
             return res.status(200).json({
                 message: "Vous n'avez aucun film pour le moment",
@@ -307,8 +333,6 @@ export async function getFilmsByUser(req, res) {
         return res.status(200).json(FilmData);
 
     } catch (err) {
-        return catchError(res, err)
+        return catchError(res, err);
     }
-
 }
-

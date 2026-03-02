@@ -1,0 +1,63 @@
+{
+  "alerts": {
+    "confirmSubmit": "Es ou asiré ou lé voyé fim tala? Asiré kòw tout sé enfòmasyon-an bon avan ou kontinié.",
+    "errorUnknown": "Lérè nou pa konnèt",
+    "networkError": "Lérè rézo",
+    "successSubmit": "Fim-lan voyé épi siksé !"
+  },
+  "header": {
+    "callForProjects": "Apèl a Pwojé 2026",
+    "submitTitle1": "Soumèt an ",
+    "submitTitle2": "fim",
+    "description1": "Transmèt sé zéléman tèknik-la, lizaJ IA-a épi konpozisyon lékip-ou a.",
+    "description2": "Tout sé chan-an ki ni an zétwèl (*) oblijatwa."
+  },
+  "options": {
+    "fullAi": "Jénérasyon total (100% IA)",
+    "hybrid": "Prodiksyon ibrid (Vré zimaj + épi IA)"
+  },
+  "step1": {
+    "title": "01. Idantité Fim-lan",
+    "titleLabel": "TIT *",
+    "titlePlaceholder": "TIT",
+    "durationLabel": "KANTITÉ TAN EGZAK (AN SGON) *",
+    "durationPlaceholder": "EGZ:60",
+    "synopsisLabel": "MANIFÈS / RÉZIMÉ * (MAKS. 300 KARAKTÈ)",
+    "synopsisPlaceholder": "Rézimé lidé fim-ou a épi listwa a i ka rakonte an dé-twa liy..."
+  },
+  "step2": {
+    "title": "02. Déklarasyon Lizaj IA",
+    "transparencyText": "MARS.A.I ka mandé wè klè anlè itilizasyon Entélijans Artifisyèl. Chwazi tout sé zouti jénératif la ou itilizé adan travay-ou a.",
+    "classificationLabel": "Klasifikasyon Zèv-la : * Chwazi yonn adan :",
+    "stackLabel": "Stak Tèknolojik *",
+    "stackPlaceholder": "Fè lis sé zouti-a ou itilizé a (egz: Midjourney pou zimaj, ElevenLabs pou vwa, Runway pou animasyon...)",
+    "methodologyLabel": "Métablisman Kréyatif",
+    "methodologyPlaceholder": "Dékri entéraksyon ant moun-lan épi machin-lan adan travay tala.."
+  },
+  "step3": {
+    "title": "03. Sa ou ka Livré & Aksésibilité",
+    "youtubeLabel": "Lien YouTube (Piblik / Pa anréjistré) *",
+    "posterLabel": "Vinyèt Ofisyèl (16:9) *",
+    "galleryLabel": "Galri Médya (Zimaj - Maks 2)"
+  },
+  "step4": {
+    "title": "04. Konpozisyon Lékip-la",
+    "mr": "Msiyé",
+    "mrs": "Madanm",
+    "namePlaceholder": "EGZ: JEAN DUPOND",
+    "addCollaborator": "+ Ajouté an kolaboratè"
+  },
+  "footer": {
+    "certificateTitle": "Sèrtifika Pwopriyété",
+    "certificateText": "Lè ou ka voyé dosiyé tala, ou ka sètifyé asou lonè'w sé wou ki mèt orijinal zèv-la épi ou ni tout dwa pou difizé'y.",
+    "submitBtn": "Fini voyé dosiyé'a"
+  },
+  "DynamicInput": {
+  "addButton": "Ajouté",
+  "subtitleLabel": "Soutit (Maks 5)",
+  "typeFile": "Fichyé",
+  "typeLink": "Lyen",
+  "chooseFile": "Chwazi an fichyé .SRT",
+  "pasteLink": "Kolé lyen-an"
+}
+}

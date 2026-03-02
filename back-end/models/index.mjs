@@ -14,9 +14,23 @@ import PlaylistFilm from "./PlaylistFilm.mjs";
 import WorkshopCategory from "./WorkshopCategory.mjs";
 import FilmSponsor from "./FilmSponsor.mjs";
 
+import { Model } from "sequelize";
 
 
 
+console.log("\n=== 🔍 VÉRIFICATION DES TYPES DE MODÈLES ===");
+const allModels = { User, Film, Playlist, Selection, File, Price, Sponsor, Workshop, Notification, Note, Annotation, PlaylistFilm };
+
+for (const [name, model] of Object.entries(allModels)) {
+  if (!model) {
+    console.log(`❌ ${name} est UNDEFINED`);
+  } else if (!(model.prototype instanceof Model)) {
+    console.log(`❌ ${name} N'EST PAS UN MODÈLE SEQUELIZE (C'est un objet invalide)`);
+  } else {
+    console.log(`✅ ${name} est parfait`);
+  }
+}
+console.log("============================================\n");
 
 // === User ===
 User.hasMany(Film, { foreignKey: 'UserId', onDelete: "CASCADE" });
@@ -28,6 +42,9 @@ Playlist.belongsTo(User);
 User.belongsToMany(Film, { through: Note, as: 'Notes' , onUpdate: "CASCADE" });
 Film.belongsToMany(User, { through: Note, as: 'Notes' , onUpdate: "CASCADE"});
 
+User.hasMany(Note);
+Note.belongsTo(User);
+
 User.belongsToMany(Film, { through: Annotation, as: 'Annotators' });
 Film.belongsToMany(User, { through: Annotation, as: 'Annotators' });
 
@@ -37,8 +54,8 @@ Playlist.belongsTo(User, { foreignKey: { allowNull: true }, onDelete: "SET NULL"
 User.hasMany(Workshop);
 Workshop.belongsTo(User);
 
-User.hasMany(Notification);
-Notification.belongsTo(User);
+User.hasMany(Notification, { foreignKey: 'userId' });
+Notification.belongsTo(User, { foreignKey: 'userId' });
 
 // === Film ===
 Film.belongsToMany(Playlist, { through: PlaylistFilm});
@@ -56,6 +73,8 @@ Sponsor.belongsToMany(Film, { through: FilmSponsor });
 Film.belongsToMany(Selection, { through: "SelectionFilm" });
 Selection.belongsToMany(Film, { through: "SelectionFilm" });
 
+Film.hasMany(Note, { as: "NotesDirect" });
+Note.belongsTo(Film);
 // === Sponsor / Price ===
 Sponsor.hasMany(Price );
 Price.belongsTo(Sponsor);
