@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo } from "react";
 import { useParams } from "react-router-dom";
-import ListFilms from "./ListFilms";
+import ListFilms from "../comite/ListFilms";
 import { FilmComponent } from "../../components/film";
 import { useNavigate } from "react-router-dom";
 import { useRef } from "react";
@@ -320,7 +320,7 @@ export default function Note() {
         <aside className="w-full md:w-72 bg-black border-b md:border-b-0 md:border-r overflow-y-auto p-4 flex flex-col gap-4">
           {/* 上部のアクションボタン */}
           <button
-            onClick={() => navigate("/comiteprofile")}
+            onClick={() => navigate("/comite/profile")}
             className="bg-white text-black px-4 py-1 rounded-md font-semibold text-sm hover:bg-gray-100 transition"
           >
             VOIR MES ÉVALUATIONS
