@@ -145,7 +145,7 @@ export const updateProfile = async (req, res) => {
       return res.status(404).json({ message: "ERR_USER_NOT_FOUND" });
     }
 
-    // 2. GESTION DE L'AVATAR (via Multer)
+    // GESTION DE L'AVATAR (via Multer)
     if (req.files && req.files['avatar'] && req.files['avatar'][0]) {
 
         const fileName = req.files['avatar'][0].filename;
@@ -153,38 +153,34 @@ export const updateProfile = async (req, res) => {
         user.avatar = `uploads/${fileName}`; 
     }
 
-    // 3. RÉCUPÉRATION DES DONNÉES TEXTUELLES
-    const { firstName, lastName, bio, school, country, socialNetworks, instagram } = req.body;
+// AJOUT DES NOUVEAUX RESEAU
+    const { 
+      firstName, lastName, bio, school, country, 
+      instagram, youtube, linkedin, facebook, tiktok, x 
+    } = req.body;
 
-    // Mise à jour conditionnelle (seulement si le champ est envoyé)
     if (firstName !== undefined) user.firstName = firstName;
     if (lastName !== undefined) user.lastName = lastName;
     if (bio !== undefined) user.bio = bio;
     if (school !== undefined) user.school = school;
     if (country !== undefined) user.country = country;
 
-    // 4. GESTION DU JSON 'socialNetworks'
-    // FormData (utilisé pour envoyer des fichiers) transforme tout en string.
-    // Si 'socialNetworks' arrive comme chaîne "{...}", on doit le parser en JSON.
-    if (socialNetworks) {
-        try {
-            user.socialNetworks = typeof socialNetworks === 'string' 
-                ? JSON.parse(socialNetworks) 
-                : socialNetworks;
-        } catch (e) {
-            console.error("Erreur parsing JSON socialNetworks", e);
-            // On continue même si ça échoue, pour ne pas bloquer l'update du reste
-        }
-    } 
-    // Cas spécifique pour simplifier le front : si on envoie juste le champ "instagram"
-    else if (instagram) {
-        user.socialNetworks = { ...user.socialNetworks, instagram: instagram };
-    }
+    // On récupère les réseaux existants (ou un objet vide par défaut)
+    const currentSocials = user.socialNetworks || {};
 
-    // 5. SAUVEGARDE EN BASE DE DONNÉES
+    // On met à jour l'objet JSON avec les nouvelles valeurs envoyées par le Front
+    user.socialNetworks = {
+      ...currentSocials,
+      instagram: instagram !== undefined ? instagram : currentSocials.instagram,
+      youtube: youtube !== undefined ? youtube : currentSocials.youtube,
+      linkedin: linkedin !== undefined ? linkedin : currentSocials.linkedin,
+      facebook: facebook !== undefined ? facebook : currentSocials.facebook,
+      tiktok: tiktok !== undefined ? tiktok : currentSocials.tiktok,
+      x: x !== undefined ? x : currentSocials.x,
+    };
+
     await user.save();
 
-    // 6. PRÉPARATION DE LA RÉPONSE
     const cleanUser = user.toJSON();
     delete cleanUser.password;
 

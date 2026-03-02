@@ -1,7 +1,9 @@
 @import "tailwindcss";
 /* @plugin "daisyui"; */
-@import "tailwindcss";
 
+html, body {
+  overflow-x: hidden;
+}
 
 @theme {
   /* Colores de marca */

@@ -3,7 +3,8 @@ import { useLocation, useNavigate, Link } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { useTranslation } from "react-i18next"; 
+import { useTranslation } from "react-i18next";
+import { useAuth } from "../../context/authContext"; 
 
 import mailIcon from "/src/assets/mail.png";
 import logo from "/src/assets/icon-stars.png";
@@ -25,7 +26,8 @@ const Login = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const [serverError, setServerError] = useState("");
-  
+  const { refreshAuth } = useAuth(); 
+
   const successMessage = location.state?.successMessage;
 
   const { 
@@ -55,10 +57,12 @@ const Login = () => {
         } else {
           setServerError(t("error_login_failed"));
         }
-        return;
+        return; 
       }
 
+      
       console.log("Connexion réussie !");
+      await refreshAuth();
       navigate("/profile", { 
         state: { successMessage: "success_login" },
       });
@@ -100,7 +104,6 @@ const Login = () => {
           {/* Message de succès */}
           {successMessage && (
             <div className="mb-4 p-3 bg-green-900/20 border border-green-800/50 rounded text-green-400 text-xs text-center font-bold">
-              {/* On le traduit car Register a probablement envoyé une clé comme 'SUCCESS_REGISTER' */}
               {t(successMessage)}
             </div>
           )}
@@ -132,7 +135,6 @@ const Login = () => {
                   {...register("email")}
                 />
               </div>
-              {/* Traduction dynamique de l'erreur */}
               {errors.email && <p className="text-red-500 text-[10px] mt-1 font-bold">{t(errors.email.message)}</p>}
             </div>
 
@@ -154,7 +156,6 @@ const Login = () => {
                   {...register("password")}
                 />
               </div>
-              {/* Traduction dynamique de l'erreur */}
               {errors.password && <p className="text-red-500 text-[10px] mt-1 font-bold">{t(errors.password.message)}</p>}
             </div>
 
