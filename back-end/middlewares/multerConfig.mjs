@@ -10,7 +10,6 @@ const storage = multer.diskStorage({
     destination: (req, file, cb) => {
         const dir = path.resolve(__dirname, "../../front-end/public/uploads");
         if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
-        console.log('carpeta creada en:', dir)
         cb(null, dir)
     },
     filename: (req, file, cb) => {

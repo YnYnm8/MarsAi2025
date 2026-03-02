@@ -136,7 +136,7 @@ export default function Footer() {
               {t('footer.link_press')}
             </Link>
             <Link
-              to="/content/contact"
+              to="/contact"
               className="font-['Plus_Jakarta_Sans'] font-[700] text-[14px] leading-[18px] uppercase text-[#64748B] hover:text-[#FFFFFF] transition-colors"
             >
               {t('footer.link_contact')}

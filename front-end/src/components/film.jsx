@@ -1,4 +1,3 @@
-
 export const FilmComponent = ({ data, variant = "details" }) => {
 
     if (!data) return null;
@@ -7,15 +6,17 @@ export const FilmComponent = ({ data, variant = "details" }) => {
     const isCard = variant === "card";
     const mainFile = data.Files?.[0] || {};
 
-    // URL base backend
-    const API_URL = "http://localhost:3000";
 
     // Función para resolver la ruta de archivos 
     const getFileUrl = (path) => {
         if (!path) return "";
         if (path.startsWith('http')) return path;
-        const cleanPath = path.startsWith('/') ? path.substring(1) : path;
-        return `${API_URL}/${cleanPath}`;
+
+       
+        let cleanPath = path.replace(/^\/public/, '');
+        cleanPath = cleanPath.startsWith('/') ? cleanPath : `/${cleanPath}`;
+
+        return cleanPath;
     };
 
     const containerStyles = isCard

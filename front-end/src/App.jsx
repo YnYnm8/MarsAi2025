@@ -24,6 +24,9 @@ import EditFilm from "./pages/films/editFilm.jsx";
 import AdminAllFilms from "./pages/admin/adminallfilm.jsx"
 import TopNavbar from "./components/navbar.jsx";
 import Footer from "./components/footer.jsx";
+import AdminPlaylist from './pages/admin/adminplaylist.jsx';
+import AdminPlaylistDetail from './pages/admin/adminplaylistdetail.jsx';
+
 import Contact from "./pages/auth/Contact.jsx";
 import ComiteProfile from "./pages/comite/ComiteProfile.jsx";
 
@@ -44,12 +47,12 @@ function App() {
 
           {/* FILMS*/}
           <Route path="/films/:id" element={<FilmsDetails />} />
-          <Route path="/comite/note" element={<Note />} />
-           <Route path="/comite/profile" element={<ComiteProfile />} />
-
-          
           <Route path="/form-movie" element={<PostFilm />} />
           <Route path="/edit/:id" element={<EditFilm />} />
+
+          {/* COMITE*/}
+          <Route path="/comite/note" element={<Note />} />
+          <Route path="/comite/profile" element={<ComiteProfile />} />
 
           {/* USER */}
           <Route path="/login" element={<Login />} />
@@ -70,13 +73,15 @@ function App() {
           <Route path="/admin/films/pending" element={<Adminpending />} />
 
           {/* CONTACT */}
-          <Route path="/contact" element={<Contact/>} />
+          <Route path="/contact" element={<Contact />} />
 
           <Route path="/reservation" element={<Reservation />} />
           <Route path="/jury" element={<Jury />} />
           {/* <Route path="/admin/profile" element={<AdminProfile />} /> */}
           <Route path="/admin/films" element={<AdminAllFilms />} />
           <Route path="/admin/films/:status" element={<AdminAllFilms />} />
+          <Route path="/admin/playlists" element={<AdminPlaylist />} />
+          <Route path="/admin/playlist/:id" element={<AdminPlaylistDetail />} />
 
 
 

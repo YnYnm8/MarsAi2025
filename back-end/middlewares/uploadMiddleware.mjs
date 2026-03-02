@@ -5,6 +5,7 @@ import fs from "fs";
 import Film from "../models/Films.mjs";
 import File from "../models/File.mjs";
 import { catchError } from "../helpers/errorHandler.mjs";
+import { getVideoDurationInSeconds } from 'get-video-duration';
 
 export const uploadMiddleware = async (req, res, next) => {
 
@@ -32,6 +33,24 @@ export const uploadMiddleware = async (req, res, next) => {
                 }))
             });
         }
+        const filmFile = req.files.film[0];
+        try {
+            const videoDuration = await getVideoDurationInSeconds(filmFile.path);
+
+            if (videoDuration > 120) {
+                if (fs.existsSync(filmFile.path)) fs.unlinkSync(filmFile.path);
+
+                return res.status(400).json({
+                    errors: [{
+                        field: "film",
+                        message: `La vidéo est trop longue (${Math.round(videoDuration)}s). Le maximum est de 2 minutes.`
+                    }]
+                });
+            }
+        } catch (durationError) {
+            console.error("Error al medir el video:", durationError);
+        }
+
 
         // Redimensionnement de l'affiche avec Sharp
         await Promise.all(
@@ -58,6 +77,7 @@ export const uploadMiddleware = async (req, res, next) => {
             title,
             description,
             duration,
+            collaborateur,
             generateAi,
         } = bodyValidation.data;
 
@@ -67,12 +87,12 @@ export const uploadMiddleware = async (req, res, next) => {
             title,
             description,
             duration,
+            collaborateur,
             generateAi,
             status: "submitted",
         })
 
         // Creation des fichiers en base de données
-        const filmFile = req.files.film[0];
         const posterFiles = req.files.poster[0];
         const subtitleFiles = req.files.subtitle;
         const { outil_Ai } = bodyValidation.data;

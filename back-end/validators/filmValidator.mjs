@@ -10,7 +10,6 @@ const updateFilesSchema = z.object({
 
 export const filmSchema = z.object({
 
-    collaborateur: z.string().optional(),
 
     title: z
         .string()
@@ -20,7 +19,7 @@ export const filmSchema = z.object({
         .preprocess(val => Number(val), z.number().positive().max(120, "Durée maximale 2 minutes")),
 
 
-    status: z.enum(["submitted", "accepted", "rejected"]).default("submitted"),
+    status: z.enum(["submitted", "selected", "rejected"]).default("submitted"),
 
     description: z
         .string()
@@ -32,6 +31,7 @@ export const filmSchema = z.object({
             message: "Il est obligatoire de choisir une option"
         }),
 
+    collaborateur: z.string().optional(),
     outil_Ai: z
         .string()
         .min(2, "Outil AI obligatoire minimum 2 caractères"),
