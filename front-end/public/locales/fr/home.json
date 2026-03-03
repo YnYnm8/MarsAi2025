@@ -1,4 +1,7 @@
 {
+"participe":"PARTICIPEZ MAINTENANT",
+"imagine":"IMAGINEZ LES FUTURS SOUHAITABLES",
+"know":"EN SAVOIR PLUS",
 "welcome":"BIENVENUE SUR LE PROJET MARS A.I",
 "project_title":"LE PROJET MARS A.I.",
 "sub_mars":"Un évènement hybride unique en France, réunissant la fine fleur de l'IA générative et de la création cinématographique.",
@@ -81,6 +84,6 @@
  "six": "+ 600",
  "submitted": "FILMS SOUMIS",
  "partners" :"NOS PARTENAIRES",
- " soutien": "ILS SOUTIENNENT ",
+ "soutien": "ILS SOUTIENNENT",
  "futurs":"LE FUTUR "
 }
