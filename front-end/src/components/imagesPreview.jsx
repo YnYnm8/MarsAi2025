@@ -1,17 +1,34 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
-export default function ImagesPreview({ label, id, name, defaultImage,onFileSelect,
+export default function ImagesPreview({ label, id, name, defaultImage, defaultValue, onFileSelect,
     fullPreviewOnUpload = false
 }) {
     const [preview, setPreviews] = useState(null);
-    
+
+    useEffect(() => {
+        if (defaultValue) {
+            //YOUTUBE
+            if (typeof defaultValue === "string") {
+                setPreviews(defaultValue);
+            }
+            // LOCAL
+            else if (defaultValue instanceof File) {
+                const url = URL.createObjectURL(defaultValue);
+                setPreviews(url);
+                return () => URL.revokeObjectURL(url);
+            }
+        }
+    }, [defaultValue]);
 
     const handleFileChange = (e) => {
         const file = e.target.files[0];
         if (file) {
-            setPreviews(URL.createObjectURL(file));
-            if (onFileSelect) onFileSelect(file); 
+            const objectUrl = URL.createObjectURL(file);
+            setPreviews(objectUrl);
+            if (onFileSelect) {
+                onFileSelect(file);
+            }
         }
     };
 

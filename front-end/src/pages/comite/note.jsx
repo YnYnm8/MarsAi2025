@@ -362,39 +362,61 @@ export default function Note() {
           {/* Video Card */}
           <div className="max-w-5xl mx-auto p-4 md:p-6 mb-6">
             {selectedFilm?.Files?.[0]?.film_url ? (
-              <div className="relative w-full">
-                <video
-                  ref={videoRef}
-                  src={selectedFilm.Files[0].film_url}
-                  controls
-                  className="w-full rounded-lg"
-                />
-                <div className="absolute  right-3 top-3 flex gap-2 bg-black bg-opacity-50 p-2 rounded-lg">
+              <>
+                {/* YOUTUBE O LOCAL */}
+                {selectedFilm.Files[0].film_url.includes("youtube.com") || selectedFilm.Files[0].film_url.includes("youtu.be") ? (
+                  <div className="aspect-video w-full">
+                    <iframe
+                      src={selectedFilm.Files[0].film_url.replace("watch?v=", "embed/")}
+                      className="w-full h-full rounded-lg"
+                      allowFullScreen
+                    ></iframe>
+                  </div>
+                ) : (
+                  <>
+                    <video
+                      ref={videoRef}
+                      key={selectedFilm.Files[0].film_url}
+                      src={selectedFilm.Files[0].film_url.startsWith('http') ? selectedFilm.Files[0].film_url : `http://localhost:3000${selectedFilm.Files[0].film_url}`}
+                      poster={selectedFilm.Files[0].poster_url?.startsWith('http') ? selectedFilm.Files[0].poster_url : `http://localhost:3000${selectedFilm.Files[0].poster_url}`}
+                      controls
+                      className="w-full rounded-lg"
+                    />
 
-                  <button
-                    onClick={() => setSpeed(1.5)}
-                    className="px-3 py-1 bg-gray-700 text-white rounded-lg hover:bg-gray-800"
-                  >
-                    1.5x
-                  </button>
-
-                  <button
-                    onClick={() => setSpeed(2)}
-                    className="px-3 py-1 bg-gray-700 text-white rounded-lg hover:bg-gray-800"
-                  >
-                    2x
-                  </button>
-
-                </div>
-              </div>
+                    <div className="mt-3 flex gap-3 justify-center">
+                      <button
+                        onClick={() => setSpeed(1)}
+                        className="px-4 py-2 bg-gray-700 text-white rounded-lg hover:bg-gray-800 transition"
+                      >
+                        1x
+                      </button>
+                      <button
+                        onClick={() => setSpeed(1.5)}
+                        className="px-4 py-2 bg-gray-700 text-white rounded-lg hover:bg-gray-800 transition"
+                      >
+                        1.5x
+                      </button>
+                      <button
+                        onClick={() => setSpeed(2)}
+                        className="px-4 py-2 bg-gray-700 text-white rounded-lg hover:bg-gray-800 transition"
+                      >
+                        2x
+                      </button>
+                    </div>
+                  </>
+                )}
+              </>
             ) : (
               <img
-                src={selectedFilm?.Files?.[0]?.poster_url || "/youtubeimg.webp"}
+                src={selectedFilm?.Files?.[0]?.poster_url?.startsWith('http')
+                  ? selectedFilm.Files[0].poster_url
+                  : `http://localhost:3000${selectedFilm?.Files?.[0]?.poster_url || "/uploads/youtubeimg.webp"}`}
                 alt={selectedFilm?.title || "Film Poster"}
                 className="w-full h-64 object-cover rounded-lg mb-4"
               />
             )}
           </div>
+          
           {/* タイトル・監督 */}
           <div className="flex flex-col md:flex-row justify-between items-start mb-4">
             <div>

@@ -7,30 +7,43 @@ import { fileURLToPath } from "url";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const storage = multer.diskStorage({
+
     destination: (req, file, cb) => {
-        const dir = path.resolve(__dirname, "../../front-end/public/uploads");
+        const dir = path.resolve(__dirname, "../uploads");
+        
+        console.log("Intentando guardar en: ", dir);
+
         if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
         cb(null, dir)
     },
     filename: (req, file, cb) => {
-        cb(null, Date.now() + "-" + file.originalname)
+        // LIMPIEZA
+        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+        cb(null, uniqueSuffix + path.extname(file.originalname));
     },
 })
 
 //filtres
 const fileFilter = (req, file, cb) => {
     const field = file.fieldname;
+
     if (field === "film") {
-        file.mimetype.startsWith("video/") ? cb(null, true) : cb(new Error("Le fichier du film doit être une vidéo"));
-    } else if (field === "poster" || field === "galerie" || field === "avatar") {
+        file.mimetype.startsWith("video/") ? cb(null, true) : cb(new Error("Le fichier du film doit être une vidéo"),false);
+    } 
+    
+    else if (field === "poster" || field === "galerie" || field === "avatar") {
         ["image/jpeg", "image/png"].includes(file.mimetype)
             ? cb(null, true)
             : cb(new Error("Le poster doit être au format JPG ou PNG"));
-    } else if (field === "subtitle") {
+    } 
+    
+    else if (field === "subtitle") {
         ["application/x-subrip", "text/plain"].includes(file.mimetype)
             ? cb(null, true)
             : cb(new Error("Le fichier de sous-titres doit être au format .srt"));
-    } else {
+    }
+    
+    else {
         cb(new Error("Champ de fichier non autorisé"));
     }
 };
