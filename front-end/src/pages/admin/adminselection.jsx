@@ -61,7 +61,7 @@ const AdminSelected = () => {
         const result = await response.json();
 
         if (response.ok && result.success) {
-            setRejectedFilms(prev => prev.filter(f => f.id !== selectedFilmId));
+            setSelectedFilms(prev => prev.filter(f => f.id !== selectedFilmId));
             setIsModalOpen(false);
             setSelectedFilmId(null);
         } else {
