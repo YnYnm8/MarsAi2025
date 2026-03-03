@@ -57,28 +57,34 @@ const AdminRejected = () => {
     };
 
     const confirmMoveToPending = async () => {
-        if (!selectedFilmId) return;
+    if (!selectedFilmId) return;
 
-        try {
-            const response = await fetch(`http://localhost:3000/admin/films/${selectedFilmId}/status`, {
-                method: 'PUT',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ playlistId: 4 }), // 4 = Discussion/Pending
-                credentials: 'include'
-            });
+    try {
+        const response = await fetch(`http://localhost:3000/admin/films/${selectedFilmId}/status`, {
+            method: 'PUT', 
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ 
+                playlistId: 4, 
+                reason: "Réexamen du film par l'administrateur." 
+            }),
+            credentials: 'include'
+        });
 
-            if (response.ok) {
-                setRejectedFilms(prev => prev.filter(f => f.id !== selectedFilmId));
-                setIsModalOpen(false);
-                setSelectedFilmId(null);
-            } else {
-                alert("Erreur lors de la mise à jour du statut");
-            }
-        } catch (err) {
-            console.error("Erreur changement statut:", err);
-            alert("Impossible de contacter le serveur");
+        const result = await response.json();
+
+        if (response.ok && result.success) {
+            setRejectedFilms(prev => prev.filter(f => f.id !== selectedFilmId));
+            setIsModalOpen(false);
+            setSelectedFilmId(null);
+        } else {
+            // Cela affichera l'erreur réelle renvoyée par le serveur
+            alert("Erreur serveur : " + (result.message || "Action impossible"));
         }
-    };
+    } catch (err) {
+        console.error("Erreur changement statut:", err);
+        alert("Impossible de contacter le serveur");
+    }
+};
 
     const formatDate = (dateString) => {
         if (!dateString) return "N/C";

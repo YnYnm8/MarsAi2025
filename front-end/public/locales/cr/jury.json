@@ -1,0 +1,59 @@
+{
+  "header": {
+    "subtitle": "MANM JIRI-A",
+    "titlePart1": "YON JIRI",
+    "titlePart2": "DWÈT-DWÈT",
+    "titleBlue": "POU DÈMEN"
+  },
+  "president": {
+    "role": "PREZIDAN JIRI-A",
+    "name": "JULIEN VALROS",
+    "quote": "« Nou pa jijé sèlman fim, men vizyon pou yon avni ki bon, ki fèt épi zouti ki toujou dépassé nou. Sé kòmansman yon nouvo épòk. »",
+    "description": "Réalizatè marseyé ki ganyen anpil pri, Julien Valros mennen gadé-y san konpwomi sou rakontaj é émotion siné.",
+    "cta": "WÉY FILMOGRAFI-Y"
+  },
+  "members_section": {
+    "titleBlack": "MANM-YO",
+    "titleBlue": "JIRI-A",
+    "list": {
+      "aiko": {
+        "role": "CHÈCHÈZ IA / OPEN AI",
+        "name": "AIKO SATO",
+        "bio": "Ekspè an modèl difizyon, ay analizé fòs teknik prompt-yo."
+      },
+      "julie": {
+        "role": "PWODIKTRIS",
+        "name": "JULIE MASSON",
+        "bio": "Fondatris \"Future Pictures\", ay chèché nouvo talan pou imaj dèmen."
+      },
+      "marc": {
+        "role": "DIRÈKTÈ FOTO",
+        "name": "MARC AUBIN",
+        "bio": "Spésyalis limyè, ay veyé kalité estétik kreyasyon ogmanté-yo."
+      }
+    }
+  },
+  "scoring_chart": {
+    "titleWhite": "CHARTE",
+    "titleRed": "NOTASYON",
+    "intro": "Jiri-a angajé-y pou évalié chak ti-fim selon kat pilié fondamantal pou asouré lékilib ant patisipan-yo.",
+    "pillars": {
+      "originality": {
+        "title": "ORIJINALITÉ IA",
+        "description": "Pertinans é ladjès nan itilizasyon zouti jénératif-yo."
+      },
+      "aesthetic": {
+        "title": "ESTÉTIK VIZYÈL",
+        "description": "Kohérans é bòté rézilta global-la."
+      },
+      "narrative": {
+        "title": "KALITÉ NARATIF",
+        "description": "Fòs zistwar rakontéy an sèlman 60 sègond."
+      },
+      "impact": {
+        "title": "ÉMOTION É ENPAK",
+        "description": "Kapasite fim-lan pou touché moun ki gadé-y."
+      }
+    }
+  }
+}

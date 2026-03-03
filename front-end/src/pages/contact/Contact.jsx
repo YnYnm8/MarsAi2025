@@ -6,38 +6,7 @@ import { faClock } from '@fortawesome/free-solid-svg-icons';
 
 export default function Contact() {
 
-  // const contactForm = () => {
-  //   const [email, setEmail] = useState("");
-  //   const [massage, setMessage] = useState("");
-  //   const [emailSent, setEmailSent] = useState(false);
-  //   const [isSending, setIsSending] = useState(false);
-  //   const [showModel, setShowMoel] = useState(false);
-
-  //   const sleep = (waitTime) => new Promise(resolve => setTimeout(resolve, waitTime));
-  //   const handleEmailchange = (event) => {
-  //     setEmail(event.target.value);
-  //   };
-  //   const handleMessageChange = (event) => {
-  //     setMessage(event.target.value);
-  //   };
-  //   const handleSubmit = async (event) => {
-  //     event.preventDefaut();
-  //     try {
-  //       setIsSending(true);
-  //       await sleep(5000);
-  //       console.log("Email eovoyé");
-
-  //       setEmailSent(true);
-
-  //     } catch (error) {
-  //       console.error(error);
-  //     } finally {
-  //       setIsSending(false);
-  //     };
-  //     console.log('送信されたメール：', email)
-  //     console.log('送信されたメッセージ：', message)
-  //   }
-  // }
+  
 
   return (
     <div className="item-center text-gray-900 min-h-screen">
@@ -89,6 +58,7 @@ export default function Contact() {
               className="w-full border-2 border-black rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-700"
             />
             {/* {isSending ? ( */}
+
             {/* <FontAwesomeIcon icon={faClock} /> */}
 
 

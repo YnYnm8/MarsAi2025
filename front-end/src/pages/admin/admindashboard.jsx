@@ -50,11 +50,7 @@ const AdminDash = () => {
         fetchData();
     }, []);
 
-    // Initiales de l'avatar
-    const getInitials = (name) => {
-        if (!name) return "AD";
-        return name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
-    };
+  
 
     const selected = Number(stats.totalSelected || 0);
     const rejected = Number(stats.totalRejected || 0);
