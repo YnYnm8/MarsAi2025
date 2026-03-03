@@ -1,0 +1,59 @@
+{
+  "header": {
+    "subtitle": "THE JURY MEMBERS",
+    "titlePart1": "AN EXCEPTIONAL",
+    "titlePart2": "JURY",
+    "titleBlue": "FOR THE FUTURE"
+  },
+  "president": {
+    "role": "JURY PRESIDENT",
+    "name": "JULIEN VALROS",
+    "quote": "« We are not only judging films, but visions of desirable futures created with tools that still surpass our understanding. This is the beginning of a new era. »",
+    "description": "Award-winning Marseille-based filmmaker, Julien Valros brings his uncompromising eye for storytelling and cinematic emotion.",
+    "cta": "VIEW HIS FILMOGRAPHY"
+  },
+  "members_section": {
+    "titleBlack": "THE MEMBERS",
+    "titleBlue": "OF THE JURY",
+    "list": {
+      "aiko": {
+        "role": "AI RESEARCHER / OPEN AI",
+        "name": "AIKO SATO",
+        "bio": "An expert in diffusion models, she analyzes the technical prowess of prompts."
+      },
+      "julie": {
+        "role": "PRODUCER",
+        "name": "JULIE MASSON",
+        "bio": "Founder of \"Future Pictures\", she seeks the new talents of tomorrow's image."
+      },
+      "marc": {
+        "role": "DIRECTOR OF PHOTOGRAPHY",
+        "name": "MARC AUBIN",
+        "bio": "A specialist in lighting, he oversees the aesthetic quality of augmented creations."
+      }
+    }
+  },
+  "scoring_chart": {
+    "titleWhite": "THE SCORING",
+    "titleRed": "CHARTER",
+    "intro": "The jury commits to evaluating each short film according to four fundamental pillars to guarantee fairness among participants.",
+    "pillars": {
+      "originality": {
+        "title": "AI ORIGINALITY",
+        "description": "The relevance and boldness of the use of generative tools."
+      },
+      "aesthetic": {
+        "title": "VISUAL AESTHETICS",
+        "description": "The coherence and beauty of the overall rendering."
+      },
+      "narrative": {
+        "title": "NARRATIVE QUALITY",
+        "description": "The strength of the story told in just 60 seconds."
+      },
+      "impact": {
+        "title": "EMOTION AND IMPACT",
+        "description": "The film's ability to move the viewer."
+      }
+    }
+  }
+}

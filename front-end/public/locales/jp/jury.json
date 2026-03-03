@@ -1,0 +1,59 @@
+{
+  "header": {
+    "subtitle": "審査員メンバー",
+    "titlePart1": "審査員団",
+    "titlePart2": "卓越した",
+    "titleBlue": "未来のために"
+  },
+  "president": {
+    "role": "審査員長",
+    "name": "JULIEN VALROS",
+    "quote": "「私たちは映画を審査するだけでなく、まだ私たちの理解を超えたツールで生み出された、望ましい未来のビジョンを審査している。これは新たな時代の始まりだ。」",
+    "description": "数々の賞を受賞したマルセイユ出身の映画監督、ジュリアン・ヴァルロスは、物語と映画的感動に対する妥協なき視点をもたらす。",
+    "cta": "フィルモグラフィーを見る"
+  },
+  "members_section": {
+    "titleBlack": "メンバー",
+    "titleBlue": "審査員",
+    "list": {
+      "aiko": {
+        "role": "AI研究者 / OPEN AI",
+        "name": "AIKO SATO",
+        "bio": "拡散モデルの専門家として、プロンプトの技術的な卓越性を分析する。"
+      },
+      "julie": {
+        "role": "プロデューサー",
+        "name": "JULIE MASSON",
+        "bio": "\"Future Pictures\"の創設者として、未来のイメージを担う新しい才能を探している。"
+      },
+      "marc": {
+        "role": "撮影監督",
+        "name": "MARC AUBIN",
+        "bio": "光の専門家として、拡張されたクリエイティブ作品の美的品質を監修する。"
+      }
+    }
+  },
+  "scoring_chart": {
+    "titleWhite": "評価",
+    "titleRed": "基準",
+    "intro": "審査員は、参加者間の公平性を確保するため、4つの基本的な柱に従って各短編映画を評価することを約束する。",
+    "pillars": {
+      "originality": {
+        "title": "AIオリジナリティ",
+        "description": "生成ツールの使用における関連性と大胆さ。"
+      },
+      "aesthetic": {
+        "title": "視覚的美学",
+        "description": "全体的なレンダリングの一貫性と美しさ。"
+      },
+      "narrative": {
+        "title": "物語の質",
+        "description": "わずか60秒で語られる物語の力。"
+      },
+      "impact": {
+        "title": "感情とインパクト",
+        "description": "映画が観客に感動を与える力。"
+      }
+    }
+  }
+}

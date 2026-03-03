@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState,useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 
 export default function ComiteProfile() {
@@ -6,11 +6,9 @@ export default function ComiteProfile() {
   const [films, setFilms] = useState([]);
   const [filter, setFilter] = useState("NOT_WATCHED");
   const [playlists, setPlaylist] = useState([]);
+  
 
-  const user = {
-    name: "PAUL MICHEL",
-    avatar: "https://via.placeholder.com/40"
-  };
+
 
   useEffect(() => {
     fetchFilmAndPlaylists();
@@ -21,30 +19,30 @@ export default function ComiteProfile() {
       const filmRes = await fetch("http://localhost:3000/films");
       if (!filmRes.ok) throw new Error("Failed to fetch film data");
       const filmsData = await filmRes.json();
-      
+
       const playlistRes = await fetch("http://localhost:3000/comite/allplaylists");
       if (!playlistRes.ok) throw new Error("Failed to fetch playlists");
       const playlistsData = await playlistRes.json();
-   
+
       const playlistsWithName = playlistsData.map(p => ({
         ...p,
         name: p.name || p.status || "Sans nom",
         filmCount: 0
       }));
-      
+
       const filmsWithStatus = filmsData.map(film => {
         if (!film.PlaylistFilms || film.PlaylistFilms.length === 0) {
-          return { ...film, status: "NOT_WATCHED", playlistName: "なし" };
+          return { ...film, status: "NOT_WATCHED", playlistName: "Pas de  name" };
         }
-        
+
         const latestPlaylistFilm = film.PlaylistFilms[film.PlaylistFilms.length - 1];
         const playlistObj = playlistsData.find(p => p.id === latestPlaylistFilm.PlaylistId);
-       
-        
+
+
         return {
           ...film,
           status: playlistObj?.status || "NOT_WATCHED",
-          playlistName: playlistObj?.name || "なし",
+          playlistName: playlistObj?.name || "pas de nom",
         };
       });
 
@@ -57,6 +55,26 @@ export default function ComiteProfile() {
   };
 
   const filteredFilms = films.filter(film => film.status === filter);
+
+  const customPlaylists = playlists.filter(
+    (p) => !["NOT_WATCHED", "selected", "rejected", "pending"].includes(p.status)
+  );
+
+
+  const playlistsWithCounts = useMemo(() => {
+    if (!playlists.length) return [];
+    return playlists.map((p) => {
+      let count;
+      if (p.status === "NOT_WATCHED") {
+        count = films.filter(film => film.status === "NOT_WATCHED").length;
+      } else {
+        count = films.filter(film =>
+          film.PlaylistFilms?.some(pf => pf.PlaylistId === p.id)
+        ).length;
+      }
+      return { ...p, filmCount: count };
+    });
+  }, [films, playlists]);
 
   return (
     <div className="flex min-h-screen bg-black text-white">
@@ -73,6 +91,15 @@ export default function ComiteProfile() {
         <h1 className="text-2xl font-bold mb-6">
           COMITE - MES ÉVALUATIONS
         </h1>
+         {/* 戻るボタン */}
+        <div className="mt-10">
+          <button
+            onClick={() => navigate("/comite/note")}
+            className="bg-blue-600 px-6 py-2 rounded-lg font-semibold"
+          >
+            ← RETOUR À L'ÉVALUATION
+          </button>
+        </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {filteredFilms.map(film => (
@@ -85,10 +112,8 @@ export default function ComiteProfile() {
                 className="w-full h-40 object-cover rounded"
               />
               <h2 className="mt-2 font-bold">{film.title}</h2>
-              <p className="text-sm text-gray-400">
-                Score : {film.NoteDirect?.[0]?.score ?? 0}/10
-              </p>
-              <p className="text-sm mt-1">{film.NoteDirect?.[0]?.comment ??"Nocomment"}</p>
+              Score : {film.NotesDirect?.[0]?.score ?? 0}/10
+              <p>{film.NotesDirect?.[0]?.comment ?? "Pas de comment"}</p>
             </div>
           ))}
         </div>
@@ -106,20 +131,21 @@ export default function ComiteProfile() {
 
       {/* 右サイドバー */}
       <aside className="w-64 bg-gray-900 p-6 border-l border-gray-700">
-        <h2 className="font-bold mb-4">FILTER</h2>
+        <h2 className="font-bold mb-4">VOTRE LIST</h2>
 
-        {["NOT_WATCHED", "ACCEPTED", "REFUSED", "TO_DISCUSS"].map(status => (
+        {playlistsWithCounts.map((p) => (
           <button
-            key={status}
-            onClick={() => setFilter(status)}
-            className={`block w-full text-left px-4 py-2 rounded mb-2 ${filter === status
-                ? "bg-blue-600"
-                : "bg-gray-800 hover:bg-gray-700"
+            key={p.id}
+            onClick={() => setFilter(p.status)}
+            className={`block w-full text-left px-4 py-2 rounded mb-2 ${filter === p.status
+              ? "bg-blue-600"
+              : "bg-gray-800 hover:bg-gray-700"
               }`}
           >
-            {status}
+            {p.name} ({p.filmCount})
           </button>
         ))}
+
       </aside>
 
     </div>

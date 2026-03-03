@@ -4,6 +4,8 @@ import ListFilms from "../comite/ListFilms";
 import { FilmComponent } from "../../components/film";
 import { useNavigate } from "react-router-dom";
 import { useRef } from "react";
+import { faTrash } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 export default function Note() {
   const { id } = useParams();
@@ -18,6 +20,7 @@ export default function Note() {
   const [newListName, setNewListName] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
   const navigate = useNavigate();
+  const [showComment, setShowComment] = useState(false);
 
 
 
@@ -89,7 +92,7 @@ export default function Note() {
   const handleSavereview = async (clickedStatus) => {
     if (!selectedFilm) return alert("No film selected!");
     if (!value || value < 1) return alert("Please note your film!");
-    if (!clickedStatus) return alert("Please select ACCEPTED, REFUSED or TO_DISCUSS");
+    if (!clickedStatus) return alert("Please select selected, rejected or pending");
 
     try {
       //  レビューを登録
@@ -115,28 +118,29 @@ export default function Note() {
       await reviewResponse.json();
 
       // // ACCEPTEDなら公式セレクションに登録
-      // if (clickedStatus === "ACCEPTED") {
-      //   const selectionResponse = await fetch("http://localhost:3000/comite/select", {
-      //     method: "POST",
-      //     headers: { "Content-Type": "application/json" },
-      //     body: JSON.stringify({ UserId: 3 }), // 必要に応じてログインユーザーID
-      //   });
+      if (clickedStatus === "selected") {
+        const selectionResponse = await fetch("http://localhost:3000/comite/select", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ UserId: 3 }), // 必要に応じてログインユーザーID
+        });
 
-      //   if (!selectionResponse.ok) {
-      //     const errorData = await selectionResponse.json();
-      //     throw new Error(errorData.message || "公式セレクションの登録に失敗しました");
-      //   }
+        if (!selectionResponse.ok) {
+          const errorData = await selectionResponse.json();
+          throw new Error(errorData.message || "公式セレクションの登録に失敗しました");
+        }
 
-      //   const selectionData = await selectionResponse.json();
-      //   console.log("公式セレクション登録成功:", selectionData);
-      //   alert("公式セレクションに登録しました！");
-      // }
+        const selectionData = await selectionResponse.json();
+        console.log("公式セレクション登録成功:", selectionData);
+        // alert("公式セレクションに登録しました！");
+      }
 
       // UI更新
       await fetchFilmAndPlaylists();
       setComment("");
       setValue(0);
       setStatus(null);
+      setShowComment(false);
 
     } catch (error) {
       console.error(error);
@@ -201,6 +205,8 @@ export default function Note() {
 
       await fetchFilmAndPlaylists();
       setValue(0);
+      setComment("");
+      setShowComment(false);
 
     } catch (error) {
       console.error("Error adding film to playlist:", error);
@@ -269,7 +275,8 @@ export default function Note() {
 
       await response.json();
       alert("Commentaire enregistré !");
-      setComment("");  // 入力欄をクリア
+      setComment("");  
+      setShowComment(false);
       await fetchFilmAndPlaylists(); // UIを更新
 
     } catch (error) {
@@ -291,31 +298,6 @@ export default function Note() {
     <div className="flex flex-col h-screen bg-black font-sans">
 
 
-      {/* Main Layout */}
-      {/* <div className="flex flex-col md:flex-row flex-1 overflow-hidden"> */}
-      {/* Sidebar */}
-      {/* <aside className="w-full md:w-72 bg-black border-b md:border-b-0 md:border-r overflow-y-auto">
-          <div className="p-4">
-            <input
-              type="text"
-              placeholder="Rechercher un film..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full rounded border px-3 py-2 text-sm"
-            />
-          </div>
-
-          {/* フィルター */}
-      {/* {playlistsWithCounts.map((p) => (
-            <button
-              key={p.id}
-              onClick={() => setFilter(p.status)}
-              className={`px-3 py-1 rounded-md transition ${filter === p.status ? "bg-[#246BAD] text-white" : "bg-gray-800 text-white"
-                }`}
-            >
-              {p.status} ({p.filmCount})
-            </button>
-          ))}  */}
       <div className="flex flex-col md:flex-row flex-1 overflow-hidden">
         <aside className="w-full md:w-72 bg-black border-b md:border-b-0 md:border-r overflow-y-auto p-4 flex flex-col gap-4">
           {/* 上部のアクションボタン */}
@@ -329,7 +311,7 @@ export default function Note() {
           {/* 検索ボックス */}
           <input
             type="text"
-            placeholder="Rechercher un film..."
+            placeholder="Le nom d'un film ou l'id"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             className="w-full rounded border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -363,48 +345,48 @@ export default function Note() {
         <main className="flex-1 overflow-y-auto p-4 md:p-8">
           {/* タイトル */}
           <div className="text-center mb-6">
-            <h1 className="text-xl md:text-2xl font-bold text-bg-red-600">
+            <h1 className="text-xl md:text-2xl font-bold text-bg-red-600 ">
               PRÊT POUR LES <br /> DÉLIBÉRATIONS ?
             </h1>
-            <p className="text-sm text-gray-500 mt-1">
+            <p className="text-sm text-gray-500 mt-1 font-medium">
               Sélectionnez un film dans la liste à gauche
             </p>
             <div className="mt-2 flex flex-col md:flex-row justify-center gap-2 md:gap-6 text-sm">
               <span className="font-bold">{films.filter(f => f.status === "NOT_WATCHED").length}</span>
-              <span className="text-gray-500">FILM A NOTER</span>
+              <span className="text-gray-500 font-semibold">FILM A NOTER</span>
               <span className="text-[#FF5845] font-semibold">15 JUIN 2026</span>
-              <span className="text-gray-500">CLUTURE</span>
+              <span className="text-gray-500 font-semibold">CLUTURE</span>
             </div>
           </div>
 
           {/* Video Card */}
-          <div className="max-w-3xl mx-auto p-4 md:p-6 mb-6">
+          <div className="max-w-5xl mx-auto p-4 md:p-6 mb-6">
             {selectedFilm?.Files?.[0]?.film_url ? (
-              <>
+              <div className="relative w-full">
                 <video
                   ref={videoRef}
                   src={selectedFilm.Files[0].film_url}
                   controls
                   className="w-full rounded-lg"
                 />
-                <div className="mt-3 flex gap-3 justify-center">
-
+                <div className="absolute  right-3 top-3 flex gap-2 bg-black bg-opacity-50 p-2 rounded-lg">
 
                   <button
                     onClick={() => setSpeed(1.5)}
-                    className="px-4 py-2 bg-gray-700 text-white rounded-lg hover:bg-gray-800"
+                    className="px-3 py-1 bg-gray-700 text-white rounded-lg hover:bg-gray-800"
                   >
                     1.5x
                   </button>
 
                   <button
                     onClick={() => setSpeed(2)}
-                    className="px-4 py-2 bg-gray-700 text-white rounded-lg hover:bg-gray-800"
+                    className="px-3 py-1 bg-gray-700 text-white rounded-lg hover:bg-gray-800"
                   >
                     2x
                   </button>
+
                 </div>
-              </>
+              </div>
             ) : (
               <img
                 src={selectedFilm?.Files?.[0]?.poster_url || "/youtubeimg.webp"}
@@ -413,16 +395,21 @@ export default function Note() {
               />
             )}
           </div>
-
           {/* タイトル・監督 */}
           <div className="flex flex-col md:flex-row justify-between items-start mb-4">
             <div>
               <h2 className="text-lg font-bold text-[#246BAD]">
-                {selectedFilm?.title || "SYNTHETICA : title"}
+               Le Nom de Film : {selectedFilm?.title || "SYNTHETICA : title"}
               </h2>
-              <p className="text-sm text-gray-600">
-                {selectedFilm?.director || "Director · France"}
+              <div className="flex flex-wrap gap-2 text-sm text-gray-600 mt-1">
+                <span className="font-medium font-semibold">
+              Directeur :{selectedFilm?.User?.firstName || "Director "} {selectedFilm?.User?.lastName ||""}
+                </span>
+              </div>
+                 <p className="text-sm text-gray-600 font-semibold">
+              Origin :{selectedFilm?.User?.country || "Country "}
               </p>
+
             </div>
             <div className="text-xl font-bold mt-2 md:mt-0">
               {value}
@@ -451,30 +438,38 @@ export default function Note() {
               </span>
             ))}
           </div>
-
           {/* コメント欄 */}
           <div className="mb-6">
-            <label className="block text-sm font-medium text-blue-400 mb-3">
-              Commentaire
-            </label>
+            <button
+              onClick={() => setShowComment(!showComment)}
+              className="px-3 py-1 bg-gray-700 text-white rounded-lg hover:bg-gray-800"
+            >
+              Ajouter un commentaire
+            </button>
+            {showComment && (
+              <div className="relative">
+                <textarea
+                  rows="4"
+                  value={comment}
+                  onChange={(e) => setComment(e.target.value)}
+                  className="w-full rounded-xl bg-[#0f172a] border border-gray-600 px-4 py-3 pr-32 text-sm focus:outline-none focus:ring-2 focus:ring-[#246BAD] transition"
+                  placeholder="Ajouter un commentaire sur le film..."
+                />
 
-            <div className="relative">
-              <textarea
-                rows="4"
-                value={comment}
-                onChange={(e) => setComment(e.target.value)}
-                className="w-full rounded-xl bg-[#0f172a] border border-gray-600 px-4 py-3 pr-32 text-sm focus:outline-none focus:ring-2 focus:ring-[#246BAD] transition"
-                placeholder="Ajouter un commentaire sur le film..."
-              />
-
-              <button
-                onClick={handleSaveComment}
-                className="absolute bottom-3 right-3 bg-[#246BAD] hover:bg-blue-600 text-white px-4 py-1.5 rounded-lg text-xs font-semibold transition"
-              >
-                Enregistrer
-              </button>
-            </div>
+                <button
+                  onClick={handleSaveComment}
+                  className="absolute bottom-15 right-10 bg-[#246BAD] hover:bg-[#FF5845] text-white px-4 py-1.5 rounded-lg text-xs font-semibold transition"
+                >
+                  Enregistrer
+                </button>
+                <span className="text-xm text-[#FF5845] ">
+                  "Enregistrer" → commentaire seulement. Pour valider le Film  utilisez  les boutons de SÉLECTIONNER.
+                </span>
+              </div>
+            )}
           </div>
+
+
           {/* 選択・リストボタン */}
           <div className="bg-gray-800 rounded-xl shadow p-4 flex flex-col md:flex-row justify-between items-center gap-6 mt-4">
             <span className="flex items-center gap-2 text-white font-semibold">
@@ -498,38 +493,38 @@ export default function Note() {
               )}
 
               {/* 横並びのボタン */}
-              <div className="flex gap-4 w-full max-w-md">
+              <div className="flex flex-wrap gap-4">
                 <button
-                  onClick={() => handleSavereview("ACCEPTED")}
+                  onClick={() => handleSavereview("selected")}
                   disabled={!value || value < 1}
                   className={`flex-1 px-4 py-2 rounded-lg text-sm font-semibold text-white transition-colors ${!value || value < 1
                     ? "bg-blue-800/50 cursor-not-allowed"
                     : "bg-blue-800 hover:bg-blue-700"
                     }`}
                 >
-                  ACCEPTED
+                  SELECTED
                 </button>
 
                 <button
-                  onClick={() => handleSavereview("REFUSED")}
+                  onClick={() => handleSavereview("rejected")}
                   disabled={!value || value < 1}
                   className={`flex-1 px-4 py-2 rounded-lg text-sm font-semibold text-white transition-colors ${!value || value < 1
                     ? "bg-blue-600/50 cursor-not-allowed"
                     : "bg-blue-600 hover:bg-blue-500"
                     }`}
                 >
-                  REFUSED
+                  REJECTED
                 </button>
 
                 <button
-                  onClick={() => handleSavereview("TO_DISCUSS")}
+                  onClick={() => handleSavereview("pending")}
                   disabled={!value || value < 1}
                   className={`flex-1 px-4 py-2 rounded-lg text-sm font-semibold text-white transition-colors ${!value || value < 1
                     ? "bg-blue-400/50 cursor-not-allowed"
                     : "bg-blue-400 hover:bg-blue-300"
                     }`}
                 >
-                  TO_DISCUSS
+                  PENDING
                 </button>
                 <button
                   onClick={() => setShowModal(true)}
@@ -557,7 +552,7 @@ export default function Note() {
                         onClick={() => handleDeletePlaylist(p.id)}
                         className="flex-1 px-4 bg-gray-600 text-shadow-red-600 py-2 rounded-lg text-xs hover:bg-gray-800"
                       >
-                        X
+                         <FontAwesomeIcon icon={faTrash} /> 
                       </button>
                     </div>
                   ))}
