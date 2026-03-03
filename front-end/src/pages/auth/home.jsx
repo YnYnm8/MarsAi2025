@@ -3,7 +3,6 @@ import logo from "/src/assets/icon-stars.png";
 import { useTranslation } from "react-i18next";
 
 
-
 const Home = () => {
     const { t } = useTranslation("home");
 
@@ -11,41 +10,46 @@ const Home = () => {
 
     return (
         <div className="font-sans">
+<section>
+  <div className="relative inline-block">
+    <img src="affiche.jpeg" alt="affiche" />
 
 
+    <div className="absolute top-6 left-6">
+      <h1 className="text-white text-9xl font-extrabold tracking-wide">
+        MARS A.I
+      </h1>
+    </div>
 
+  
+    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
+      <h2 className="text-white text-8xl font-semibold text-center max-w-2xl">
+       {t("imagine")}
+      </h2>
+    </div>
 
-            <section>
-                <header className="relative h-screen w-full overflow-hidden">
+    
+    <div
+      className="absolute left-1/2 top-[75%] -translate-x-1/2 -translate-y-1/2 
+                 flex gap-6">
+      
+      <button
+        className="bg-[#246BAD] hover:bg-[#e04b3b] text-white font-bold 
+                   py-3 px-6 rounded-xl transition duration-300 shadow-lg 
+                   w-[300px] text-center">
+        {t("participe")}
+      </button>
 
-                    <video
-                        className="absolute inset-0 w-full h-full object-cover"
-                        autoPlay
-                        muted
-                        loop
-                        playsInline
-                        preload="auto"
-                    >
-                        <source src="/story.mp4" type="video/mp4" />
+      <button
+        className="bg-white hover:bg-[#246BAD] text-black font-bold 
+                   py-3 px-6 rounded-xl transition duration-300 shadow-lg 
+                   w-[300px] text-center">
+        {t("know")}
+      </button>
 
-                    </video>
-
-                    <div className="absolute inset-0 bg-black/50"></div>
-
-                    <div className="relative z-10 flex items-center justify-center h-full text-white text-center px-6">
-                        <div>
-                            <h1 className="text-4xl md:text-6xl font-bold text-orange-600 ">
-                                {t("welcome")}
-                            </h1>
-
-                        
-                        </div>
-                    </div>
-
-                </header>
-            </section>
-
-
+    </div>
+  </div>
+</section>
             {/* SECOND SECTION */}
             <section className="bg-[#EFEFEF] py-20 px-6 text-black w-[90]">
                 <div className=" w-[90%] mx-auto md:pl-20">
@@ -59,7 +63,7 @@ const Home = () => {
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
                         <div className="rounded-2xl bg-white p-6 text-center shadow-sm">
-                            <img src="projection.png" alt="projection" className="h-10 w-10 mx-auto mb-4" />
+                            <img src="../projection.png" alt="projection" className="h-10 w-10 mx-auto mb-4" />
                             <h2 className="text-2xl font-bold mb-4">{t("time")}</h2>
                             <p>{t("format")}</p>
                         </div>
@@ -209,7 +213,7 @@ const Home = () => {
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-10 mb-10">
                         <div className="rounded-2xl bg-[#0E172A] p-8">
-                            <img src="projection.png" alt="projection" className="h-10 w-10 mb-6" />
+                            <img src="../projection.png" alt="projection" className="h-10 w-10 mb-6" />
                             <h2 className="text-white font-bold text-3xl mb-4">
                                 {t("pro")}
                             </h2>
@@ -219,7 +223,7 @@ const Home = () => {
                         </div>
 
                         <div className="rounded-2xl bg-[#D5DAE1] p-8">
-                            <img src="image7.png" alt="img7" className="h-10 w-10 mb-6" />
+                            <img src="/image7.png" alt="img7" className="h-10 w-10 mb-6" />
                             <h2 className="text-black font-bold text-3xl mb-4">
                                 {t("work")}
                             </h2>
@@ -242,45 +246,51 @@ const Home = () => {
                 </div>
             </section>
 
-            <section className="bg-[#FFFFFF] py-20 text-black">
-                <div className="w-[80%] mx-auto relative flex">
+          <section className="relative text-white">
 
-                    <img src="frame8.png" alt="frame8" className="rounded-2xl w-full" />
+ 
+  <img 
+    src="frame8.png" 
+    alt="frame8" 
+    className="w-full h-screen object-cover"
+  />
 
-                    <div className="absolute top-6 left-6 text-white">
-                        <img src="CTA.png" alt="cta" className="mt-10 ml-10" />
-                        <p className="text-8xl font-bold mt-10 ml-10">
-                            {t("mars")} <br />{t("day")}
-                        </p>
-                        <p className="font-bold text-xl mt-10 ml-10 mb-10">
-                            {t("electro")}
-                        </p>
-                        <div className="relative w-[350px] h-[250px] ml-40 mt-40">
-                            <div className="rounded-2xl bg-white p-8 absolute right-6 top-6 w-[420px] 
-flex flex-col items-center justify-center text-center gap-4">
+ 
+  <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-6 md:px-16">
 
-                                <img src="/rdv.png" alt="rdv" className="w-20" />
+    <img src="CTA.png" alt="cta" className="mb-8" />
 
-                                <h2 className="text-black font-bold text-3xl">
-                                    {t("date")}
-                                </h2>
+    <p className="text-7xl md:text-8xl font-bold mb-6">
+      {t("mars")} <br /> {t("day")}
+    </p>
 
-                                <p className="text-orange-600 text-xl font-bold">
-                                    {t("hour")}
-                                </p>
+    <p className="font-bold text-xl mb-12">
+      {t("electro")}
+    </p>
 
-                                <button className="mt-2 bg-[#246BAD] text-white font-bold px-6 py-3 rounded-xl hover:bg-orange-700 transition">
-                                    {t("pass")}
-                                </button>
+    
+    <div className="rounded-2xl bg-white p-8 w-full max-w-[420px] 
+                    flex flex-col items-center justify-center text-center gap-4 shadow-2xl">
 
-                            </div>
+      <img src="/rdv.png" alt="rdv" className="w-20" />
 
-                        </div>
+      <h2 className="text-black font-bold text-3xl">
+        {t("date")}
+      </h2>
 
-                    </div>
+      <p className="text-orange-600 text-xl font-bold">
+        {t("hour")}
+      </p>
 
-                </div>
-            </section>
+      <button className="mt-2 bg-[#246BAD] text-white font-bold px-6 py-3 rounded-xl hover:bg-orange-700 transition">
+        {t("pass")}
+      </button>
+
+    </div>
+
+  </div>
+
+</section>
 
             <section>
                 <div className="bg-[#F2F3F5] py-20">
