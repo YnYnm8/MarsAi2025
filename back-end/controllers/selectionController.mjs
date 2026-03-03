@@ -7,9 +7,9 @@ import { catchError } from "../helpers/errorHandler.mjs";
 import { notifyFilmSelected } from "../services/notificationService.mjs";
 
 // POST /selection/confirm
-// export async function confirmSelection(req, res) {
-//   try {
-//     const { userId, year } = req.body;
+export async function confirmSelection(req, res) {
+  try {
+    const { userId, year } = req.body;
 
     const selectedFilms = await PlaylistFilm.findAll({
       include: [
@@ -18,12 +18,12 @@ import { notifyFilmSelected } from "../services/notificationService.mjs";
       ]
     });
 
-//     if (!selectedFilms.length) {
-//       return res.status(400).json({ message: "Aucun film n'a été sélectionné." });
-//     }
+    if (!selectedFilms.length) {
+      return res.status(400).json({ message: "Aucun film n'a été sélectionné." });
+    }
 
-//     const selection = await Selection.create({ name: `${year} Official Selection`, year });
-//     await selection.addFilms(selectedFilms.map(sf => sf.Film));
+    const selection = await Selection.create({ name: `${year} Official Selection`, year });
+    await selection.addFilms(selectedFilms.map(sf => sf.Film));
 
     // --- NOTIFICATIONS DE MASSE AUX GAGNANTS ---
     const deps = { models: req.app.locals.models, io: req.app.locals.io };
