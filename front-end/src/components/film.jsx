@@ -13,10 +13,9 @@ export const FilmComponent = ({ data, variant = "details" }) => {
         if (path.startsWith('http')) return path;
 
 
-        let cleanPath = path.replace(/^\/public/, '');
-        cleanPath = cleanPath.startsWith('/') ? cleanPath : `/${cleanPath}`;
-
-        return cleanPath;
+        const cleanPath = path.startsWith('/') ? path : `/${path}`;
+        const BACKEND_URL = "http://localhost:3000";
+        return `${BACKEND_URL}${cleanPath}`;
     };
 
     const containerStyles = isCard
@@ -48,9 +47,28 @@ export const FilmComponent = ({ data, variant = "details" }) => {
                 ) : (
                     <div className="rounded-2xl overflow-hidden border border-gray-700 bg-black aspect-video shadow-2xl">
                         {mainFile.film_url ? (
-                            <video src={getFileUrl(mainFile.film_url)} controls className=" cursor-pointer w-full h-full"></video>
+                            // DETECCIÓN DE YOUTUBE
+                            mainFile.film_url.includes("youtube.com") || mainFile.film_url.includes("youtu.be") ? (
+                                <iframe
+                                    src={getFileUrl(mainFile.film_url)}
+                                    title={data.title}
+                                    className="w-full h-full"
+                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                                    allowFullScreen
+                                    frameBorder="0"
+                                ></iframe>
+                            ) : (
+                                // VIDEO LOCAL
+                                <video
+                                    src={getFileUrl(mainFile.film_url)}
+                                    controls
+                                    className="cursor-pointer w-full h-full"
+                                ></video>
+                            )
                         ) : (
-                            <div className="w-full h-full flex items-center justify-center text-gray-500">Vidéo non disponible</div>
+                            <div className="w-full h-full flex items-center justify-center text-gray-500">
+                                Vidéo non disponible
+                            </div>
                         )}
                     </div>
                 )}
