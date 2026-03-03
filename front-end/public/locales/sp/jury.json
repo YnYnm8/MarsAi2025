@@ -1,0 +1,59 @@
+{
+  "header": {
+    "subtitle": "LOS MIEMBROS DEL JURADO",
+    "titlePart1": "UN JURADO",
+    "titlePart2": "DE EXCEPCIÓN",
+    "titleBlue": "PARA EL FUTURO"
+  },
+  "president": {
+    "role": "PRESIDENTE DEL JURADO",
+    "name": "JULIEN VALROS",
+    "quote": "« No juzgamos solo películas, sino visiones de futuros deseables creadas con herramientas que aún nos superan. Es el comienzo de una nueva era. »",
+    "description": "Cineasta marsellés galardonado, Julien Valros aporta su mirada sin concesiones sobre la narración y la emoción cinematográfica.",
+    "cta": "VER SU FILMOGRAFÍA"
+  },
+  "members_section": {
+    "titleBlack": "LOS MIEMBROS",
+    "titleBlue": "DEL JURADO",
+    "list": {
+      "aiko": {
+        "role": "INVESTIGADORA IA / OPEN AI",
+        "name": "AIKO SATO",
+        "bio": "Experta en modelos de difusión, analiza la proeza técnica de los prompts."
+      },
+      "julie": {
+        "role": "PRODUCTORA",
+        "name": "JULIE MASSON",
+        "bio": "Fundadora de \"Future Pictures\", busca los nuevos talentos de la imagen del mañana."
+      },
+      "marc": {
+        "role": "DIRECTOR DE FOTOGRAFÍA",
+        "name": "MARC AUBIN",
+        "bio": "Especialista en iluminación, vela por la calidad estética de las creaciones aumentadas."
+      }
+    }
+  },
+  "scoring_chart": {
+    "titleWhite": "LA CARTA",
+    "titleRed": "DE PUNTUACIÓN",
+    "intro": "El jurado se compromete a evaluar cada cortometraje según cuatro pilares fundamentales para garantizar la equidad entre los participantes.",
+    "pillars": {
+      "originality": {
+        "title": "ORIGINALIDAD IA",
+        "description": "La pertinencia y la audacia del uso de herramientas generativas."
+      },
+      "aesthetic": {
+        "title": "ESTÉTICA VISUAL",
+        "description": "La coherencia y la belleza del resultado global."
+      },
+      "narrative": {
+        "title": "CALIDAD NARRATIVA",
+        "description": "La fuerza de la historia contada en solo 60 segundos."
+      },
+      "impact": {
+        "title": "EMOCIÓN E IMPACTO",
+        "description": "La capacidad de la película para conmover al espectador."
+      }
+    }
+  }
+}
