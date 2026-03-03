@@ -6,7 +6,6 @@ import defaultImg from "../../assets/image-default.png";
 import VideoUpload from "../../components/videoPreview";
 import { useNavigate } from "react-router";
 import { Toast } from "../../components/toastMessage";
-
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus, faTrash, faFilm, faMicrochip, faSave, faUsers, faCloudUploadAlt } from '@fortawesome/free-solid-svg-icons';
 
@@ -14,10 +13,17 @@ export default function PostFilm() {
     const { t } = useTranslation("formulaireF");
 
     const [posterFile, setPosterFile] = useState(null);
+    const [duration, setDuration] = useState("");
     const [collaborateurs, setCollaborateurs] = useState([{ genre: "male", name: "" }]);
     const [selected, setSelected] = useState(null);
     const [toastMessages, setToastMessages] = useState([]);
     const [subtitles, setSubtitles] = useState([{ type: "file", value: null }]);
+    const [title, setTitle] = useState("");
+    const [description, setDescription] = useState("");
+    const [youtubeUrl, setYoutubeUrl] = useState("");
+    const [uploadMode, setUploadMode] = useState("file"); // o "youtube"
+    const [isLoadingYoutube, setIsLoadingYoutube] = useState(false);
+
 
     const navigate = useNavigate();
 
@@ -48,6 +54,41 @@ export default function PostFilm() {
         return () => clearTimeout(timer);
     }, [toastMessages]);
 
+    const fetchYoutubeInfo = async () => {
+        const cleanUrl = youtubeUrl.trim();
+        if (!cleanUrl) return;
+
+        setIsLoadingYoutube(true);
+        try {
+            const response = await fetch(`http://localhost:3000/films/youtube-info?url=${encodeURIComponent(cleanUrl)}`);
+            const data = await response.json();
+            console.log(data)
+            if (response.ok && data.title) {
+                setTitle(data.title);
+                setDescription(data.description || "");
+                if (data.duration) {
+                    setDuration(data.duration);
+                }
+
+                const youtubeImg = data.thumbnails?.maxres?.url ||
+                    data.thumbnail ||
+                    data.thumbnails?.high?.url ||
+                    data.thumbnails?.medium?.url ||
+                    data.thumbnails?.default?.url;
+
+                setPosterFile(youtubeImg);
+
+                setToastMessages(["¡Información de YouTube cargada!"]);
+            } else {
+                setToastMessages(["No se encontró información del video"]);
+            }
+        } catch (error) {
+            setToastMessages(["Error al conectar con el servidor"]);
+        } finally {
+            setIsLoadingYoutube(false);
+        }
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
 
@@ -55,6 +96,10 @@ export default function PostFilm() {
         if (!confirmation) return
 
         const formData = new FormData(e.target);
+        //Append youtube
+        if (uploadMode === "youtube" && youtubeUrl) {
+            formData.append("youtubeUrl", youtubeUrl);
+        }
 
         subtitles.forEach((sub) => {
             if (sub.type === "file" && sub.value) {
@@ -76,11 +121,20 @@ export default function PostFilm() {
         formData.delete("collaborateur");
         formData.append("collaborateur", namesWithGenre);
 
-        // Append de generateAi, poster
+        // Append de generateAi
 
         if (selected) formData.append("generateAi", selected);
-        if (posterFile) formData.append("poster", posterFile);
 
+        //Append poster 
+
+        formData.delete("poster");
+        formData.delete("posterUrl");
+
+        if (posterFile instanceof File) {
+            formData.set("poster", posterFile);
+        } else if (typeof posterFile === 'string' && posterFile !== "") {
+            formData.set("posterUrl", posterFile);
+        }
         try {
             const response = await fetch("http://localhost:3000/films", {
                 method: "POST",
@@ -139,17 +193,29 @@ export default function PostFilm() {
                         <div className="grid grid-cols-2 gap-x-20 gap-y-15 pt-5 tracking-wider text-base font-bold">
                             <div className="flex flex-col">
                                 <label htmlFor="titleInput" className="pb-2 text-white/50">{t("step1.titleLabel")}</label>
-                                <input type="text" name="title" id="titleInput" className="bg-black border border-dark-border p-3 rounded-lg text-sm outline-none focus:border-blue-tertiary" placeholder={t("step1.titlePlaceholder")} />
+                                <input type="text" name="title" id="titleInput" value={title} onChange={(e) => setTitle(e.target.value)} className="bg-black border border-dark-border p-3 rounded-lg text-sm outline-none focus:border-blue-tertiary" placeholder={t("step1.titlePlaceholder")} />
                             </div>
                             <div className="flex flex-col">
                                 <label htmlFor="durationInput" className="pb-2 text-white/50">{t("step1.durationLabel")}</label>
-                                <input type="number" name="duration" id="durationInput" min={1} className="bg-black border border-dark-border p-3 rounded-lg text-sm outline-none focus:border-blue-tertiary" placeholder={t("step1.durationPlaceholder")} />
+                                <input type="number"
+                                    name="duration"
+                                    id="durationInput"
+                                    value={duration}
+                                    onChange={(e) => setDuration(e.target.value)}
+                                    placeholder={t("step1.durationPlaceholder")}
+                                    min={1}
+                                    className="bg-black border border-dark-border p-3 rounded-lg text-sm outline-none focus:border-blue-tertiary" />
                             </div>
                         </div>
 
                         <div className="flex flex-col pt-15 tracking-wider text-base font-bold">
                             <label htmlFor="descriptionInput" className="pb-2 text-white/50">{t("step1.synopsisLabel")}</label>
-                            <textarea name="description" id="descriptionInput" maxLength={300} className="bg-black border border-dark-border p-3 rounded-lg text-sm uppercase min-h-35 max-h-45 outline-none focus:border-blue-tertiary"
+                            <textarea name="description"
+                                id="descriptionInput"
+                                maxLength={300}
+                                value={description}
+                                onChange={(e) => setDescription(e.target.value)}
+                                className="bg-black border border-dark-border p-3 rounded-lg text-sm uppercase min-h-35 max-h-45 outline-none focus:border-blue-tertiary"
                                 placeholder={t("step1.synopsisPlaceholder")}>
                             </textarea>
                         </div>
@@ -207,21 +273,88 @@ export default function PostFilm() {
                         </div>
                     </fieldset>
 
+
                     {/* 03. Livrables */}
                     <fieldset className="fieldset tracking-widest uppercase bg-dark-card border-dark-border rounded-box text-base font-bold m-7 border p-10">
                         <div className="flex gap-3 pb-7">
-                            <p className="uppercase font-display pt-1 text-base tracking-widest font-bold text-lg ">{t("step3.title")}</p>
+                            <p className="uppercase font-display pt-1 text-base tracking-widest font-bold text-lg ">
+                                {t("step3.title")}
+                            </p>
                         </div>
+
+                        {/* Sélecteur de mode : Fichier vs YouTube */}
+                        <div className="flex bg-black/40 p-1 rounded-xl border border-dark-border w-fit mb-10 self-center">
+                            <button
+                                type="button"
+                                onClick={() => setUploadMode("file")}
+                                className={`px-8 py-2 cursor-pointer rounded-lg text-[10px] font-bold tracking-widest transition-all duration-300 ${uploadMode === "file"
+                                    ? "bg-blue-tertiary text-white shadow-lg shadow-blue-tertiary/20"
+                                    : "text-white/40 hover:text-white/60"
+                                    }`}
+                            >
+                                {t("step3.typeFile", "FICHIER LOCAL")}
+                            </button>
+                            <button
+                                type="button"
+                                onClick={() => setUploadMode("youtube")}
+                                className={`px-8 py-2 cursor-pointer rounded-lg text-[10px] font-bold tracking-widest transition-all duration-300 ${uploadMode === "youtube"
+                                    ? "bg-red-600 text-white shadow-lg shadow-red-600/20"
+                                    : "text-white/40 hover:text-white/60"
+                                    }`}
+                            >
+                                {t("step3.typeYoutube", "LIEN YOUTUBE")}
+                            </button>
+                        </div>
+
+                        {/* Champ URL YouTube (Visible uniquement en mode YouTube) */}
+                        {uploadMode === "youtube" && (
+                            <div className="col-span-2 flex flex-col mb-8 animate-in fade-in slide-in-from-top-2 duration-300">
+                                <label className="pb-3 text-white/50 uppercase text-xs tracking-widest font-bold">
+                                    {t("step3.youtubeLabel")}
+                                </label>
+                                <div className="flex gap-3">
+                                    <div className="relative flex-1">
+                                        <input
+                                            type="text"
+                                            value={youtubeUrl}
+                                            onChange={(e) => setYoutubeUrl(e.target.value)}
+                                            className="w-full bg-black border border-dark-border p-4 rounded-xl text-sm outline-none focus:border-red-600 transition-all"
+                                            placeholder="https://www.youtube.com/watch?v=..."
+                                        />
+                                        <FontAwesomeIcon icon={faFilm} className="absolute right-4 top-4 text-red-600/30" />
+                                    </div>
+
+                                    <button
+                                        type="button"
+                                        onClick={fetchYoutubeInfo}
+                                        disabled={isLoadingYoutube || !youtubeUrl}
+                                        className={`px-6 rounded-xl cursor-pointer font-bold uppercase text-xs transition-all flex items-center gap-2 
+                    ${isLoadingYoutube ? 'bg-gray-800 text-gray-500' : 'bg-red-600/10 border border-red-600/40 text-red-500 hover:bg-red-600 hover:text-white'}`}
+                                    >
+                                        {isLoadingYoutube ? t("step3.loading", 'Chargement...') : t("step3.importBtn", 'Importer info')}
+                                        <FontAwesomeIcon icon={faCloudUploadAlt} />
+                                    </button>
+                                </div>
+                            </div>
+                        )}
+
                         <div className="grid grid-cols-2 gap-x-20 gap-y-15 ">
+                            {/* Composant VideoUpload adapté */}
+
                             <VideoUpload
-                                label={t("step3.youtubeLabel")}
+                                label={uploadMode === "file" ? t("step3.fileUpload", "Télécharger le film") : t("step3.previewYoutube", "Aperçu YouTube")}
                                 name="film"
+                                youtubeUrl={uploadMode === "youtube" ? youtubeUrl : ""}
+                                uploadMode={uploadMode}
                                 onDurationError={(msg) => setToastMessages([msg])}
-                                id="videoUrl" />
+                                id="videoUrl"
+                            />
 
                             <div className="text-white/50 flex flex-col">
-                                <DynamicSubtitleInput subtitles={subtitles}
-                                    setSubtitles={setSubtitles} />
+                                <DynamicSubtitleInput
+                                    subtitles={subtitles}
+                                    setSubtitles={setSubtitles}
+                                />
                             </div>
 
                             <ImagesPreview
@@ -229,8 +362,10 @@ export default function PostFilm() {
                                 label={t("step3.posterLabel")}
                                 name="poster"
                                 defaultImage={defaultImg}
+                                defaultValue={posterFile}
                                 fullPreviewOnUpload={true}
-                                onFileSelect={setPosterFile} />
+                                onFileSelect={setPosterFile}
+                            />
 
                             <div>
                                 <p className="text-white/50 p-3">{t("step3.galleryLabel")}</p>

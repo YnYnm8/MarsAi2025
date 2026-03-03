@@ -3,7 +3,7 @@ import { DataTypes } from "sequelize";
 
 const File = sequelize.define("File", {
     subtitle: {
-        type: DataTypes.STRING,
+        type: DataTypes.JSON,
         allowNull: false,
         validate: {
             notEmpty: { msg: "Subtitle est obligatoire" }

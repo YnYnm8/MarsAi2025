@@ -3,10 +3,10 @@ import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { useTranslation } from "react-i18next"; 
+import { useTranslation } from "react-i18next";
 
 const profileSchema = z.object({
-  firstName: z.string().min(2, "val_min_2").optional(), 
+  firstName: z.string().min(2, "val_min_2").optional(),
   lastName: z.string().min(2, "val_min_2").optional(),
   bio: z.string().optional(),
   school: z.string().optional(),
@@ -20,7 +20,7 @@ const profileSchema = z.object({
 });
 
 const Profile = () => {
-  const { t, i18n } = useTranslation("profile"); 
+  const { t, i18n } = useTranslation("profile");
   const [user, setUser] = useState(null);
   const [films, setFilms] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -30,24 +30,24 @@ const Profile = () => {
 
   const navigate = useNavigate();
 
-  const { 
-    register,      
-    handleSubmit,  
-    setValue,     
-    formState: { isSubmitting, errors } 
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    formState: { isSubmitting, errors }
   } = useForm({
-    resolver: zodResolver(profileSchema) 
+    resolver: zodResolver(profileSchema)
   });
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const userRes = await fetch('http://localhost:3000/me', { credentials: 'include' });
-        
+
         if (userRes.status === 401) { navigate('/login'); return; }
-        
+
         const userData = await userRes.json();
-        
+
         if (userRes.ok) {
           const currentUser = userData.user || userData;
           setUser(currentUser);
@@ -56,7 +56,7 @@ const Profile = () => {
           setValue("bio", currentUser.bio || "");
           setValue("school", currentUser.school || "");
           setValue("country", currentUser.country || "");
-          
+
           // Initialisation des réseaux sociaux
           setValue("instagram", currentUser.socialNetworks?.instagram || "");
           setValue("youtube", currentUser.socialNetworks?.youtube || "");
@@ -70,20 +70,20 @@ const Profile = () => {
         if (filmsRes.ok) {
           const filmsData = await filmsRes.json();
           const filmsArray = Array.isArray(filmsData) ? filmsData : (filmsData.data || []);
-          console.log("Films reçus de la BDD :", filmsArray); 
+          console.log("Films reçus de la BDD :", filmsArray);
           setFilms(filmsArray);
         }
 
-      } catch (error) { console.error("Erreur", error); } 
-      finally { 
-        setLoading(false); 
+      } catch (error) { console.error("Erreur", error); }
+      finally {
+        setLoading(false);
       }
     };
     fetchData();
-  }, [navigate, setValue]); 
+  }, [navigate, setValue]);
 
   const handleImageChange = (e) => {
-    const file = e.target.files[0]; 
+    const file = e.target.files[0];
     if (file) {
       setSelectedFile(file);
       setPreviewUrl(URL.createObjectURL(file));
@@ -93,13 +93,13 @@ const Profile = () => {
   const onSubmit = async (data) => {
     try {
       const formData = new FormData();
-      
+
       formData.append("firstName", data.firstName);
       formData.append("lastName", data.lastName);
       formData.append("bio", data.bio || "");
       formData.append("school", data.school || "");
       formData.append("country", data.country || "");
-      
+
       // Ajout des réseaux sociaux
       if (data.instagram) formData.append("instagram", data.instagram);
       if (data.youtube) formData.append("youtube", data.youtube);
@@ -115,7 +115,7 @@ const Profile = () => {
       const res = await fetch('http://localhost:3000/profile', {
         method: 'PUT',
         credentials: 'include',
-        body: formData 
+        body: formData
       });
 
       if (res.ok) {
@@ -133,7 +133,7 @@ const Profile = () => {
   const handleDeleteFilm = async (filmId, e) => {
     e.stopPropagation();
     if (!window.confirm(t("confirm_delete"))) return;
-    
+
     try {
       const res = await fetch(`http://localhost:3000/films/${filmId}`, {
         method: 'DELETE',
@@ -151,11 +151,11 @@ const Profile = () => {
 
   const getStatusStyle = (status) => {
     const safeStatus = status ? status.toLowerCase() : 'submitted';
-    switch(safeStatus) {
+    switch (safeStatus) {
       case 'approved': return 'bg-green-500/20 border-green-500 text-green-400';
       case 'rejected': return 'bg-red-500/20 border-red-500 text-red-400';
       case 'submitted': return 'bg-blue-500/20 border-blue-500 text-blue-400';
-      default: return 'bg-gray-500/20 border-gray-500 text-gray-400'; 
+      default: return 'bg-gray-500/20 border-gray-500 text-gray-400';
     }
   };
 
@@ -175,22 +175,23 @@ const Profile = () => {
   const totalViews = films.reduce((acc, film) => acc + (film.views || 0), 0);
   const totalShares = films.reduce((acc, film) => acc + (film.shares || 0), 0);
 
-  const avatarSrc = previewUrl 
-    ? previewUrl 
+  const avatarSrc = previewUrl
+    ? previewUrl
     : (user.avatar ? `http://localhost:3000/${user.avatar.replace(/\\/g, "/")}` : null);
-    
+
   const getStatusLabel = (status) => {
-      const safeStatus = status ? status.toLowerCase() : 'submitted';
-      switch(safeStatus) {
-          case 'approved': return 'APPROVED';
-          case 'rejected': return 'REJECTED';
-          case 'submitted': return 'SUBMITTED';
-          default: return 'SUBMITTED';
-      }
+    const safeStatus = status ? status.toLowerCase() : 'submitted';
+    switch (safeStatus) {
+      case 'approved': return 'APPROVED';
+      case 'rejected': return 'REJECTED';
+      case 'submitted': return 'SUBMITTED';
+      default: return 'SUBMITTED';
+    }
   };
 
   // Helper pour sécuriser l'URL des réseaux 
   const formatUrl = (url) => url.startsWith('http') ? url : `https://${url}`;
+  const BACKEND_URL = "http://localhost:3000";
 
   return (
     <div className="min-h-screen bg-black text-white font-sans selection:bg-purple-500 selection:text-white">
@@ -200,10 +201,10 @@ const Profile = () => {
       </div>
 
       <div className="max-w-4xl mx-auto px-4 -mt-16 relative z-10 pb-20">
-        
+
         {/* SECTION 1 : IDENTITÉ ET AVATAR */}
         <div className="flex flex-col items-center">
-          
+
           <div className="relative group">
             <div className="w-28 h-28 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 p-1 flex items-center justify-center shadow-xl overflow-hidden">
               <div className="w-full h-full bg-black rounded-full flex items-center justify-center text-3xl font-bold tracking-widest overflow-hidden relative">
@@ -231,15 +232,15 @@ const Profile = () => {
               <h1 className="mt-4 text-2xl font-bold uppercase tracking-wide text-center">
                 {user.firstName} {user.lastName}
               </h1>
-              <p className="text-gray-500 text-xs mt-1">{user.email}</p> 
+              <p className="text-gray-500 text-xs mt-1">{user.email}</p>
             </>
           ) : (
             <div className="mt-4 w-full max-w-xs space-y-2 flex flex-col items-center">
-               <input {...register("firstName")} className="w-full bg-[#111] border border-gray-700 rounded px-3 py-2 text-center text-white" placeholder={t("placeholder_firstname")} />
-               {errors.firstName && <span className="text-red-500 text-[10px]">{t(errors.firstName.message)}</span>}
-               
-               <input {...register("lastName")} className="w-full bg-[#111] border border-gray-700 rounded px-3 py-2 text-center text-white" placeholder={t("placeholder_lastname")} />
-               {errors.lastName && <span className="text-red-500 text-[10px]">{t(errors.lastName.message)}</span>}
+              <input {...register("firstName")} className="w-full bg-[#111] border border-gray-700 rounded px-3 py-2 text-center text-white" placeholder={t("placeholder_firstname")} />
+              {errors.firstName && <span className="text-red-500 text-[10px]">{t(errors.firstName.message)}</span>}
+
+              <input {...register("lastName")} className="w-full bg-[#111] border border-gray-700 rounded px-3 py-2 text-center text-white" placeholder={t("placeholder_lastname")} />
+              {errors.lastName && <span className="text-red-500 text-[10px]">{t(errors.lastName.message)}</span>}
             </div>
           )}
 
@@ -269,7 +270,7 @@ const Profile = () => {
           ) : (
             <textarea {...register("bio")} className="w-full bg-[#111] border border-gray-700 rounded px-3 py-2 text-white text-sm" rows="2" placeholder={t("placeholder_bio")} />
           )}
-          
+
           <div className="flex items-center justify-center gap-4 text-xs font-bold text-gray-500">
             <div className="flex items-center gap-1">
               <span className="text-blue-500">🏫</span>
@@ -292,7 +293,7 @@ const Profile = () => {
               <input {...register("x")} className="bg-[#111] border border-gray-700 rounded px-3 py-2 text-white text-xs w-full text-center" placeholder={t("placeholder_x") || "X (Twitter) URL"} />
             </div>
           )}
-          
+
           {/* LIENS RESEAUX SOCIAUX (MODE LECTURE) */}
           {!isEditing && (
             <div className="flex flex-wrap justify-center gap-2 mt-4">
@@ -351,8 +352,8 @@ const Profile = () => {
           <h3 className="text-white text-sm font-bold tracking-widest border-l-4 border-blue-600 pl-3">
             {t("my_submissions")}
           </h3>
-          
-          <button 
+
+          <button
             onClick={() => navigate("/form-movie")}
             className="bg-gradient-to-r from-blue-600 to-purple-600 cursor-pointer hover:from-blue-500 hover:to-purple-500 text-white font-bold py-2 px-5 rounded-full text-xs shadow-[0_0_15px_rgba(168,85,247,0.4)] hover:shadow-[0_0_20px_rgba(168,85,247,0.6)] transform hover:-translate-y-0.5 transition-all duration-300 flex items-center gap-2"
           >
@@ -366,12 +367,12 @@ const Profile = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {films.length > 0 ? (
             films.map((film) => (
-              <div 
-                key={film.id} 
-                onClick={() => navigate(`/films/${film.id}`)} 
+              <div
+                key={film.id}
+                onClick={() => navigate(`/films/${film.id}`)}
                 className="bg-[#0F0F0F] rounded-2xl overflow-hidden border border-gray-800 hover:border-gray-600 transition group flex flex-col cursor-pointer relative"
               >
-                <button 
+                <button
                   onClick={(e) => handleDeleteFilm(film.id, e)}
                   className="absolute top-2 right-2 bg-red-600/80 hover:bg-red-600 text-white p-1.5 rounded-md opacity-0 group-hover:opacity-100 transition z-20 backdrop-blur-sm"
                   title={t("title_delete")}
@@ -387,7 +388,12 @@ const Profile = () => {
                     {getStatusLabel(film.status)}
                   </div>
                   {film.Files?.[0]?.poster_url ? (
-                    <img src={film.Files[0].poster_url} alt={film.title} className="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition duration-500" />
+                    <img src={film.Files[0].poster_url.startsWith('http')
+                      ? film.Files[0].poster_url
+                      : `${BACKEND_URL}${film.Files[0].poster_url}`
+                    }
+
+                      alt={film.title} className="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition duration-500" />
                   ) : (
                     <div className="w-full h-full flex flex-col items-center justify-center text-gray-600 text-xs bg-gray-900">
                       <svg className="w-8 h-8 mb-2 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
@@ -413,7 +419,7 @@ const Profile = () => {
                   <p className="text-gray-400 text-xs line-clamp-3 mb-4 flex-1 font-light leading-relaxed">
                     {film.description}
                   </p>
-                  
+
                   <div className="flex items-center justify-between border-t border-gray-800 pt-3 mt-auto">
                     <div className="flex gap-4">
                       <div className="flex items-center gap-1.5 text-xs text-gray-400" title={t("title_views")}>

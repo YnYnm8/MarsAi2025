@@ -12,19 +12,24 @@ import defaultImg from "../../assets/image-default.png";
 export default function EditFilm() {
     const { id } = useParams();
     const navigate = useNavigate();
-
+    const BACKEND_URL = "http://localhost:3000";
 
     const [movie, setMovie] = useState(null);
     const [selected, setSelected] = useState(null);
     const [posterFile, setPosterFile] = useState(null);
     const [toastMessages, setToastMessages] = useState([]);
 
+    // Youtube
+    const [uploadMode, setUploadMode] = useState("file");
+    const [youtubeUrl, setYoutubeUrl] = useState("");
+    const [isLoadingYoutube, setIsLoadingYoutube] = useState(false);
+    const [title, setTitle] = useState("");
+    const [description, setDescription] = useState("");
+
     // Inputs dinamicos
     const [collaborateurs, setCollaborateurs] = useState([{ genre: "male", name: "" }]);
     const [subtitles, setSubtitles] = useState([{ type: "file", value: null }]);
     const [newGalleryFiles, setNewGalleryFiles] = useState([null, null]);
-
-
 
     const options = [
         { label: "Génération intégrale (100% IA)", value: "fullAi" },
@@ -35,7 +40,7 @@ export default function EditFilm() {
     useEffect(() => {
         const editFetchData = async () => {
             try {
-                const response = await fetch(`http://localhost:3000/films/${id}`, {
+                const response = await fetch(`${BACKEND_URL}/films/${id}`, {
                     method: 'GET',
                     credentials: 'include'
                 });
@@ -44,7 +49,18 @@ export default function EditFilm() {
 
                 setMovie(data);
                 setSelected(data.generateAi);
+                setTitle(data.title);
+                setDescription(data.description);
 
+                //deteccion video
+                const videoUrl = data.Files?.[0]?.film_url || "";
+                if (videoUrl.includes("youtube.com") || videoUrl.includes("youtu.be")) {
+                    setUploadMode("youtube");
+                    setYoutubeUrl(videoUrl);
+                } else {
+                    setUploadMode("file");
+                }
+                
                 // Cargar colaboradores existentes
                 if (data.collaborateur && data.collaborateur.trim() !== "") {
                     const parsed = data.collaborateur.split(',').map(item => {
@@ -55,12 +71,12 @@ export default function EditFilm() {
                             name: trimmed.replace(/^(M\.|Mrs\.)\s*/, '')
                         };
                     });
-                    setCollaborateurs(parsed); // El ESTADO puede llamarse plural si quieres, es interno
+                    setCollaborateurs(parsed); 
                 } else {
                     setCollaborateurs([{ genre: "male", name: "" }]);
                 }
 
-                // Cargar subtítulos existentes (mapeo desde los archivos)
+                // Cargar subtítulos existentes
                 const existingSubs = data.Files?.filter(f => f.type === "subtitle").map(s => ({
                     type: "file",
                     value: s.url,
@@ -71,8 +87,13 @@ export default function EditFilm() {
                     setSubtitles(existingSubs);
                 }
 
-                const posterObj = data.Files?.find(f => f.category === "poster_url" || f.poster_url)
+                const posterObj = data.Files?.find(f => f.poster_url || f.category === "poster_url");
                 const posterPath = posterObj?.poster_url || posterObj?.url;
+
+                if (posterPath) {
+                    setPosterFile(posterPath);
+                }
+
                 const fileObj = data.Files?.[0];
                 if (fileObj) {
                     const currentGallery = Array.isArray(fileObj.galerie_url)
@@ -92,23 +113,15 @@ export default function EditFilm() {
         if (id) editFetchData();
     }, [id]);
 
-    // 2. Manejo de cambios
     const handleCollabChange = (index, field, value) => {
         setCollaborateurs(prevCollabs => {
             const updated = [...prevCollabs];
-            updated[index] = {
-                ...updated[index],
-                [field]: value
-            }
-            return updated
-        }
-
-        );
+            updated[index] = { ...updated[index], [field]: value }
+            return updated;
+        });
     };
 
-    const addCollaborateur = () => {
-        setCollaborateurs([...collaborateurs, { genre: "male", name: "" }]);
-    };
+    const addCollaborateur = () => setCollaborateurs([...collaborateurs, { genre: "male", name: "" }]);
     const removeCollaborateur = (index) => setCollaborateurs(collaborateurs.filter((_, i) => i !== index));
 
     const handleGalleryChange = (index, file) => {
@@ -117,53 +130,57 @@ export default function EditFilm() {
         setNewGalleryFiles(updatedGallery);
     };
 
-    //TOAST 
-
     useEffect(() => {
         if (!toastMessages.length) return;
-
-        const timer = setTimeout(() => {
-            setToastMessages([]);
-        }, 4000);
-
+        const timer = setTimeout(() => setToastMessages([]), 4000);
         return () => clearTimeout(timer);
     }, [toastMessages]);
 
+    // Fetch YOUTUBE 
+    const fetchYoutubeInfo = async () => {
+        const cleanUrl = youtubeUrl.trim();
+        if (!cleanUrl) return;
+        setIsLoadingYoutube(true);
+        try {
+            const response = await fetch(`${BACKEND_URL}/films/youtube-info?url=${encodeURIComponent(cleanUrl)}`);
+            const data = await response.json();
+            if (response.ok && data.title) {
+                setTitle(data.title);
+                setDescription(data.description || "");
+                const youtubeImg = data.thumbnails?.maxres?.url || data.thumbnail || data.thumbnails?.high?.url;
+                setPosterFile(youtubeImg);
+                
+               
+                if (data.duration) {
+                    setMovie(prev => ({ ...prev, duration: data.duration }));
+                }
 
+                setToastMessages(["¡Información de YouTube cargada!"]);
+            }
+        } catch (error) {
+            setToastMessages(["Error al conectar con el servidor"]);
+        } finally {
+            setIsLoadingYoutube(false);
+        }
+    };
 
-    // 3. Envío del Formulario (UPDATE)
     const handleSubmit = async (e) => {
         e.preventDefault();
-
         const confirmation = window.confirm("Souhaitez-vous enregistrer les modifications ?");
         if (!confirmation) return;
 
         const formData = new FormData(e.target);
 
-
-        // Append de subtítulos (solo nuevos)
         subtitles.forEach((sub) => {
-            if (sub.type === "file" && sub.value) {
-                formData.append("subtitle", sub.value);
-            } else if (sub.type === "url" && sub.value) {
-                formData.append("subtitle", sub.value);
-            }
+            if (sub.value) formData.append("subtitle", sub.value);
         });
-
-        // Append de colaboradores
 
         const namesWithGenre = collaborateurs
             .filter(c => c.name && c.name.trim() !== "")
-            .map(c => {
-                const prefix = c.genre === 'female' ? 'Mrs.' : 'M.';
-                return `${prefix} ${c.name.trim()}`;
-            })
+            .map(c => `${c.genre === 'female' ? 'Mrs.' : 'M.'} ${c.name.trim()}`)
             .join(", ");
 
-
         formData.set("collaborateur", namesWithGenre || "");
-
-        // Append de galería (solo nuevos)
 
         newGalleryFiles.forEach((file) => {
             if (!file) return;
@@ -174,14 +191,16 @@ export default function EditFilm() {
             }
         });
 
-
-        // Append de generateAi, poster
-
         if (selected) formData.set("generateAi", selected);
-        if (posterFile) formData.append("poster", posterFile);
+
+        if (posterFile instanceof File) {
+            formData.append("poster", posterFile);
+        } else if (typeof posterFile === 'string') {
+            formData.set("posterUrl", posterFile);
+        }
 
         try {
-            const response = await fetch(`http://localhost:3000/films/${id}`, {
+            const response = await fetch(`${BACKEND_URL}/films/${id}`, {
                 method: "PUT",
                 body: formData,
                 credentials: "include"
@@ -189,30 +208,20 @@ export default function EditFilm() {
             const result = await response.json();
 
             if (!response.ok) {
-                if (result.errors) {
-                    console.log(result.errors)
-                    setToastMessages(result.errors.map(err => err.message));
-                } else {
-                    setToastMessages([result.message || "Erreur inconnue"]);
-                }
+                setToastMessages(result.errors ? result.errors.map(err => err.message) : [result.message || "Erreur inconnue"]);
                 return;
             }
-
             navigate("/me", { state: { successMessage: "Film mis à jour avec succès !" } });
         } catch (error) {
             setToastMessages(["Erreur réseau lors de la mise à jour"]);
-            console.error(error);
         }
     };
 
     if (!movie) return <div className="text-white p-20 text-center font-display uppercase tracking-widest">Chargement du projet...</div>;
-    // Archivos actuales para previsualización
 
     return (
-        <div className="bg-black-primary min-h-screen  text-white pb-20">
-
+        <div className="bg-black-primary min-h-screen text-white pb-20">
             <div className="flex flex-col m-8 max-w-7xl mx-auto">
-                {/* Cabecera */}
                 <div className="font-display text-center mb-10">
                     <div className="flex justify-center items-center gap-4 mb-4">
                         <h1 className="text-6xl text-white-secondary uppercase font-extrabold tracking-tighter">
@@ -226,7 +235,6 @@ export default function EditFilm() {
                 <form className="font-display flex flex-col" onSubmit={handleSubmit} encType="multipart/form-data">
                     <input type="hidden" name="generateAi" value={selected || ""} />
 
-                    {/* 01. IDENTITÉ */}
                     <fieldset className="bg-dark-card border-dark-border rounded-box m-7 border p-10">
                         <div className="flex items-center gap-3 pb-8 border-b border-white/5 mb-8">
                             <FontAwesomeIcon icon={faFilm} className="text-blue-tertiary text-xl" />
@@ -236,182 +244,117 @@ export default function EditFilm() {
                         <div className="grid grid-cols-2 gap-x-12 gap-y-10">
                             <div className="flex flex-col relative">
                                 <label className="pb-2 text-white/50 text-xs font-bold uppercase">Titre du film *</label>
-                                <div className="relative">
-                                    <input type="text" name="title" defaultValue={movie.title} className="w-full bg-black border border-dark-border p-4 pr-12 rounded-xl outline-none focus:border-blue-tertiary transition-all" />
-                                    <FontAwesomeIcon icon={faPencil} className="absolute right-4 top-1/2 -translate-y-1/2 text-blue-tertiary/40" />
-                                </div>
+                                <input type="text" name="title" value={title} onChange={(e) => setTitle(e.target.value)} className="w-full bg-black border border-dark-border p-4 pr-12 rounded-xl outline-none focus:border-blue-tertiary transition-all" />
                             </div>
                             <div className="flex flex-col relative">
                                 <label className="pb-2 text-white/50 text-xs font-bold uppercase">Durée (Secondes) *</label>
-                                <div className="relative">
-                                    <input type="number" name="duration" defaultValue={movie.duration} className="w-full bg-black border border-dark-border p-4 pr-12 rounded-xl outline-none focus:border-blue-tertiary" />
-                                    <FontAwesomeIcon icon={faPencil} className="absolute right-4 top-1/2 -translate-y-1/2 text-blue-tertiary/40" />
-                                </div>
+                                <input type="number" name="duration" value={movie.duration} onChange={(e) => setMovie({...movie, duration: e.target.value})} className="w-full bg-black border border-dark-border p-4 pr-12 rounded-xl outline-none focus:border-blue-tertiary" />
                             </div>
                             <div className="flex flex-col col-span-2 relative">
-                                <label className="pb-2 text-white/50 text-xs font-bold uppercase">Manifeste / Synopsis * (Min 10 caracteres)</label>
-                                <div className="relative">
-                                    <textarea name="description" defaultValue={movie.description} className="w-full bg-black border border-dark-border p-4 pr-12 rounded-xl h-32 outline-none focus:border-blue-tertiary uppercase text-sm" />
-                                    <FontAwesomeIcon icon={faPencil} className="absolute right-4 top-6 text-blue-tertiary/40" />
-                                </div>
+                                <label className="pb-2 text-white/50 text-xs font-bold uppercase">Manifeste / Synopsis *</label>
+                                <textarea name="description" value={description} onChange={(e) => setDescription(e.target.value)} className="w-full bg-black border border-dark-border p-4 pr-12 rounded-xl h-32 outline-none focus:border-blue-tertiary uppercase text-sm" />
                             </div>
                         </div>
                     </fieldset>
 
-                    {/* 02. DÉCLARATION IA */}
                     <fieldset className="bg-dark-card border-dark-border rounded-box m-7 border p-10">
                         <div className="flex items-center gap-3 pb-8 border-b border-white/5 mb-8">
                             <FontAwesomeIcon icon={faMicrochip} className="text-blue-tertiary text-xl" />
                             <p className="uppercase tracking-widest font-bold text-lg">02. Déclaration Usage de l'IA</p>
                         </div>
-
-                        <p className="uppercase font-bold text-s text-white/50 mb-6">Classification actuelle :</p>
-                        <div className="flex p-5 gap-7">
-                            <FontAwesomeIcon icon={faInfo} className="text-lg" />
-                            <p className="uppercase font-bold text-xs tracking-wider ">
-                                MARS.A.I exige une transparence totale sur l'utilisation de l'Intelligence Artificielle. Sélectionnez tous les outils génératifs sollicités dans votre processus créatif.
-                            </p>
-                        </div>
                         <div className="flex gap-5 mb-12">
                             {options.map((opt) => (
-                                <button
-                                    key={opt.value}
-                                    type="button"
-                                    onClick={() => setSelected(opt.value)}
-                                    className={`flex-1 p-6  cursor-pointer rounded-xl border transition-all font-bold text-sm uppercase ${selected === opt.value ? "bg-blue-tertiary border-blue-400 shadow-glow-blue" : "bg-black/40 border-gray-800 text-white/40 hover:bg-gray-800"}`}
-                                >
-                                    {opt.label}
-                                </button>
+                                <button key={opt.value} type="button" onClick={() => setSelected(opt.value)} className={`flex-1 p-6 cursor-pointer rounded-xl border transition-all font-bold text-sm uppercase ${selected === opt.value ? "bg-blue-tertiary border-blue-400 shadow-glow-blue" : "bg-black/40 border-gray-800 text-white/40 hover:bg-gray-800"}`}>{opt.label}</button>
                             ))}
                         </div>
-
                         <div className="grid grid-cols-2 gap-10">
-                            <div className="flex flex-col relative">
-                                <label className="pb-4 text-white/50 text-xs font-bold uppercase">Stack Technologique * (Min 10 caracteres)</label>
-                                <div className="relative">
-                                    <textarea name="outil_Ai" defaultValue={movie.Files[0].outil_Ai} className="w-full bg-black/50 border border-gray-800 p-5 rounded-xl h-48 outline-none focus:border-blue-tertiary" />
-                                    <FontAwesomeIcon icon={faPencil} className="absolute right-4 top-5 text-blue-tertiary/40" />
-                                </div>
-                            </div>
-                            <div className="flex flex-col relative">
-                                <label className="pb-4 text-white/50 text-xs font-bold uppercase">Méthodologie Créative</label>
-                                <div className="relative">
-                                    <textarea name="creativeMethodology" defaultValue={movie.Files[0].creativeMethodology} className="w-full bg-black/50 border border-gray-800 p-5 rounded-xl h-48 outline-none focus:border-blue-tertiary" />
-                                    <FontAwesomeIcon icon={faPencil} className="absolute right-4 top-5 text-blue-tertiary/40" />
-                                </div>
-                            </div>
+                            <textarea name="outil_Ai" defaultValue={movie.Files[0].outil_Ai} className="w-full bg-black/50 border border-gray-800 p-5 rounded-xl h-48 outline-none focus:border-blue-tertiary" />
+                            <textarea name="creativeMethodology" defaultValue={movie.Files[0].creativeMethodology} className="w-full bg-black/50 border border-gray-800 p-5 rounded-xl h-48 outline-none focus:border-blue-tertiary" />
                         </div>
                     </fieldset>
 
-                    {/* 03. LIVRABLES */}
-                    <fieldset className="bg-dark-card border-dark-border rounded-box m-7 border p-10">
-                        <div className="flex items-center gap-3 pb-8 border-b border-white/5 mb-10">
+                    <fieldset className="fieldset tracking-widest uppercase bg-dark-card border-dark-border rounded-box text-base font-bold m-7 border p-10">
+                        <div className="flex gap-3 pb-7 border-b border-white/5 mb-8">
                             <FontAwesomeIcon icon={faCloudUploadAlt} className="text-blue-tertiary text-xl" />
-                            <p className="uppercase tracking-widest font-bold text-lg">03. Livrables & Accessibilité</p>
+                            <p className="uppercase font-display pt-1 text-base tracking-widest font-bold text-lg ">03. Livrables & Accessibilité</p>
                         </div>
-                        {/*VIDEO */}
-                        <div className="grid grid-cols-2 gap-x-16 gap-y-12">
 
+                        <div className="flex bg-black/40 p-1 rounded-xl border border-dark-border w-fit mb-10 self-center">
+                            <button type="button" onClick={() => setUploadMode("file")} className={`px-8 py-2 cursor-pointer rounded-lg text-[10px] font-bold tracking-widest ${uploadMode === "file" ? "bg-blue-tertiary text-white shadow-lg" : "text-white/40"}`}>FICHIER LOCAL</button>
+                            <button type="button" onClick={() => setUploadMode("youtube")} className={`px-8 py-2 cursor-pointer rounded-lg text-[10px] font-bold tracking-widest ${uploadMode === "youtube" ? "bg-red-600 text-white shadow-lg" : "text-white/40"}`}>LIEN YOUTUBE</button>
+                        </div>
+
+                        {uploadMode === "youtube" && (
+                            <div className="col-span-2 flex flex-col mb-8 animate-in fade-in slide-in-from-top-2">
+                                <label className="pb-3 text-white/50 uppercase text-xs font-bold">Lien de la vidéo YouTube</label>
+                                <div className="flex gap-3">
+                                    <input type="text" value={youtubeUrl} name="youtubeUrl" onChange={(e) => setYoutubeUrl(e.target.value)} className="flex-1 bg-black border border-dark-border p-4 rounded-xl text-sm outline-none focus:border-red-600" />
+                                    <button type="button" onClick={fetchYoutubeInfo} disabled={isLoadingYoutube || !youtubeUrl} className="px-6 rounded-xl cursor-pointer font-bold uppercase text-xs bg-red-600/10 border border-red-600/40 text-red-500 hover:bg-red-600 hover:text-white transition-all">{isLoadingYoutube ? 'Chargement...' : 'Importer info'}</button>
+                                </div>
+                            </div>
+                        )}
+
+                        <div className="grid grid-cols-2 gap-x-20 gap-y-15 ">
                             <VideoUpload
-                                label="Fichier Vidéo / URL *"
+                                label={uploadMode === "file" ? "Télécharger le film" : "Aperçu YouTube"}
                                 name="film"
-                                id="videoUrl"
+                                youtubeUrl={uploadMode === "youtube" ? youtubeUrl : ""}
+                                uploadMode={uploadMode}
                                 onDurationError={(msg) => setToastMessages([msg])}
-                                defaultValue={movie.Files[0].film_url}
+                                id="videoUrl"
+                                defaultValue={movie.Files[0].film_url ? (movie.Files[0].film_url.startsWith('http') ? movie.Files[0].film_url : `${BACKEND_URL}${movie.Files[0].film_url}`) : ""}
                             />
 
-                            {/*SUBTITULOS */}
                             <div className="flex flex-col">
                                 <label className="pb-2 text-white/50 text-xs font-bold uppercase">Sous-titres (SRT/VTT)</label>
                                 <DynamicSubtitleInput subtitles={subtitles} setSubtitles={setSubtitles} />
                             </div>
 
-                            {/*POSTER */}
                             <ImagesPreview
-                                label="Vignette Officielle (16:9) *"
-                                name="poster"
                                 id="fichier-vignette"
-                                defaultImage={
-                                    movie.Files?.find(f => f.poster_url)?.poster_url ||
-                                    movie.Files?.find(f => f.category === "poster_url")?.url ||
-                                    defaultImg
-                                } fullPreviewOnUpload={true}
+                                label="Vignette Officielle (16:9) *"
+                                defaultImage={(posterFile && typeof posterFile === 'string') ? (posterFile.startsWith('http') ? posterFile : `${BACKEND_URL}${posterFile}`) : defaultImg}
+                                fullPreviewOnUpload={true}
                                 onFileSelect={setPosterFile}
                             />
-                            {/*GALERIA */}
                             <div>
-                                <label className="pb-4 block text-white/50 text-xs font-bold uppercase">Galerie Médias (Stills)</label>
+                                <label className="pb-4 block text-white/50 text-xs font-bold uppercase">Galerie Médias</label>
                                 <div className="flex gap-4">
-                                    <ImagesPreview
-                                        id="galerie-1"
-                                        name="galerie"
-                                        defaultImage={typeof newGalleryFiles[0] === 'string'
-                                            ? `http://localhost:3000${newGalleryFiles[0]}`
-                                            : defaultImg}
-                                        onFileSelect={(file) => handleGalleryChange(0, file)}
-                                    />
-                                    <ImagesPreview
-                                        id="galerie-2"
-                                        name="galerie"
-                                        defaultImage={typeof newGalleryFiles[1] === 'string'
-                                            ? `http://localhost:3000${newGalleryFiles[1]}`
-                                            : defaultImg}
-                                        onFileSelect={(file) => handleGalleryChange(1, file)}
-                                    />
+                                    {newGalleryFiles.map((file, idx) => (
+                                        <ImagesPreview
+                                            key={idx}
+                                            id={`galerie-${idx}`}
+                                            defaultImage={file ? (typeof file === 'string' ? (file.startsWith('http') ? file : `${BACKEND_URL}${file}`) : URL.createObjectURL(file)) : defaultImg}
+                                            onFileSelect={(f) => handleGalleryChange(idx, f)}
+                                        />
+                                    ))}
                                 </div>
                             </div>
                         </div>
                     </fieldset>
 
-                    {/* 04. ÉQUIPE */}
                     <fieldset className="bg-dark-card border-dark-border rounded-box m-7 border p-10">
                         <div className="flex items-center gap-3 pb-8 border-b border-white/5 mb-8">
                             <FontAwesomeIcon icon={faUsers} className="text-blue-tertiary text-xl" />
                             <p className="uppercase tracking-widest font-bold text-lg">04. Composition de l'Équipe</p>
                         </div>
-
                         <div className="flex flex-col gap-3">
                             {collaborateurs.map((collab, index) => (
                                 <div key={index} className="bg-black/40 p-5 flex justify-center gap-5 font-bold rounded-box tracking-wider text-sm">
-                                    <select
-                                        className="bg-black border border-gray-800 p-4 rounded-xl text-white outline-none"
-                                        value={collab.genre}
-                                        onChange={(e) => handleCollabChange(index, "genre", e.target.value)}
-                                    >
+                                    <select className="bg-black border border-gray-800 p-4 rounded-xl text-white outline-none" value={collab.genre} onChange={(e) => handleCollabChange(index, "genre", e.target.value)}>
                                         <option value="male">M.</option>
                                         <option value="female">Mrs.</option>
                                     </select>
-                                    <div className="relative flex-1">
-                                        <input
-                                            type="text"
-                                            value={collab.name || ""}
-                                            onChange={(e) => handleCollabChange(index, "name", e.target.value)}
-                                            className="bg-black border border-gray-700 p-5 w-200 rounded-box mt-5 text-white outline-none focus:border-blue-tertiary"
-                                            placeholder="NOM COMPLET"
-                                        />
-                                        <FontAwesomeIcon icon={faPencil} className="absolute  top-1/2 -translate-y-1/2 text-blue-tertiary/30" />
-                                    </div>
-                                    {collaborateurs.length > 1 && (
-                                        <button type="button" onClick={() => removeCollaborateur(index)} className="text-red-500  cursor-pointer bg-red-500/10  p-8 text-xl rounded-xl hover:bg-red-500 hover:text-white transition-all">
-                                            <FontAwesomeIcon icon={faTrash} />
-                                        </button>
-                                    )}
+                                    <input type="text" value={collab.name || ""} onChange={(e) => handleCollabChange(index, "name", e.target.value)} className="bg-black border border-gray-700 p-5 flex-1 rounded-box text-white outline-none focus:border-blue-tertiary" placeholder="NOM COMPLET" />
+                                    {collaborateurs.length > 1 && <button type="button" onClick={() => removeCollaborateur(index)} className="text-red-500 cursor-pointer bg-red-500/10 p-8 text-xl rounded-xl hover:bg-red-500 hover:text-white transition-all"><FontAwesomeIcon icon={faTrash} /></button>}
                                 </div>
                             ))}
-                            <button
-                                type="button"
-                                onClick={addCollaborateur}
-                                className="mt-4 cursor-pointer self-center bg-blue-tertiary/10 border border-blue-tertiary/40 text-blue-tertiary px-8 py-4 rounded-xl font-bold uppercase text-xs flex items-center gap-2 hover:bg-blue-tertiary hover:text-white transition-all"
-                            >
-                                <FontAwesomeIcon icon={faPlus} /> Ajouter un collaborateur
-                            </button>
+                            <button type="button" onClick={addCollaborateur} className="mt-4 cursor-pointer self-center bg-blue-tertiary/10 border border-blue-tertiary/40 text-blue-tertiary px-8 py-4 rounded-xl font-bold uppercase text-xs flex items-center gap-2 transition-all"><FontAwesomeIcon icon={faPlus} /> Ajouter un collaborateur</button>
                         </div>
                     </fieldset>
 
-                    {/* Botón Guardar */}
-                    <button className="btn self-center cursor-pointer  bg-blue-tertiary text-white py-6 px-20 font-bold text-lg rounded-2xl uppercase shadow-glow-blue hover:scale-105 transition-all mt-10 mb-20 flex items-center gap-3" type="submit">
-                        <FontAwesomeIcon icon={faSave} />
-                        Enregistrer les modifications
+                    <button className="btn self-center cursor-pointer bg-blue-tertiary text-white py-6 px-20 font-bold text-lg rounded-2xl uppercase shadow-glow-blue hover:scale-105 transition-all mt-10 mb-20 flex items-center gap-3" type="submit">
+                        <FontAwesomeIcon icon={faSave} /> Enregistrer les modifications
                     </button>
                 </form>
             </div>

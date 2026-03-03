@@ -103,12 +103,19 @@ export default function ComiteProfile() {
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {filteredFilms.map(film => (
+            console.log(film),
             <div
               key={film.id}
               className="bg-gray-800 rounded-xl p-4 shadow"
             >
               <img
-                src={film.Files[0]?.poster_url}
+                src={
+                  film.Files?.[0]?.poster_url
+                    ? (film.Files[0].poster_url.startsWith('http')
+                      ? film.Files[0].poster_url
+                      : `http://localhost:3000${film.Files[0].poster_url}`)
+                    : "http://localhost:3000/uploads/youtubeimg.webp"
+                }
                 className="w-full h-40 object-cover rounded"
               />
               <h2 className="mt-2 font-bold">{film.title}</h2>

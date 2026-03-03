@@ -1,7 +1,18 @@
 export default function FilmCard({ film, isActive }) {
-  const posterUrl =
-    film.Files?.[0]?.poster_url || "../src/assets/youtubeimg.webp";
+  const BACKEND_URL = "http://localhost:3000";
 
+  const getPosterUrl = () => {
+    const file = film.Files?.[0];
+
+    if (!file?.poster_url) return `${BACKEND_URL}/uploads/youtubeimg.webp`;
+
+    if (file.poster_url.startsWith('http')) return file.poster_url;
+
+    const cleanPath = file.poster_url.startsWith('/') ? file.poster_url : `/${file.poster_url}`;
+    return `${BACKEND_URL}${cleanPath}`;
+  };
+
+  const posterUrl = getPosterUrl();
   return (
     <div   // ← ここを div に変更
       className={`flex items-center gap-3 rounded-lg p-2 cursor-pointer ${isActive ? "bg-black" : "hover:bg-gray-400"

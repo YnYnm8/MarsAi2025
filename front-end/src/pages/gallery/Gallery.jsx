@@ -69,25 +69,38 @@ const Gallery = () => {
     if (typeof director === "string") return director;
     return t("unknown_director", "Inconnu");
   };
+  const BACKEND_URL = "http://localhost:3000";
+
   const getPosterUrl = (film) => {
     if (film.Files && film.Files.length > 0 && film.Files[0].poster_url) {
       const url = film.Files[0].poster_url;
       if (url.startsWith("http")) return url;
-      let cleanPath = url.replace(/\\/g, "/").replace(/^(\/)?public\//, "");
-      return cleanPath.startsWith("/") ? cleanPath : `/${cleanPath}`;
+      const cleanPath = url.startsWith("/") ? url : `/${url}`;
+      return `${BACKEND_URL}${cleanPath}`;
     }
 
     return "https://images.unsplash.com/photo-1626814026160-2237a95fc5a0?q=80&w=2670&auto=format&fit=crop";
   };
+
   const getFilmUrl = (film) => {
     if (film.Files && film.Files.length > 0 && film.Files[0].film_url) {
-        const url = film.Files[0].film_url;
-        if (url.startsWith("http")) return url;
-        let cleanPath = url.replace(/\\/g, "/").replace(/^(\/)?public\//, "");
-        return cleanPath.startsWith("/") ? cleanPath : `/${cleanPath}`;
+      const url = film.Files[0].film_url;
+      if (url.startsWith("http")) return url;
+      const cleanPath = url.startsWith("/") ? url : `/${url}`;
+      return `${BACKEND_URL}${cleanPath}`;
     }
     return null;
-};
+  };
+  //AVATAR
+  const getAvatarUrl = (film) => {
+    const director = getDirectorObj(film);
+    if (director && director.avatar) {
+      if (director.avatar.startsWith("http")) return director.avatar;
+      const cleanPath = director.avatar.startsWith("/") ? director.avatar : `/${director.avatar}`;
+      return `${BACKEND_URL}${cleanPath}`;
+    }
+    return "https://cdn-icons-png.flaticon.com/512/149/149071.png";
+  };
   const copyToClipboard = (id) => {
     const url = `${window.location.origin}/films/${id}`;
     navigator.clipboard.writeText(url);
@@ -321,7 +334,7 @@ const Gallery = () => {
             <div className="flex flex-wrap items-start gap-8 px-2">
               <div className="flex items-center gap-4">
                 <img
-                  src={getDirectorObj(selectedFilm).avatar || "https://cdn-icons-png.flaticon.com/512/149/149071.png"}
+                 src={getAvatarUrl(selectedFilm)}
                   alt="Avatar"
                   className="bg-orange-500 rounded-full w-12 h-12 flex-shrink-0 object-cover border border-gray-700"
                 />

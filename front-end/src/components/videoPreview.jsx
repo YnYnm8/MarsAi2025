@@ -1,85 +1,78 @@
 import React, { useEffect, useState } from "react";
 
-export default function VideoUpload({ label, id, defaultValue, onDurationError }) {
+export default function VideoUpload({ 
+  label, 
+  id, 
+  defaultValue, 
+  onDurationError, 
+  youtubeUrl = "", 
+  setYoutubeUrl,    
+  onImport,         
+  uploadMode = "file" 
+}) {
   const [videoPreview, setVideoPreview] = useState(null);
   const [error, setError] = useState(null);
 
+  const getEmbedId = (url) => {
+    if (!url) return null;
+    const regExp = /(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/i;
+    const match = url.match(regExp);
+    return match ? match[1] : null;
+  };
+
+  const youtubeId = getEmbedId(youtubeUrl);
+
   useEffect(() => {
-    if (defaultValue) {
-      setVideoPreview(defaultValue);
-    }
+    if (defaultValue) setVideoPreview(defaultValue);
   }, [defaultValue]);
 
   const handleVideoChange = (e) => {
     const file = e.target.files[0];
-    setError(null)
     if (file) {
-      //duration
       const video = document.createElement('video');
       video.preload = 'metadata';
-
       video.onloadedmetadata = () => {
-   
         window.URL.revokeObjectURL(video.src);
-
         if (video.duration > 120) {
           e.target.value = "";
           setVideoPreview(null);
-
-        
-          if (onDurationError) {
-            onDurationError("La vidéo est trop longue (max 2 minutes)");
-          }
+          if (onDurationError) onDurationError("La vidéo est trop longue (max 2 minutes)");
           return;
         }
-        
         setVideoPreview(URL.createObjectURL(file));
       };
-
-      video.onerror = () => {
-        setError("Fichier vidéo invalide");
-        e.target.value = "";
-      };
-
       video.src = URL.createObjectURL(file);
     }
   };
 
   return (
-    <div className="flex flex-col">
-      <span className="text-white-primary p-3 uppercase text-xs font-bold opacity-50">{label}</span>
+ 
+  <div className="flex flex-col w-full">
+    <span className="text-white-primary pb-3 uppercase text-xs font-bold opacity-50">{label}</span>
 
-      {videoPreview ? (
-        <div className="relative group">
-          <video
-            src={videoPreview}
-            controls
-            className="w-full max-h-80 rounded-lg mb-4 border border-white/10"
-          />
-          <p className="text-[10px] text-blue-tertiary uppercase mt-2.5 mb-4 font-bold">
-            {videoPreview.startsWith('http') ? "Vidéo actuelle" : "Nouvelle vidéo sélectionnée"}
-          </p>
-        </div>
+    {/* ÁREA DE PREVIEW  */}
+    <div className="w-full aspect-video mb-4 overflow-hidden rounded-lg border border-white/10 bg-white/5 flex items-center justify-center">
+      {uploadMode === "youtube" && youtubeId ? (
+        <iframe className="w-full h-full" src={`https://www.youtube.com/embed/${youtubeId}`} frameBorder="0" allowFullScreen></iframe>
+      ) : videoPreview && uploadMode === "file" ? (
+        <video src={videoPreview} controls className="w-full h-full object-cover" />
       ) : (
-        <div className="w-full h-48 border-2 border-dashed border-white/10 rounded-lg flex items-center justify-center mb-4 bg-white/5">
-          <p className="text-white/20 text-xs uppercase">Aucune vidéo</p>
-        </div>
+        <p className="text-white/20 text-[10px] uppercase font-bold tracking-widest text-center px-4">
+          {uploadMode === "youtube" ? "Attente du lien youtube" : "Aucune vidéo"}
+        </p>
       )}
-
-      <label
-        htmlFor={id}
-        className="btn self-center bg-blue-tertiary/20 text-blue-tertiary border border-blue-tertiary/40 p-4 px-8 font-bold text-xs tracking-widest rounded-xl uppercase cursor-pointer hover:bg-blue-tertiary hover:text-white transition-all"
-      >
-        {videoPreview ? "Remplacer la vidéo" : "Explorer"}
-      </label>
-      <input
-        type="file"
-        id={id}
-        accept="video/*"
-        name="film"
-        className="hidden"
-        onChange={handleVideoChange}
-      />
     </div>
-  );
+
+    {/* LOCAL*/}
+    {uploadMode === "file" && (
+      <>
+        <label htmlFor={id} className="btn self-center bg-blue-tertiary/20 text-blue-tertiary border border-blue-tertiary/40 p-4 px-8 font-bold text-xs tracking-widest rounded-xl uppercase cursor-pointer hover:bg-blue-tertiary hover:text-white transition-all">
+          {videoPreview ? "Changer le fichier" : "Choisir un fichier"}
+        </label>
+        <input type="file" id={id} accept="video/*" name="film" className="hidden" onChange={handleVideoChange} />
+      </>
+    )}
+  </div>
+);
+  
 }
