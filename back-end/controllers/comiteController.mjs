@@ -4,8 +4,17 @@ import Film from "../models/Films.mjs";
 import Note from "../models/Note.mjs";
 import { catchError } from "../helpers/errorHandler.mjs";
 import Selection from "../models/Selection.mjs";
-import { notifyFilmNotSelected } from "../services/notificationService.mjs";
+import { notifyFilmNotSelected, notifyFilmSelected, notifyFilmPending } from "../services/notificationService.mjs";
 import User from "../models/User.mjs";
+
+
+const getStatusFromPlaylistId = (playlistId) => {
+  const pId = parseInt(playlistId);
+  if (pId === 2) return "selected";
+  if (pId === 3) return "rejected";
+  if (pId === 4) return "pending";
+  return "submitted";
+};
 
 //  POST /comite/select
 // 公式セレクションに選ばれた映画の限定リスト。（選考済み作品）
@@ -48,6 +57,9 @@ export async function getAllOfficialSelection(req, res) {
   }
 }
 export async function reviewFilm(req, res) {
+  console.log("=== reviewFilm START ===");
+  console.log("BODY:", req.body);
+  console.log("PARAMS:", req.params);
   try {
     const { UserId, score, comment, status } = req.body;
     const { FilmId } = req.params;
@@ -92,12 +104,24 @@ export async function reviewFilm(req, res) {
         PlaylistId,
       });
     }
+    // synchronisation film status
+    film.status = getStatusFromPlaylistId(PlaylistId);
+    await film.save();
+
     // Notification si REFUSED -----------------------------------------
     // ⚠️ Pas de notif FILM_SELECTED ici — réservé à PATCH /admin/lock/selection
-    if (status === "REFUSED" && film.User) {
+
+
+    if (film.User) {
       try {
         const deps = { models: req.app.locals.models, io: req.app.locals.io };
-        await notifyFilmNotSelected({ director: film.User, film, deps });
+        if (status === "selected") {
+          await notifyFilmSelected({ director: film.User, film, deps });
+        } else if (status === "rejected") {
+          await notifyFilmNotSelected({ director: film.User, film, deps });
+        } else if (status === "pending") {
+          await notifyFilmPending({ director: film.User, film, deps });
+        }
       } catch (notifError) {
         console.error("[comiteController] reviewFilm notification error:", notifError.message);
       }
@@ -238,6 +262,14 @@ export async function deletePlaylist(req, res) {
 
     // ② 映画がある場合 → TO_DISCUSS(4) に移動
     if (playlistFilms.length > 0) {
+      for (const pf of playlistFilms) {
+        const film = await Film.findByPk(pf.FilmId);
+        if (film) {
+          film.status = "pending";
+          await film.save();
+        }
+      }
+
       await PlaylistFilm.update(
         { PlaylistId: 4 }, // TO_DISCUSS
         { where: { PlaylistId: targetPlaylistId } }
@@ -286,6 +318,9 @@ export async function acceptedFilm(req, res) {
       playlistFilm = await PlaylistFilm.create({ FilmId, UserId, PlaylistId });
     }
 
+    film.status = "selected";
+    await film.save();
+
     return res.json({
       message: "映画を ACCEPTED に更新しました",
       data: playlistFilm,
@@ -326,7 +361,11 @@ export async function refuseFilm(req, res) {
       playlistFilm = await PlaylistFilm.create({ FilmId, UserId, PlaylistId });
     }
 
-        // Notification refus --------------------------------------------------------
+    // statut synchronisation
+    film.status = "rejected";
+    await film.save();
+
+    // Notification refus --------------------------------------------------------
     if (film.User) {
       try {
         const deps = { models: req.app.locals.models, io: req.app.locals.io };
@@ -394,6 +433,9 @@ export async function modifyPlaylistStatus(req, res) {
     if (existsInOtherPlaylist) {
       // Si le film existe déjà dans une autre playlist on update la ligne
       await PlaylistFilm.update({ PlaylistId }, { where: { FilmId, UserId } });
+
+      film.status = getStatusFromPlaylistId(PlaylistId);
+      await film.save();
       return res.json({
         message: "映画のプレイリストを更新しました",
         filmtitle: film.title,
@@ -405,6 +447,10 @@ export async function modifyPlaylistStatus(req, res) {
       PlaylistId,
       UserId,
     });
+
+    film.status = getStatusFromPlaylistId(PlaylistId);
+    await film.save();
+
     return res
       .status(201)
       .json({ message: "Film ajouté à la playlist", data: playlistFilm });
@@ -444,6 +490,12 @@ export async function addFilmToPlaylist(req, res) {
       FilmId,
       UserId,
     });
+
+    const film = await Film.findByPk(FilmId);
+    if (film) {
+      film.status = getStatusFromPlaylistId(targetPlaylistId);
+      await film.save();
+    }
 
     res.status(201).json(item);
   } catch (err) {

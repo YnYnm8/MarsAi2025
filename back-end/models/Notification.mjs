@@ -25,6 +25,7 @@ const Notification = sequelize.define(
         "FILM_SUBMITTED",
         "FILM_PENDING_REVIEW",
         "FILM_APPROVED",
+        "FILM_PENDING",
         "FILM_REJECTED_ADMIN",
         "FILM_SELECTED",
         "FILM_NOT_SELECTED",
