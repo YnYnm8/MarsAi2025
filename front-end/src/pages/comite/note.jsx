@@ -383,7 +383,7 @@ export default function Note() {
                       className="w-full rounded-lg"
                     />
 
-                    <div className="mt-3 flex gap-3 justify-center">
+                    <div className="mt-3 flex gap-3 left-3 up-10">
                       <button
                         onClick={() => setSpeed(1)}
                         className="px-4 py-2 bg-gray-700 text-white rounded-lg hover:bg-gray-800 transition"
@@ -424,13 +424,14 @@ export default function Note() {
                Le Nom de Film : {selectedFilm?.title || "SYNTHETICA : title"}
               </h2>
               <div className="flex flex-wrap gap-2 text-sm text-gray-600 mt-1">
-                <span className="font-medium font-semibold">
+                <span className="font-semibold">
               Directeur :{selectedFilm?.User?.firstName || "Director "} {selectedFilm?.User?.lastName ||""}
                 </span>
               </div>
                  <p className="text-sm text-gray-600 font-semibold">
               Origin :{selectedFilm?.User?.country || "Country "}
               </p>
+              
 
             </div>
             <div className="text-xl font-bold mt-2 md:mt-0">

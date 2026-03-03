@@ -30,7 +30,7 @@ export default function FilmCard({ film, isActive }) {
         <p className="text-sm font-semibold text-[#FF5845]"> SCORE :  {film.NotesDirect?.[0]?.score || "Non evalué"}</p>
         <p className="text-xs text-gray-5OO">{film.duration} sec.</p>
         <p className="text-xs text-gray-500">
-          {film.User.lastName} –  ORIGIN  {film.User.country}
+          {film.User?.lastName} –  ORIGIN  {film.User?.country}
         </p>
       </div>
     </div>
