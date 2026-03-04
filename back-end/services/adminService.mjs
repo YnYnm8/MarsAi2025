@@ -22,7 +22,13 @@ const fetchDashboardStats = async () => {
   const totalSelected = await Film.count({ where: { status: 'selected' } });
   const totalRejected = await Film.count({ where: { status: 'rejected' } });
   const totalPending = await Film.count({ where: { status: 'pending' } });
+  const totalSubmitted = await Film.count({ where: { status: 'submitted' } });
   
+  const totalFilmsRated = await Film.count({
+    where: {
+        status: { [Op.in]: ['selected', 'rejected', 'pending'] }
+    }
+});
 
   const totalViews = (await Film.sum("views")) || 0;
   const totalShares = (await Film.sum("shares")) || 0;
@@ -65,7 +71,9 @@ const fetchDashboardStats = async () => {
     workshopOccupation,
     totalInscrits,
     totalPlaces,
-    toolsUsage
+    toolsUsage,
+    totalFilmsRated,
+    totalSubmitted
   };
 };
 
