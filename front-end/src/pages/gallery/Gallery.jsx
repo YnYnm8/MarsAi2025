@@ -34,7 +34,7 @@ const Gallery = () => {
     const fetchFilms = async () => {
       try {
         setLoading(true);
-        const response = await fetch("http://localhost:3000/films", {
+        const response = await fetch("http://localhost:3004/films", {
           method: "GET",
           headers: { "Content-Type": "application/json" },
         });
@@ -69,7 +69,7 @@ const Gallery = () => {
     if (typeof director === "string") return director;
     return t("unknown_director", "Inconnu");
   };
-  const BACKEND_URL = "http://localhost:3000";
+  const BACKEND_URL = "http://localhost:3004";
 
   const getPosterUrl = (film) => {
     if (film.Files && film.Files.length > 0 && film.Files[0].poster_url) {
@@ -140,7 +140,7 @@ const Gallery = () => {
     }
     setActiveShareId(null);
     try {
-      const response = await fetch(`http://localhost:3000/films/share/${film.id}`, { method: "POST" });
+      const response = await fetch(`http://localhost:3004/films/share/${film.id}`, { method: "POST" });
       const result = await response.json();
       if (result.success && result.incremented) {
         setFilms((prevFilms) =>

@@ -10,7 +10,7 @@ const AdminDetailsFilms = () => {
     useEffect(() => {
         const fetchFilms = async () => {
             try {
-                const res = await fetch('http://localhost:3000/admin/films', { credentials: 'include' });
+                const res = await fetch('http://localhost:3004/admin/films', { credentials: 'include' });
                 const json = await res.json();
                 if (json.success) setFilms(json.data);
             } catch (err) { console.error("Erreur films:", err); }

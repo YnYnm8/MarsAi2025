@@ -15,7 +15,7 @@ const AdminRejected = () => {
 
     const fetchRejected = async () => {
         try {
-            const response = await fetch('http://localhost:3000/admin/films/rejected', { credentials: 'include' });
+            const response = await fetch('http://localhost:3004/admin/films/rejected', { credentials: 'include' });
             const json = await response.json();
             let data = [];
             if (json.success && Array.isArray(json.data)) data = json.data;
@@ -34,7 +34,7 @@ const AdminRejected = () => {
     const confirmMoveToPending = async () => {
         if (!selectedFilmId) return;
         try {
-            const response = await fetch(`http://localhost:3000/admin/films/${selectedFilmId}/status`, {
+            const response = await fetch(`http://localhost:3004/admin/films/${selectedFilmId}/status`, {
                 method: 'PUT', headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ playlistId: 4, reason: "Réexamen du film par l'administrateur." }),
                 credentials: 'include'
@@ -50,7 +50,7 @@ const AdminRejected = () => {
     const formatDate = (d) => d ? new Date(d).toLocaleDateString('fr-FR') : "N/C";
     const getPoster = (film) => {
         const raw = film.Files?.[0]?.poster_url || film.poster_url;
-        return raw ? (raw.startsWith('http') ? raw : `http://localhost:3000${raw}`) : "/src/assets/youtube.png";
+        return raw ? (raw.startsWith('http') ? raw : `http://localhost:3004${raw}`) : "/src/assets/youtube.png";
     };
 
     const filteredFilms = rejectedFilms.filter(film => {

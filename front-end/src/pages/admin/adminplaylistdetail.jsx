@@ -11,7 +11,7 @@ const AdminPlaylistDetail = () => {
     useEffect(() => {
         const fetchPlaylistFilms = async () => {
             try {
-                const response = await fetch(`http://localhost:3000/admin/playlist/${id}`, { credentials: 'include' });
+                const response = await fetch(`http://localhost:3004/admin/playlist/${id}`, { credentials: 'include' });
                 const result = await response.json();
                 if (result.success && result.data) {
                     setPlaylist(result.data);

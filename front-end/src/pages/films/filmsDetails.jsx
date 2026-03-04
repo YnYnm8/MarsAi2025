@@ -17,7 +17,7 @@ export default function FilmsDetails() {
         if (!window.confirm("Voulez-vous vraiment supprimer ce film définitivement ?")) return;
 
         try {
-            const res = await fetch(`http://localhost:3000/films/${filmId}`, {
+            const res = await fetch(`http://localhost:3004/films/${filmId}`, {
                 method: 'DELETE',
                 credentials: 'include'
             });
@@ -38,7 +38,7 @@ export default function FilmsDetails() {
         const fetchFilmData = async () => {
             try {
                 setLoading(true);
-                const response = await fetch(`http://localhost:3000/films/${id}`);
+                const response = await fetch(`http://localhost:3004/films/${id}`);
 
                 if (!response.ok) {
                     throw new Error('Film introuvable');

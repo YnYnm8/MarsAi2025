@@ -27,11 +27,11 @@ export default function Note() {
   // データ取得
   const fetchFilmAndPlaylists = async () => {
     try {
-      const filmRes = await fetch("http://localhost:3000/films");
+      const filmRes = await fetch("http://localhost:3004/films");
       if (!filmRes.ok) throw new Error("Failed to fetch film data");
       const filmsData = await filmRes.json();
 
-      const playlistRes = await fetch("http://localhost:3000/comite/allplaylists");
+      const playlistRes = await fetch("http://localhost:3004/comite/allplaylists");
       if (!playlistRes.ok) throw new Error("Failed to fetch playlists");
       const playlistsData = await playlistRes.json();
 
@@ -97,7 +97,7 @@ export default function Note() {
     try {
       //  レビューを登録
       const reviewResponse = await fetch(
-        `http://localhost:3000/comite/review/${selectedFilm.id}`,
+        `http://localhost:3004/comite/review/${selectedFilm.id}`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -136,7 +136,7 @@ export default function Note() {
     if (!newListName.trim()) return alert("Please enter a name for the list");
 
     try {
-      const response = await fetch("http://localhost:3000/comite/create/playlist", {
+      const response = await fetch("http://localhost:3004/comite/create/playlist", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -162,7 +162,7 @@ export default function Note() {
     if (!selectedFilm) return alert("No film selected!");
 
     try {
-      const playlistResponse = await fetch("http://localhost:3000/comite/film/list", {
+      const playlistResponse = await fetch("http://localhost:3004/comite/film/list", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -174,7 +174,7 @@ export default function Note() {
       if (!playlistResponse.ok) throw new Error("Failed to add film to playlist");
       await playlistResponse.json();
 
-      const noteResponse = await fetch("http://localhost:3000/comite/note", {
+      const noteResponse = await fetch("http://localhost:3004/comite/note", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -202,7 +202,7 @@ export default function Note() {
     if (!playlistId) return alert("No playlist selected to delete!");
 
     try {
-      const response = await fetch("http://localhost:3000/comite/deletestatus", {
+      const response = await fetch("http://localhost:3004/comite/deletestatus", {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -241,7 +241,7 @@ export default function Note() {
     if (!comment.trim()) return alert("Veuillez entrer un commentaire.");
 
     try {
-      const response = await fetch(`http://localhost:3000/comite/note`, {
+      const response = await fetch(`http://localhost:3004/comite/note`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -361,8 +361,8 @@ export default function Note() {
                     <video
                       ref={videoRef}
                       key={selectedFilm.Files[0].film_url}
-                      src={selectedFilm.Files[0].film_url.startsWith('http') ? selectedFilm.Files[0].film_url : `http://localhost:3000${selectedFilm.Files[0].film_url}`}
-                      poster={selectedFilm.Files[0].poster_url?.startsWith('http') ? selectedFilm.Files[0].poster_url : `http://localhost:3000${selectedFilm.Files[0].poster_url}`}
+                      src={selectedFilm.Files[0].film_url.startsWith('http') ? selectedFilm.Files[0].film_url : `http://localhost:3004${selectedFilm.Files[0].film_url}`}
+                      poster={selectedFilm.Files[0].poster_url?.startsWith('http') ? selectedFilm.Files[0].poster_url : `http://localhost:3004${selectedFilm.Files[0].poster_url}`}
                       controls
                       className="w-full rounded-lg"
                     />
@@ -394,7 +394,7 @@ export default function Note() {
               <img
                 src={selectedFilm?.Files?.[0]?.poster_url?.startsWith('http')
                   ? selectedFilm.Files[0].poster_url
-                  : `http://localhost:3000${selectedFilm?.Files?.[0]?.poster_url || "/uploads/youtubeimg.webp"}`}
+                  : `http://localhost:3004${selectedFilm?.Files?.[0]?.poster_url || "/uploads/youtubeimg.webp"}`}
                 alt={selectedFilm?.title || "Film Poster"}
                 className="w-full h-64 object-cover rounded-lg mb-4"
               />
