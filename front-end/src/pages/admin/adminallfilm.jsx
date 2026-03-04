@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from "react-router-dom";
 import Sidebar from '../../components/sidebar.jsx';
-import { getStatusDetails } from '../../../../back-end/services/statutHelper.mjs';
+import { getStatusDetails } from '../../services/statusHelper.js';
 
 const AdminAllFilms = () => {
     const [allFilms, setAllFilms] = useState([]);

@@ -67,17 +67,54 @@ const AdminPlaylistDetail = () => {
                             <div key={film.id} className="group flex items-center justify-between p-4 lg:p-6 bg-white rounded-2xl lg:rounded-[2rem] hover:bg-black hover:text-white transition-all duration-500 shadow-sm border border-slate-100">
                                 <div className="flex items-center gap-4 lg:gap-8 flex-1 min-w-0">
                                     {/* POSTER */}
-                                    <div className="w-12 h-16 lg:w-20 lg:h-24 bg-slate-100 rounded-xl lg:rounded-2xl overflow-hidden flex-shrink-0 border border-slate-200">
-                                        {film.posterUrl ? (
-                                            <img src={film.posterUrl} alt={film.title} className="w-full h-full object-cover" onError={(e) => { e.target.onerror = null; e.target.src = 'https://via.placeholder.com/300x450'; }} />
-                                        ) : (
-                                            <div className="w-full h-full flex items-center justify-center text-[8px] font-black text-slate-400 p-1 text-center uppercase">No Image</div>
-                                        )}
+
+                                    <div className="w-16 h-20 bg-slate-100 rounded-lg overflow-hidden flex-shrink-0 border border-slate-200">
+                                        {/* on cherche l'URL du poster dans 3 endroits possibles */}
+                                        {/* On prend le premier qui existe */}
+                                        {(() => {
+                                            let posterUrl = null;
+
+                                            if (film.poster_url) {
+                                                posterUrl = film.poster_url;
+                                            } else if (film.posterUrl) {
+                                                posterUrl = film.posterUrl;
+                                            } else if (film.Files && film.Files[0] && film.Files[0].poster_url) {
+                                                posterUrl = film.Files[0].poster_url;
+                                            }
+
+                                            // si on a trouvé une URL, on construit l'URL complète
+                                            if (posterUrl) {
+                                                // Si l'URL commence par "http", elle est déjà complète
+                                                // Sinon c'est un chemin local, on ajoute le serveur devant
+                                                const urlComplete = posterUrl.startsWith('http')
+                                                    ? posterUrl
+                                                    : 'http://localhost:3000' + posterUrl;
+
+                                                //  on affiche l'image
+                                                return (
+                                                    <img
+                                                        src={urlComplete}
+                                                        alt={film.title}
+                                                        className="w-full h-full object-cover"
+                                                        onError={(e) => {
+                                                            // Si l'image est cassée, on affiche une image par défaut
+                                                            e.target.src = '/src/assets/youtube.png';
+                                                        }}
+                                                    />
+                                                );
+                                            } else {
+                                                return (
+                                                    <div className="w-full h-full flex items-center justify-center text-[8px] font-black text-slate-400 uppercase">
+                                                        No Image
+                                                    </div>
+                                                );
+                                            }
+                                        })()}
                                     </div>
                                     <div className="min-w-0">
                                         <h4 className="font-black uppercase tracking-tight text-base lg:text-xl mb-1 truncate">{film.title}</h4>
                                         <p className="text-[10px] opacity-50 font-bold tracking-[0.15em] uppercase">
-                                            Par {film.directorName || "Réalisateur inconnu"}
+                                            Par {film.User ? `${film.User.firstName} ${film.User.lastName}` : "Réalisateur inconnu"}
                                         </p>
                                     </div>
                                 </div>
