@@ -22,8 +22,8 @@ const Admin = () => {
             try {
                 setLoading(true);
                 const [statsRes, usersRes] = await Promise.all([
-                    fetch('http://localhost:3000/admin/stats', { credentials: 'include' }),
-                    fetch('http://localhost:3000/admin/users', { credentials: 'include' })
+                    fetch('http://localhost:3004/admin/stats', { credentials: 'include' }),
+                    fetch('http://localhost:3004/admin/users', { credentials: 'include' })
                 ]);
                 if (!statsRes.ok || !usersRes.ok) throw new Error("Erreur serveur");
                 const statsJson = await statsRes.json();
@@ -38,7 +38,7 @@ const Admin = () => {
 
     const onUpdateRole = async (userId, newRole) => {
         try {
-            const response = await fetch(`http://localhost:3000/admin/users/${userId}/role`, {
+            const response = await fetch(`http://localhost:3004/admin/users/${userId}/role`, {
                 method: 'PATCH', headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ role: newRole })
             });

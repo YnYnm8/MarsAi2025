@@ -42,7 +42,7 @@ const Profile = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const userRes = await fetch('http://localhost:3000/me', { credentials: 'include' });
+        const userRes = await fetch('http://localhost:3004/me', { credentials: 'include' });
 
         if (userRes.status === 401) { navigate('/login'); return; }
 
@@ -66,7 +66,7 @@ const Profile = () => {
           setValue("x", currentUser.socialNetworks?.x || "");
         }
 
-        const filmsRes = await fetch('http://localhost:3000/my-films', { credentials: 'include' });
+        const filmsRes = await fetch('http://localhost:3004/my-films', { credentials: 'include' });
         if (filmsRes.ok) {
           const filmsData = await filmsRes.json();
           const filmsArray = Array.isArray(filmsData) ? filmsData : (filmsData.data || []);
@@ -112,7 +112,7 @@ const Profile = () => {
         formData.append("avatar", selectedFile);
       }
 
-      const res = await fetch('http://localhost:3000/profile', {
+      const res = await fetch('http://localhost:3004/profile', {
         method: 'PUT',
         credentials: 'include',
         body: formData
@@ -135,7 +135,7 @@ const Profile = () => {
     if (!window.confirm(t("confirm_delete"))) return;
 
     try {
-      const res = await fetch(`http://localhost:3000/films/${filmId}`, {
+      const res = await fetch(`http://localhost:3004/films/${filmId}`, {
         method: 'DELETE',
         credentials: 'include'
       });
@@ -177,7 +177,7 @@ const Profile = () => {
 
   const avatarSrc = previewUrl
     ? previewUrl
-    : (user.avatar ? `http://localhost:3000/${user.avatar.replace(/\\/g, "/")}` : null);
+    : (user.avatar ? `http://localhost:3004/${user.avatar.replace(/\\/g, "/")}` : null);
 
   const getStatusLabel = (status) => {
     const safeStatus = status ? status.toLowerCase() : 'submitted';
@@ -191,7 +191,7 @@ const Profile = () => {
 
   // Helper pour sécuriser l'URL des réseaux 
   const formatUrl = (url) => url.startsWith('http') ? url : `https://${url}`;
-  const BACKEND_URL = "http://localhost:3000";
+  const BACKEND_URL = "http://localhost:3004";
 
   return (
     <div className="min-h-screen bg-black text-white font-sans selection:bg-purple-500 selection:text-white">

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from "react-router-dom";
 import Sidebar from '../../components/sidebar.jsx';
-import { getStatusDetails } from '../../../../back-end/services/statutHelper.mjs';
+// import { getStatusDetails } from '../../../../back-end/services/statutHelper.mjs';
 
 const AdminSelected = () => {
     const [selectedFilms, setSelectedFilms] = useState([]);
@@ -15,7 +15,7 @@ const AdminSelected = () => {
 
     const fetchSelected = async () => {
         try {
-            const response = await fetch('http://localhost:3000/admin/films/selected', { credentials: 'include' });
+            const response = await fetch('http://localhost:3004/admin/films/selected', { credentials: 'include' });
             const json = await response.json();
             let data = Array.isArray(json) ? json : (json.data || []);
             setSelectedFilms(data);
@@ -34,7 +34,7 @@ const AdminSelected = () => {
     const confirmMoveToPending = async () => {
         if (!selectedFilmId) return;
         try {
-            const response = await fetch(`http://localhost:3000/admin/films/${selectedFilmId}/status`, {
+            const response = await fetch(`http://localhost:3004/admin/films/${selectedFilmId}/status`, {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ playlistId: 4 }),
@@ -67,7 +67,7 @@ const AdminSelected = () => {
 
     const getPoster = (film) => {
         const raw = film.Files?.[0]?.poster_url || film.poster_url;
-        return raw ? (raw.startsWith('http') ? raw : `http://localhost:3000${raw}`) : "/src/assets/youtube.png";
+        return raw ? (raw.startsWith('http') ? raw : `http://localhost:3004${raw}`) : "/src/assets/youtube.png";
     };
 
     const Skeleton = () => (

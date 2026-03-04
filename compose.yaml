@@ -11,6 +11,10 @@ services:
       - "3306:3306"
     volumes:
       - db_data:/var/lib/mysql 
+    healthcheck:
+      test: ["CMD","mysql", "-uuser","-puser","--database=MarsAI-database"]
+      retries: 2
+      start_period: 10s
     
   pma:
     image: phpmyadmin
@@ -20,6 +24,38 @@ services:
       PMA_PASSWORD: root
     ports:
       - "8080:80"
+    depends_on:
+      - bdd
+
+  front:
+    # image: 
+    build: ./front-end
+    ports:
+      - "8004:80"
+
+
+  back:
+    # image:
+    build: ./back-end
+    ports:
+      - "3004:3000"
+    environment:
+      - DB_NAME=MarsAI-database
+      - DB_USER=user
+      - DB_PASS=user
+      - DB_HOST=bdd
+      - DB_PORT=3306
+      - FRONTEND_URL=http://localhost:8004/
+      - NODE_ENV=development
+      - RESEND_API_KEY=re_cW54KG7F_AwyqtHCuakGBzCmZMfdamhj6
+      - JWT_SECRET=secret123
+      - YOUTUBE_API_KEY=AIzaSyB5clZNC7q8e5s5S6wSn_zg6MT9WCjGt7g
+      - SMTP_HOST=smtp.mailtrap.io
+      - SMTP_PORT=587
+      - SMTP_USER=resend
+      - SMTP_PASS=re_cW54KG7F_AwyqtHCuakGBzCmZMfdamhj6
+      - SMTP_FROM=noreply@marsai.fr
+      - SMTP_FROM=onboarding@resend.dev
     depends_on:
       - bdd
 

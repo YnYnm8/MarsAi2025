@@ -16,11 +16,11 @@ export default function ComiteProfile() {
 
   const fetchFilmAndPlaylists = async () => {
     try {
-      const filmRes = await fetch("http://localhost:3000/films");
+      const filmRes = await fetch("http://localhost:3004/films");
       if (!filmRes.ok) throw new Error("Failed to fetch film data");
       const filmsData = await filmRes.json();
 
-      const playlistRes = await fetch("http://localhost:3000/comite/allplaylists");
+      const playlistRes = await fetch("http://localhost:3004/comite/allplaylists");
       if (!playlistRes.ok) throw new Error("Failed to fetch playlists");
       const playlistsData = await playlistRes.json();
 
@@ -113,8 +113,8 @@ export default function ComiteProfile() {
                   film.Files?.[0]?.poster_url
                     ? (film.Files[0].poster_url.startsWith('http')
                       ? film.Files[0].poster_url
-                      : `http://localhost:3000${film.Files[0].poster_url}`)
-                    : "http://localhost:3000/uploads/youtubeimg.webp"
+                      : `http://localhost:3004${film.Files[0].poster_url}`)
+                    : "http://localhost:3004/uploads/youtubeimg.webp"
                 }
                 className="w-full h-40 object-cover rounded"
               />
