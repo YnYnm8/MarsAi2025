@@ -1,0 +1,452 @@
+/**
+ * committeeController.mjs - Committee Controller
+ * Endpoints: Film review, voting, auto-decision
+ */
+
+import { Film, Vote, User, GlobalSettings } from '../models/index.mjs';
+import nodemailer from 'nodemailer';
+
+// Configuration email
+const emailTransporter = nodemailer.createTransport({
+  service: 'gmail',
+  auth: {
+    user: process.env.EMAIL_USER,
+    pass: process.env.EMAIL_PASSWORD
+  }
+});
+
+/**
+ * Helper: Envoyer email film sélectionné
+ */
+const sendFilmAcceptedEmail = async (director, film) => {
+  try {
+    await emailTransporter.sendMail({
+      from: process.env.EMAIL_USER,
+      to: director.email,
+      subject: '🎉 Votre film a été sélectionné!',
+      html: `
+        <h2>Félicitations!</h2>
+        <p>Votre film <strong>${film.titleFR || film.titleEN}</strong> a été sélectionné par le comité.</p>
+        <p>Nous vous contactons bientôt avec les détails.</p>
+      `
+    });
+  } catch (error) {
+    console.error('❌ Email send error:', error);
+  }
+};
+
+/**
+ * Helper: Envoyer email film rejeté
+ */
+const sendFilmRejectedEmail = async (director, film, avgScore) => {
+  try {
+    await emailTransporter.sendMail({
+      from: process.env.EMAIL_USER,
+      to: director.email,
+      subject: 'Décision du comité - MARS AI',
+      html: `
+        <h2>Résultat de votre candidature</h2>
+        <p>Malheureusement, votre film <strong>${film.titleFR || film.titleEN}</strong> n'a pas été sélectionné.</p>
+        <p>Score moyen: <strong>${avgScore.toFixed(2)}/10</strong></p>
+        <p>Vous pouvez répostuler l'année prochaine!</p>
+      `
+    });
+  } catch (error) {
+    console.error('❌ Email send error:', error);
+  }
+};
+
+/**
+ * GetFilmsToReview - Liste des films à évaluer (comité)
+ * @route GET /api/committee/queue
+ * @requires AUTH + COMMITTEE/ADMIN
+ * @returns {200} Films to review
+ */
+export const getFilmsToReview = async (req, res) => {
+  try {
+    // Vérifier que l'utilisateur est comité/admin
+    if (!req.user || !req.user.id) {
+      return res.status(401).json({ message: 'Non authentifié' });
+    }
+
+    if (req.user.role !== 'admin' && req.user.role !== 'committee') {
+      return res.status(403).json({ message: 'Accès réservé au comité de sélection' });
+    }
+
+    const userId = req.user.id;
+
+    // Récupérer les films non encore votés par ce comité member
+    const votedFilmIds = await Vote.findAll({
+      attributes: ['filmId'],
+      where: { userId }
+    }).then(votes => votes.map(v => v.filmId));
+
+    const films = await Film.findAll({
+      where: {
+        status: { [require('sequelize')]: ['submitted', 'in_review'] },
+        ...(votedFilmIds.length > 0 && { id: { [require('sequelize').Op.notIn]: votedFilmIds } })
+      },
+      include: [{
+        model: User,
+        as: 'director',
+        attributes: ['id', 'firstName', 'lastName', 'email', 'school']
+      }],
+      order: [['createdAt', 'ASC']],
+      limit: 20
+    });
+
+    res.status(200).json({
+      success: true,
+      films,
+      message: `${films.length} film(s) en attente d'évaluation`
+    });
+
+  } catch (error) {
+    console.error('❌ getFilmsToReview error:', error);
+    res.status(500).json({
+      success: false,
+      message: process.env.NODE_ENV === 'development' ? error.message : 'Failed to fetch films'
+    });
+  }
+};
+
+/**
+ * SubmitVote - Soumettre un vote de comité
+ * @route POST /api/committee/vote
+ * @requires AUTH + COMMITTEE/ADMIN
+ * @body {number} filmId - Film à voter
+ * @body {number} score - 1-10
+ * @body {string} verdict - 'accept' ou 'reject'
+ * @body {string} comment - Commentaire optionnel
+ * @returns {201} Vote created + auto-decision if all voted
+ */
+export const submitVote = async (req, res) => {
+  try {
+    // Authentification
+    if (!req.user || !req.user.id) {
+      return res.status(401).json({ message: 'Non authentifié' });
+    }
+
+    if (req.user.role !== 'admin' && req.user.role !== 'committee') {
+      return res.status(403).json({ message: 'Accès réservé au comité' });
+    }
+
+    const { filmId, score, comment, verdict } = req.body;
+    const userId = req.user.id;
+
+    // Validation filmId
+    if (!filmId || isNaN(parseInt(filmId))) {
+      return res.status(400).json({ message: 'Film ID invalide' });
+    }
+
+    // Validation score
+    if (!score || isNaN(parseInt(score)) || score < 1 || score > 10) {
+      return res.status(400).json({ message: 'Score doit être entre 1 et 10' });
+    }
+
+    // Validation verdict
+    if (!verdict || !['accept', 'reject'].includes(verdict.toLowerCase())) {
+      return res.status(400).json({ message: 'Verdict invalide (accept/reject)' });
+    }
+
+    // Vérifier que le film existe
+    const film = await Film.findByPk(parseInt(filmId));
+    if (!film) {
+      return res.status(404).json({ message: 'Film non trouvé' });
+    }
+
+    // Vérifier si déjà voté
+    const existing = await Vote.findOne({ 
+      where: { filmId: parseInt(filmId), userId } 
+    });
+
+    if (existing) {
+      return res.status(409).json({ message: 'Vous avez déjà voté pour ce film' });
+    }
+
+    // Créer le vote
+    const vote = await Vote.create({
+      filmId: parseInt(filmId),
+      userId,
+      score: parseInt(score),
+      comment: comment ? String(comment).substring(0, 500) : null,
+      verdict: verdict.toLowerCase()
+    });
+
+    console.log(`✅ Vote created for film ${filmId} by user ${userId}`);
+
+    // LOGIQUE AUTO-DÉCISION: Si tous les comité members ont voté
+    const settings = await GlobalSettings.findOne();
+    const committeeSize = settings?.committeeMemberCount || 5;
+    
+    const allVotes = await Vote.count({ where: { filmId: parseInt(filmId) } });
+
+    let decisionMade = false;
+
+    if (allVotes >= committeeSize) {
+      // Récupérer tous les votes pour ce film
+      const votes = await Vote.findAll({ 
+        where: { filmId: parseInt(filmId) }
+      });
+
+      // Calculer résultats
+      const acceptCount = votes.filter(v => v.verdict === 'accept').length;
+      const avgScore = votes.reduce((sum, v) => sum + v.score, 0) / votes.length;
+
+      // Récupérer le réalisateur
+      const director = await User.findByPk(film.userId);
+
+      // DÉCISION: 60% acceptent ET score >= 6
+      if (acceptCount >= (committeeSize * 0.6) && avgScore >= 6) {
+        // ✅ SÉLECTIONNÉ
+        film.status = 'selected';
+        film.averageScore = parseFloat(avgScore.toFixed(2));
+        await film.save();
+        decisionMade = true;
+
+        console.log(`✅ Film ${filmId} SELECTED (score: ${avgScore.toFixed(2)}, accepts: ${acceptCount}/${committeeSize})`);
+
+        // Email au réalisateur
+        if (director && director.email) {
+          await sendFilmAcceptedEmail(director, film);
+        }
+
+        // WebSocket notification
+        const io = req.app?.get('io');
+        if (io && director) {
+          io.to(String(director.id)).emit('film-selected', {
+            filmId: parseInt(filmId),
+            message: 'Votre film a été sélectionné! 🎉',
+            status: 'selected',
+            score: parseFloat(avgScore.toFixed(2))
+          });
+        }
+
+      } else {
+        // ❌ REJETÉ
+        film.status = 'rejected';
+        film.averageScore = parseFloat(avgScore.toFixed(2));
+        await film.save();
+        decisionMade = true;
+
+        console.log(`❌ Film ${filmId} REJECTED (score: ${avgScore.toFixed(2)}, accepts: ${acceptCount}/${committeeSize})`);
+
+        // Email au réalisateur
+        if (director && director.email) {
+          await sendFilmRejectedEmail(director, film, avgScore);
+        }
+
+        // WebSocket notification
+        const io = req.app?.get('io');
+        if (io && director) {
+          io.to(String(director.id)).emit('film-rejected', {
+            filmId: parseInt(filmId),
+            message: 'Décision du comité rendue',
+            status: 'rejected',
+            avgScore: parseFloat(avgScore.toFixed(2))
+          });
+        }
+      }
+    }
+
+    res.status(201).json({
+      success: true,
+      message: 'Vote enregistré',
+      vote,
+      allVotesCount: allVotes,
+      decisionMade,
+      committeeSize
+    });
+
+  } catch (error) {
+    console.error('❌ submitVote error:', error);
+    res.status(500).json({
+      success: false,
+      message: process.env.NODE_ENV === 'development' ? error.message : 'Vote submission failed'
+    });
+  }
+};
+
+/**
+ * GetVoteResults - Résultats du vote pour un film
+ * @route GET /api/committee/results/:filmId
+ * @requires AUTH + COMMITTEE/ADMIN
+ * @param {number} filmId
+ * @returns {200} Vote results
+ */
+export const getVoteResults = async (req, res) => {
+  try {
+    if (!req.user || req.user.role !== 'admin') {
+      return res.status(403).json({ message: 'Admin only' });
+    }
+
+    const { filmId } = req.params;
+
+    if (!filmId || isNaN(parseInt(filmId))) {
+      return res.status(400).json({ message: 'Film ID invalide' });
+    }
+
+    const votes = await Vote.findAll({
+      where: { filmId: parseInt(filmId) },
+      include: [{
+        model: User,
+        as: 'evaluator',
+        attributes: ['firstName', 'lastName']
+      }]
+    });
+
+    const acceptCount = votes.filter(v => v.verdict === 'accept').length;
+    const rejectCount = votes.filter(v => v.verdict === 'reject').length;
+    const avgScore = votes.length > 0 
+      ? parseFloat((votes.reduce((sum, v) => sum + v.score, 0) / votes.length).toFixed(2))
+      : 0;
+
+    res.status(200).json({
+      success: true,
+      results: {
+        totalVotes: votes.length,
+        acceptCount,
+        rejectCount,
+        avgScore,
+        votes
+      }
+    });
+
+  } catch (error) {
+    console.error('❌ getVoteResults error:', error);
+    res.status(500).json({
+      success: false,
+      message: process.env.NODE_ENV === 'development' ? error.message : 'Failed to fetch results'
+    });
+  }
+};
+
+/**
+ * GetVoteHistory - Historique des votes d'un comité member
+ * @route GET /api/committee/history
+ * @requires AUTH + COMMITTEE/ADMIN
+ * @returns {200} User's vote history
+ */
+export const getVoteHistory = async (req, res) => {
+  try {
+    if (!req.user || !req.user.id) {
+      return res.status(401).json({ message: 'Non authentifié' });
+    }
+
+    const votes = await Vote.findAll({
+      where: { userId: req.user.id },
+      include: [{
+        model: Film,
+        as: 'film',
+        attributes: ['id', 'titleFR', 'titleEN', 'status']
+      }],
+      order: [['createdAt', 'DESC']]
+    });
+
+    res.status(200).json({
+      success: true,
+      votes
+    });
+
+  } catch (error) {
+    console.error('❌ getVoteHistory error:', error);
+    res.status(500).json({
+      success: false,
+      message: process.env.NODE_ENV === 'development' ? error.message : 'Failed to fetch history'
+    });
+  }
+};
+
+/**
+ * SelectFinalists - Sélectionner les films finalistes (Admin)
+ * @route POST /api/committee/select-finalists
+ * @requires AUTH + ADMIN
+ * @body {array} filmIds - Film IDs to select
+ * @returns {200} Updated films
+ */
+export const selectFinalists = async (req, res) => {
+  try {
+    if (!req.user || req.user.role !== 'admin') {
+      return res.status(403).json({ message: 'Admin only' });
+    }
+
+    const { filmIds } = req.body;
+
+    if (!Array.isArray(filmIds) || filmIds.length === 0) {
+      return res.status(400).json({ message: 'Film IDs array required' });
+    }
+
+    // Validation IDs
+    const validIds = filmIds.filter(id => !isNaN(parseInt(id))).map(id => parseInt(id));
+
+    const updated = await Film.update(
+      { status: 'finalist' },
+      { where: { id: validIds } }
+    );
+
+    res.status(200).json({
+      success: true,
+      message: `${updated[0]} films marked as finalists`
+    });
+
+  } catch (error) {
+    console.error('❌ selectFinalists error:', error);
+    res.status(500).json({
+      success: false,
+      message: process.env.NODE_ENV === 'development' ? error.message : 'Selection failed'
+    });
+  }
+};
+
+/**
+ * SelectWinner - Sélectionner le film gagnant (Admin)
+ * @route POST /api/committee/select-winner
+ * @requires AUTH + ADMIN
+ * @body {number} filmId
+ * @returns {200} Winner selected
+ */
+export const selectWinner = async (req, res) => {
+  try {
+    if (!req.user || req.user.role !== 'admin') {
+      return res.status(403).json({ message: 'Admin only' });
+    }
+
+    const { filmId } = req.body;
+
+    if (!filmId || isNaN(parseInt(filmId))) {
+      return res.status(400).json({ message: 'Film ID invalide' });
+    }
+
+    const film = await Film.findByPk(parseInt(filmId));
+    if (!film) {
+      return res.status(404).json({ message: 'Film non trouvé' });
+    }
+
+    film.status = 'winner';
+    await film.save();
+
+    // Notifier le réalisateur
+    const director = await User.findByPk(film.userId);
+    if (director && director.email) {
+      await emailTransporter.sendMail({
+        from: process.env.EMAIL_USER,
+        to: director.email,
+        subject: '🏆 VOUS AVEZ GAGNÉ MARS AI!',
+        html: `<h2>Félicitations!</h2><p>Votre film a été sélectionné comme GAGNANT de MARS AI!</p>`
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      message: 'Winner selected',
+      film
+    });
+
+  } catch (error) {
+    console.error('❌ selectWinner error:', error);
+    res.status(500).json({
+      success: false,
+      message: process.env.NODE_ENV === 'development' ? error.message : 'Selection failed'
+    });
+  }
+};
