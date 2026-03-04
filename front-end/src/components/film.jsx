@@ -84,7 +84,7 @@ export const FilmComponent = ({ data, variant = "details" }) => {
                         </h2>
                         <div className="flex items-center gap-2 mt-1">
                             <span className="text-[14px] text-blue-400 font-bold uppercase tracking-wider">
-                                {data.duration} min • {data.status}
+                                {data.duration} sec • {data.status}
                             </span>
                             {!isCard && mainFile.outil_Ai && (
                                 <span className="text-[14px] bg-blue-500/10 text-blue-400 border border-blue-500/20 px-2 py-0.5 rounded italic">

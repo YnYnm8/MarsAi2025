@@ -50,7 +50,7 @@ export default function Footer() {
   };
 
   return (
-    <footer className="bg-[#282828] flex flex-col justify-center items-center py-24 px-2.5 w-full">
+    <footer className="bg-[#282828] flex flex-col justify-center items-center py-3 px-2.5 w-full md:py-24">
       <div className="flex flex-col justify-center items-center gap-20 w-full max-w-290">
         <div className="flex flex-col lg:flex-row items-center lg:items-start lg:justify-between gap-20 w-full max-w-285">
           

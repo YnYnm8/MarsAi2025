@@ -79,7 +79,7 @@ export default function FilmsDetails() {
                     Retour
                 </button>
 
-                {movie.status !== 'published' && (
+                {movie.status == 'pending' || movie.status == 'submitted' && (
                     <div className="flex gap-3">
                         {/* Botón Modificar */}
                         <button

@@ -33,7 +33,7 @@ import ComiteProfile from "./pages/comite/ComiteProfile.jsx";
 
 function App() {
   const location = useLocation();
-  const isNotePage = location.pathname === "/note";
+  const isNotePage = location.pathname === "/comite/note" || location.pathname === "/comite/profile"; // Vérifie si on est sur la page de notation ou de profil du comité pour ne pas afficher le footer
 
   return (
     <>
@@ -44,6 +44,8 @@ function App() {
           <Route path="/gallery" element={<Gallery />} />
           <Route path="/jury" element={<Jury />} />
           <Route path="/top-rated" element={<Gallery />} />
+          <Route path="/contact" element={<Contact />} />
+          <Route path="/reservation" element={<Reservation />} />
 
           {/* FILMS*/}
           <Route path="/films/:id" element={<FilmsDetails />} />
@@ -71,12 +73,6 @@ function App() {
           <Route path="/admin/films/selected" element={<AdminSelection />} />
           <Route path="/admin/films/rejected" element={<Adminrejected />} />
           <Route path="/admin/films/pending" element={<Adminpending />} />
-
-          {/* CONTACT */}
-          <Route path="/contact" element={<Contact />} />
-
-          <Route path="/reservation" element={<Reservation />} />
-          <Route path="/jury" element={<Jury />} />
           {/* <Route path="/admin/profile" element={<AdminProfile />} /> */}
           <Route path="/admin/films" element={<AdminAllFilms />} />
           <Route path="/admin/films/:status" element={<AdminAllFilms />} />
