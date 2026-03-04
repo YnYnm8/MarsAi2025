@@ -1,5 +1,5 @@
 export default function FilmCard({ film, isActive }) {
-  const BACKEND_URL = "http://localhost:3000";
+  const BACKEND_URL = "http://localhost:3004";
 
   const getPosterUrl = () => {
     const file = film.Files?.[0];

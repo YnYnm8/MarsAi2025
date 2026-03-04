@@ -9,7 +9,7 @@ import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { useAuth } from "../context/authContext";
 
-const API = "http://localhost:3000";
+const API = "http://localhost:3004";
 
 const TYPE_ICONS = {
   FILM_SELECTED:           { icon: "🏆" },

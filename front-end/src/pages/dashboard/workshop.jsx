@@ -8,7 +8,7 @@ function Workshop() {
 
   async function fetchWorkshop() {
     try {
-      const response = await fetch("http://localhost:3000/api/admin/workshops");
+      const response = await fetch("http://localhost:3004/api/admin/workshops");
 
       if (!response.ok) {
         throw new Error("Erreur HTTP");
