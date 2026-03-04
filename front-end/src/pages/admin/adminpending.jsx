@@ -7,11 +7,11 @@ const AdminPending = () => {
     const [pendingFilms, setSelections] = useState([]);
     const [loading, setLoading] = useState(true);
     const [searchTerm, setSearchTerm] = useState("");
-    
+
     const [modalConfig, setModalConfig] = useState({
         isOpen: false,
         filmId: null,
-        newStatus: null, 
+        newStatus: null,
         title: "",
         message: "",
         colorClass: ""
@@ -62,8 +62,8 @@ const AdminPending = () => {
             filmId,
             newStatus: status,
             title: isAccepting ? "Sélectionner ce film ?" : "Refuser ce film ?",
-            message: isAccepting 
-                ? "Le film sera officiellement ajouté à la sélection officiel." 
+            message: isAccepting
+                ? "Le film sera officiellement ajouté à la sélection officiel."
                 : "Le film sera déplacé dans la liste des refusés.",
             colorClass: isAccepting ? "emerald" : "rose"
         });
@@ -72,15 +72,15 @@ const AdminPending = () => {
     // Changement de statut avec mapping vers ID numériques
     const confirmDecision = async () => {
         const { filmId, newStatus } = modalConfig;
-        
+
         // Mapping pour correspondre au backend
         const playlistId = newStatus === 'selected' ? 2 : 3;
 
         try {
             const response = await fetch(`http://localhost:3000/admin/films/${filmId}/status`, {
-                method: 'PUT', 
+                method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ playlistId: playlistId }), 
+                body: JSON.stringify({ playlistId: playlistId }),
                 credentials: 'include'
             });
 
@@ -123,11 +123,11 @@ const AdminPending = () => {
                 </div>
 
                 <div className="mb-8">
-                    <input 
-                        type="text" 
-                        placeholder="Rechercher dans les à discuter..." 
-                        className="w-full p-4 rounded-2xl bg-white text-black shadow-sm text-sm outline-none focus:ring-2 focus:ring-amber-200 transition-all" 
-                        onChange={(e) => setSearchTerm(e.target.value)} 
+                    <input
+                        type="text"
+                        placeholder="Rechercher dans les à discuter..."
+                        className="w-full p-4 rounded-2xl bg-white text-black shadow-sm text-sm outline-none focus:ring-2 focus:ring-amber-200 transition-all"
+                        onChange={(e) => setSearchTerm(e.target.value)}
                     />
                 </div>
 
@@ -153,8 +153,10 @@ const AdminPending = () => {
                                 <tr><td colSpan="7" className="py-10 text-center text-gray-400 text-sm italic">Aucun film en attente de décision</td></tr>
                             ) : (
                                 currentFilms.map((film) => {
-                                    const poster = film.Files?.[0]?.poster_url || film.poster_url || "/src/assets/youtube.png";
-                                    const { label, classes } = getStatusDetails(film.status);
+                                    const rawPoster = film.Files?.[0]?.poster_url || film.poster_url;
+                                    const poster = rawPoster
+                                        ? (rawPoster.startsWith('http') ? rawPoster : `http://localhost:3000${rawPoster}`)
+                                        : "/src/assets/youtube.png"; const { label, classes } = getStatusDetails(film.status);
                                     return (
                                         <tr key={film.id} className="group hover:bg-gray-50/50 transition-colors">
                                             <td className="py-5 pl-4">
@@ -174,7 +176,7 @@ const AdminPending = () => {
                                             <td className="py-5 text-center text-[10px] font-bold text-gray-400">{formatDate(film.createdAt)}</td>
                                             <td className="py-5 text-center">
                                                 <div className="flex items-center justify-center gap-2">
-                                                    <button 
+                                                    <button
                                                         onClick={() => openDecisionModal(film.id, 'selected')}
                                                         className="p-1.5 rounded-full bg-emerald-50 text-emerald-600 hover:bg-emerald-500 hover:text-white transition-all"
                                                     >
@@ -182,7 +184,7 @@ const AdminPending = () => {
                                                             <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
                                                         </svg>
                                                     </button>
-                                                    <button 
+                                                    <button
                                                         onClick={() => openDecisionModal(film.id, 'rejected')}
                                                         className="p-1.5 rounded-full bg-rose-50 text-rose-600 hover:bg-rose-500 hover:text-white transition-all"
                                                     >
@@ -225,9 +227,8 @@ const AdminPending = () => {
             {modalConfig.isOpen && (
                 <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/40 backdrop-blur-md p-4">
                     <div className="bg-white rounded-[2.5rem] p-10 max-w-sm w-full shadow-2xl text-center animate-in fade-in zoom-in duration-200">
-                        <div className={`mx-auto flex items-center justify-center h-16 w-16 rounded-full mb-6 ${
-                            modalConfig.colorClass === 'emerald' ? 'bg-emerald-50 text-emerald-600' : 'bg-rose-50 text-rose-600'
-                        }`}>
+                        <div className={`mx-auto flex items-center justify-center h-16 w-16 rounded-full mb-6 ${modalConfig.colorClass === 'emerald' ? 'bg-emerald-50 text-emerald-600' : 'bg-rose-50 text-rose-600'
+                            }`}>
                             {modalConfig.colorClass === 'emerald' ? (
                                 <svg className="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" /></svg>
                             ) : (
@@ -236,19 +237,18 @@ const AdminPending = () => {
                         </div>
                         <h3 className="text-2xl font-black text-black uppercase tracking-tighter mb-3">{modalConfig.title}</h3>
                         <p className="text-[13px] text-gray-500 mb-10 font-medium leading-relaxed">{modalConfig.message}</p>
-                        
+
                         <div className="flex gap-4">
-                            <button 
+                            <button
                                 onClick={() => setModalConfig({ ...modalConfig, isOpen: false })}
                                 className="flex-1 py-4 px-6 rounded-2xl text-[10px] font-black uppercase text-gray-400 hover:bg-gray-100 transition-all"
                             >
                                 Annuler
                             </button>
-                            <button 
+                            <button
                                 onClick={confirmDecision}
-                                className={`flex-1 py-4 px-6 rounded-2xl text-[10px] font-black uppercase text-white shadow-xl transition-all ${
-                                    modalConfig.colorClass === 'emerald' ? 'bg-emerald-600 hover:bg-emerald-700 shadow-emerald-100' : 'bg-rose-600 hover:bg-rose-700 shadow-rose-100'
-                                }`}
+                                className={`flex-1 py-4 px-6 rounded-2xl text-[10px] font-black uppercase text-white shadow-xl transition-all ${modalConfig.colorClass === 'emerald' ? 'bg-emerald-600 hover:bg-emerald-700 shadow-emerald-100' : 'bg-rose-600 hover:bg-rose-700 shadow-rose-100'
+                                    }`}
                             >
                                 Confirmer
                             </button>

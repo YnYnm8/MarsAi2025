@@ -28,6 +28,10 @@ const IN_APP_CONTENT = (type, data) => {
       title: "Résultats de la sélection",
       message: `Votre film "${data.filmTitle}" n'a pas été retenu dans la Sélection Officielle. Merci de votre participation.`,
     },
+    FILM_PENDING: {
+      title: "Film en discussion 🕐",
+      message: `Votre film "${data.filmTitle}" a été placé en discussion par le comité.`,
+    },
     FILM_MODIFICATION_ASKED: {
       title: "Modification demandée 📝",
       message: `L'équipe MarsAI vous demande de modifier "${data.filmTitle}". Consultez votre espace.`,
@@ -146,79 +150,109 @@ export const notify = async ({
 // Helpers réalisateur
 
 export const notifyFilmSubmitted = ({ director, film, deps }) =>
-  notify({ type: "FILM_SUBMITTED", userId: director.id, emailTo: director.email,
-    data: { directorName: director.firstName, filmTitle: film.title, filmId: film.id }, ...deps });
+  notify({
+    type: "FILM_SUBMITTED", userId: director.id, emailTo: director.email,
+    data: { directorName: director.firstName, filmTitle: film.title, filmId: film.id }, ...deps
+  });
 
 export const notifyFilmApproved = ({ director, film, deps }) =>
-  notify({ type: "FILM_APPROVED", userId: director.id, emailTo: director.email,
-    data: { directorName: director.firstName, filmTitle: film.title, filmId: film.id }, ...deps });
+  notify({
+    type: "FILM_APPROVED", userId: director.id, emailTo: director.email,
+    data: { directorName: director.firstName, filmTitle: film.title, filmId: film.id }, ...deps
+  });
 
 export const notifyFilmRejectedAdmin = ({ director, film, reason, deps }) =>
-  notify({ type: "FILM_REJECTED_ADMIN", userId: director.id, emailTo: director.email,
-    data: { directorName: director.firstName, filmTitle: film.title, reason }, ...deps });
+  notify({
+    type: "FILM_REJECTED_ADMIN", userId: director.id, emailTo: director.email,
+    data: { directorName: director.firstName, filmTitle: film.title, reason }, ...deps
+  });
 
 /** ⚠️ N'appeler qu'après PATCH /admin/lock/selection */
 export const notifyFilmSelected = ({ director, film, deps }) =>
-  notify({ type: "FILM_SELECTED", userId: director.id, emailTo: director.email,
-    data: { directorName: director.firstName, filmTitle: film.title, filmId: film.id }, ...deps });
+  notify({
+    type: "FILM_SELECTED", userId: director.id, emailTo: director.email,
+    data: { directorName: director.firstName, filmTitle: film.title, filmId: film.id }, ...deps
+  });
 
 /** ⚠️ N'appeler qu'après PATCH /admin/lock/selection */
 export const notifyFilmNotSelected = ({ director, film, deps }) =>
-  notify({ type: "FILM_NOT_SELECTED", userId: director.id, emailTo: director.email,
-    data: { directorName: director.firstName, filmTitle: film.title }, ...deps });
+  notify({
+    type: "FILM_NOT_SELECTED", userId: director.id, emailTo: director.email,
+    data: { directorName: director.firstName, filmTitle: film.title }, ...deps
+  });
 
 export const notifyModificationAsked = ({ director, film, message, deps }) =>
-  notify({ type: "FILM_MODIFICATION_ASKED", userId: director.id, emailTo: director.email,
-    data: { directorName: director.firstName, filmTitle: film.title, filmId: film.id, message }, ...deps });
+  notify({
+    type: "FILM_MODIFICATION_ASKED", userId: director.id, emailTo: director.email,
+    data: { directorName: director.firstName, filmTitle: film.title, filmId: film.id, message }, ...deps
+  });
 
 export const notifyModificationOk = ({ director, film, deps }) =>
-  notify({ type: "FILM_MODIFICATION_OK", userId: director.id, emailTo: director.email,
-    data: { directorName: director.firstName, filmTitle: film.title, filmId: film.id }, ...deps });
+  notify({
+    type: "FILM_MODIFICATION_OK", userId: director.id, emailTo: director.email,
+    data: { directorName: director.firstName, filmTitle: film.title, filmId: film.id }, ...deps
+  });
 
 export const notifyModificationKo = ({ director, film, reason, deps }) =>
-  notify({ type: "FILM_MODIFICATION_KO", userId: director.id, emailTo: director.email,
-    data: { directorName: director.firstName, filmTitle: film.title, filmId: film.id, reason }, ...deps });
+  notify({
+    type: "FILM_MODIFICATION_KO", userId: director.id, emailTo: director.email,
+    data: { directorName: director.firstName, filmTitle: film.title, filmId: film.id, reason }, ...deps
+  });
 
 export const notifyFilmBanned = ({ director, film, deps }) =>
-  notify({ type: "FILM_BANNED", userId: director.id, emailTo: director.email,
-    data: { directorName: director.firstName, filmTitle: film.title }, ...deps });
+  notify({
+    type: "FILM_BANNED", userId: director.id, emailTo: director.email,
+    data: { directorName: director.firstName, filmTitle: film.title }, ...deps
+  });
 
 // Helpers comité 
 
 export const notifyFilmsAssigned = ({ member, count, deps }) =>
-  notify({ type: "FILMS_ASSIGNED", userId: member.id, emailTo: member.email,
-    data: { memberName: member.firstName, count }, ...deps });
+  notify({
+    type: "FILMS_ASSIGNED", userId: member.id, emailTo: member.email,
+    data: { memberName: member.firstName, count }, ...deps
+  });
 
 export const notifySelectionOpened = async ({ members, deadline, deps }) =>
   Promise.all(members.map((member) =>
-    notify({ type: "SELECTION_OPENED", userId: member.id, emailTo: member.email,
-      data: { memberName: member.firstName, deadline }, ...deps })
+    notify({
+      type: "SELECTION_OPENED", userId: member.id, emailTo: member.email,
+      data: { memberName: member.firstName, deadline }, ...deps
+    })
   ));
 
 export const notifySelectionClosed = async ({ members, deps }) =>
   Promise.all(members.map((member) =>
-    notify({ type: "SELECTION_CLOSED", userId: member.id, emailTo: member.email,
-      data: { memberName: member.firstName }, ...deps })
+    notify({
+      type: "SELECTION_CLOSED", userId: member.id, emailTo: member.email,
+      data: { memberName: member.firstName }, ...deps
+    })
   ));
 
 // Helpers admin
 
 export const notifyAdminsNewTicket = async ({ admins, film, ticket, reason, totalReports, deps }) =>
   Promise.all(admins.map((admin) =>
-    notify({ type: "TICKET_CREATED", userId: admin.id, emailTo: admin.email,
-      data: { filmTitle: film.title, reason, ticketId: ticket.id, totalReports }, ...deps })
+    notify({
+      type: "TICKET_CREATED", userId: admin.id, emailTo: admin.email,
+      data: { filmTitle: film.title, reason, ticketId: ticket.id, totalReports }, ...deps
+    })
   ));
 
 export const notifyAdminsNewFilmPending = async ({ admins, film, director, deps }) =>
   Promise.all(admins.map((admin) =>
-    notify({ type: "NEW_FILM_PENDING", userId: admin.id, emailTo: admin.email,
-      data: { filmTitle: film.title, directorName: director.firstName, filmId: film.id }, ...deps })
+    notify({
+      type: "NEW_FILM_PENDING", userId: admin.id, emailTo: admin.email,
+      data: { filmTitle: film.title, directorName: director.firstName, filmId: film.id }, ...deps
+    })
   ));
 
 export const notifyAdminsModificationRequest = async ({ admins, film, director, deps }) =>
   Promise.all(admins.map((admin) =>
-    notify({ type: "MODIFICATION_REQUEST", userId: admin.id, emailTo: admin.email,
-      data: { filmTitle: film.title, directorName: director.firstName, filmId: film.id }, ...deps })
+    notify({
+      type: "MODIFICATION_REQUEST", userId: admin.id, emailTo: admin.email,
+      data: { filmTitle: film.title, directorName: director.firstName, filmId: film.id }, ...deps
+    })
   ));
 
 /**
@@ -230,3 +264,8 @@ export const notifyAllDirectorsSelectionResult = async ({ allFilms, deps }) =>
     const fn = film.isSelected ? notifyFilmSelected : notifyFilmNotSelected;
     return fn({ director: film.Director, film, deps });
   }));
+
+
+  export const notifyFilmPending = ({ director, film, deps }) =>
+  notify({ type: "FILM_PENDING", userId: director.id, emailTo: director.email,
+    data: { directorName: director.firstName, filmTitle: film.title, filmId: film.id }, ...deps });

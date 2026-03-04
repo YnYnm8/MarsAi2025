@@ -7,10 +7,10 @@ const AdminRejected = () => {
     const [rejectedFilms, setRejectedFilms] = useState([]);
     const [loading, setLoading] = useState(true);
     const [searchTerm, setSearchTerm] = useState("");
-    
+
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [selectedFilmId, setSelectedFilmId] = useState(null);
-    
+
     // pagination
     const [currentPage, setCurrentPage] = useState(1);
     const filmsPerPage = 20;
@@ -24,7 +24,7 @@ const AdminRejected = () => {
                 credentials: 'include'
             });
             const json = await response.json();
-            
+
             // (Tableau direct ou objet { data: [...] })
             let data = [];
             if (json.success && Array.isArray(json.data)) {
@@ -34,7 +34,7 @@ const AdminRejected = () => {
             } else if (json.data && Array.isArray(json.data)) {
                 data = json.data;
             }
-            
+
             setRejectedFilms(data);
         } catch (err) {
             console.error("Erreur chargement films refusés:", err);
@@ -57,34 +57,34 @@ const AdminRejected = () => {
     };
 
     const confirmMoveToPending = async () => {
-    if (!selectedFilmId) return;
+        if (!selectedFilmId) return;
 
-    try {
-        const response = await fetch(`http://localhost:3000/admin/films/${selectedFilmId}/status`, {
-            method: 'PUT', 
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ 
-                playlistId: 4, 
-                reason: "Réexamen du film par l'administrateur." 
-            }),
-            credentials: 'include'
-        });
+        try {
+            const response = await fetch(`http://localhost:3000/admin/films/${selectedFilmId}/status`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    playlistId: 4,
+                    reason: "Réexamen du film par l'administrateur."
+                }),
+                credentials: 'include'
+            });
 
-        const result = await response.json();
+            const result = await response.json();
 
-        if (response.ok && result.success) {
-            setRejectedFilms(prev => prev.filter(f => f.id !== selectedFilmId));
-            setIsModalOpen(false);
-            setSelectedFilmId(null);
-        } else {
-            // Cela affichera l'erreur réelle renvoyée par le serveur
-            alert("Erreur serveur : " + (result.message || "Action impossible"));
+            if (response.ok && result.success) {
+                setRejectedFilms(prev => prev.filter(f => f.id !== selectedFilmId));
+                setIsModalOpen(false);
+                setSelectedFilmId(null);
+            } else {
+                // Cela affichera l'erreur réelle renvoyée par le serveur
+                alert("Erreur serveur : " + (result.message || "Action impossible"));
+            }
+        } catch (err) {
+            console.error("Erreur changement statut:", err);
+            alert("Impossible de contacter le serveur");
         }
-    } catch (err) {
-        console.error("Erreur changement statut:", err);
-        alert("Impossible de contacter le serveur");
-    }
-};
+    };
 
     const formatDate = (dateString) => {
         if (!dateString) return "N/C";
@@ -149,8 +149,10 @@ const AdminRejected = () => {
                             ) : (
                                 currentFilms.map((film) => {
                                     // Utilise l'affiche du premier fichier ou une image par défaut
-                                    const poster = film.Files?.[0]?.poster_url || film.poster_url || "/src/assets/youtube.png";
-                                    const { label, classes } = getStatusDetails(film.status);
+                                    const rawPoster = film.Files?.[0]?.poster_url || film.poster_url;
+                                    const poster = rawPoster
+                                        ? (rawPoster.startsWith('http') ? rawPoster : `http://localhost:3000${rawPoster}`)
+                                        : "/src/assets/youtube.png"; const { label, classes } = getStatusDetails(film.status);
                                     return (
                                         <tr key={film.id} className="group hover:bg-gray-50/50 transition-colors">
                                             <td className="py-5 pl-4">
@@ -216,7 +218,7 @@ const AdminRejected = () => {
                         <p className="text-[13px] text-gray-500 mb-10 font-medium leading-relaxed">
                             Ce film ne sera plus listé comme <span className="text-rose-600 font-bold uppercase">Refusé</span>. Il retournera en <span className="text-amber-600 font-bold uppercase">Discussion</span>.
                         </p>
-                        
+
                         <div className="flex gap-4">
                             <button onClick={() => setIsModalOpen(false)} className="flex-1 py-4 px-6 rounded-2xl text-[10px] font-black uppercase text-gray-400 hover:bg-gray-100 transition-all">Annuler</button>
                             <button onClick={confirmMoveToPending} className="flex-1 py-4 px-6 rounded-2xl text-[10px] font-black uppercase bg-black text-white hover:bg-gray-900 shadow-xl shadow-gray-200 transition-all">Confirmer</button>

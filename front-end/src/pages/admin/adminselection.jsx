@@ -7,10 +7,10 @@ const AdminSelected = () => {
     const [selectedFilms, setSelectedFilms] = useState([]);
     const [loading, setLoading] = useState(true);
     const [searchTerm, setSearchTerm] = useState("");
-    
+
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [selectedFilmId, setSelectedFilmId] = useState(null);
-    
+
     const [currentPage, setCurrentPage] = useState(1);
     const filmsPerPage = 20;
 
@@ -46,31 +46,31 @@ const AdminSelected = () => {
     };
 
     const confirmMoveToPending = async () => {
-    if (!selectedFilmId) return;
-    
-    console.log("Tentative de réexamen pour le film ID:", selectedFilmId);
+        if (!selectedFilmId) return;
 
-    try {
-        const response = await fetch(`http://localhost:3000/admin/films/${selectedFilmId}/status`, {
-            method: 'PUT',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ playlistId: 4 }), // 4 = Discussion/Pending
-            credentials: 'include'
-        });
+        console.log("Tentative de réexamen pour le film ID:", selectedFilmId);
 
-        const result = await response.json();
+        try {
+            const response = await fetch(`http://localhost:3000/admin/films/${selectedFilmId}/status`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ playlistId: 4 }), // 4 = Discussion/Pending
+                credentials: 'include'
+            });
 
-        if (response.ok && result.success) {
-            setSelectedFilms(prev => prev.filter(f => f.id !== selectedFilmId));
-            setIsModalOpen(false);
-            setSelectedFilmId(null);
-        } else {
-            alert("Erreur : " + (result.message || "Problème serveur"));
+            const result = await response.json();
+
+            if (response.ok && result.success) {
+                setSelectedFilms(prev => prev.filter(f => f.id !== selectedFilmId));
+                setIsModalOpen(false);
+                setSelectedFilmId(null);
+            } else {
+                alert("Erreur : " + (result.message || "Problème serveur"));
+            }
+        } catch (err) {
+            console.error("Erreur Fetch:", err);
         }
-    } catch (err) {
-        console.error("Erreur Fetch:", err);
-    }
-};
+    };
 
     const formatDate = (dateString) => {
         if (!dateString) return "N/C";
@@ -134,10 +134,12 @@ const AdminSelected = () => {
                                 <tr><td colSpan="7" className="py-10 text-center text-gray-400 text-sm italic">Aucun film sélectionné trouvé</td></tr>
                             ) : (
                                 currentFilms.map((film) => {
-                                    const poster = film.Files?.[0]?.poster_url || film.poster_url || "/src/assets/youtube.png";
-                                    // Utilisation du statut réel 
+                                    const rawPoster = film.Files?.[0]?.poster_url || film.poster_url;
+                                    const poster = rawPoster
+                                        ? (rawPoster.startsWith('http') ? rawPoster : `http://localhost:3000${rawPoster}`)
+                                        : "/src/assets/youtube.png";                                    // Utilisation du statut réel 
                                     const { label, classes } = getStatusDetails(film.status);
-                                    
+
                                     return (
                                         <tr key={film.id} className="group hover:bg-gray-50/50 transition-colors">
                                             <td className="py-5 pl-4">
@@ -160,8 +162,8 @@ const AdminSelected = () => {
                                                 {formatDate(film.createdAt)}
                                             </td>
                                             <td className="py-5 text-center">
-                                                <button 
-                                                    onClick={() => openModal(film.id)} 
+                                                <button
+                                                    onClick={() => openModal(film.id)}
                                                     className="p-2 rounded-full bg-amber-50 text-amber-600 hover:bg-amber-100 transition-colors mx-auto flex items-center justify-center"
                                                     title="Rétrograder en Discussion"
                                                 >
@@ -211,7 +213,7 @@ const AdminSelected = () => {
                         <p className="text-[13px] text-gray-500 mb-10 font-medium leading-relaxed">
                             Ce film ne sera plus <span className="text-emerald-600 font-bold uppercase">Sélectionné</span>. Il retournera en <span className="text-amber-600 font-bold uppercase">Discussion</span>.
                         </p>
-                        
+
                         <div className="flex gap-4">
                             <button onClick={() => setIsModalOpen(false)} className="flex-1 py-4 px-6 rounded-2xl text-[10px] font-black uppercase text-gray-400 hover:bg-gray-100 transition-all">Annuler</button>
                             <button onClick={confirmMoveToPending} className="flex-1 py-4 px-6 rounded-2xl text-[10px] font-black uppercase bg-black text-white hover:bg-gray-900 shadow-xl shadow-gray-200 transition-all">Confirmer</button>

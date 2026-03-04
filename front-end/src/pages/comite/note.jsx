@@ -117,23 +117,7 @@ export default function Note() {
 
       await reviewResponse.json();
 
-      // // ACCEPTEDなら公式セレクションに登録
-      if (clickedStatus === "selected") {
-        const selectionResponse = await fetch("http://localhost:3000/comite/select", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ UserId: 3 }), // 必要に応じてログインユーザーID
-        });
-
-        if (!selectionResponse.ok) {
-          const errorData = await selectionResponse.json();
-          throw new Error(errorData.message || "公式セレクションの登録に失敗しました");
-        }
-
-        const selectionData = await selectionResponse.json();
-        console.log("公式セレクション登録成功:", selectionData);
-        // alert("公式セレクションに登録しました！");
-      }
+     
 
       // UI更新
       await fetchFilmAndPlaylists();

@@ -40,8 +40,8 @@ const AdminAllFilms = () => {
     const filteredFilms = allFilms.filter(film => {
         const title = film.title || "";
         const director = film.User ? `${film.User.firstName} ${film.User.lastName}` : "";
-        return title.toLowerCase().includes(searchTerm.toLowerCase()) || 
-               director.toLowerCase().includes(searchTerm.toLowerCase());
+        return title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            director.toLowerCase().includes(searchTerm.toLowerCase());
     });
 
     const totalPages = Math.ceil(filteredFilms.length / filmsPerPage);
@@ -64,11 +64,11 @@ const AdminAllFilms = () => {
                 </div>
 
                 <div className="mb-8">
-                    <input 
-                        type="text" 
-                        placeholder="Rechercher par titre ou réalisateur..." 
-                        className="w-full p-4 rounded-2xl bg-white text-black border-none shadow-sm text-sm outline-none focus:ring-2 focus:ring-orange-200 transition-all" 
-                        onChange={(e) => setSearchTerm(e.target.value)} 
+                    <input
+                        type="text"
+                        placeholder="Rechercher par titre ou réalisateur..."
+                        className="w-full p-4 rounded-2xl bg-white text-black border-none shadow-sm text-sm outline-none focus:ring-2 focus:ring-orange-200 transition-all"
+                        onChange={(e) => setSearchTerm(e.target.value)}
                     />
                 </div>
 
@@ -93,7 +93,10 @@ const AdminAllFilms = () => {
                                 <tr><td colSpan="6" className="py-10 text-center text-gray-400 text-sm italic">Aucun film trouvé</td></tr>
                             ) : (
                                 currentFilms.map((film) => {
-                                    const poster = film.Files?.[0]?.poster_url || "/src/assets/youtube.png";
+                                    const rawPoster = film.Files?.[0]?.poster_url;
+                                    const poster = rawPoster
+                                        ? (rawPoster.startsWith('http') ? rawPoster : `http://localhost:3000${rawPoster}`)
+                                        : "/src/assets/youtube.png";
                                     const { label, classes } = getStatusDetails(film.status);
                                     return (
                                         <tr key={film.id} className="group hover:bg-gray-50/50 transition-colors">
@@ -114,8 +117,8 @@ const AdminAllFilms = () => {
                                             </td>
                                             <td className="py-5 text-right pr-4">
                                                 <div className="flex items-center justify-end">
-                                                    <button 
-                                                        onClick={() => navigate(`/films/${film.id}`)} 
+                                                    <button
+                                                        onClick={() => navigate(`/films/${film.id}`)}
                                                         className="p-2 rounded-xl text-gray-300 hover:bg-gray-100 hover:text-black transition-all"
                                                         title="Détails"
                                                     >
@@ -139,7 +142,7 @@ const AdminAllFilms = () => {
                                 Page {currentPage} sur {totalPages} ({filteredFilms.length} films)
                             </span>
                             <div className="flex gap-2">
-                                <button 
+                                <button
                                     onClick={() => paginate(currentPage - 1)}
                                     disabled={currentPage === 1}
                                     className={`p-2 rounded-xl transition-all ${currentPage === 1 ? 'opacity-20 cursor-not-allowed' : 'text-black hover:bg-gray-100'}`}
@@ -148,7 +151,7 @@ const AdminAllFilms = () => {
                                         <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
                                     </svg>
                                 </button>
-                                <button 
+                                <button
                                     onClick={() => paginate(currentPage + 1)}
                                     disabled={currentPage === totalPages}
                                     className={`p-2 rounded-xl transition-all ${currentPage === totalPages ? 'opacity-20 cursor-not-allowed' : 'text-black hover:bg-gray-100'}`}
