@@ -21,6 +21,7 @@ export default function Note() {
   const [searchTerm, setSearchTerm] = useState("");
   const navigate = useNavigate();
   const [showComment, setShowComment] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
 
 
@@ -117,7 +118,7 @@ export default function Note() {
 
       await reviewResponse.json();
 
-     
+
 
       // UI更新
       await fetchFilmAndPlaylists();
@@ -194,7 +195,7 @@ export default function Note() {
 
     } catch (error) {
       console.error("Error adding film to playlist:", error);
-      alert("Error adding film to playlist");
+      // alert("Error adding film to playlist");
     }
   };
 
@@ -258,8 +259,8 @@ export default function Note() {
       }
 
       await response.json();
-      alert("Commentaire enregistré !");
-      setComment("");  
+      // alert("Commentaire enregistré !");
+      setComment("");
       setShowComment(false);
       await fetchFilmAndPlaylists(); // UIを更新
 
@@ -281,15 +282,29 @@ export default function Note() {
   return (
     <div className="flex flex-col h-screen bg-black font-sans">
 
-
+      <button
+        onClick={() => setMobileMenuOpen(true)}
+        className="md:hidden bg-white text-black px-3 py-1 rounded mb-3"
+      >
+        ☰ MENU
+      </button>
       <div className="flex flex-col md:flex-row flex-1 overflow-hidden">
-        <aside className="w-full md:w-72 bg-black border-b md:border-b-0 md:border-r overflow-y-auto p-4 flex flex-col gap-4">
+
+        <aside className={`fixed md:static  overflow-y-scroll z-100  top-0 left-0 h-full w-72 bg-black transform transition-transform duration-300 ${mobileMenuOpen ? "translate-x-0" : "-translate-x-full"} md:translate-x-0
+  `}>
           {/* 上部のアクションボタン */}
           <button
             onClick={() => navigate("/comite/profile")}
-            className="bg-white text-black px-4 py-1 rounded-md font-semibold text-sm hover:bg-gray-100 transition"
+            className="flex-row bg-white text-black px-4 py-1 rounded-md font-semibold text-sm hover:bg-gray-100 transition"
           >
             VOIR MES ÉVALUATIONS
+          </button>
+          {/* モバイルだけ表示する閉じるボタン */}
+          <button
+            onClick={() => setMobileMenuOpen(false)}
+            className="md:hidden flex-end text-white bg-[#FF5845] px-2 py-1 rounded hover:bg-gray-700 ml-2"
+          >
+            ✕
           </button>
 
           {/* 検索ボックス */}
@@ -304,14 +319,16 @@ export default function Note() {
           {/* フィルター */}
           <div className="flex flex-col gap-2 mt-2">
             {playlistsWithCounts.map((p) => (
-              <button
-                key={p.id}
-                onClick={() => setFilter(p.status)}
-                className={`w-full text-left px-3 py-2 rounded-md text-sm font-medium transition 
-          ${filter === p.status ? "bg-[#246BAD] text-white" : "bg-gray-800 text-gray-200 hover:bg-gray-700"}`}
-              >
-                {p.status} ({p.filmCount})
-              </button>
+              <div key={p.id} className="flex justify-between items-center">
+                <button
+                  onClick={() => setFilter(p.status)}
+                  className={`flex-1 text-left px-3 py-2 rounded-md text-sm font-medium transition 
+        ${filter === p.status ? "bg-[#246BAD] text-white" : "bg-gray-800 text-gray-200 hover:bg-gray-700"}`}
+                >
+                  {p.status} ({p.filmCount})
+                </button>
+
+              </div>
             ))}
           </div>
 
@@ -323,6 +340,12 @@ export default function Note() {
             selectedFilm={selectedFilm}
             setSelectedFilm={setSelectedFilm}
           />
+          <button
+            onClick={() => setMobileMenuOpen(false)}
+            className="md:hidden text-white mb-4"
+          >
+            ✕ Close
+          </button>
         </aside>
 
         {/* Main Content */}
@@ -400,22 +423,22 @@ export default function Note() {
               />
             )}
           </div>
-          
+
           {/* タイトル・監督 */}
           <div className="flex flex-col md:flex-row justify-between items-start mb-4">
             <div>
               <h2 className="text-lg font-bold text-[#246BAD]">
-               Le Nom de Film : {selectedFilm?.title || "SYNTHETICA : title"}
+                Le Nom de Film : {selectedFilm?.title || "SYNTHETICA : title"}
               </h2>
               <div className="flex flex-wrap gap-2 text-sm text-gray-600 mt-1">
                 <span className="font-semibold">
-              Directeur :{selectedFilm?.User?.firstName || "Director "} {selectedFilm?.User?.lastName ||""}
+                  Directeur :{selectedFilm?.User?.firstName || "Director "} {selectedFilm?.User?.lastName || ""}
                 </span>
               </div>
-                 <p className="text-sm text-gray-600 font-semibold">
-              Origin :{selectedFilm?.User?.country || "Country "}
+              <p className="text-sm text-gray-600 font-semibold">
+                Origin :{selectedFilm?.User?.country || "Country "}
               </p>
-              
+
 
             </div>
             <div className="text-xl font-bold mt-2 md:mt-0">
@@ -559,7 +582,7 @@ export default function Note() {
                         onClick={() => handleDeletePlaylist(p.id)}
                         className="flex-1 px-4 bg-gray-600 text-shadow-red-600 py-2 rounded-lg text-xs hover:bg-gray-800"
                       >
-                         <FontAwesomeIcon icon={faTrash} /> 
+                        <FontAwesomeIcon icon={faTrash} />
                       </button>
                     </div>
                   ))}
