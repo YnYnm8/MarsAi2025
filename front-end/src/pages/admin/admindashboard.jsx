@@ -1,8 +1,6 @@
-import React, { useState, useEffect, } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from "react-router-dom";
 import Sidebar from '../../components/sidebar';
-
-// Assets
 import filmIcon from "/src/assets/film.png";
 import juryIcon from "/src/assets/jury.png";
 import statistiqueIcon from "/src/assets/statistique.png";
@@ -12,100 +10,64 @@ import earthIcon from "/src/assets/earth.png";
 
 const AdminDash = () => {
     const [stats, setStats] = useState({
-        totalUsers: 0,
-        totalFilms: 0,
-        totalSelected: 0,
-        totalRejected: 0,
-        totalPending: 0,
-        totalSubmitted: 0,
-        filmsByCountry: [],
-        newUsersToday: 0,
-        finishedJuries: 0,
-        totalJuries: 12,
-        workshopOccupation: 0,
-        admin: { name: "Admin user", role: "Admin" }
+        totalUsers: 0, totalFilms: 0, totalSelected: 0, totalRejected: 0,
+        totalPending: 0, totalSubmitted: 0, filmsByCountry: [],
+        newUsersToday: 0, finishedJuries: 0, totalJuries: 12, workshopOccupation: 0,
     });
     const [loading, setLoading] = useState(true);
-    const [isMenuOpen, setIsMenuOpen] = useState(false);
 
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await fetch('http://localhost:3000/admin/stats', {
-                    credentials: 'include'
-                });
+                const response = await fetch('http://localhost:3000/admin/stats', { credentials: 'include' });
                 const json = await response.json();
-                
-                console.log("Données reçues:", json.data); 
-
-                if (json.success) {
-                    setStats(prev => ({ ...prev, ...json.data }));
-                }
-            } catch (err) {
-                console.error("Erreur chargement stats:", err);
-            } finally {
-                setLoading(false);
-            }
+                if (json.success) setStats(prev => ({ ...prev, ...json.data }));
+            } catch (err) { console.error("Erreur chargement stats:", err); }
+            finally { setLoading(false); }
         };
         fetchData();
     }, []);
-
-  
 
     const selected = Number(stats.totalSelected || 0);
     const rejected = Number(stats.totalRejected || 0);
     const pending = Number(stats.totalPending || 0);
     const submitted = Number(stats.totalSubmitted || 0);
-    
     const totalVotes = selected + rejected + pending;
-    
-    // Barre de progression (Objectif 600) basée sur les votes + soumis
     const filmProgress = Math.min(Math.round(((totalVotes + submitted) / 600) * 100), 100);
-
     const getPercent = (value) => totalVotes > 0 ? Math.round((Number(value) / totalVotes) * 100) : 0;
 
     const calculateBestZone = () => {
-        if (!stats.filmsByCountry || stats.filmsByCountry.length === 0) return "N/A";
-        const topEntry = stats.filmsByCountry.reduce((prev, current) => {
-            return (parseInt(current.count) > parseInt(prev.count)) ? current : prev;
-        }, stats.filmsByCountry[0]);
-        return topEntry.country || "Inconnu";
+        if (!stats.filmsByCountry?.length) return "N/A";
+        return stats.filmsByCountry.reduce((prev, current) =>
+            parseInt(current.count) > parseInt(prev.count) ? current : prev,
+            stats.filmsByCountry[0]).country || "Inconnu";
     };
 
-    const Skeleton = ({ className }) => (
-        <div className={`animate-pulse bg-gray-200 rounded ${className}`}></div>
-    );
+    const Skeleton = ({ className }) => <div className={`animate-pulse bg-gray-200 rounded ${className}`} />;
 
     return (
         <div className="flex min-h-screen bg-[#F2F2F2] font-sans">
             <Sidebar />
-
-            <main className="flex-1 p-8 lg:p-12 overflow-y-auto">
-
-                
-
-                <div className="mb-12">
+            <main className="flex-1 p-4 pt-4 pb-20 lg:pt-8 lg:pb-0 lg:p-12 overflow-y-auto">
+                <div className="mb-8 lg:mb-12">
                     <h2 className="text-amber-500 font-bold mb-2 tracking-widest text-xs uppercase">ADMIN MANAGEMENT</h2>
-                    <h1 className="text-4xl font-black text-black mb-4 tracking-tighter">VUE D'ENSEMBLE</h1>
-                    <p className="text-gray-500 max-w-xl text-sm font-medium">Analyse détaillée de la progression du festival.</p>
+                    <h1 className="text-2xl lg:text-4xl font-black text-black mb-2 lg:mb-4 tracking-tighter">VUE D'ENSEMBLE</h1>
+                    <p className="text-gray-500 max-w-xl text-sm font-medium hidden lg:block">Analyse détaillée de la progression du festival.</p>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 lg:gap-8">
 
                     {/* CARD FILMS */}
-                    <div className="bg-white p-8 rounded-2xl shadow-sm space-y-6 group transition-all duration-300 hover:shadow-md">
+                    <div className="bg-white p-6 lg:p-8 rounded-2xl shadow-sm space-y-4 lg:space-y-6 group transition-all duration-300 hover:shadow-md">
                         <div className="flex justify-between items-center">
-                            {loading ? <Skeleton className="w-8 h-8" /> : <img src={filmIcon} alt="" className="w-8 h-8 object-contain group-hover:scale-110 transition-transform" />}
+                            {loading ? <Skeleton className="w-8 h-8" /> : <img src={filmIcon} alt="" className="w-8 h-8 object-contain" />}
                             <p className="text-blue-800 font-bold text-[10px] tracking-widest uppercase bg-blue-50 px-3 py-1 rounded-full">Objectif 600</p>
                         </div>
                         <div>
-                            {loading ? <Skeleton className="h-10 w-20 mb-2" /> : <p className="text-4xl font-black text-black">{totalVotes}</p>}
+                            {loading ? <Skeleton className="h-10 w-20 mb-2" /> : <p className="text-3xl lg:text-4xl font-black text-black">{totalVotes}</p>}
                             <p className="text-gray-400 text-[10px] font-bold uppercase mt-1">Films évalués par le comité</p>
-                            
                             {!loading && submitted > 0 && (
-                                <p className="text-orange-500 text-[9px] font-black uppercase mt-2 italic animate-pulse">
-                                     {submitted} nouveaux films en submitted
-                                </p>
+                                <p className="text-orange-500 text-[9px] font-black uppercase mt-2 italic animate-pulse">{submitted} nouveaux films en submitted</p>
                             )}
                         </div>
                         <div className="flex items-center gap-4">
@@ -117,13 +79,13 @@ const AdminDash = () => {
                     </div>
 
                     {/* CARD COMITE */}
-                    <div className="bg-white p-8 rounded-2xl shadow-sm space-y-6 group transition-all duration-300 hover:shadow-md">
+                    <div className="bg-white p-6 lg:p-8 rounded-2xl shadow-sm space-y-4 lg:space-y-6 group transition-all duration-300 hover:shadow-md">
                         <div className="flex justify-between items-center">
-                            <img src={juryIcon} alt="" className="w-8 h-8 object-contain group-hover:scale-110 transition-transform" />
+                            <img src={juryIcon} alt="" className="w-8 h-8 object-contain" />
                             <p className="text-orange-500 font-bold text-[10px] uppercase bg-orange-50 px-3 py-1 rounded-full">Quota 100/Jury</p>
                         </div>
                         <div>
-                            <p className="text-4xl font-black text-black">
+                            <p className="text-3xl lg:text-4xl font-black text-black">
                                 {String(stats.finishedJuries || 0).padStart(2, '0')}/{String(stats.totalJuries || 12).padStart(2, '0')}
                             </p>
                             <p className="text-gray-400 text-[10px] font-bold uppercase mt-1">Comité ayant finalisé leur lot</p>
@@ -137,9 +99,9 @@ const AdminDash = () => {
                     </div>
 
                     {/* CARD PAYS */}
-                    <div className="bg-white p-8 rounded-2xl shadow-sm group transition-all duration-300 hover:shadow-md">
+                    <div className="bg-white p-6 lg:p-8 rounded-2xl shadow-sm group transition-all duration-300 hover:shadow-md">
                         <div className="flex justify-between items-start mb-4">
-                            <div className="flex items-center gap-4">
+                            <div className="flex items-center gap-3 lg:gap-4">
                                 <img src={earthIcon} alt="" className="w-6 h-6 object-contain" />
                                 <p className="text-gray-400 font-bold text-[10px] uppercase tracking-widest">Pays représentés</p>
                             </div>
@@ -148,18 +110,18 @@ const AdminDash = () => {
                             </span>
                         </div>
                         <div className="flex items-baseline gap-2">
-                            <p className="text-4xl font-black text-black">{stats.filmsByCountry?.length || 0}</p>
+                            <p className="text-3xl lg:text-4xl font-black text-black">{stats.filmsByCountry?.length || 0}</p>
                             <span className="text-gray-400 text-[10px] font-bold uppercase tracking-widest">Nations</span>
                         </div>
                     </div>
 
                     {/* CARD DETAILS VOTES */}
-                    <div className="bg-white p-8 rounded-2xl shadow-sm space-y-6 group transition-all duration-300 hover:shadow-md">
+                    <div className="bg-white p-6 lg:p-8 rounded-2xl shadow-sm space-y-4 lg:space-y-6 group transition-all duration-300 hover:shadow-md">
                         <div className="flex justify-between items-center">
                             <img src={statistiqueIcon} alt="" className="w-6 h-6 object-contain" />
                             <p className="text-blue-800 font-bold text-[10px] uppercase bg-blue-50 px-3 py-1 rounded-full">Détails des votes</p>
                         </div>
-                        <div className="space-y-4">
+                        <div className="space-y-3 lg:space-y-4">
                             {[
                                 { label: "OUI", count: selected, color: "emerald", link: "/admin/films/selected" },
                                 { label: "NON", count: rejected, color: "red", link: "/admin/films/rejected" },
@@ -167,9 +129,9 @@ const AdminDash = () => {
                             ].map((item, index) => {
                                 const percentage = getPercent(item.count);
                                 return (
-                                    <Link key={index} to={item.link} className="flex items-center gap-4 hover:bg-gray-50 p-2 -m-2 rounded-xl transition-all">
-                                        <div className={`flex items-center gap-2 w-24 text-${item.color}-600`}>
-                                            <div className={`w-2 h-2 rounded-full bg-${item.color}-500`} />
+                                    <Link key={index} to={item.link} className="flex items-center gap-3 lg:gap-4 hover:bg-gray-50 p-2 -m-2 rounded-xl transition-all">
+                                        <div className={`flex items-center gap-2 w-20 lg:w-24 text-${item.color}-600`}>
+                                            <div className={`w-2 h-2 rounded-full bg-${item.color}-500 flex-shrink-0`} />
                                             <span className="text-[10px] font-black uppercase">{item.label}</span>
                                         </div>
                                         <div className="flex-1 bg-gray-100 rounded-full h-2 overflow-hidden">
@@ -183,12 +145,12 @@ const AdminDash = () => {
                     </div>
 
                     {/* CARD WORKSHOP */}
-                    <div className="bg-slate-900 text-white p-8 rounded-2xl shadow-lg space-y-6 group transition-all duration-300 hover:scale-[1.01]">
+                    <div className="bg-slate-900 text-white p-6 lg:p-8 rounded-2xl shadow-lg space-y-4 lg:space-y-6">
                         <div className="flex justify-between items-start">
                             <p className="text-blue-400 font-bold text-[10px] tracking-widest uppercase">Taux d'occupation Workshop</p>
                             <img src={calendarIcon} alt="" className="w-6 h-6 brightness-0 invert" />
                         </div>
-                        <p className="text-4xl font-black">{stats.workshopOccupation || 0}%</p>
+                        <p className="text-3xl lg:text-4xl font-black">{stats.workshopOccupation || 0}%</p>
                         <div className="w-full bg-slate-700 rounded-full h-1">
                             <div className="bg-blue-400 h-1 rounded-full transition-all duration-1000" style={{ width: `${stats.workshopOccupation || 0}%` }} />
                         </div>
@@ -199,24 +161,23 @@ const AdminDash = () => {
                         </Link>
                     </div>
 
-                    {/* CARD USERS INSCRITS */}
-                    <div className="bg-white p-8 rounded-2xl shadow-sm col-span-1 md:col-span-2 flex justify-between items-center group border border-transparent transition-all duration-300 hover:shadow-md hover:border-gray-100 cursor-default">
-                        <div className="flex items-center gap-6">
-                            <div className="p-4 bg-gray-50 rounded-xl transition-colors duration-300 group-hover:bg-blue-50">
-                                {loading ? <Skeleton className="w-8 h-8" /> :
-                                    <img src={iconFilm} alt="" className="w-8 h-8 object-contain transition-transform duration-300 group-hover:scale-110" />
-                                }
+                    {/* CARD USERS */}
+                    <div className="bg-white p-6 lg:p-8 rounded-2xl shadow-sm col-span-1 sm:col-span-2 flex justify-between items-center group border border-transparent transition-all duration-300 hover:shadow-md hover:border-gray-100">
+                        <div className="flex items-center gap-4 lg:gap-6">
+                            <div className="p-3 lg:p-4 bg-gray-50 rounded-xl group-hover:bg-blue-50 transition-colors">
+                                {loading ? <Skeleton className="w-8 h-8" /> : <img src={iconFilm} alt="" className="w-8 h-8 object-contain" />}
                             </div>
                             <div>
-                                {loading ? <Skeleton className="h-10 w-32 mb-2" /> : <p className="text-4xl font-black text-black">{stats.totalUsers || 0}</p>}
+                                {loading ? <Skeleton className="h-10 w-32 mb-2" /> : <p className="text-3xl lg:text-4xl font-black text-black">{stats.totalUsers || 0}</p>}
                                 <p className="text-gray-400 text-[10px] font-bold uppercase tracking-widest">Comptes utilisateurs actifs</p>
                             </div>
                         </div>
                         <div className="text-right">
-                            {loading ? <Skeleton className="h-8 w-16 mb-2 ml-auto" /> : <p className="text-blue-600 text-3xl font-black">+{stats.newUsersToday || 0}</p>}
+                            {loading ? <Skeleton className="h-8 w-16 mb-2 ml-auto" /> : <p className="text-blue-600 text-2xl lg:text-3xl font-black">+{stats.newUsersToday || 0}</p>}
                             <p className="text-gray-400 text-[10px] font-bold uppercase tracking-widest">Aujourd'hui</p>
                         </div>
                     </div>
+
                 </div>
             </main>
         </div>

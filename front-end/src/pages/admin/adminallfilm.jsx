@@ -8,16 +8,12 @@ const AdminAllFilms = () => {
     const [loading, setLoading] = useState(true);
     const [searchTerm, setSearchTerm] = useState("");
     const navigate = useNavigate();
-
-    // Etats pagination 
     const [currentPage, setCurrentPage] = useState(1);
     const filmsPerPage = 20;
 
     const fetchAllFilms = async () => {
         try {
-            const response = await fetch('http://localhost:3000/admin/films', {
-                credentials: 'include'
-            });
+            const response = await fetch('http://localhost:3000/admin/films', { credentials: 'include' });
             const json = await response.json();
             let data = Array.isArray(json) ? json : (json.data || []);
             setAllFilms(data);
@@ -28,14 +24,8 @@ const AdminAllFilms = () => {
         }
     };
 
-    useEffect(() => {
-        fetchAllFilms();
-    }, []);
-
-    // Reset à la page 1 quand on recherche
-    useEffect(() => {
-        setCurrentPage(1);
-    }, [searchTerm]);
+    useEffect(() => { fetchAllFilms(); }, []);
+    useEffect(() => { setCurrentPage(1); }, [searchTerm]);
 
     const filteredFilms = allFilms.filter(film => {
         const title = film.title || "";
@@ -54,16 +44,26 @@ const AdminAllFilms = () => {
         window.scrollTo({ top: 0, behavior: 'smooth' });
     };
 
+    const Skeleton = () => (
+        <div className="animate-pulse bg-white rounded-2xl p-4 flex items-center gap-4">
+            <div className="w-14 h-9 bg-gray-200 rounded-lg flex-shrink-0" />
+            <div className="flex-1 space-y-2">
+                <div className="h-3 bg-gray-200 rounded w-3/4" />
+                <div className="h-2 bg-gray-200 rounded w-1/2" />
+            </div>
+        </div>
+    );
+
     return (
         <div className="flex min-h-screen bg-[#F2F2F2] font-sans text-left relative">
             <Sidebar />
-            <main className="flex-1 p-8 lg:p-12 overflow-y-auto">
-                <div className="mb-12">
+            <main className="flex-1 p-4 pt-4 pb-20 lg:pt-8 lg:pb-0 lg:p-12 overflow-y-auto">
+                <div className="mb-8">
                     <h2 className="text-orange-400 font-bold mb-2 tracking-widest text-xs uppercase">ADMIN MANAGEMENT</h2>
-                    <h1 className="text-4xl font-black text-black mb-4 tracking-tighter uppercase">TOUS LES FILMS</h1>
+                    <h1 className="text-2xl lg:text-4xl font-black text-black mb-4 tracking-tighter uppercase">TOUS LES FILMS</h1>
                 </div>
 
-                <div className="mb-8">
+                <div className="mb-6">
                     <input
                         type="text"
                         placeholder="Rechercher par titre ou réalisateur..."
@@ -72,7 +72,8 @@ const AdminAllFilms = () => {
                     />
                 </div>
 
-                <div className="bg-white rounded-[2rem] shadow-sm overflow-hidden p-6">
+                {/* TABLE  */}
+                <div className="hidden lg:block bg-white rounded-[2rem] shadow-sm overflow-hidden p-6">
                     <table className="w-full text-left border-collapse">
                         <thead>
                             <tr className="text-[10px] text-gray-400 uppercase tracking-widest border-b border-gray-50">
@@ -85,81 +86,84 @@ const AdminAllFilms = () => {
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-gray-50">
-                            {loading ? (
-                                [...Array(5)].map((_, i) => (
-                                    <tr key={i}><td colSpan="6" className="py-4"><div className="animate-pulse bg-gray-200 h-12 w-full rounded-xl"></div></td></tr>
-                                ))
-                            ) : currentFilms.length === 0 ? (
+                            {loading ? [...Array(5)].map((_, i) => (
+                                <tr key={i}><td colSpan="6" className="py-4"><div className="animate-pulse bg-gray-200 h-12 w-full rounded-xl"></div></td></tr>
+                            )) : currentFilms.length === 0 ? (
                                 <tr><td colSpan="6" className="py-10 text-center text-gray-400 text-sm italic">Aucun film trouvé</td></tr>
-                            ) : (
-                                currentFilms.map((film) => {
-                                    const rawPoster = film.Files?.[0]?.poster_url;
-                                    const poster = rawPoster
-                                        ? (rawPoster.startsWith('http') ? rawPoster : `http://localhost:3000${rawPoster}`)
-                                        : "/src/assets/youtube.png";
-                                    const { label, classes } = getStatusDetails(film.status);
-                                    return (
-                                        <tr key={film.id} className="group hover:bg-gray-50/50 transition-colors">
-                                            <td className="py-5 pl-4">
-                                                <div className="w-14 h-9 overflow-hidden rounded-lg bg-gray-100 border border-gray-50 shadow-sm">
-                                                    <img src={poster} className="h-full w-full object-cover" alt="poster" onError={(e) => { e.target.src = "/src/assets/youtube.png"; }} />
-                                                </div>
-                                            </td>
-                                            <td className="py-5 text-[11px] font-black uppercase text-black">{film.title || "SANS TITRE"}</td>
-                                            <td className="py-5 text-[10px] font-bold text-gray-800 uppercase">
-                                                {film.User ? `${film.User.firstName} ${film.User.lastName}` : "N/A"}
-                                            </td>
-                                            <td className="py-5 text-center">
-                                                <span className={`px-3 py-1 rounded-full text-[9px] font-black uppercase border ${classes}`}>{label}</span>
-                                            </td>
-                                            <td className="py-5 text-center text-[10px] font-bold text-gray-400">
-                                                {new Date(film.createdAt).toLocaleDateString('fr-FR')}
-                                            </td>
-                                            <td className="py-5 text-right pr-4">
-                                                <div className="flex items-center justify-end">
-                                                    <button
-                                                        onClick={() => navigate(`/films/${film.id}`)}
-                                                        className="p-2 rounded-xl text-gray-300 hover:bg-gray-100 hover:text-black transition-all"
-                                                        title="Détails"
-                                                    >
-                                                        <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
-                                                            <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
-                                                        </svg>
-                                                    </button>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                    );
-                                })
-                            )}
+                            ) : currentFilms.map((film) => {
+                                const rawPoster = film.Files?.[0]?.poster_url;
+                                const poster = rawPoster ? (rawPoster.startsWith('http') ? rawPoster : `http://localhost:3000${rawPoster}`) : "/src/assets/youtube.png";
+                                const { label, classes } = getStatusDetails(film.status);
+                                return (
+                                    <tr key={film.id} className="group hover:bg-gray-50/50 transition-colors">
+                                        <td className="py-5 pl-4">
+                                            <div className="w-14 h-9 overflow-hidden rounded-lg bg-gray-100 border border-gray-50 shadow-sm">
+                                                <img src={poster} className="h-full w-full object-cover" alt="poster" onError={(e) => { e.target.src = "/src/assets/youtube.png"; }} />
+                                            </div>
+                                        </td>
+                                        <td className="py-5 text-[11px] font-black uppercase text-black">{film.title || "SANS TITRE"}</td>
+                                        <td className="py-5 text-[10px] font-bold text-gray-800 uppercase">{film.User ? `${film.User.firstName} ${film.User.lastName}` : "N/A"}</td>
+                                        <td className="py-5 text-center"><span className={`px-3 py-1 rounded-full text-[9px] font-black uppercase border ${classes}`}>{label}</span></td>
+                                        <td className="py-5 text-center text-[10px] font-bold text-gray-400">{new Date(film.createdAt).toLocaleDateString('fr-FR')}</td>
+                                        <td className="py-5 text-right pr-4">
+                                            <button onClick={() => navigate(`/films/${film.id}`)} className="p-2 rounded-xl text-gray-300 hover:bg-gray-100 hover:text-black transition-all">
+                                                <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}><path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" /></svg>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                );
+                            })}
                         </tbody>
                     </table>
-
-                    {/* BLOC PAGINATION */}
                     {!loading && totalPages > 1 && (
                         <div className="flex items-center justify-between mt-8 px-4 pb-4">
-                            <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">
-                                Page {currentPage} sur {totalPages} ({filteredFilms.length} films)
-                            </span>
+                            <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Page {currentPage} sur {totalPages} ({filteredFilms.length} films)</span>
                             <div className="flex gap-2">
-                                <button
-                                    onClick={() => paginate(currentPage - 1)}
-                                    disabled={currentPage === 1}
-                                    className={`p-2 rounded-xl transition-all ${currentPage === 1 ? 'opacity-20 cursor-not-allowed' : 'text-black hover:bg-gray-100'}`}
-                                >
-                                    <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
-                                        <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
-                                    </svg>
+                                <button onClick={() => paginate(currentPage - 1)} disabled={currentPage === 1} className={`p-2 rounded-xl transition-all ${currentPage === 1 ? 'opacity-20 cursor-not-allowed' : 'text-black hover:bg-gray-100'}`}>
+                                    <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}><path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" /></svg>
                                 </button>
-                                <button
-                                    onClick={() => paginate(currentPage + 1)}
-                                    disabled={currentPage === totalPages}
-                                    className={`p-2 rounded-xl transition-all ${currentPage === totalPages ? 'opacity-20 cursor-not-allowed' : 'text-black hover:bg-gray-100'}`}
-                                >
-                                    <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
-                                        <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
-                                    </svg>
+                                <button onClick={() => paginate(currentPage + 1)} disabled={currentPage === totalPages} className={`p-2 rounded-xl transition-all ${currentPage === totalPages ? 'opacity-20 cursor-not-allowed' : 'text-black hover:bg-gray-100'}`}>
+                                    <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}><path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" /></svg>
                                 </button>
+                            </div>
+                        </div>
+                    )}
+                </div>
+
+                {/* CARDS */}
+                <div className="lg:hidden space-y-3">
+                    {loading ? [...Array(5)].map((_, i) => <Skeleton key={i} />) :
+                        currentFilms.length === 0 ? (
+                            <div className="py-10 text-center text-gray-400 text-sm italic bg-white rounded-2xl">Aucun film trouvé</div>
+                        ) : currentFilms.map((film) => {
+                            const rawPoster = film.Files?.[0]?.poster_url;
+                            const poster = rawPoster ? (rawPoster.startsWith('http') ? rawPoster : `http://localhost:3000${rawPoster}`) : "/src/assets/youtube.png";
+                            const { label, classes } = getStatusDetails(film.status);
+                            return (
+                                <div key={film.id} className="bg-white rounded-2xl p-4 flex items-center gap-4 shadow-sm">
+                                    <div className="w-14 h-10 overflow-hidden rounded-lg bg-gray-100 flex-shrink-0">
+                                        <img src={poster} className="h-full w-full object-cover" alt="poster" onError={(e) => { e.target.src = "/src/assets/youtube.png"; }} />
+                                    </div>
+                                    <div className="flex-1 min-w-0">
+                                        <p className="font-black text-[11px] text-black uppercase truncate">{film.title || "SANS TITRE"}</p>
+                                        <p className="text-[10px] text-gray-500 font-bold uppercase truncate">{film.User ? `${film.User.firstName} ${film.User.lastName}` : "N/A"}</p>
+                                        <div className="flex items-center gap-2 mt-1">
+                                            <span className={`px-2 py-0.5 rounded-full text-[8px] font-black uppercase border ${classes}`}>{label}</span>
+                                            <span className="text-[9px] text-gray-400">{new Date(film.createdAt).toLocaleDateString('fr-FR')}</span>
+                                        </div>
+                                    </div>
+                                    <button onClick={() => navigate(`/films/${film.id}`)} className="text-gray-300 hover:text-black transition-colors flex-shrink-0">
+                                        <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}><path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" /></svg>
+                                    </button>
+                                </div>
+                            );
+                        })}
+                    {!loading && totalPages > 1 && (
+                        <div className="flex items-center justify-between px-2 py-4">
+                            <span className="text-[10px] font-bold text-gray-400 uppercase">Page {currentPage}/{totalPages}</span>
+                            <div className="flex gap-2">
+                                <button onClick={() => paginate(currentPage - 1)} disabled={currentPage === 1} className={`px-4 py-2 text-[10px] font-black uppercase rounded-xl transition-all ${currentPage === 1 ? 'text-gray-200' : 'text-black hover:bg-white'}`}>Préc.</button>
+                                <button onClick={() => paginate(currentPage + 1)} disabled={currentPage === totalPages} className={`px-4 py-2 text-[10px] font-black uppercase rounded-xl transition-all ${currentPage === totalPages ? 'text-gray-200' : 'text-black hover:bg-white'}`}>Suiv.</button>
                             </div>
                         </div>
                     )}
