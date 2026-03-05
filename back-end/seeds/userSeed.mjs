@@ -22,14 +22,8 @@ export async function userSeed() {
                     password: 'Director123!',
                     firstName: 'Taro',
                     lastName: 'Director',
-                    role: 'director',
+                    role: 'committee',
                     country: 'France', 
-                    isEmailVerified: true,
-                    isActive: true,
-                    
-
-                    lastName: 'DirectorTEST',
-                    role: 'director',
                     isEmailVerified: true,
                     isActive: true,
                     bio: 'Réalisateur passionné de Sci-Fi',

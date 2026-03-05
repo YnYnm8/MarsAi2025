@@ -102,8 +102,8 @@ export default function Note() {
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
+          credentials:"include",
           body: JSON.stringify({
-            UserId: 3,
             score: value,
             comment: comment,
             status: clickedStatus,
@@ -140,9 +140,9 @@ export default function Note() {
       const response = await fetch("http://localhost:3004/comite/create/playlist", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
+        credentials:"include",
         body: JSON.stringify({
           status: newListName,
-          UserId: 4,
           FilmId: selectedFilm ? selectedFilm.id : null,
         }),
       });
@@ -156,8 +156,10 @@ export default function Note() {
     } catch (error) {
       console.error("Error creating playlist:", error);
       alert("Error creating playlist");
-    }
-  };
+
+    };
+
+  }
 
   const handleAddToPlaylistWithNote = async (playlistId) => {
     if (!selectedFilm) return alert("No film selected!");
@@ -166,8 +168,8 @@ export default function Note() {
       const playlistResponse = await fetch("http://localhost:3004/comite/film/list", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
+        credentials:"include",
         body: JSON.stringify({
-          UserId: 3,
           FilmId: selectedFilm.id,
           targetPlaylistId: playlistId,
         }),
@@ -178,13 +180,14 @@ export default function Note() {
       const noteResponse = await fetch("http://localhost:3004/comite/note", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
+        credentials:"include",
         body: JSON.stringify({
-          UserId: 3,
           FilmId: selectedFilm.id,
           score: value,
           comment: comment,
         }),
       });
+      console.log(noteResponse)
       if (!noteResponse.ok) throw new Error("Fail to add your note to the film");
       await noteResponse.json();
 
@@ -206,8 +209,8 @@ export default function Note() {
       const response = await fetch("http://localhost:3004/comite/deletestatus", {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          UserId: 3,               // ログインユーザーID
+        credentials:"include",
+        body: JSON.stringify({             // ログインユーザーID
           targetPlaylistId: playlistId, // 修正済み
         }),
       });
@@ -245,8 +248,8 @@ export default function Note() {
       const response = await fetch(`http://localhost:3004/comite/note`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
+        credentials:"include",
         body: JSON.stringify({
-          UserId: 3,             // ログインユーザーID
           FilmId: selectedFilm.id,
           score: value || null,  // スコアは空でもOKにする
           comment: comment,
@@ -567,7 +570,7 @@ export default function Note() {
                 {/* 自作プレイリスト */}
 
 
-                <div className="flex flex-col md:flex">
+                <div className="flex flex-wrap gap-4">
                   {playlist.slice(4).map((p) => (
                     <div key={p.id} className="flex gap-2 items-center">
                       <button

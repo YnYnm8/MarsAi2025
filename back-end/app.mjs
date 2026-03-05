@@ -29,7 +29,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const app = express();
 const PORT = process.env.PORT || 3000;
-const FRONTEND_URL = (process.env.FRONTEND_URL || 'http://localhost:5173').replace(/\/$/, '');
+const FRONTEND_URL = 'http://localhost:8004'.replace(/\/$/, '');
 console.log({FRONTEND_URL});
 // Créer le serveur HTTP à partir d'Express
 const httpServer = createServer(app);
@@ -37,7 +37,7 @@ const httpServer = createServer(app);
 // Initialiser Socket.io sur le serveur HTTP
 const io = new Server(httpServer, {
   cors: {
-    origin: ['http://localhost:5173', FRONTEND_URL].filter(Boolean),
+    origin: ['http://localhost:8004', FRONTEND_URL].filter(Boolean),
     credentials: true,
     methods: ['GET', 'POST'],
   },
@@ -53,7 +53,7 @@ initSocket(io, db);
 // MIDDLEWARES
 
 app.use(cors({
-  origin: ['http://localhost:5173', FRONTEND_URL].filter(Boolean),
+  origin: ['http://localhost:8004', FRONTEND_URL].filter(Boolean),
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept', 'Origin'],
@@ -71,13 +71,13 @@ app.use(helmet({
       defaultSrc: ["'self'"],
       styleSrc: ["'self'", "'unsafe-inline'"],
       scriptSrc: ["'self'"],
-      imgSrc: ["'self'", 'data:', 'blob:', 'http://localhost:3000'],
+      imgSrc: ["'self'", 'data:', 'blob:', 'http://localhost:3004'],
       connectSrc: [
         "'self'",
-        "http://localhost:5173",
-        "http://localhost:3000",
-        "ws://localhost:3000",   // WebSocket Socket.io
-        "wss://localhost:3000",
+        "http://localhost:8004",
+        "http://localhost:3004",
+        "ws://localhost:3004",   // WebSocket Socket.io
+        "wss://localhost:3004",
         FRONTEND_URL.replace('http', 'ws'),
         FRONTEND_URL.replace('http', 'wss'),
       ],

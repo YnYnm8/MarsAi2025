@@ -51,11 +51,11 @@ export default function Footer() {
 
   return (
     <footer className="bg-[#282828] flex flex-col justify-center items-center py-3 px-2.5 w-full md:py-24">
-      <div className="flex flex-col justify-center items-center gap-20 w-full max-w-290">
-        <div className="flex flex-col lg:flex-row items-center lg:items-start lg:justify-between gap-20 w-full max-w-285">
+      <div className="flex flex-col justify-center items-centerw-full max-w-290 gap-5 md:gap-20 ">
+        <div className="flex flex-col lg:flex-row items-center lg:items-start lg:justify-between md w-full max-w-285">
           
           {/* Left Content */}
-          <div className="flex flex-col items-start gap-9 w-full max-w-132.5 p-2.5">
+          <div className="flex flex-col items-start gap-10 w-full max-w-132.5 p-2.5">
             <div className="flex flex-row justify-center items-center p-5 w-31.25 h-15 bg-brand-blue rounded-xl">
               <span className="font-['Inter'] font-extrabold text-[18px] leading-5.5 uppercase text-[#FFFFFF]">
                 MARS.A.I
@@ -84,8 +84,8 @@ export default function Footer() {
 
           {/* Right Content / StatCard */}
           <div className="flex flex-col justify-center items-center p-[10px] gap-[10px] w-full max-w-[530px]">
-            <div className="box-border flex flex-col justify-center items-center p-[32px] gap-[24px] w-full max-w-[510px] min-h-[262px] bg-[#333333] border border-[#484848] shadow-[0px_4px_10px_rgba(0,0,0,0.05)] rounded-[24px]">
-              <h3 className="font-['Plus_Jakarta_Sans'] font-[800] text-[32px] leading-[40px] text-center uppercase text-[#FFFFFF]">
+            <div className="box-border flex flex-col justify-center items-center gap-[24px] w-full max-w-[510px] min-h-[200px] bg-[#333333] border border-[#484848] shadow-[0px_4px_10px_rgba(0,0,0,0.05)] rounded-[24px] md:p-[32px]">
+              <h3 className="font-['Plus_Jakarta_Sans'] font-[800] text-24px leading-[40px] text-center uppercase text-[#FFFFFF] md:text-[32px]  ">
                 {t('footer.newsletter_title')}
               </h3>
 
