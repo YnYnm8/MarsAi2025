@@ -1,12 +1,12 @@
-import { useEffect, useState,useMemo } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
-
 export default function ComiteProfile() {
   const navigate = useNavigate();
   const [films, setFilms] = useState([]);
   const [filter, setFilter] = useState("NOT_WATCHED");
   const [playlists, setPlaylist] = useState([]);
-  
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
 
 
 
@@ -79,6 +79,7 @@ export default function ComiteProfile() {
   return (
     <div className="flex min-h-screen bg-black text-white">
 
+
       {/* 左側：ユーザー情報 */}
       <div className="absolute top-4 left-4 flex items-center gap-2">
         {/* <img src={user.avatar} className="rounded-full w-10 h-10" /> */}
@@ -87,15 +88,21 @@ export default function ComiteProfile() {
 
       {/* メインコンテンツ */}
       <div className="flex-1 p-10 overflow-y-auto">
+        <button
+          onClick={() => setMobileMenuOpen(true)}
+          className="md:hidden bg-white text-black px-3 py-1 rounded mb-3"
+        >
+          Accéder aux listes
+        </button>
 
         <h1 className="text-2xl font-bold mb-6">
           COMITE - MES ÉVALUATIONS
         </h1>
-         {/* 戻るボタン */}
+        {/* 戻るボタン */}
         <div className="mt-10">
           <button
             onClick={() => navigate("/comite/note")}
-            className="bg-blue-600 px-6 py-2 rounded-lg font-semibold"
+            className="text-white px-6 py-2 rounded-lg font-semibold"
           >
             ← RETOUR À L'ÉVALUATION
           </button>
@@ -129,31 +136,57 @@ export default function ComiteProfile() {
         <div className="mt-10">
           <button
             onClick={() => navigate("/comite/note")}
-            className="bg-blue-600 px-6 py-2 rounded-lg font-semibold"
+            className="text-white px-6 py-2 rounded-lg font-semibold"
           >
             ← RETOUR À L'ÉVALUATION
           </button>
         </div>
       </div>
 
-      {/* 右サイドバー */}
-      <aside className="w-64 bg-gray-900 p-6 border-l border-gray-700">
-        <h2 className="font-bold mb-4">VOTRE LIST</h2>
 
+      {/* 右サイドバー */}
+      {/* PC用 */}
+      <aside className="hidden md:block w-64 bg-gray-900 p-6 border-l border-gray-700">
+        <h2 className="font-bold mb-4">VOTRE LIST</h2>
         {playlistsWithCounts.map((p) => (
           <button
             key={p.id}
             onClick={() => setFilter(p.status)}
-            className={`block w-full text-left px-4 py-2 rounded mb-2 ${filter === p.status
-              ? "bg-blue-600"
-              : "bg-gray-800 hover:bg-gray-700"
+            className={`block w-full text-left px-4 py-2 rounded mb-2 ${filter === p.status ? "bg-blue-600" : "bg-gray-800 hover:bg-gray-700"
               }`}
           >
             {p.name} ({p.filmCount})
           </button>
         ))}
-
       </aside>
+
+      {/* モバイル用 */}
+      {mobileMenuOpen && (
+        <aside className="fixed inset-0 bg-black/50 z-40">
+          <div className="absolute top-0 left-0 w-64 h-full z-100 bg-gray-900 p-6 shadow-lg">
+            <button
+              className="mb-4 px-2 py-1 bg-gray-700 rounded"
+              onClick={() => setMobileMenuOpen(false)}
+            >
+              ✕ Fermer
+            </button>
+            <h2 className="font-bold mb-4">VOTRE LIST</h2>
+            {playlistsWithCounts.map((p) => (
+              <button
+                key={p.id}
+                onClick={() => {
+                  setFilter(p.status);
+                  setMobileMenuOpen(false);
+                }}
+                className={`block w-full text-left px-4 py-2 rounded mb-2 ${filter === p.status ? "bg-blue-600" : "bg-gray-800 hover:bg-gray-700"
+                  }`}
+              >
+                {p.name} ({p.filmCount})
+              </button>
+            ))}
+          </div>
+        </aside>
+      )}
 
     </div>
   );

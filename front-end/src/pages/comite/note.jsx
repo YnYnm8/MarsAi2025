@@ -4,7 +4,7 @@ import ListFilms from "../comite/ListFilms";
 import { FilmComponent } from "../../components/film";
 import { useNavigate } from "react-router-dom";
 import { useRef } from "react";
-import { faTrash } from '@fortawesome/free-solid-svg-icons';
+import { faTrash ,faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 export default function Note() {
@@ -284,9 +284,10 @@ export default function Note() {
 
       <button
         onClick={() => setMobileMenuOpen(true)}
-        className="md:hidden bg-white text-black px-3 py-1 rounded mb-3"
+        className="md:hidden text-white px-3 py-1 rounded mb-3 self-start"
       >
-        ☰ MENU
+       <FontAwesomeIcon icon={faArrowLeft} />
+        Accéder aux listes
       </button>
       <div className="flex flex-col md:flex-row flex-1 overflow-hidden">
 
