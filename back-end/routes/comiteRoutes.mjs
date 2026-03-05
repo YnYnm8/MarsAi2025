@@ -25,10 +25,8 @@ const comiteRouter = express.Router()
 
 comiteRouter.post("/select",authMiddleware, roleMiddleware('committee'),getAllOfficialSelection);
 comiteRouter.post("/review/:FilmId", authMiddleware, roleMiddleware('committee'),reviewFilm);
-comiteRouter.get("/allplaylists",authMiddleware,roleMiddleware('committee'), getAllPlaylists)
-
+comiteRouter.get("/allplaylists",authMiddleware,roleMiddleware('committee' || "admin"), getAllPlaylists)
 // Get playlist by id
-
 comiteRouter.post("/create/playlist",authMiddleware,roleMiddleware('committee'), createPlaylist);
 comiteRouter.get("/refused",authMiddleware, roleMiddleware('committee'),getAllRefusedFilms);
 comiteRouter.post("/select/:FilmId",authMiddleware, roleMiddleware('committee'), acceptedFilm);

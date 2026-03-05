@@ -4,7 +4,7 @@ import ListFilms from "../comite/ListFilms";
 import { FilmComponent } from "../../components/film";
 import { useNavigate } from "react-router-dom";
 import { useRef } from "react";
-import { faTrash ,faArrowLeft } from '@fortawesome/free-solid-svg-icons';
+import { faTrash, faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 export default function Note() {
@@ -28,12 +28,11 @@ export default function Note() {
   // データ取得
   const fetchFilmAndPlaylists = async () => {
     try {
-      const filmRes = await fetch("http://localhost:3004/films");
-      if (!filmRes.ok) throw new Error("Failed to fetch film data");
-      const filmsData = await filmRes.json();
 
       const playlistRes = await fetch("http://localhost:3004/comite/allplaylists");
+      
       if (!playlistRes.ok) throw new Error("Failed to fetch playlists");
+      
       const playlistsData = await playlistRes.json();
 
       const playlistsWithName = playlistsData.map(p => ({
@@ -42,6 +41,7 @@ export default function Note() {
         filmCount: 0
       }));
 
+      const filmsData = playlistRes.Film;
       const filmsWithStatus = filmsData.map(film => {
         if (!film.PlaylistFilms || film.PlaylistFilms.length === 0) {
           return { ...film, status: "NOT_WATCHED", playlistName: "なし" };
@@ -102,7 +102,7 @@ export default function Note() {
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          credentials:"include",
+          credentials: "include",
           body: JSON.stringify({
             score: value,
             comment: comment,
@@ -140,7 +140,7 @@ export default function Note() {
       const response = await fetch("http://localhost:3004/comite/create/playlist", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        credentials:"include",
+        credentials: "include",
         body: JSON.stringify({
           status: newListName,
           FilmId: selectedFilm ? selectedFilm.id : null,
@@ -168,7 +168,7 @@ export default function Note() {
       const playlistResponse = await fetch("http://localhost:3004/comite/film/list", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        credentials:"include",
+        credentials: "include",
         body: JSON.stringify({
           FilmId: selectedFilm.id,
           targetPlaylistId: playlistId,
@@ -180,7 +180,7 @@ export default function Note() {
       const noteResponse = await fetch("http://localhost:3004/comite/note", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        credentials:"include",
+        credentials: "include",
         body: JSON.stringify({
           FilmId: selectedFilm.id,
           score: value,
@@ -209,7 +209,7 @@ export default function Note() {
       const response = await fetch("http://localhost:3004/comite/deletestatus", {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
-        credentials:"include",
+        credentials: "include",
         body: JSON.stringify({             // ログインユーザーID
           targetPlaylistId: playlistId, // 修正済み
         }),
@@ -248,7 +248,7 @@ export default function Note() {
       const response = await fetch(`http://localhost:3004/comite/note`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        credentials:"include",
+        credentials: "include",
         body: JSON.stringify({
           FilmId: selectedFilm.id,
           score: value || null,  // スコアは空でもOKにする
@@ -289,7 +289,7 @@ export default function Note() {
         onClick={() => setMobileMenuOpen(true)}
         className="md:hidden text-white px-3 py-1 rounded mb-3 self-start"
       >
-       <FontAwesomeIcon icon={faArrowLeft} />
+        <FontAwesomeIcon icon={faArrowLeft} />
         Accéder aux listes
       </button>
       <div className="flex flex-col md:flex-row flex-1 overflow-hidden">

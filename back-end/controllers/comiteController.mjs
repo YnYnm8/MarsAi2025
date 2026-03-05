@@ -1,6 +1,7 @@
 import Playlist from "../models/Playlist.mjs";
 import PlaylistFilm from "../models/PlaylistFilm.mjs";
 import Film from "../models/Films.mjs";
+import File from "../models/File.mjs";
 import Note from "../models/Note.mjs";
 import { catchError } from "../helpers/errorHandler.mjs";
 import Selection from "../models/Selection.mjs";
@@ -145,7 +146,48 @@ export async function reviewFilm(req, res) {
 //プレイリストを取得するためのもの
 export async function getAllPlaylists(req, res) {
   try {
-    const playlists = await Playlist.findAll();
+    const user = req.user.id;
+    const DEFAULT_LISTS = [
+      { status: "NOT_WATCHED" },
+      { status: "PENDING" },
+      { status: "SELECTED" },
+      { status: "REFUSED" }
+    ];
+    let playlists = await Playlist.findAll({
+      where: { UserId: user },
+      include: [
+        {
+          model: Film,
+          as: 'Films',
+          attributes: ['id', 'UserId', 'title', 'collaborateur', 'description',
+            'duration', 'generateAi'],
+          include: [
+            {
+              model: File,
+              as: 'Files',
+              attributes: ['id', 'film_url', 'poster_url', 'galerie_url', 'creativeMethodology', 'subtitle', 'outil_Ai']
+            },
+          ]
+        }
+      ]
+    });
+
+    if (playlists.length < 4) {
+      for (const status of DEFAULT_LISTS) {
+
+        await Playlist.findOrCreate({
+          where: { status: status, UserId: user },
+          defaults: { status: status},
+        });
+      }
+
+      // Volvemos a consultar para traer las recién creadas con sus IDs reales
+      playlists = await Playlist.findAll({
+        where: { UserId: user },
+        include: [{ model: Film, through: { attributes: [] }, include: [{ model: File, as: 'Files' }] }],
+        order: [['id', 'ASC']]
+      });
+    }
 
     if (!playlists)
       return res.status(404).json({ message: "リストが存在しません" });
