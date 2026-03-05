@@ -36,11 +36,9 @@ console.log("============================================\n");
 User.hasMany(Film, { foreignKey: 'UserId', onDelete: "CASCADE" });
 Film.belongsTo(User, { foreignKey: 'UserId' });
 
-User.hasMany(Playlist, {onDelete: "CASCADE" });
-Playlist.belongsTo(User);
 
-User.belongsToMany(Film, { through: Note, as: 'Notes' , onUpdate: "CASCADE" });
-Film.belongsToMany(User, { through: Note, as: 'Notes' , onUpdate: "CASCADE"});
+User.belongsToMany(Film, { through: Note, as: 'Notes', onUpdate: "CASCADE" });
+Film.belongsToMany(User, { through: Note, as: 'Notes', onUpdate: "CASCADE" });
 
 User.hasMany(Note);
 Note.belongsTo(User);
@@ -48,8 +46,8 @@ Note.belongsTo(User);
 User.belongsToMany(Film, { through: Annotation, as: 'Annotators' });
 Film.belongsToMany(User, { through: Annotation, as: 'Annotators' });
 
-User.hasMany(Playlist, { foreignKey: { allowNull: true }, onDelete: "SET NULL" });
-Playlist.belongsTo(User, { foreignKey: { allowNull: true }, onDelete: "SET NULL" });
+User.hasMany(Playlist, { onDelete: "CASCADE" });
+Playlist.belongsTo(User, { onDelete: "CASCADE" });
 
 User.hasMany(Workshop);
 Workshop.belongsTo(User);
@@ -58,8 +56,8 @@ User.hasMany(Notification, { foreignKey: 'userId' });
 Notification.belongsTo(User, { foreignKey: 'userId' });
 
 // === Film ===
-Film.belongsToMany(Playlist, { through: PlaylistFilm});
-Playlist.belongsToMany(Film, { through: PlaylistFilm});
+Film.belongsToMany(Playlist, { through: PlaylistFilm });
+Playlist.belongsToMany(Film, { through: PlaylistFilm });
 
 Film.hasMany(File, { onDelete: "CASCADE" });
 File.belongsTo(Film);
@@ -76,7 +74,7 @@ Selection.belongsToMany(Film, { through: "SelectionFilm" });
 Film.hasMany(Note, { as: "NotesDirect" });
 Note.belongsTo(Film);
 // === Sponsor / Price ===
-Sponsor.hasMany(Price );
+Sponsor.hasMany(Price);
 Price.belongsTo(Sponsor);
 
 // === Workshop / Category ===
@@ -93,7 +91,7 @@ Notification.belongsTo(Price);
 
 // PlaylistFilm (履歴テーブル) から参照
 PlaylistFilm.belongsTo(Playlist);
-PlaylistFilm.belongsTo(Film );
+PlaylistFilm.belongsTo(Film);
 PlaylistFilm.belongsTo(User);
 
 
@@ -106,7 +104,7 @@ User.hasMany(PlaylistFilm);
 
 // === Export ===
 export {
-  User, Film, Playlist, Selection,Note, Annotation,
+  User, Film, Playlist, Selection, Note, Annotation,
   File, Price, Sponsor, Workshop, WorkshopCategory,
   Notification, PlaylistFilm, FilmSponsor
 };

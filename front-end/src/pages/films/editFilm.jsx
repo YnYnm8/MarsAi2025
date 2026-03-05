@@ -60,7 +60,7 @@ export default function EditFilm() {
                 } else {
                     setUploadMode("file");
                 }
-                
+
                 // Cargar colaboradores existentes
                 if (data.collaborateur && data.collaborateur.trim() !== "") {
                     const parsed = data.collaborateur.split(',').map(item => {
@@ -71,7 +71,7 @@ export default function EditFilm() {
                             name: trimmed.replace(/^(M\.|Mrs\.)\s*/, '')
                         };
                     });
-                    setCollaborateurs(parsed); 
+                    setCollaborateurs(parsed);
                 } else {
                     setCollaborateurs([{ genre: "male", name: "" }]);
                 }
@@ -149,8 +149,8 @@ export default function EditFilm() {
                 setDescription(data.description || "");
                 const youtubeImg = data.thumbnails?.maxres?.url || data.thumbnail || data.thumbnails?.high?.url;
                 setPosterFile(youtubeImg);
-                
-               
+
+
                 if (data.duration) {
                     setMovie(prev => ({ ...prev, duration: data.duration }));
                 }
@@ -220,81 +220,92 @@ export default function EditFilm() {
     if (!movie) return <div className="text-white p-20 text-center font-display uppercase tracking-widest">Chargement du projet...</div>;
 
     return (
-        <div className="bg-black-primary min-h-screen text-white pb-20">
-            <div className="flex flex-col m-8 max-w-7xl mx-auto">
-                <div className="font-display text-center mb-10">
-                    <div className="flex justify-center items-center gap-4 mb-4">
-                        <h1 className="text-6xl text-white-secondary uppercase font-extrabold tracking-tighter">
+        <div className="bg-black-primary min-h-screen text-white pb-10 md:pb-20">
+            {/* Agregamos w-full y centrado relativo */}
+            <div className="flex flex-col w-full max-w-7xl mx-auto p-4 md:p-8">
+
+                {/* Header responsivo */}
+                <div className="font-display text-center mb-8 md:mb-10 w-full">
+                    <div className="flex  md:flex-row justify-center items-center gap-2 md:gap-4 mb-4">
+                        <h1 className="text-3xl md:text-6xl text-white-secondary uppercase font-extrabold tracking-tighter text-center">
                             Modifier le <span className="text-blue-tertiary">film</span>
                         </h1>
-                        <FontAwesomeIcon icon={faPencil} className="text-blue-tertiary text-3xl opacity-50" />
+                        <FontAwesomeIcon icon={faPencil} className="text-blue-tertiary text-xl md:text-3xl opacity-50" />
                     </div>
-                    <p className="text-white/40 uppercase tracking-widest text-sm font-bold">ID PROJET: {id}</p>
+                    <p className="text-white/40 uppercase tracking-widest text-[10px] md:text-sm font-bold">ID PROJET: {id}</p>
                 </div>
 
-                <form className="font-display flex flex-col" onSubmit={handleSubmit} encType="multipart/form-data">
+                {/* Formulario con ancho completo */}
+                <form className="font-display flex flex-col w-full" onSubmit={handleSubmit} encType="multipart/form-data">
                     <input type="hidden" name="generateAi" value={selected || ""} />
 
-                    <fieldset className="bg-dark-card border-dark-border rounded-box m-7 border p-10">
-                        <div className="flex items-center gap-3 pb-8 border-b border-white/5 mb-8">
-                            <FontAwesomeIcon icon={faFilm} className="text-blue-tertiary text-xl" />
-                            <p className="uppercase tracking-widest font-bold text-lg">01. Identité du Film</p>
+                    {/* 01. Identité - Eliminamos m-7 y usamos mb-6 para móviles */}
+                    <fieldset className="bg-dark-card border-dark-border rounded-box border p-5 md:p-10 mb-6 md:m-7">
+                        <div className="flex items-center gap-3 pb-6 md:pb-8 border-b border-white/5 mb-6 md:mb-8">
+                            <FontAwesomeIcon icon={faFilm} className="text-blue-tertiary text-lg md:text-xl" />
+                            <p className="uppercase tracking-widest font-bold text-base md:text-lg">01. Identité du Film</p>
                         </div>
 
-                        <div className="grid grid-cols-2 gap-x-12 gap-y-10">
-                            <div className="flex flex-col relative">
-                                <label className="pb-2 text-white/50 text-xs font-bold uppercase">Titre du film *</label>
-                                <input type="text" name="title" value={title} onChange={(e) => setTitle(e.target.value)} className="w-full bg-black border border-dark-border p-4 pr-12 rounded-xl outline-none focus:border-blue-tertiary transition-all" />
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-x-12 md:gap-y-10">
+                            <div className="flex flex-col relative w-full">
+                                <label className="pb-2 text-white/50 text-[10px] md:text-xs font-bold uppercase">Titre du film *</label>
+                                <input type="text"
+                                    name="title"
+                                    value={title}
+                                    onChange={(e) => setTitle(e.target.value)}
+                                    className="w-full bg-black border border-dark-border p-4 pr-12 rounded-xl outline-none focus:border-blue-tertiary transition-all" />
                             </div>
-                            <div className="flex flex-col relative">
-                                <label className="pb-2 text-white/50 text-xs font-bold uppercase">Durée (Secondes) *</label>
-                                <input type="number" name="duration" value={movie.duration} onChange={(e) => setMovie({...movie, duration: e.target.value})} className="w-full bg-black border border-dark-border p-4 pr-12 rounded-xl outline-none focus:border-blue-tertiary" />
+                            <div className="flex flex-col relative w-full">
+                                <label className="pb-2 text-white/50 text-[10px] md:text-xs font-bold uppercase">Durée (Secondes) *</label>
+                                <input type="number" name="duration" value={movie.duration} onChange={(e) => setMovie({ ...movie, duration: e.target.value })} className="w-full bg-black border border-dark-border p-4 pr-12 rounded-xl outline-none focus:border-blue-tertiary" />
                             </div>
-                            <div className="flex flex-col col-span-2 relative">
-                                <label className="pb-2 text-white/50 text-xs font-bold uppercase">Manifeste / Synopsis *</label>
-                                <textarea name="description" value={description} onChange={(e) => setDescription(e.target.value)} className="w-full bg-black border border-dark-border p-4 pr-12 rounded-xl h-32 outline-none focus:border-blue-tertiary uppercase text-sm" />
+                            <div className="flex flex-col col-span-1 md:col-span-2 relative w-full">
+                                <label className="pb-2 text-white/50 text-[10px] md:text-xs font-bold uppercase">Manifeste / Synopsis *</label>
+                                <textarea name="description" value={description} onChange={(e) => setDescription(e.target.value)} className="w-full bg-black border border-dark-border p-4 pr-12 rounded-xl h-32 md:h-40 outline-none focus:border-blue-tertiary uppercase text-sm" />
                             </div>
                         </div>
                     </fieldset>
 
-                    <fieldset className="bg-dark-card border-dark-border rounded-box m-7 border p-10">
-                        <div className="flex items-center gap-3 pb-8 border-b border-white/5 mb-8">
-                            <FontAwesomeIcon icon={faMicrochip} className="text-blue-tertiary text-xl" />
-                            <p className="uppercase tracking-widest font-bold text-lg">02. Déclaration Usage de l'IA</p>
+                    {/* 02. IA Usage */}
+                    <fieldset className="bg-dark-card border-dark-border rounded-box border p-5 md:p-10 mb-6 md:m-7">
+                        <div className="flex items-center gap-3 pb-6 md:pb-8 border-b border-white/5 mb-6 md:mb-8">
+                            <FontAwesomeIcon icon={faMicrochip} className="text-blue-tertiary text-lg md:text-xl" />
+                            <p className="uppercase tracking-widest font-bold text-base md:text-lg">02. Déclaration IA</p>
                         </div>
-                        <div className="flex gap-5 mb-12">
+                        <div className="flex flex-col md:flex-row gap-3 md:gap-5 mb-8 md:mb-12">
                             {options.map((opt) => (
-                                <button key={opt.value} type="button" onClick={() => setSelected(opt.value)} className={`flex-1 p-6 cursor-pointer rounded-xl border transition-all font-bold text-sm uppercase ${selected === opt.value ? "bg-blue-tertiary border-blue-400 shadow-glow-blue" : "bg-black/40 border-gray-800 text-white/40 hover:bg-gray-800"}`}>{opt.label}</button>
+                                <button key={opt.value} type="button" onClick={() => setSelected(opt.value)} className={`flex-1 p-4 md:p-6 cursor-pointer rounded-xl border transition-all font-bold text-xs md:text-sm uppercase ${selected === opt.value ? "bg-blue-tertiary border-blue-400 shadow-glow-blue text-white" : "bg-black/40 border-gray-800 text-white/40 hover:bg-gray-800"}`}>{opt.label}</button>
                             ))}
                         </div>
-                        <div className="grid grid-cols-2 gap-10">
-                            <textarea name="outil_Ai" defaultValue={movie.Files[0].outil_Ai} className="w-full bg-black/50 border border-gray-800 p-5 rounded-xl h-48 outline-none focus:border-blue-tertiary" />
-                            <textarea name="creativeMethodology" defaultValue={movie.Files[0].creativeMethodology} className="w-full bg-black/50 border border-gray-800 p-5 rounded-xl h-48 outline-none focus:border-blue-tertiary" />
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-10">
+                            <textarea name="outil_Ai" defaultValue={movie.Files[0].outil_Ai} placeholder="Outils utilisés" className="w-full bg-black/50 border border-gray-800 p-5 rounded-xl h-40 md:h-48 outline-none focus:border-blue-tertiary" />
+                            <textarea name="creativeMethodology" defaultValue={movie.Files[0].creativeMethodology} placeholder="Méthodologie" className="w-full bg-black/50 border border-gray-800 p-5 rounded-xl h-40 md:h-48 outline-none focus:border-blue-tertiary" />
                         </div>
                     </fieldset>
 
-                    <fieldset className="fieldset tracking-widest uppercase bg-dark-card border-dark-border rounded-box text-base font-bold m-7 border p-10">
-                        <div className="flex gap-3 pb-7 border-b border-white/5 mb-8">
-                            <FontAwesomeIcon icon={faCloudUploadAlt} className="text-blue-tertiary text-xl" />
-                            <p className="uppercase font-display pt-1 text-base tracking-widest font-bold text-lg ">03. Livrables & Accessibilité</p>
+                    {/* 03. Livrables */}
+                    <fieldset className="bg-dark-card border-dark-border rounded-box border p-5 md:p-10 mb-6 md:m-7">
+                        <div className="flex gap-3 pb-6 border-b border-white/5 mb-6 md:mb-8">
+                            <FontAwesomeIcon icon={faCloudUploadAlt} className="text-blue-tertiary text-lg md:text-xl" />
+                            <p className="uppercase font-display pt-1 tracking-widest font-bold text-base md:text-lg">03. Livrables</p>
                         </div>
 
-                        <div className="flex bg-black/40 p-1 rounded-xl border border-dark-border w-fit mb-10 self-center">
-                            <button type="button" onClick={() => setUploadMode("file")} className={`px-8 py-2 cursor-pointer rounded-lg text-[10px] font-bold tracking-widest ${uploadMode === "file" ? "bg-blue-tertiary text-white shadow-lg" : "text-white/40"}`}>FICHIER LOCAL</button>
-                            <button type="button" onClick={() => setUploadMode("youtube")} className={`px-8 py-2 cursor-pointer rounded-lg text-[10px] font-bold tracking-widest ${uploadMode === "youtube" ? "bg-red-600 text-white shadow-lg" : "text-white/40"}`}>LIEN YOUTUBE</button>
+                        <div className="flex bg-black/40 p-1 rounded-xl border border-dark-border w-full md:w-fit mb-8 md:mb-10 self-center">
+                            <button type="button" onClick={() => setUploadMode("file")} className={`flex-1 md:flex-none px-4 md:px-8 py-2 cursor-pointer rounded-lg text-[10px] font-bold tracking-widest ${uploadMode === "file" ? "bg-blue-tertiary text-white shadow-lg" : "text-white/40"}`}>FICHIER LOCAL</button>
+                            <button type="button" onClick={() => setUploadMode("youtube")} className={`flex-1 md:flex-none px-4 md:px-8 py-2 cursor-pointer rounded-lg text-[10px] font-bold tracking-widest ${uploadMode === "youtube" ? "bg-red-600 text-white shadow-lg" : "text-white/40"}`}>LIEN YOUTUBE</button>
                         </div>
 
                         {uploadMode === "youtube" && (
-                            <div className="col-span-2 flex flex-col mb-8 animate-in fade-in slide-in-from-top-2">
+                            <div className="flex flex-col mb-8 animate-in fade-in slide-in-from-top-2">
                                 <label className="pb-3 text-white/50 uppercase text-xs font-bold">Lien de la vidéo YouTube</label>
-                                <div className="flex gap-3">
+                                <div className="flex flex-col md:flex-row gap-3">
                                     <input type="text" value={youtubeUrl} name="youtubeUrl" onChange={(e) => setYoutubeUrl(e.target.value)} className="flex-1 bg-black border border-dark-border p-4 rounded-xl text-sm outline-none focus:border-red-600" />
-                                    <button type="button" onClick={fetchYoutubeInfo} disabled={isLoadingYoutube || !youtubeUrl} className="px-6 rounded-xl cursor-pointer font-bold uppercase text-xs bg-red-600/10 border border-red-600/40 text-red-500 hover:bg-red-600 hover:text-white transition-all">{isLoadingYoutube ? 'Chargement...' : 'Importer info'}</button>
+                                    <button type="button" onClick={fetchYoutubeInfo} disabled={isLoadingYoutube || !youtubeUrl} className="px-6 py-4 md:py-0 rounded-xl cursor-pointer font-bold uppercase text-xs bg-red-600/10 border border-red-600/40 text-red-500 hover:bg-red-600 hover:text-white transition-all">{isLoadingYoutube ? 'Chargement...' : 'Importer info'}</button>
                                 </div>
                             </div>
                         )}
 
-                        <div className="grid grid-cols-2 gap-x-20 gap-y-15 ">
+                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-x-20 md:gap-y-15">
                             <VideoUpload
                                 label={uploadMode === "file" ? "Télécharger le film" : "Aperçu YouTube"}
                                 name="film"
@@ -306,7 +317,7 @@ export default function EditFilm() {
                             />
 
                             <div className="flex flex-col">
-                                <label className="pb-2 text-white/50 text-xs font-bold uppercase">Sous-titres (SRT/VTT)</label>
+                                <label className="pb-4 text-white/50 text-[10px] md:text-xs font-bold uppercase text-center md:text-left">Sous-titres (SRT/VTT)</label>
                                 <DynamicSubtitleInput subtitles={subtitles} setSubtitles={setSubtitles} />
                             </div>
 
@@ -317,44 +328,70 @@ export default function EditFilm() {
                                 fullPreviewOnUpload={true}
                                 onFileSelect={setPosterFile}
                             />
+
                             <div>
-                                <label className="pb-4 block text-white/50 text-xs font-bold uppercase">Galerie Médias</label>
-                                <div className="flex gap-4">
+                                <label className="pb-4 block text-white/50 text-[10px] md:text-xs font-bold uppercase text-center md:text-left">Galerie Médias</label>
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-4">
                                     {newGalleryFiles.map((file, idx) => (
-                                        <ImagesPreview
-                                            key={idx}
-                                            id={`galerie-${idx}`}
-                                            defaultImage={file ? (typeof file === 'string' ? (file.startsWith('http') ? file : `${BACKEND_URL}${file}`) : URL.createObjectURL(file)) : defaultImg}
-                                            onFileSelect={(f) => handleGalleryChange(idx, f)}
-                                        />
+                                        <div key={idx} className="w-full">
+                                            <ImagesPreview
+                                                id={`galerie-${idx}`}
+                                                defaultImage={file ? (typeof file === 'string' ? (file.startsWith('http') ? file : `${BACKEND_URL}${file}`) : URL.createObjectURL(file)) : defaultImg}
+                                                onFileSelect={(f) => handleGalleryChange(idx, f)}
+                                            />
+                                        </div>
                                     ))}
                                 </div>
                             </div>
                         </div>
                     </fieldset>
 
-                    <fieldset className="bg-dark-card border-dark-border rounded-box m-7 border p-10">
-                        <div className="flex items-center gap-3 pb-8 border-b border-white/5 mb-8">
-                            <FontAwesomeIcon icon={faUsers} className="text-blue-tertiary text-xl" />
-                            <p className="uppercase tracking-widest font-bold text-lg">04. Composition de l'Équipe</p>
+                    {/* 04. Équipe */}
+                    <fieldset className="bg-dark-card border-dark-border rounded-box border p-5 md:p-10 mb-6 md:m-7">
+                        <div className="flex items-center gap-3 pb-6 md:pb-8 border-b border-white/5 mb-6 md:mb-8">
+                            <FontAwesomeIcon icon={faUsers} className="text-blue-tertiary text-lg md:text-xl" />
+                            <p className="uppercase tracking-widest font-bold text-base md:text-lg">04. Composition de l'Équipe</p>
                         </div>
-                        <div className="flex flex-col gap-3">
+                        <div className="flex flex-col gap-4">
                             {collaborateurs.map((collab, index) => (
-                                <div key={index} className="bg-black/40 p-5 flex justify-center gap-5 font-bold rounded-box tracking-wider text-sm">
-                                    <select className="bg-black border border-gray-800 p-4 rounded-xl text-white outline-none" value={collab.genre} onChange={(e) => handleCollabChange(index, "genre", e.target.value)}>
-                                        <option value="male">M.</option>
-                                        <option value="female">Mrs.</option>
-                                    </select>
-                                    <input type="text" value={collab.name || ""} onChange={(e) => handleCollabChange(index, "name", e.target.value)} className="bg-black border border-gray-700 p-5 flex-1 rounded-box text-white outline-none focus:border-blue-tertiary" placeholder="NOM COMPLET" />
-                                    {collaborateurs.length > 1 && <button type="button" onClick={() => removeCollaborateur(index)} className="text-red-500 cursor-pointer bg-red-500/10 p-8 text-xl rounded-xl hover:bg-red-500 hover:text-white transition-all"><FontAwesomeIcon icon={faTrash} /></button>}
+                                <div key={index} className="bg-black/40 p-4 md:p-5 flex flex-col md:flex-row items-center gap-3 md:gap-5 font-bold rounded-2xl md:rounded-box tracking-wider text-sm border border-white/5 w-full">
+                                    <div className="flex gap-2 w-full md:w-auto">
+                                        <select
+                                            className="bg-black border border-gray-800 p-4 rounded-xl text-white outline-none flex-1 md:flex-none md:w-24 focus:border-blue-tertiary"
+                                            value={collab.genre}
+                                            onChange={(e) => handleCollabChange(index, "genre", e.target.value)}
+                                        >
+                                            <option value="male">M.</option>
+                                            <option value="female">Mrs.</option>
+                                        </select>
+                                        {collaborateurs.length > 1 && (
+                                            <button type="button" onClick={() => removeCollaborateur(index)} className="md:hidden text-red-500 bg-red-500/10 px-6 rounded-xl border border-red-500/20 flex items-center justify-center">
+                                                <FontAwesomeIcon icon={faTrash} />
+                                            </button>
+                                        )}
+                                    </div>
+                                    <input
+                                        type="text"
+                                        value={collab.name || ""}
+                                        onChange={(e) => handleCollabChange(index, "name", e.target.value)}
+                                        className="bg-black border border-gray-700 p-4 md:p-5 flex-1 rounded-xl md:rounded-box text-white outline-none focus:border-blue-tertiary transition-all uppercase w-full"
+                                        placeholder="NOM COMPLET"
+                                    />
+                                    {collaborateurs.length > 1 && (
+                                        <button type="button" onClick={() => removeCollaborateur(index)} className="hidden md:flex text-red-500 cursor-pointer bg-red-500/10 p-5 text-xl rounded-xl hover:bg-red-500 hover:text-white transition-all items-center justify-center border border-red-500/10">
+                                            <FontAwesomeIcon icon={faTrash} />
+                                        </button>
+                                    )}
                                 </div>
                             ))}
-                            <button type="button" onClick={addCollaborateur} className="mt-4 cursor-pointer self-center bg-blue-tertiary/10 border border-blue-tertiary/40 text-blue-tertiary px-8 py-4 rounded-xl font-bold uppercase text-xs flex items-center gap-2 transition-all"><FontAwesomeIcon icon={faPlus} /> Ajouter un collaborateur</button>
+                            <button type="button" onClick={addCollaborateur} className="mt-4 cursor-pointer self-center w-full md:w-auto bg-blue-tertiary/10 border border-blue-tertiary/40 text-blue-tertiary px-8 py-4 rounded-xl font-bold uppercase text-[10px] md:text-xs flex items-center justify-center gap-2 hover:bg-blue-tertiary hover:text-white transition-all">
+                                <FontAwesomeIcon icon={faPlus} /> AJOUTER UN COLLABORATEUR
+                            </button>
                         </div>
                     </fieldset>
 
-                    <button className="btn self-center cursor-pointer bg-blue-tertiary text-white py-6 px-20 font-bold text-lg rounded-2xl uppercase shadow-glow-blue hover:scale-105 transition-all mt-10 mb-20 flex items-center gap-3" type="submit">
-                        <FontAwesomeIcon icon={faSave} /> Enregistrer les modifications
+                    <button className="btn self-center w-full md:w-auto cursor-pointer bg-blue-tertiary text-white py-5 md:py-6 px-10 md:px-20 font-bold text-base md:text-lg rounded-2xl uppercase shadow-glow-blue hover:scale-105 transition-all mt-6 md:mt-10 mb-20 flex items-center justify-center gap-3" type="submit">
+                        <FontAwesomeIcon icon={faSave} /> Enregistrer
                     </button>
                 </form>
             </div>

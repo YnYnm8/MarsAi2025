@@ -1,7 +1,7 @@
 services:
   bdd:
     image: mysql  # Utilisation de la version Long Term Support
-    restart: always      # Redémarre le conteneur s'il plante
+    restart: always     
     environment:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_USER: user

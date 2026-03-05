@@ -4,9 +4,12 @@ import Film from "../models/Films.mjs";
 import Note from "../models/Note.mjs";
 import { catchError } from "../helpers/errorHandler.mjs";
 import Selection from "../models/Selection.mjs";
-import { notifyFilmNotSelected, notifyFilmSelected, notifyFilmPending } from "../services/notificationService.mjs";
+import {
+  notifyFilmNotSelected,
+  notifyFilmSelected,
+  notifyFilmPending,
+} from "../services/notificationService.mjs";
 import User from "../models/User.mjs";
-
 
 const getStatusFromPlaylistId = (playlistId) => {
   const pId = parseInt(playlistId);
@@ -22,7 +25,7 @@ const getStatusFromPlaylistId = (playlistId) => {
 
 export async function getAllOfficialSelection(req, res) {
   try {
-    const { UserId } = req.body;
+    const UserId = req.user.id;
     if (!UserId) {
       return res.status(401).json({ message: "ユーザーが認証されていません" });
     }
@@ -35,7 +38,9 @@ export async function getAllOfficialSelection(req, res) {
     });
 
     if (!selectedFilms.length) {
-      return res.status(404).json({ message: "公式セレクションが存在しません" });
+      return res
+        .status(404)
+        .json({ message: "公式セレクションが存在しません" });
     }
 
     // Selection に登録
@@ -61,7 +66,8 @@ export async function reviewFilm(req, res) {
   console.log("BODY:", req.body);
   console.log("PARAMS:", req.params);
   try {
-    const { UserId, score, comment, status } = req.body;
+    const UserId = req.user.id;
+    const { score, comment, status } = req.body;
     const { FilmId } = req.params;
 
     const film = await Film.findByPk(FilmId, { include: [{ model: User }] });
@@ -121,7 +127,10 @@ export async function reviewFilm(req, res) {
           await notifyFilmPending({ director: film.User, film, deps });
         }
       } catch (notifError) {
-        console.error("[comiteController] reviewFilm notification error:", notifError.message);
+        console.error(
+          "[comiteController] reviewFilm notification error:",
+          notifError.message,
+        );
       }
     }
     // ---------------------------------------------------------------------
@@ -146,27 +155,34 @@ export async function getAllPlaylists(req, res) {
   }
 }
 
-
 //POST /comite/create/playlist
 //選考委員が自分のプレイリストを作成するAPI
 
 export async function createPlaylist(req, res) {
   try {
-    const { UserId, status, FilmId } = req.body;
-    if (!status) {
-      return res.status(400).json({ message: "プレイリスト名は必須です" });
-    }
+    console.log("BODY:", req.body);
+    console.log("ESTOY EN CREATEPLAYLIST");
+    console.log("USER DESDE MIDDLEWARE:", req.user);
 
+    const { status } = req.body;
+    if (!status) {
+      return res.status(400).json({ message: "status not found" });
+    };
+    const user = req.user.id;
+    if (!user) {
+      return res.status(401).json({ message: "user not found" });
+    };
     // プレイリストの作成
     const newPlaylist = await Playlist.create({
-      UserId,
+      UserId: user,
       status: status,
     });
 
     return res.status(201).json({
-      message: "プレイリストを作成し、フィルムを追加しました",
+      message: "funciona",
       playlist: newPlaylist,
     });
+
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
@@ -199,7 +215,7 @@ export async function getAllRefusedFilms(req, res) {
 // GET/commite/refused/:userid
 
 export async function getRefusedFilmsById(req, res) {
-  const { UserId } = req.param;
+  const UserId = req.user.id;
 
   try {
     // REFUSED プレイリストのIDを取得しておく
@@ -225,8 +241,12 @@ export async function getRefusedFilmsById(req, res) {
 
 export async function addNote(req, res) {
   try {
-    const { UserId, FilmId, score, comment } = req.body;
-
+    const UserId = req.user.id;
+    console.log(UserId);
+    const { FilmId, score, comment } = req.body;
+    if (!UserId) {
+      return res.status(401).json({ message: "error" })
+    }
     const existsNote = await Note.findOne({ where: { UserId, FilmId } });
 
     if (existsNote) {
@@ -240,12 +260,11 @@ export async function addNote(req, res) {
     // 新規作成
     const newNote = await Note.create({ UserId, FilmId, score, comment });
     res.status(201).json(newNote);
-
   } catch (error) {
+
     return catchError(res, error);
   }
 }
-
 
 // プレイリストを削除し中身をTO＿DISCUSSに移動させる
 // PATCH/comite/delitestatus
@@ -270,7 +289,7 @@ export async function deletePlaylist(req, res) {
 
       await PlaylistFilm.update(
         { PlaylistId: 4 }, // TO_DISCUSS
-        { where: { PlaylistId: targetPlaylistId } }
+        { where: { PlaylistId: targetPlaylistId } },
       );
     }
 
@@ -290,7 +309,7 @@ export async function deletePlaylist(req, res) {
 // 映画を公式セレクションに追加
 export async function acceptedFilm(req, res) {
   try {
-    const { UserId } = req.body;
+    const UserId = req.user.id;
     const { FilmId } = req.params;
 
     // // committeeのみ許可
@@ -333,7 +352,7 @@ export async function refuseFilm(req, res) {
   console.log("BODY:", req.body);
   // console.log("targetPlaylistId:", targetPlaylistId);
   try {
-    const { UserId } = req.body;
+    const UserId = req.user.id;
     const { FilmId } = req.params;
 
     // // committeeのみ許可
@@ -369,7 +388,10 @@ export async function refuseFilm(req, res) {
         const deps = { models: req.app.locals.models, io: req.app.locals.io };
         await notifyFilmNotSelected({ director: film.User, film, deps });
       } catch (notifError) {
-        console.error("[comiteController] refuseFilm notification error:", notifError.message);
+        console.error(
+          "[comiteController] refuseFilm notification error:",
+          notifError.message,
+        );
       }
     }
     // ------------------------------------------------------------------------------
@@ -389,7 +411,8 @@ export async function refuseFilm(req, res) {
  */
 export async function modifyPlaylistStatus(req, res) {
   try {
-    const { UserId, FilmId, PlaylistId } = req.body;
+    const UserId = req.user.id;
+    const { FilmId, PlaylistId } = req.body;
     // JWT 前提
 
     if (!FilmId) {
@@ -464,7 +487,8 @@ export async function modifyPlaylistStatus(req, res) {
 
 export async function addFilmToPlaylist(req, res) {
   try {
-    const { UserId, FilmId, targetPlaylistId } = req.body;
+    const UserId = req.user.id;
+    const { FilmId, targetPlaylistId } = req.body;
 
     if (!UserId || !FilmId || !targetPlaylistId) {
       return res.status(400).json({
@@ -510,7 +534,7 @@ export async function getComiteSortHistory(req, res) {
   try {
     // const userId = req.user.id; // JWT 前提
 
-    const { UserId } = req.body; // JWT 前提
+    const UserId = req.user.id;; // JWT 前提
     const history = await PlaylistFilm.findAll({
       where: { UserId },
       include: [
@@ -531,3 +555,4 @@ export async function getComiteSortHistory(req, res) {
     return catchError(res, err);
   }
 }
+
