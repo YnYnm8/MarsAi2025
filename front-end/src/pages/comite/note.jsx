@@ -1,14 +1,11 @@
 import { useState, useEffect, useMemo } from "react";
-import { useParams } from "react-router-dom";
 import ListFilms from "../comite/ListFilms";
-import { FilmComponent } from "../../components/film";
 import { useNavigate } from "react-router-dom";
 import { useRef } from "react";
 import { faTrash, faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 export default function Note() {
-  const { id } = useParams();
   const [films, setFilms] = useState([]);
   const [playlist, setPlaylist] = useState([]);
   const [selectedFilm, setSelectedFilm] = useState(null);
@@ -29,36 +26,21 @@ export default function Note() {
   const fetchFilmAndPlaylists = async () => {
     try {
 
-      const playlistRes = await fetch("http://localhost:3004/comite/allplaylists");
-      
+      const playlistRes = await fetch("http://localhost:3004/comite/allplaylists", { credentials: 'include' });
+
       if (!playlistRes.ok) throw new Error("Failed to fetch playlists");
-      
+
       const playlistsData = await playlistRes.json();
 
-      const playlistsWithName = playlistsData.map(p => ({
-        ...p,
-        name: p.name || p.status || "Sans nom",
-        filmCount: 0
-      }));
+      console.log(playlistsData);
 
-      const filmsData = playlistRes.Film;
-      const filmsWithStatus = filmsData.map(film => {
-        if (!film.PlaylistFilms || film.PlaylistFilms.length === 0) {
-          return { ...film, status: "NOT_WATCHED", playlistName: "なし" };
-        }
+      // State にセッ
+      setPlaylist(playlistsData);
 
-        const latestPlaylistFilm = film.PlaylistFilms[film.PlaylistFilms.length - 1];
-        const playlistObj = playlistsData.find(p => p.id === latestPlaylistFilm.PlaylistId);
-
-        return {
-          ...film,
-          status: playlistObj?.status || "NOT_WATCHED",
-          playlistName: playlistObj?.name || "なし",
-        };
-      });
-
-      setFilms(filmsWithStatus);
-      setPlaylist(playlistsWithName);
+      const allFilms = playlistsData.flatMap(p => p.Films || []);
+      const uniqueFilms = allFilms.filter((film, index, self) =>
+        index == self.findIndex(f => f.id === film.id))
+      setFilms(uniqueFilms)
 
     } catch (error) {
       console.error("Error fetching data:", error);
@@ -67,28 +49,20 @@ export default function Note() {
 
   useEffect(() => {
     fetchFilmAndPlaylists();
-  }, [id]);
+  }, []);
 
   useEffect(() => {
     if (!films.length) return;
     const firstFilm = films.find(film => film.status === filter);
     setSelectedFilm(firstFilm || films[0]);
   }, [filter, films]);
-
+  //PLAYLIST WITH COUNTS
   const playlistsWithCounts = useMemo(() => {
-    if (!playlist.length) return [];
-    return playlist.map(p => {
-      let count;
-      if (p.status === "NOT_WATCHED") {
-        count = films.filter(film => film.status === "NOT_WATCHED").length;
-      } else {
-        count = films.filter(film =>
-          film.PlaylistFilms?.some(pf => pf.PlaylistId === p.id)
-        ).length;
-      }
-      return { ...p, filmCount: count };
-    });
-  }, [films, playlist]);
+    return playlist.map(p => ({
+      ...p,
+      filmCount: p.Films ? p.Films.length : 0
+    }));
+  }, [playlist]);
 
   const handleSavereview = async (clickedStatus) => {
     if (!selectedFilm) return alert("No film selected!");
@@ -116,15 +90,10 @@ export default function Note() {
         throw new Error(errorData.message || "Failed to save review");
       }
 
-      await reviewResponse.json();
-
-
-
       // UI更新
       await fetchFilmAndPlaylists();
       setComment("");
       setValue(0);
-      setStatus(null);
       setShowComment(false);
 
     } catch (error) {
@@ -164,6 +133,8 @@ export default function Note() {
   const handleAddToPlaylistWithNote = async (playlistId) => {
     if (!selectedFilm) return alert("No film selected!");
 
+    console.log(selectedFilm)
+
     try {
       const playlistResponse = await fetch("http://localhost:3004/comite/film/list", {
         method: "POST",
@@ -171,11 +142,13 @@ export default function Note() {
         credentials: "include",
         body: JSON.stringify({
           FilmId: selectedFilm.id,
-          targetPlaylistId: playlistId,
+          targetPlaylistId: playlistId.id,
         }),
       });
       if (!playlistResponse.ok) throw new Error("Failed to add film to playlist");
       await playlistResponse.json();
+
+      console.log(playlistResponse)
 
       const noteResponse = await fetch("http://localhost:3004/comite/note", {
         method: "POST",
@@ -187,9 +160,10 @@ export default function Note() {
           comment: comment,
         }),
       });
-      console.log(noteResponse)
       if (!noteResponse.ok) throw new Error("Fail to add your note to the film");
       await noteResponse.json();
+
+      console.log(noteResponse)
 
       await fetchFilmAndPlaylists();
       setValue(0);
@@ -229,17 +203,20 @@ export default function Note() {
       alert("Error deleting playlist: " + error.message);
     }
   };
+  //USEMEMO
   const filteredFilms = useMemo(() => {
-    if (!searchTerm.trim()) return films;
+  const activePlaylist = playlist.find(p => p.status === filter);
+  
+  const baseFilms = activePlaylist?.Films || [];
 
-    const lowerSearch = searchTerm.toLowerCase();
+  if (!searchTerm.trim()) return baseFilms;
+  const lowerSearch = searchTerm.toLowerCase();
+  return baseFilms.filter((film) =>
+    film.title?.toLowerCase().includes(lowerSearch) ||
+    film.id?.toString().includes(lowerSearch)
+  );
+}, [playlist, filter, searchTerm]);
 
-    return films.filter((film) => {
-      const matchTitle = film.title?.toLowerCase().includes(lowerSearch);
-      const matchId = film.id?.toString().includes(lowerSearch);
-      return matchTitle || matchId;
-    });
-  }, [films, searchTerm]);
   const handleSaveComment = async () => {
     if (!selectedFilm) return alert("Aucun film sélectionné !");
     if (!comment.trim()) return alert("Veuillez entrer un commentaire.");
@@ -338,7 +315,7 @@ export default function Note() {
 
           {/* 映画リスト */}
           <ListFilms
-            films={films}
+            films={filteredFilms}
             filter={filter}
             searchTerm={searchTerm}
             selectedFilm={selectedFilm}
@@ -529,7 +506,7 @@ export default function Note() {
               {/* 横並びのボタン */}
               <div className="flex flex-wrap gap-4">
                 <button
-                  onClick={() => handleSavereview("selected")}
+                  onClick={() => handleSavereview("SELECTED")}
                   disabled={!value || value < 1}
                   className={`flex-1 px-4 py-2 rounded-lg text-sm font-semibold text-white transition-colors ${!value || value < 1
                     ? "bg-blue-800/50 cursor-not-allowed"
@@ -540,7 +517,7 @@ export default function Note() {
                 </button>
 
                 <button
-                  onClick={() => handleSavereview("rejected")}
+                  onClick={() => handleSavereview("REJECTED")}
                   disabled={!value || value < 1}
                   className={`flex-1 px-4 py-2 rounded-lg text-sm font-semibold text-white transition-colors ${!value || value < 1
                     ? "bg-blue-600/50 cursor-not-allowed"
@@ -551,7 +528,7 @@ export default function Note() {
                 </button>
 
                 <button
-                  onClick={() => handleSavereview("pending")}
+                  onClick={() => handleSavereview("PENDING")}
                   disabled={!value || value < 1}
                   className={`flex-1 px-4 py-2 rounded-lg text-sm font-semibold text-white transition-colors ${!value || value < 1
                     ? "bg-blue-400/50 cursor-not-allowed"
