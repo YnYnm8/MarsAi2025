@@ -69,7 +69,9 @@ export async function reviewFilm(req, res) {
   try {
     const UserId = req.user.id;
     const { score, comment, status } = req.body;
-    const { FilmId } = req.params;
+    const FilmId = req.params.FilmId || req.params.id;
+
+    if (!FilmId) return res.status(400).json({ message: "ID manquant" });
 
     const film = await Film.findByPk(FilmId, { include: [{ model: User }] });
     if (!film) {
@@ -89,31 +91,31 @@ export async function reviewFilm(req, res) {
     });
 
     // ② status → PlaylistId に変換
-    let PlaylistId;
-    if (status === "selected") PlaylistId = 2;
-    else if (status === "rejected") PlaylistId = 3;
-    else if (status === "pending") PlaylistId = 4;
-    else PlaylistId = 1;
-
-    // ③ すでに登録されているか確認
-    const existing = await PlaylistFilm.findOne({
-      where: { FilmId },
+    let targetPlaylist = await Playlist.findOne({
+      where: {
+        status: status.toUpperCase(), // "SELECTED", "REJECTED", etc.
+        UserId: UserId
+      }
     });
 
-    if (existing) {
-      // 更新
-      await existing.update({ PlaylistId });
-    } else {
-      // 新規作成
-      await PlaylistFilm.create({
-        UserId,
-        FilmId,
-        PlaylistId,
-      });
+    if (!targetPlaylist) {
+      targetPlaylist = await Playlist.create({ status: status.toUpperCase(), UserId });
     }
-    // synchronisation film status
-    film.status = getStatusFromPlaylistId(PlaylistId);
+
+
+    // ③ すでに登録されているか確認
+    const [playlistFilm, created] = await PlaylistFilm.findOrCreate({
+      where: { FilmId, UserId },
+      defaults: { PlaylistId: targetPlaylist.id }
+    });
+
+    if (!created) {
+      await playlistFilm.update({ PlaylistId: targetPlaylist.id });
+    }
+
+    film.status = status.toLowerCase();
     await film.save();
+
 
     // Notification si REFUSED -----------------------------------------
     // ⚠️ Pas de notif FILM_SELECTED ici — réservé à PATCH /admin/lock/selection
@@ -135,18 +137,35 @@ export async function reviewFilm(req, res) {
       }
     }
     // ---------------------------------------------------------------------
-
-    return res.json({ message: "レビューとステータスを保存しました" });
+    return res.json({
+      message: "レビューとステータスを保存しました",
+      playlistName: targetPlaylist.status,
+      playlistId: targetPlaylist.id
+    });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 }
 
-//GET /comite/allplaylists
-//プレイリストを取得するためのもの
+
 //GET /comite/allplaylists
 //プレイリストを取得するためのもの
 export async function getAllPlaylists(req, res) {
+  try {
+    const playlists = await Playlist.findAll();
+
+    if (!playlists)
+      return res.status(404).json({ message: "リストが存在しません" });
+    res.json(playlists);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+}
+
+//GET /comite/allplaylistsbyuserid
+//プレイリストを取得するためのもの
+
+export async function getAllPlaylistsByUserId(req, res) {
   try {
     const userId = req.user.id;
     const DEFAULT_LISTS = ["NOT_WATCHED", "PENDING", "SELECTED", "REJECTED"];
@@ -297,7 +316,6 @@ export async function getRefusedFilmsById(req, res) {
 export async function addNote(req, res) {
   try {
     const UserId = req.user.id;
-    console.log(UserId);
     const { FilmId, score, comment } = req.body;
     if (!UserId) {
       return res.status(401).json({ message: "error" })

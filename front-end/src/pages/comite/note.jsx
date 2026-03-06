@@ -26,13 +26,12 @@ export default function Note() {
   const fetchFilmAndPlaylists = async () => {
     try {
 
-      const playlistRes = await fetch("http://localhost:3004/comite/allplaylists", { credentials: 'include' });
+      const playlistRes = await fetch("http://localhost:3004/comite/allplaylistsbyuserid", { credentials: 'include' });
 
       if (!playlistRes.ok) throw new Error("Failed to fetch playlists");
 
       const playlistsData = await playlistRes.json();
 
-      console.log(playlistsData);
 
       // State にセッ
       setPlaylist(playlistsData);
@@ -133,7 +132,6 @@ export default function Note() {
   const handleAddToPlaylistWithNote = async (playlistId) => {
     if (!selectedFilm) return alert("No film selected!");
 
-    console.log(selectedFilm)
 
     try {
       const playlistResponse = await fetch("http://localhost:3004/comite/film/list", {
@@ -142,13 +140,12 @@ export default function Note() {
         credentials: "include",
         body: JSON.stringify({
           FilmId: selectedFilm.id,
-          targetPlaylistId: playlistId.id,
+          targetPlaylistId: playlistId,
         }),
       });
       if (!playlistResponse.ok) throw new Error("Failed to add film to playlist");
       await playlistResponse.json();
 
-      console.log(playlistResponse)
 
       const noteResponse = await fetch("http://localhost:3004/comite/note", {
         method: "POST",
@@ -163,7 +160,6 @@ export default function Note() {
       if (!noteResponse.ok) throw new Error("Fail to add your note to the film");
       await noteResponse.json();
 
-      console.log(noteResponse)
 
       await fetchFilmAndPlaylists();
       setValue(0);

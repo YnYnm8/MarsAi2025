@@ -20,7 +20,9 @@ export default function ComiteProfile() {
       if (!filmRes.ok) throw new Error("Failed to fetch film data");
       const filmsData = await filmRes.json();
 
-      const playlistRes = await fetch("http://localhost:3004/comite/allplaylists");
+      const playlistRes = await fetch("http://localhost:3004/comite/allplaylistsbyuserid", {
+        credentials: "include",
+      });
       if (!playlistRes.ok) throw new Error("Failed to fetch playlists");
       const playlistsData = await playlistRes.json();
 

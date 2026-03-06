@@ -12,6 +12,7 @@ import {
   getAllPlaylists,
   deletePlaylist,
   getAllOfficialSelection,
+  getAllPlaylistsByUserId,
   // modifyPlaylistStatus,
   // getOfficialSelectionById,
   // getRefusedFilmsById,
@@ -26,6 +27,8 @@ const comiteRouter = express.Router()
 comiteRouter.post("/select",authMiddleware, roleMiddleware('committee'),getAllOfficialSelection);
 comiteRouter.post("/review/:FilmId", authMiddleware, roleMiddleware('committee'),reviewFilm);
 comiteRouter.get("/allplaylists",authMiddleware,roleMiddleware('committee' || "admin"), getAllPlaylists)
+comiteRouter.get("/allplaylistsbyuserid",authMiddleware,roleMiddleware('committee' || "admin"), getAllPlaylistsByUserId)
+
 // Get playlist by id
 comiteRouter.post("/create/playlist",authMiddleware,roleMiddleware('committee'), createPlaylist);
 comiteRouter.get("/refused",authMiddleware, roleMiddleware('committee'),getAllRefusedFilms);

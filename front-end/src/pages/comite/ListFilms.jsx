@@ -10,7 +10,6 @@ export default function ListFilms({ films = [], searchTerm = "", filter, selecte
       film.id?.toString().includes(lowerSearch)
     );
   });
-
   if (filteredBySearch.length === 0) {
     return <p className="text-gray-500 text-sm px-4">Aucun film trouvé.</p>;
   }
