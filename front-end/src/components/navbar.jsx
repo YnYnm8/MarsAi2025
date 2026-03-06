@@ -274,7 +274,16 @@ const TopNavbar = () => {
                 <button onClick={handleLogout} className="text-red-600 hover:text-red-800 cursor-pointer transition-colors font-bold uppercase text-xs tracking-widest">
                   {t("navbar.logout")}
                 </button>
+
+                <button onClick={() => { navigate("/comite/note") }} className="text-left cursor-pointer text-gray-800 hover:text-blue-500 active:text-blue-600 transition-colors font-bold uppercase text-sm tracking-widest">
+                  comite
+                </button>
+                <button onClick={() => { navigate("/admin/dashboard") }} className="text-left cursor-pointer text-gray-800 hover:text-blue-500 active:text-blue-600 transition-colors font-bold uppercase text-sm tracking-widest">
+                  admin
+                </button>
+
               </>
+
             ) : (
               <>
                 <button onClick={() => navigate("/register")} className="text-gray-800 cursor-pointer hover:text-blue-500 transition-colors font-bold uppercase text-xs tracking-widest">
@@ -346,12 +355,6 @@ const TopNavbar = () => {
           </button>
           <button onClick={() => { navigate("/jury"); setMenuOpen(false); }} className="text-left cursor-pointer text-gray-800 hover:text-blue-500 active:text-blue-600 transition-colors font-bold uppercase text-sm tracking-widest">
             {t("navbar.jury")}
-          </button>
-          <button onClick={() => { navigate("/comite/note") }} className="text-left cursor-pointer text-gray-800 hover:text-blue-500 active:text-blue-600 transition-colors font-bold uppercase text-sm tracking-widest">
-            comite
-          </button>
-          <button onClick={() => { navigate("/admin/dashboard") }} className="text-left cursor-pointer text-gray-800 hover:text-blue-500 active:text-blue-600 transition-colors font-bold uppercase text-sm tracking-widest">
-            admin
           </button>
 
           <hr className="border-gray-200" />
