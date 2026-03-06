@@ -22,7 +22,7 @@ import { WorkshopSeed } from './seeds/workshopSeed.mjs';
 import publicRoutes from './routes/publicRoutes.mjs';
 import contctRoutes from './routes/contactRoute.mjs';
 import notificationRoute from "./routes/notificationRoutes.mjs";
-
+import http from "http";
 dotenv.config();
 
 const __filename = fileURLToPath(import.meta.url);
@@ -33,7 +33,6 @@ const FRONTEND_URL = 'http://localhost:8004'.replace(/\/$/, '');
 console.log({FRONTEND_URL});
 // Créer le serveur HTTP à partir d'Express
 const httpServer = createServer(app);
-
 // Initialiser Socket.io sur le serveur HTTP
 const io = new Server(httpServer, {
   cors: {

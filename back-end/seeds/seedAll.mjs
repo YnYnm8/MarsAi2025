@@ -1,5 +1,4 @@
 import Film from "../models/Films.mjs";
-import Playlist from "../models/Playlist.mjs";
 import Selection from "../models/Selection.mjs";
 import File from "../models/File.mjs";
 import Price from "../models/Price.mjs";
@@ -8,7 +7,6 @@ import Notification from "../models/Notification.mjs";
 import Annotation from "../models/Annotation.mjs";
 import FilmSponsor from "../models/FilmSponsor.mjs";
 // import Note from "../models/Note.mjs";
-import PlaylistFilm from "../models/PlaylistFilm.mjs";
 export async function seedAll() {
     try {
         // 1. CRÉATION DES SPONSORS
@@ -196,22 +194,7 @@ export async function seedAll() {
             include: [File],
             returning: true
         })
-        const playlists = await Playlist.bulkCreate([
-            { PlaylistId: 1, status: "NOT_WATCHED" },
-            { PlaylistId: 2, status: "selected" },
-            { PlaylistId: 3, status: "rejected" },
-            { PlaylistId: 4, status: "pending" },
-        ]);
-        await PlaylistFilm.bulkCreate([
-            { PlaylistId: 1, FilmId: films[0].id },
-            { PlaylistId: 1, FilmId: films[1].id },
-            { PlaylistId: 1, FilmId: films[2].id },
-            { PlaylistId: 1, FilmId: films[3].id },
-            { PlaylistId: 1, FilmId: films[4].id },
-            { PlaylistId: 1, FilmId: films[5].id },
-            { PlaylistId: 1, FilmId: films[6].id },
-            { PlaylistId: 1, FilmId: films[7].id },
-        ]);
+
         const prices = await Price.bulkCreate([
             { FilmId: films[0].id, SponsorId: sponsors[0].id },
             { FilmId: films[1].id, SponsorId: sponsors[1].id }

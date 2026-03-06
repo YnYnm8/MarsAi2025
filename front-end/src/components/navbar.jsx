@@ -12,29 +12,29 @@ import { useAuth } from "../context/authContext";
 const API = "http://localhost:3004";
 
 const TYPE_ICONS = {
-  FILM_SELECTED:           { icon: "🏆" },
-  FILM_APPROVED:           { icon: "✅" },
-  FILM_REJECTED_ADMIN:     { icon: "⚠️" },
-  FILM_BANNED:             { icon: "🚫" },
+  FILM_SELECTED: { icon: "🏆" },
+  FILM_APPROVED: { icon: "✅" },
+  FILM_REJECTED_ADMIN: { icon: "⚠️" },
+  FILM_BANNED: { icon: "🚫" },
   FILM_MODIFICATION_ASKED: { icon: "📝" },
-  FILM_MODIFICATION_OK:    { icon: "✅" },
-  FILM_MODIFICATION_KO:    { icon: "❌" },
-  FILM_SUBMITTED:          { icon: "🎬" },
-  FILM_NOT_SELECTED:       { icon: "📋" },
-  FILMS_ASSIGNED:          { icon: "📋" },
-  SELECTION_OPENED:        { icon: "🟢" },
-  SELECTION_CLOSED:        { icon: "🔴" },
-  TICKET_CREATED:          { icon: "🚨" },
-  NEW_FILM_PENDING:        { icon: "⏳" },
-  MODIFICATION_REQUEST:    { icon: "📝" },
-  SYSTEM:                  { icon: "🔔" },
-  DEFAULT:                 { icon: "🔔" },
+  FILM_MODIFICATION_OK: { icon: "✅" },
+  FILM_MODIFICATION_KO: { icon: "❌" },
+  FILM_SUBMITTED: { icon: "🎬" },
+  FILM_NOT_SELECTED: { icon: "📋" },
+  FILMS_ASSIGNED: { icon: "📋" },
+  SELECTION_OPENED: { icon: "🟢" },
+  SELECTION_CLOSED: { icon: "🔴" },
+  TICKET_CREATED: { icon: "🚨" },
+  NEW_FILM_PENDING: { icon: "⏳" },
+  MODIFICATION_REQUEST: { icon: "📝" },
+  SYSTEM: { icon: "🔔" },
+  DEFAULT: { icon: "🔔" },
 };
 
 const useNotifications = (isLoggedIn) => {
   const [notifications, setNotifications] = useState([]);
-  const [unreadCount, setUnreadCount]     = useState(0);
-  const [loading, setLoading]             = useState(false);
+  const [unreadCount, setUnreadCount] = useState(0);
+  const [loading, setLoading] = useState(false);
   const socketRef = useRef(null);
 
   const fetchNotifications = useCallback(async () => {
@@ -110,7 +110,7 @@ const useNotifications = (isLoggedIn) => {
 
 const NotificationBell = ({ isLoggedIn }) => {
   const [open, setOpen] = useState(false);
-  const panelRef        = useRef(null);
+  const panelRef = useRef(null);
   const { notifications, unreadCount, loading, markAllRead } = useNotifications(isLoggedIn);
 
   useEffect(() => {
@@ -174,15 +174,13 @@ const NotificationBell = ({ isLoggedIn }) => {
               return (
                 <div
                   key={notif.id}
-                  className={`flex gap-3 px-4 py-3 hover:bg-gray-50 transition-colors ${
-                    !notif.isRead ? "bg-blue-50/60" : ""
-                  }`}
+                  className={`flex gap-3 px-4 py-3 hover:bg-gray-50 transition-colors ${!notif.isRead ? "bg-blue-50/60" : ""
+                    }`}
                 >
                   <span className="text-lg shrink-0 mt-0.5">{icon}</span>
                   <div className="flex-1 min-w-0">
-                    <p className={`text-xs font-semibold leading-tight ${
-                      !notif.isRead ? "text-gray-900" : "text-gray-600"
-                    }`}>
+                    <p className={`text-xs font-semibold leading-tight ${!notif.isRead ? "text-gray-900" : "text-gray-600"
+                      }`}>
                       {notif.title}
                     </p>
                     <p className="text-xs text-gray-500 mt-0.5 line-clamp-2 leading-relaxed">
@@ -212,9 +210,9 @@ const NotificationBell = ({ isLoggedIn }) => {
 };
 
 const TopNavbar = () => {
-  const navigate                      = useNavigate();
-  const [menuOpen, setMenuOpen]       = useState(false);
-  const { t, i18n }                   = useTranslation("common");
+  const navigate = useNavigate();
+  const [menuOpen, setMenuOpen] = useState(false);
+  const { t, i18n } = useTranslation("common");
   const { isLoggedIn, setIsLoggedIn } = useAuth();
 
   const handleLogout = async () => {
@@ -235,9 +233,9 @@ const TopNavbar = () => {
   const toggleLanguage = () => {
     const newLang =
       i18n.language === "fr" ? "en" :
-      i18n.language === "en" ? "jp" :
-      i18n.language === "jp" ? "sp" :
-      i18n.language === "sp" ? "cr" : "fr";
+        i18n.language === "en" ? "jp" :
+          i18n.language === "jp" ? "sp" :
+            i18n.language === "sp" ? "cr" : "fr";
     i18n.changeLanguage(newLang);
   };
 
@@ -276,7 +274,16 @@ const TopNavbar = () => {
                 <button onClick={handleLogout} className="text-red-600 hover:text-red-800 cursor-pointer transition-colors font-bold uppercase text-xs tracking-widest">
                   {t("navbar.logout")}
                 </button>
+
+                <button onClick={() => { navigate("/comite/note") }} className="text-left cursor-pointer text-gray-800 hover:text-blue-500 active:text-blue-600 transition-colors font-bold uppercase text-sm tracking-widest">
+                  comite
+                </button>
+                <button onClick={() => { navigate("/admin/dashboard") }} className="text-left cursor-pointer text-gray-800 hover:text-blue-500 active:text-blue-600 transition-colors font-bold uppercase text-sm tracking-widest">
+                  admin
+                </button>
+
               </>
+
             ) : (
               <>
                 <button onClick={() => navigate("/register")} className="text-gray-800 cursor-pointer hover:text-blue-500 transition-colors font-bold uppercase text-xs tracking-widest">
@@ -293,10 +300,10 @@ const TopNavbar = () => {
             <img
               src={
                 i18n.language === "en" ? DrapeauEn :
-                i18n.language === "jp" ? Drapeaujp :
-                i18n.language === "sp" ? DrapeauSp :
-                i18n.language === "cr" ? DrapeauCr :
-                DrapeauFr
+                  i18n.language === "jp" ? Drapeaujp :
+                    i18n.language === "sp" ? DrapeauSp :
+                      i18n.language === "cr" ? DrapeauCr :
+                        DrapeauFr
               }
               alt="Changer de langue"
               className="h-8 w-11 object-cover rounded-sm shadow-sm"
@@ -317,16 +324,14 @@ const TopNavbar = () => {
       </nav>
 
       <div
-        className={`fixed inset-0 bg-black/40 backdrop-blur-sm transition-opacity duration-300 z-[60] ${
-          menuOpen ? "opacity-100 visible" : "opacity-0 invisible"
-        }`}
+        className={`fixed inset-0 bg-black/40 backdrop-blur-sm transition-opacity duration-300 z-[60] ${menuOpen ? "opacity-100 visible" : "opacity-0 invisible"
+          }`}
         onClick={() => setMenuOpen(false)}
       />
 
       <div
-        className={`fixed top-0 right-0 h-full w-64 bg-white shadow-xl z-[70] transform transition-transform duration-300 ${
-          menuOpen ? "translate-x-0" : "translate-x-full"
-        }`}
+        className={`fixed top-0 right-0 h-full w-64 bg-white shadow-xl z-[70] transform transition-transform duration-300 ${menuOpen ? "translate-x-0" : "translate-x-full"
+          }`}
       >
         <div className="p-6 flex justify-between items-center border-b border-gray-100">
           <span className="font-bold text-lg text-[#1F66B1]">MARS.A.I</span>
@@ -373,6 +378,7 @@ const TopNavbar = () => {
               <button onClick={() => { navigate("/register"); setMenuOpen(false); }} className="text-left cursor-pointer text-gray-800 hover:text-blue-500 active:text-blue-600 transition-colors font-bold uppercase text-sm tracking-widest">
                 {t("navbar.register")}
               </button>
+
               <button onClick={() => { navigate("/login"); setMenuOpen(false); }} className="text-left cursor-pointer text-gray-800 hover:text-blue-500 active:text-blue-600 transition-colors font-bold uppercase text-sm tracking-widest">
                 {t("navbar.login")}
               </button>
