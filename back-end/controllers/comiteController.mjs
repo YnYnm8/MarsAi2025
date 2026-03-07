@@ -31,7 +31,7 @@ export async function getAllOfficialSelection(req, res) {
       return res.status(401).json({ message: "ユーザーが認証されていません" });
     }
 
-    const selectedPlaylistId = 2; // ACCEPTED
+    const selectedPlaylistId = 2; // selected
     const selectedFilms = await PlaylistFilm.findAll({
       where: { UserId, PlaylistId: selectedPlaylistId },
       include: [{ model: Film }],
@@ -62,6 +62,7 @@ export async function getAllOfficialSelection(req, res) {
     return catchError(res, err);
   }
 }
+
 export async function reviewFilm(req, res) {
   console.log("=== reviewFilm START ===");
   console.log("BODY:", req.body);
@@ -210,17 +211,27 @@ export async function getAllPlaylistsByUserId(req, res) {
         {
           model: Film,
           include: [
-            {
-              model: File,
-              as: 'Files',
-              attributes: ['id', 'film_url', 'poster_url', 'galerie_url']
-            }
+           {
+          model: File,
+          as: "Files",
+          attributes: ["id", "film_url", "poster_url", "galerie_url"]
+        },
+        {
+          model: User,
+          attributes: ["id", "firstName", "lastName", "country","socialNetworks"]
+        },
+        {
+          model: Note,
+          as: "NotesDirect",
+          where: { UserId: userId },
+          required: false,
+          attributes: ["score", "comment"]
+        }
           ]
         }
       ],
       order: [['id', 'ASC']]
     });
-
     return res.json(playlists);
 
   } catch (err) {
