@@ -119,20 +119,24 @@ export async function reviewFilm(req, res) {
 
     // Notification si REFUSED -----------------------------------------
     // ⚠️ Pas de notif FILM_SELECTED ici — réservé à PATCH /admin/lock/selection
-    if (status === "rejected" && film.User) {
+   if (film.User) {
       try {
         const deps = { models: req.app.locals.models, io: req.app.locals.io };
-        if (status === "selected") {
-          await notifyFilmSelected({ director: film.User, film, deps });
-        } else if (status === "rejected") {
-          await notifyFilmNotSelected({ director: film.User, film, deps });
-        } else if (status === "pending") {
-          await notifyFilmPending({ director: film.User, film, deps });
+        switch (status.toLowerCase()) {
+          case "selected":
+            await notifyFilmSelected({ director: film.User, film, deps });
+            break;
+          case "rejected":
+            await notifyFilmNotSelected({ director: film.User, film, deps });
+            break;
+          case "pending":
+            await notifyFilmPending({ director: film.User, film, deps });
+            break;
         }
       } catch (notifError) {
         console.error(
           "[comiteController] reviewFilm notification error:",
-          notifError.message,
+          notifError.message
         );
       }
     }
