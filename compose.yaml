@@ -28,14 +28,14 @@ services:
       - bdd
 
   front:
-    # image: 
+    image: luzrivera/mars-front
     build: ./front-end
     ports:
       - "8004:80"
 
 
   back:
-    # image:
+    image: luzrivera/mars-back
     build: ./back-end
     ports:
       - "3004:3000"
