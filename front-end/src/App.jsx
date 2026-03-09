@@ -45,7 +45,7 @@ function App() {
           <Route path="/jury" element={<Jury />} />
           <Route path="/top-rated" element={<Gallery />} />
           <Route path="/contact" element={<Contact />} />
-          <Route path="/reservation" element={<Reservation />} />
+          <Route path="/programs" element={<Reservation />} />
 
           {/* FILMS*/}
           <Route path="/films/:id" element={<FilmsDetails />} />

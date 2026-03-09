@@ -7,7 +7,7 @@ import VideoUpload from "../../components/videoPreview";
 import { useNavigate } from "react-router";
 import { Toast } from "../../components/toastMessage";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPlus, faTrash, faFilm, faMicrochip, faSave, faUsers, faCloudUploadAlt } from '@fortawesome/free-solid-svg-icons';
+import { faInfo, faTrash, faFilm, faUser, faShieldHeart, faCloudArrowUp, faBookOpen, faCircleInfo} from '@fortawesome/free-solid-svg-icons';
 
 export default function PostFilm() {
     const { t } = useTranslation("formulaireF");
@@ -168,7 +168,8 @@ export default function PostFilm() {
             <div className="flex flex-col p-4 md:m-8 flex-wrap">
                 <div className="font-display text-center flex items-center flex-col">
                     <div className="flex uppercase font-extrabold p-5">
-                        <img src="src/assets/icon-stars.png" className="w-6 md:w-8 pr-2" alt="" />
+
+                        <FontAwesomeIcon icon={faCircleInfo} className="text-blue-tertiary text-lg md:text-xl" />
                         <p className="text-brand-blue text-sm md:text-base tracking-wider">{t("header.callForProjects")}</p>
                     </div>
 
@@ -187,6 +188,8 @@ export default function PostFilm() {
                     {/* 01. Identité */}
                     <fieldset className="fieldset bg-dark-card border-dark-border rounded-box m-2 md:m-7 border p-6 md:p-10">
                         <div className="flex pb-5">
+                            <FontAwesomeIcon icon={faFilm} className="text-orange pt-1" />
+
                             <p className="uppercase font-display pl-2 tracking-widest font-bold text-lg">{t("step1.title")}</p>
                         </div>
 
@@ -211,11 +214,12 @@ export default function PostFilm() {
                     {/* 02. Déclaration IA */}
                     <fieldset className="bg-dark-card text-white p-6 md:p-10 fieldset border-dark-border rounded-box m-2 md:m-7 border pt-10 md:pt-15">
                         <div className="flex border-b border-gray-700 pb-5">
+                            <FontAwesomeIcon icon={faBookOpen} />
                             <p className="uppercase tracking-widest font-bold text-lg">{t("step2.title")}</p>
                         </div>
 
                         <div className="flex flex-col md:flex-row gap-5 md:gap-10 justify-center bg-black/40 p-5 rounded-box border border-gray-700 mt-10">
-                            <img src="src/assets/icon-info.png" className="h-10 w-10 object-contain mx-auto md:mx-0" alt="" />
+                            <FontAwesomeIcon icon={faInfo} className="text-blue-tertiary text-lg md:text-xl" />
                             <p className="uppercase font-bold text-sm md:text-base tracking-wider text-center md:text-left">
                                 {t("step2.transparencyText")}
                             </p>
@@ -259,6 +263,7 @@ export default function PostFilm() {
                     {/* 03. Livrables */}
                     <fieldset className="fieldset tracking-widest uppercase bg-dark-card border-dark-border rounded-box text-base font-bold m-2 md:m-7 border p-6 md:p-10">
                         <div className="flex gap-3 pb-7">
+                            <FontAwesomeIcon icon={faCloudArrowUp} />
                             <p className="uppercase font-display pt-1 text-lg tracking-widest font-bold">
                                 {t("step3.title")}
                             </p>
@@ -306,7 +311,7 @@ export default function PostFilm() {
                     {/* 04. Équipe */}
                     <fieldset className="fieldset bg-dark-card uppercase border-dark-border rounded-box m-2 md:m-7 border p-6 md:p-10">
                         <div className="flex gap-5 mb-5">
-                            <img src="src/assets/avatar.png" className="w-10 h-10 md:w-12 md:h-12 rounded-box bg-white/5 p-1" alt="" />
+                            <FontAwesomeIcon icon={faUser} />
                             <p className="uppercase pt-2 tracking-widest font-bold text-lg">{t("step4.title")}</p>
                         </div>
                         <div className="flex flex-col gap-4">
@@ -332,7 +337,7 @@ export default function PostFilm() {
 
                     {/* Footer Info */}
                     <div className="bg-blue-tertiary/10 flex flex-col md:flex-row items-center md:items-start text-center md:text-left gap-5 md:gap-7 rounded-2xl md:rounded-4xl p-6 md:p-10 m-2 md:m-7 tracking-widest uppercase border border-blue-tertiary/20">
-                        <img src="src/assets/icon-protection.png" className="h-10 w-10 object-contain" alt="" />
+                        <FontAwesomeIcon icon={faShieldHeart} />
                         <div className="flex flex-col justify-between gap-3 md:gap-5 text-white/80">
                             <p className="font-extrabold text-sm md:text-base">{t("footer.certificateTitle")}</p>
                             <p className="normal-case md:uppercase text-xs leading-relaxed">{t("footer.certificateText")}</p>
