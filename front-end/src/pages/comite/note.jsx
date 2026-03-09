@@ -50,6 +50,7 @@ export default function Note() {
     fetchFilmAndPlaylists();
   }, []);
 
+
   useEffect(() => {
     if (!films.length) return;
     const firstFilm = films.find(film => film.status === filter);
@@ -100,7 +101,6 @@ export default function Note() {
       alert("Error: " + error.message);
     }
   };
-
   const handleCreateList = async () => {
     if (!newListName.trim()) return alert("Please enter a name for the list");
 
@@ -200,9 +200,10 @@ export default function Note() {
     }
   };
   //USEMEMO
-  const filteredFilms = useMemo(() => {
+const filteredFilms = useMemo(() => {
+  if (!playlist || !Array.isArray(playlist)) return [];
+
   const activePlaylist = playlist.find(p => p.status === filter);
-  
   const baseFilms = activePlaylist?.Films || [];
 
   if (!searchTerm.trim()) return baseFilms;
@@ -336,7 +337,9 @@ export default function Note() {
               Sélectionnez un film dans la liste à gauche
             </p>
             <div className="mt-2 flex flex-col md:flex-row justify-center gap-2 md:gap-6 text-sm">
-              <span className="font-bold">{films.filter(f => f.status === "NOT_WATCHED").length}</span>
+              <span className="font-bold">
+                {playlistsWithCounts.find(p => p.status === "NOT_WATCHED")?.filmCount || 0}
+              </span>
               <span className="text-gray-500 font-semibold">FILM A NOTER</span>
               <span className="text-[#FF5845] font-semibold">15 JUIN 2026</span>
               <span className="text-gray-500 font-semibold">CLUTURE</span>
@@ -402,25 +405,40 @@ export default function Note() {
           </div>
 
           {/* タイトル・監督 */}
-          <div className="flex flex-col md:flex-row justify-between items-start mb-4">
-            <div>
-              <h2 className="text-lg font-bold text-[#246BAD]">
-                Le Nom de Film : {selectedFilm?.title || "SYNTHETICA : title"}
+          <div className="flex flex-col md:flex-row justify-between items-start mb-6 p-6 bg-white shadow-lg rounded-xl border border-gray-200">
+            <div className="flex-1">
+              <h2 className="text-2xl font-bold text-[#246BAD] mb-3">
+                {selectedFilm?.title || "SYNTHETICA : title"}
               </h2>
-              <div className="flex flex-wrap gap-2 text-sm text-gray-600 mt-1">
+
+              <div className="flex flex-wrap gap-4 text-sm text-gray-700 mb-4">
                 <span className="font-semibold">
-                  Directeur :{selectedFilm?.User?.firstName || "Director "} {selectedFilm?.User?.lastName || ""}
+                  Directeur: {selectedFilm?.User?.firstName || "Director"} {selectedFilm?.User?.lastName || ""}
+                </span>
+                <span className="font-semibold">
+                  Origin: {selectedFilm?.User?.country || "Country"}
                 </span>
               </div>
-              <p className="text-sm text-gray-600 font-semibold">
-                Origin :{selectedFilm?.User?.country || "Country "}
+
+              <p className="text-gray-600 mb-2">
+                <span className="font-semibold">Synopsis:</span> {selectedFilm?.Films?.[0]?.description || "No description"}
               </p>
 
+              <p className="text-gray-600 mb-2">
+                <span className="font-semibold">Generate AI:</span> {selectedFilm?.Films?.[0]?.generateAi || "N/A"}
+              </p>
+              <p className="text-gray-600 mb-2">
+                <span className="font-semibold">SocialMedia:</span> {selectedFilm?.Films?.[0]?.socialWorks || "N/A"}
+              </p>
 
+              <p className="text-gray-600 mb-2">
+                <span className="font-semibold">Collaborateur:</span> {selectedFilm?.User?.collaborateur || "N/A"}
+              </p>
             </div>
-            <div className="text-xl font-bold mt-2 md:mt-0">
+
+            <div className="mt-4 md:mt-0 text-3xl font-bold text-gray-800 flex items-baseline">
               {value}
-              <span className="text-sm">/10</span>
+              <span className="text-sm text-gray-500 ml-1">/10</span>
             </div>
           </div>
 
