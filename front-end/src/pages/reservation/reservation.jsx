@@ -29,7 +29,7 @@ function Reservation() {
                     <input 
                       type="text" 
                       placeholder="NOM" 
-                      className="bg-white border border-black p-3 rounded-xl w-full text-sm outline-none focus:ring-2 focus:ring-[#246BAD] transition-all" 
+                      className="bg-white border border-black p-3 text-gray-600 rounded-xl w-full text-sm outline-none focus:ring-2 focus:ring-[#246BAD] transition-all" 
                     />
                   </div>
                   <div className="flex flex-col gap-1.5">
@@ -37,7 +37,7 @@ function Reservation() {
                     <input 
                       type="text" 
                       placeholder="PRÉNOM" 
-                      className="bg-white border border-black p-3 rounded-xl w-full text-sm outline-none focus:ring-2 focus:ring-[#246BAD] transition-all" 
+                      className="bg-white border border-black p-3 text-gray-600 rounded-xl w-full text-sm outline-none focus:ring-2 focus:ring-[#246BAD] transition-all" 
                     />
                   </div>
                 </div>
@@ -48,7 +48,7 @@ function Reservation() {
                     <input 
                       type="email" 
                       placeholder="EMAIL@EXEMPLE.COM" 
-                      className="bg-white border border-black p-3 rounded-xl w-full text-sm outline-none focus:ring-2 focus:ring-[#246BAD] transition-all" 
+                      className="bg-white border border-black p-3 text-gray-600 rounded-xl w-full text-sm outline-none focus:ring-2 focus:ring-[#246BAD] transition-all" 
                     />
                   </div>
                   <div className="flex flex-col gap-1.5">
@@ -56,7 +56,7 @@ function Reservation() {
                     <input 
                       type="text" 
                       placeholder="PROFESSION / SPÉCIALITÉ" 
-                      className="bg-white border border-black p-3 rounded-xl w-full text-sm outline-none focus:ring-2 focus:ring-[#246BAD] transition-all" 
+                      className="bg-white border border-black p-3 rounded-xl w-full text-gray-600 text-sm outline-none focus:ring-2 focus:ring-[#246BAD] transition-all" 
                     />
                   </div>
                 </div>
