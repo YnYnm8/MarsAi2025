@@ -122,6 +122,7 @@ export async function reviewFilm(req, res) {
     // ⚠️ Pas de notif FILM_SELECTED ici — réservé à PATCH /admin/lock/selection
     if (status === "rejected" && film.User) {
       try {
+        console.log(status);
         const deps = { models: req.app.locals.models, io: req.app.locals.io };
         if (status === "selected") {
           await notifyFilmSelected({ director: film.User, film, deps });
