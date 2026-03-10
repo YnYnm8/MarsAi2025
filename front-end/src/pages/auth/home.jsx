@@ -1,6 +1,7 @@
 import bgImg from "../../assets/accueilbg.png";
 import logo from "/src/assets/icon-stars.png";
 import { useTranslation } from "react-i18next";
+import{Link} from "react-router-dom";
 
 const Home = () => {
     const { t } = useTranslation("home");
@@ -25,16 +26,17 @@ const Home = () => {
                     </div>
 
                     <div className="absolute left-1/2 top-[75%] -translate-x-1/2 -translate-y-1/2 flex gap-2 sm:gap-6">
+                        <Link to="/login">
                         <button
                             className="bg-[#246BAD] hover:bg-[#e04b3b] text-white font-bold rounded-xl transition duration-300 shadow-lg text-center"
                             style={{ fontSize: "clamp(0.5rem, 1.8vw, 1rem)", padding: "clamp(6px, 1.2vw, 12px) clamp(8px, 2vw, 24px)", width: "clamp(100px, 25vw, 300px)" }}>
-                            {t("participe")}
-                        </button>
-                        <button
+                            {t("participe")} 
+                        </button> </Link>
+                        <Link to="/programs"><button
                             className="bg-white hover:bg-[#246BAD] text-black font-bold rounded-xl transition duration-300 shadow-lg text-center"
                             style={{ fontSize: "clamp(0.5rem, 1.8vw, 1rem)", padding: "clamp(6px, 1.2vw, 12px) clamp(8px, 2vw, 24px)", width: "clamp(100px, 25vw, 300px)" }}>
                             {t("know")}
-                        </button>
+                        </button></Link>
                     </div>
                 </div>
             </section>
@@ -91,7 +93,7 @@ const Home = () => {
                         <img src="Variant2.png" alt="variant" className="w-full" />
                     </div>
                 </div>
-                <h2 className="text-[#246BAD] font-bold text-2xl w-[90%] md:w-[80%] mx-auto"> {t("view_all")} </h2>
+                <Link to="gallery"><h2 className="text-[#246BAD] font-bold text-2xl w-[90%] md:w-[80%] mx-auto"> {t("view_all")} </h2></Link>
             </section>
 
             {/* OBJECTIFS */}
@@ -151,9 +153,9 @@ const Home = () => {
                             <p className="text-[#FF5845] font-bold mb-4"> {t("cinema")}</p>
                             <p>{t("projection")} </p>
                         </div>
-                        <button className="mt-4 bg-[#246BAD] text-white font-bold px-6 py-3 rounded-xl hover:bg-orange-700 transition">
+                        <Link to="/programs"><button className="mt-4 bg-[#246BAD] text-white font-bold px-6 py-3 rounded-xl hover:bg-orange-700 transition">
                             {t("now")}
-                        </button>
+                        </button></Link>
                     </div>
                 </div>
             </section>
@@ -204,9 +206,9 @@ const Home = () => {
                         <img src="/rdv.png" alt="rdv" className="w-16 md:w-20" />
                         <h2 className="text-black font-bold text-2xl md:text-3xl">{t("date")}</h2>
                         <p className="text-orange-600 text-lg md:text-xl font-bold">{t("hour")}</p>
-                        <button className="mt-2 bg-[#246BAD] text-white font-bold px-6 py-3 rounded-xl hover:bg-orange-700 transition">
+                        <Link to="/reservation"><button className="mt-2 bg-[#246BAD] text-white font-bold px-6 py-3 rounded-xl hover:bg-orange-700 transition">
                             {t("pass")}
-                        </button>
+                        </button></Link>
                     </div>
                 </div>
             </section>
@@ -269,11 +271,10 @@ const Home = () => {
                             height="550"
                             style={{ border: 0 }}
                             allowFullScreen
-                            loading="lazy"
                             referrerPolicy="no-referrer-when-downgrade"
                         ></iframe>
                     </div>
-                </section>
+                </section>j
 
                 <div className="bg-[#EFEFEF] py-20">
                     <p className="text-[#246BAD] font-bold text-center mb-10 text-xl">{t("partners")}</p>
