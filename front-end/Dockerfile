@@ -9,9 +9,13 @@ RUN npm run build
 # npm run build
 
 
-FROM httpd
+FROM httpd:2.4
 # copy dist dans le serveur apache
-
 COPY --from=build /app/dist/. /usr/local/apache2/htdocs/
+#Activer mod_rewrite URL
+RUN echo "LoadModule rewrite_module modules/mod_rewrite.so" >> /usr/local/apache2/conf/httpd.conf
 
+#.htaccess
+RUN sed -i 's/AllowOverride None/AllowOverride All/g' /usr/local/apache2/conf/httpd.conf
 
+EXPOSE 80

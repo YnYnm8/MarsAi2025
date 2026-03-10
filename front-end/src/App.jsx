@@ -25,6 +25,8 @@ import TopNavbar from "./components/navbar.jsx";
 import Footer from "./components/footer.jsx";
 import AdminPlaylist from './pages/admin/adminplaylist.jsx';
 import AdminPlaylistDetail from './pages/admin/adminplaylistdetail.jsx';
+import MentionsLegales from "./pages/mentionsLegales.jsx";
+
 import Contact from "./pages/auth/Contact.jsx";
 import ComiteProfile from "./pages/comite/ComiteProfile.jsx";
 
@@ -46,6 +48,7 @@ function App() {
           <Route path="/top-rated" element={<Gallery />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/programs" element={<Reservation />} />
+          <Route path="/mentions-legales" element={<MentionsLegales />} />
           <Route path="/films/:id" element={<FilmsDetails />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />

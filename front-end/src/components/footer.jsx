@@ -124,7 +124,7 @@ export default function Footer() {
         <div className="flex flex-col md:flex-row justify-between items-center w-full max-w-[1140px] gap-8 md:gap-0">
           <div className="flex flex-row flex-wrap justify-center items-center gap-[40px] md:gap-[80px]">
             <Link
-              to="/content/mentions-legales"
+              to="/mentions-legales"
               className="font-['Plus_Jakarta_Sans'] cursor-pointer font-[700] text-[14px] leading-[18px] uppercase text-[#64748B] hover:text-[#FFFFFF] transition-colors"
             >
               {t('footer.link_legal')}
