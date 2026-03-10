@@ -17,25 +17,27 @@ import { authMiddleware, roleMiddleware } from "../middlewares/authMiddleware.mj
 
 const router = express.Router();
 
+router.use(authMiddleware);
+
 // Stats dashboard admin
-router.get("/stats", getStats);
+router.get("/stats",roleMiddleware('admin'), getStats);
 
 // Liste de tous les users
-router.get("/users", getAllUsers);
+router.get("/users",roleMiddleware('admin'), getAllUsers);
 
-router.patch("/users/:id/role", updateUserRole);
+router.patch("/users/:id/role",roleMiddleware('admin'), updateUserRole);
 
-router.get("/films", getAllFilms); 
+router.get("/films",roleMiddleware('admin'), getAllFilms); 
 
 // Status films
-router.get("/films/selected", getSelectedFilms); 
-router.get("/films/rejected", getRejectedFilms); 
-router.get("/films/pending", getPendingFilms);
+router.get("/films/selected",roleMiddleware('admin'), getSelectedFilms); 
+router.get("/films/rejected",roleMiddleware('admin'), getRejectedFilms); 
+router.get("/films/pending",roleMiddleware('admin'), getPendingFilms);
 
 // changement de status
-router.put("/films/:id/status", updateFilmStatus);
-router.get("/playlists", authMiddleware ,roleMiddleware('admin' || "committee"), getAllPlaylists);
-router.get("/playlist/:id", getPlaylistDetails);
+router.put("/films/:id/status",roleMiddleware('admin'), updateFilmStatus);
+router.get("/playlists",roleMiddleware(['admin', 'committee']), getAllPlaylists);
+router.get("/playlist/:id",roleMiddleware('admin'), getPlaylistDetails);
 
 
 export default router;

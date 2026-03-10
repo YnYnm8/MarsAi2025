@@ -30,7 +30,7 @@ const Admin = () => {
                 const usersJson = await usersRes.json();
                 setStats(statsJson.success ? statsJson.data : statsJson);
                 setUsers(Array.isArray(usersJson.success ? usersJson.data : usersJson) ? (usersJson.success ? usersJson.data : usersJson) : []);
-            } catch (err) { setError("Accès refusé ou serveur hors ligne"); }
+            } catch { setError("Accès refusé ou serveur hors ligne"); }
             finally { setLoading(false); }
         };
         fetchData();
@@ -40,10 +40,11 @@ const Admin = () => {
         try {
             const response = await fetch(`http://localhost:3004/admin/users/${userId}/role`, {
                 method: 'PATCH', headers: { 'Content-Type': 'application/json' },
+                credentials: 'include',
                 body: JSON.stringify({ role: newRole })
             });
             if (response.ok) setUsers(users.map(u => u.id === userId ? { ...u, role: newRole } : u));
-        } catch (err) { alert("Erreur de mise à jour"); }
+        } catch { alert("Erreur de mise à jour"); }
     };
 
     if (loading) return (
