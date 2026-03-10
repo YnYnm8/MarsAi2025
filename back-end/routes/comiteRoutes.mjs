@@ -12,27 +12,33 @@ import {
   getAllPlaylists,
   deletePlaylist,
   getAllOfficialSelection,
+  getAllPlaylistsByUserId,
   // modifyPlaylistStatus,
   // getOfficialSelectionById,
   // getRefusedFilmsById,
   
 } from "../controllers/comiteController.mjs";
 import { getPlaylistDetails } from "../controllers/adminController.mjs";
+import { authMiddleware,roleMiddleware } from "../middlewares/authMiddleware.mjs";
 
 const comiteRouter = express.Router()
-comiteRouter.post("/select", getAllOfficialSelection);
-comiteRouter.post("/review/:FilmId", reviewFilm);
-comiteRouter.get("/allplaylists",getAllPlaylists)
-comiteRouter.post("/create/playlist",createPlaylist);
-comiteRouter.get("/refused",getAllRefusedFilms);
-comiteRouter.post("/select/:FilmId", acceptedFilm);
-comiteRouter.post("/refused/:FilmId", refuseFilm);
-comiteRouter.post("/film/list", addFilmToPlaylist);
-comiteRouter.get("/sort/history/:userId", getComiteSortHistory);
-comiteRouter.post("/note", addNote);
-comiteRouter.patch("/deletestatus",deletePlaylist);
 
-comiteRouter.get("/playlist/:id", getPlaylistDetails);
+
+comiteRouter.post("/select",authMiddleware, roleMiddleware('committee'),getAllOfficialSelection);
+comiteRouter.post("/review/:FilmId", authMiddleware, roleMiddleware('committee'),reviewFilm);
+comiteRouter.get("/allplaylists",authMiddleware,roleMiddleware('committee' || "admin"), getAllPlaylists)
+comiteRouter.get("/allplaylistsbyuserid",authMiddleware,roleMiddleware('committee' || "admin"), getAllPlaylistsByUserId)
+
+// Get playlist by id
+comiteRouter.post("/create/playlist",authMiddleware,roleMiddleware('committee'), createPlaylist);
+comiteRouter.get("/refused",authMiddleware, roleMiddleware('committee'),getAllRefusedFilms);
+comiteRouter.post("/select/:FilmId",authMiddleware, roleMiddleware('committee'), acceptedFilm);
+comiteRouter.post("/refused/:FilmId",authMiddleware, roleMiddleware('committee'), refuseFilm);
+comiteRouter.post("/film/list", authMiddleware,roleMiddleware('committee'), addFilmToPlaylist);
+comiteRouter.get("/sort/history/:userId",authMiddleware, roleMiddleware('committee'), getComiteSortHistory);
+comiteRouter.post("/note", authMiddleware, roleMiddleware('committee'),addNote);
+comiteRouter.patch("/deletestatus",authMiddleware, roleMiddleware('committee'),deletePlaylist);
+comiteRouter.get("/playlist/:id",authMiddleware,roleMiddleware('committee'), getPlaylistDetails);
 
 // comiteRouter.post("/select/:playlist_id", modifyPlaylistStatus);
 // Object.function(String,function)

@@ -13,6 +13,7 @@ import {
 } from "../controllers/adminController.mjs";
 
 import { getAllPlaylists } from "../controllers/comiteController.mjs";
+import { authMiddleware, roleMiddleware } from "../middlewares/authMiddleware.mjs";
 
 const router = express.Router();
 
@@ -33,7 +34,7 @@ router.get("/films/pending", getPendingFilms);
 
 // changement de status
 router.put("/films/:id/status", updateFilmStatus);
-router.get("/playlists", getAllPlaylists);
+router.get("/playlists", authMiddleware ,roleMiddleware('admin' || "committee"), getAllPlaylists);
 router.get("/playlist/:id", getPlaylistDetails);
 
 

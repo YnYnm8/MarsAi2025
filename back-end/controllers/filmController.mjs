@@ -165,7 +165,7 @@ export async function createFilm(req, res) {
     const newFilm = await Film.create({
       ...req.body,
       duration: duration,
-      poster_url: poster, // <--- Esto evita el error de NULL
+      poster_url: poster,
       video_url: video,
       UserId: req.user.id
     });

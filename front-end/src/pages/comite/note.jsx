@@ -1,14 +1,11 @@
 import { useState, useEffect, useMemo } from "react";
-import { useParams } from "react-router-dom";
 import ListFilms from "../comite/ListFilms";
-import { FilmComponent } from "../../components/film";
 import { useNavigate } from "react-router-dom";
 import { useRef } from "react";
-import { faTrash } from '@fortawesome/free-solid-svg-icons';
+import { faTrash, faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 export default function Note() {
-  const { id } = useParams();
   const [films, setFilms] = useState([]);
   const [playlist, setPlaylist] = useState([]);
   const [selectedFilm, setSelectedFilm] = useState(null);
@@ -21,43 +18,28 @@ export default function Note() {
   const [searchTerm, setSearchTerm] = useState("");
   const navigate = useNavigate();
   const [showComment, setShowComment] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
 
 
   // データ取得
   const fetchFilmAndPlaylists = async () => {
     try {
-      const filmRes = await fetch("http://localhost:3000/films");
-      if (!filmRes.ok) throw new Error("Failed to fetch film data");
-      const filmsData = await filmRes.json();
 
-      const playlistRes = await fetch("http://localhost:3000/comite/allplaylists");
+      const playlistRes = await fetch("http://localhost:3004/comite/allplaylistsbyuserid", { credentials: 'include' });
+
       if (!playlistRes.ok) throw new Error("Failed to fetch playlists");
+
       const playlistsData = await playlistRes.json();
 
-      const playlistsWithName = playlistsData.map(p => ({
-        ...p,
-        name: p.name || p.status || "Sans nom",
-        filmCount: 0
-      }));
 
-      const filmsWithStatus = filmsData.map(film => {
-        if (!film.PlaylistFilms || film.PlaylistFilms.length === 0) {
-          return { ...film, status: "NOT_WATCHED", playlistName: "なし" };
-        }
+      // State にセッ
+      setPlaylist(playlistsData);
 
-        const latestPlaylistFilm = film.PlaylistFilms[film.PlaylistFilms.length - 1];
-        const playlistObj = playlistsData.find(p => p.id === latestPlaylistFilm.PlaylistId);
-
-        return {
-          ...film,
-          status: playlistObj?.status || "NOT_WATCHED",
-          playlistName: playlistObj?.name || "なし",
-        };
-      });
-
-      setFilms(filmsWithStatus);
-      setPlaylist(playlistsWithName);
+      const allFilms = playlistsData.flatMap(p => p.Films || []);
+      const uniqueFilms = allFilms.filter((film, index, self) =>
+        index == self.findIndex(f => f.id === film.id))
+      setFilms(uniqueFilms)
 
     } catch (error) {
       console.error("Error fetching data:", error);
@@ -66,28 +48,21 @@ export default function Note() {
 
   useEffect(() => {
     fetchFilmAndPlaylists();
-  }, [id]);
+  }, []);
+
 
   useEffect(() => {
     if (!films.length) return;
     const firstFilm = films.find(film => film.status === filter);
     setSelectedFilm(firstFilm || films[0]);
   }, [filter, films]);
-
+  //PLAYLIST WITH COUNTS
   const playlistsWithCounts = useMemo(() => {
-    if (!playlist.length) return [];
-    return playlist.map(p => {
-      let count;
-      if (p.status === "NOT_WATCHED") {
-        count = films.filter(film => film.status === "NOT_WATCHED").length;
-      } else {
-        count = films.filter(film =>
-          film.PlaylistFilms?.some(pf => pf.PlaylistId === p.id)
-        ).length;
-      }
-      return { ...p, filmCount: count };
-    });
-  }, [films, playlist]);
+    return playlist.map(p => ({
+      ...p,
+      filmCount: p.Films ? p.Films.length : 0
+    }));
+  }, [playlist]);
 
   const handleSavereview = async (clickedStatus) => {
     if (!selectedFilm) return alert("No film selected!");
@@ -97,12 +72,12 @@ export default function Note() {
     try {
       //  レビューを登録
       const reviewResponse = await fetch(
-        `http://localhost:3000/comite/review/${selectedFilm.id}`,
+        `http://localhost:3004/comite/review/${selectedFilm.id}`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
+          credentials: "include",
           body: JSON.stringify({
-            UserId: 3,
             score: value,
             comment: comment,
             status: clickedStatus,
@@ -115,31 +90,10 @@ export default function Note() {
         throw new Error(errorData.message || "Failed to save review");
       }
 
-      await reviewResponse.json();
-
-      // // ACCEPTEDなら公式セレクションに登録
-      if (clickedStatus === "selected") {
-        const selectionResponse = await fetch("http://localhost:3000/comite/select", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ UserId: 3 }), // 必要に応じてログインユーザーID
-        });
-
-        if (!selectionResponse.ok) {
-          const errorData = await selectionResponse.json();
-          throw new Error(errorData.message || "公式セレクションの登録に失敗しました");
-        }
-
-        const selectionData = await selectionResponse.json();
-        console.log("公式セレクション登録成功:", selectionData);
-        // alert("公式セレクションに登録しました！");
-      }
-
       // UI更新
       await fetchFilmAndPlaylists();
       setComment("");
       setValue(0);
-      setStatus(null);
       setShowComment(false);
 
     } catch (error) {
@@ -147,17 +101,16 @@ export default function Note() {
       alert("Error: " + error.message);
     }
   };
-
   const handleCreateList = async () => {
     if (!newListName.trim()) return alert("Please enter a name for the list");
 
     try {
-      const response = await fetch("http://localhost:3000/comite/create/playlist", {
+      const response = await fetch("http://localhost:3004/comite/create/playlist", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
+        credentials: "include",
         body: JSON.stringify({
           status: newListName,
-          UserId: 4,
           FilmId: selectedFilm ? selectedFilm.id : null,
         }),
       });
@@ -171,18 +124,21 @@ export default function Note() {
     } catch (error) {
       console.error("Error creating playlist:", error);
       alert("Error creating playlist");
-    }
-  };
+
+    };
+
+  }
 
   const handleAddToPlaylistWithNote = async (playlistId) => {
     if (!selectedFilm) return alert("No film selected!");
 
+
     try {
-      const playlistResponse = await fetch("http://localhost:3000/comite/film/list", {
+      const playlistResponse = await fetch("http://localhost:3004/comite/film/list", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
+        credentials: "include",
         body: JSON.stringify({
-          UserId: 3,
           FilmId: selectedFilm.id,
           targetPlaylistId: playlistId,
         }),
@@ -190,11 +146,12 @@ export default function Note() {
       if (!playlistResponse.ok) throw new Error("Failed to add film to playlist");
       await playlistResponse.json();
 
-      const noteResponse = await fetch("http://localhost:3000/comite/note", {
+
+      const noteResponse = await fetch("http://localhost:3004/comite/note", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
+        credentials: "include",
         body: JSON.stringify({
-          UserId: 3,
           FilmId: selectedFilm.id,
           score: value,
           comment: comment,
@@ -203,6 +160,7 @@ export default function Note() {
       if (!noteResponse.ok) throw new Error("Fail to add your note to the film");
       await noteResponse.json();
 
+
       await fetchFilmAndPlaylists();
       setValue(0);
       setComment("");
@@ -210,7 +168,7 @@ export default function Note() {
 
     } catch (error) {
       console.error("Error adding film to playlist:", error);
-      alert("Error adding film to playlist");
+      // alert("Error adding film to playlist");
     }
   };
 
@@ -218,11 +176,11 @@ export default function Note() {
     if (!playlistId) return alert("No playlist selected to delete!");
 
     try {
-      const response = await fetch("http://localhost:3000/comite/deletestatus", {
+      const response = await fetch("http://localhost:3004/comite/deletestatus", {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          UserId: 3,               // ログインユーザーID
+        credentials: "include",
+        body: JSON.stringify({             // ログインユーザーID
           targetPlaylistId: playlistId, // 修正済み
         }),
       });
@@ -241,27 +199,31 @@ export default function Note() {
       alert("Error deleting playlist: " + error.message);
     }
   };
-  const filteredFilms = useMemo(() => {
-    if (!searchTerm.trim()) return films;
+  //USEMEMO
+const filteredFilms = useMemo(() => {
+  if (!playlist || !Array.isArray(playlist)) return [];
 
-    const lowerSearch = searchTerm.toLowerCase();
+  const activePlaylist = playlist.find(p => p.status === filter);
+  const baseFilms = activePlaylist?.Films || [];
 
-    return films.filter((film) => {
-      const matchTitle = film.title?.toLowerCase().includes(lowerSearch);
-      const matchId = film.id?.toString().includes(lowerSearch);
-      return matchTitle || matchId;
-    });
-  }, [films, searchTerm]);
+  if (!searchTerm.trim()) return baseFilms;
+  const lowerSearch = searchTerm.toLowerCase();
+  return baseFilms.filter((film) =>
+    film.title?.toLowerCase().includes(lowerSearch) ||
+    film.id?.toString().includes(lowerSearch)
+  );
+}, [playlist, filter, searchTerm]);
+
   const handleSaveComment = async () => {
     if (!selectedFilm) return alert("Aucun film sélectionné !");
     if (!comment.trim()) return alert("Veuillez entrer un commentaire.");
 
     try {
-      const response = await fetch(`http://localhost:3000/comite/note`, {
+      const response = await fetch(`http://localhost:3004/comite/note`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
+        credentials: "include",
         body: JSON.stringify({
-          UserId: 3,             // ログインユーザーID
           FilmId: selectedFilm.id,
           score: value || null,  // スコアは空でもOKにする
           comment: comment,
@@ -274,8 +236,8 @@ export default function Note() {
       }
 
       await response.json();
-      alert("Commentaire enregistré !");
-      setComment("");  
+      // alert("Commentaire enregistré !");
+      setComment("");
       setShowComment(false);
       await fetchFilmAndPlaylists(); // UIを更新
 
@@ -297,15 +259,30 @@ export default function Note() {
   return (
     <div className="flex flex-col h-screen bg-black font-sans">
 
-
+      <button
+        onClick={() => setMobileMenuOpen(true)}
+        className="md:hidden text-white px-3 py-1 rounded mb-3 self-start"
+      >
+        <FontAwesomeIcon icon={faArrowLeft} />
+        Accéder aux listes
+      </button>
       <div className="flex flex-col md:flex-row flex-1 overflow-hidden">
-        <aside className="w-full md:w-72 bg-black border-b md:border-b-0 md:border-r overflow-y-auto p-4 flex flex-col gap-4">
+
+        <aside className={`fixed md:static  overflow-y-scroll z-100  top-0 left-0 h-full w-72 bg-black transform transition-transform duration-300 ${mobileMenuOpen ? "translate-x-0" : "-translate-x-full"} md:translate-x-0
+  `}>
           {/* 上部のアクションボタン */}
           <button
             onClick={() => navigate("/comite/profile")}
-            className="bg-white text-black px-4 py-1 rounded-md font-semibold text-sm hover:bg-gray-100 transition"
+            className="flex-row bg-white text-black px-4 py-1 rounded-md font-semibold text-sm hover:bg-gray-100 transition"
           >
             VOIR MES ÉVALUATIONS
+          </button>
+          {/* モバイルだけ表示する閉じるボタン */}
+          <button
+            onClick={() => setMobileMenuOpen(false)}
+            className="md:hidden flex-end text-white bg-[#FF5845] px-2 py-1 rounded hover:bg-gray-700 ml-2"
+          >
+            ✕
           </button>
 
           {/* 検索ボックス */}
@@ -320,25 +297,33 @@ export default function Note() {
           {/* フィルター */}
           <div className="flex flex-col gap-2 mt-2">
             {playlistsWithCounts.map((p) => (
-              <button
-                key={p.id}
-                onClick={() => setFilter(p.status)}
-                className={`w-full text-left px-3 py-2 rounded-md text-sm font-medium transition 
-          ${filter === p.status ? "bg-[#246BAD] text-white" : "bg-gray-800 text-gray-200 hover:bg-gray-700"}`}
-              >
-                {p.status} ({p.filmCount})
-              </button>
+              <div key={p.id} className="flex justify-between items-center">
+                <button
+                  onClick={() => setFilter(p.status)}
+                  className={`flex-1 text-left px-3 py-2 rounded-md text-sm font-medium transition 
+        ${filter === p.status ? "bg-[#246BAD] text-white" : "bg-gray-800 text-gray-200 hover:bg-gray-700"}`}
+                >
+                  {p.status} ({p.filmCount})
+                </button>
+
+              </div>
             ))}
           </div>
 
           {/* 映画リスト */}
           <ListFilms
-            films={films}
+            films={filteredFilms}
             filter={filter}
             searchTerm={searchTerm}
             selectedFilm={selectedFilm}
             setSelectedFilm={setSelectedFilm}
           />
+          <button
+            onClick={() => setMobileMenuOpen(false)}
+            className="md:hidden text-white mb-4"
+          >
+            ✕ Close
+          </button>
         </aside>
 
         {/* Main Content */}
@@ -352,7 +337,9 @@ export default function Note() {
               Sélectionnez un film dans la liste à gauche
             </p>
             <div className="mt-2 flex flex-col md:flex-row justify-center gap-2 md:gap-6 text-sm">
-              <span className="font-bold">{films.filter(f => f.status === "NOT_WATCHED").length}</span>
+              <span className="font-bold">
+                {playlistsWithCounts.find(p => p.status === "NOT_WATCHED")?.filmCount || 0}
+              </span>
               <span className="text-gray-500 font-semibold">FILM A NOTER</span>
               <span className="text-[#FF5845] font-semibold">15 JUIN 2026</span>
               <span className="text-gray-500 font-semibold">CLUTURE</span>
@@ -377,13 +364,13 @@ export default function Note() {
                     <video
                       ref={videoRef}
                       key={selectedFilm.Files[0].film_url}
-                      src={selectedFilm.Files[0].film_url.startsWith('http') ? selectedFilm.Files[0].film_url : `http://localhost:3000${selectedFilm.Files[0].film_url}`}
-                      poster={selectedFilm.Files[0].poster_url?.startsWith('http') ? selectedFilm.Files[0].poster_url : `http://localhost:3000${selectedFilm.Files[0].poster_url}`}
+                      src={selectedFilm.Files[0].film_url.startsWith('http') ? selectedFilm.Files[0].film_url : `http://localhost:3004${selectedFilm.Files[0].film_url}`}
+                      poster={selectedFilm.Files[0].poster_url?.startsWith('http') ? selectedFilm.Files[0].poster_url : `http://localhost:3004${selectedFilm.Files[0].poster_url}`}
                       controls
                       className="w-full rounded-lg"
                     />
 
-                    <div className="mt-3 flex gap-3 justify-center">
+                    <div className="mt-3 flex gap-3 left-3 up-10">
                       <button
                         onClick={() => setSpeed(1)}
                         className="px-4 py-2 bg-gray-700 text-white rounded-lg hover:bg-gray-800 transition"
@@ -410,32 +397,48 @@ export default function Note() {
               <img
                 src={selectedFilm?.Files?.[0]?.poster_url?.startsWith('http')
                   ? selectedFilm.Files[0].poster_url
-                  : `http://localhost:3000${selectedFilm?.Files?.[0]?.poster_url || "/uploads/youtubeimg.webp"}`}
+                  : `http://localhost:3004${selectedFilm?.Files?.[0]?.poster_url || "/uploads/youtubeimg.webp"}`}
                 alt={selectedFilm?.title || "Film Poster"}
                 className="w-full h-64 object-cover rounded-lg mb-4"
               />
             )}
           </div>
-          
+
           {/* タイトル・監督 */}
-          <div className="flex flex-col md:flex-row justify-between items-start mb-4">
-            <div>
-              <h2 className="text-lg font-bold text-[#246BAD]">
-               Le Nom de Film : {selectedFilm?.title || "SYNTHETICA : title"}
+          <div className="flex flex-col md:flex-row justify-between items-start mb-6 p-6 bg-white shadow-lg rounded-xl border border-gray-200">
+            <div className="flex-1">
+              <h2 className="text-2xl font-bold text-[#246BAD] mb-3">
+                {selectedFilm?.title || "SYNTHETICA : title"}
               </h2>
-              <div className="flex flex-wrap gap-2 text-sm text-gray-600 mt-1">
-                <span className="font-medium font-semibold">
-              Directeur :{selectedFilm?.User?.firstName || "Director "} {selectedFilm?.User?.lastName ||""}
+
+              <div className="flex flex-wrap gap-4 text-sm text-gray-700 mb-4">
+                <span className="font-semibold">
+                  Directeur: {selectedFilm?.User?.firstName || "Director"} {selectedFilm?.User?.lastName || ""}
+                </span>
+                <span className="font-semibold">
+                  Origin: {selectedFilm?.User?.country || "Country"}
                 </span>
               </div>
-                 <p className="text-sm text-gray-600 font-semibold">
-              Origin :{selectedFilm?.User?.country || "Country "}
+
+              <p className="text-gray-600 mb-2">
+                <span className="font-semibold">Synopsis:</span> {selectedFilm?.Films?.[0]?.description || "No description"}
               </p>
 
+              <p className="text-gray-600 mb-2">
+                <span className="font-semibold">Generate AI:</span> {selectedFilm?.Films?.[0]?.generateAi || "N/A"}
+              </p>
+              <p className="text-gray-600 mb-2">
+                <span className="font-semibold">SocialMedia:</span> {selectedFilm?.Films?.[0]?.socialWorks || "N/A"}
+              </p>
+
+              <p className="text-gray-600 mb-2">
+                <span className="font-semibold">Collaborateur:</span> {selectedFilm?.User?.collaborateur || "N/A"}
+              </p>
             </div>
-            <div className="text-xl font-bold mt-2 md:mt-0">
+
+            <div className="mt-4 md:mt-0 text-3xl font-bold text-gray-800 flex items-baseline">
               {value}
-              <span className="text-sm">/10</span>
+              <span className="text-sm text-gray-500 ml-1">/10</span>
             </div>
           </div>
 
@@ -517,7 +520,7 @@ export default function Note() {
               {/* 横並びのボタン */}
               <div className="flex flex-wrap gap-4">
                 <button
-                  onClick={() => handleSavereview("selected")}
+                  onClick={() => handleSavereview("SELECTED")}
                   disabled={!value || value < 1}
                   className={`flex-1 px-4 py-2 rounded-lg text-sm font-semibold text-white transition-colors ${!value || value < 1
                     ? "bg-blue-800/50 cursor-not-allowed"
@@ -528,7 +531,7 @@ export default function Note() {
                 </button>
 
                 <button
-                  onClick={() => handleSavereview("rejected")}
+                  onClick={() => handleSavereview("REJECTED")}
                   disabled={!value || value < 1}
                   className={`flex-1 px-4 py-2 rounded-lg text-sm font-semibold text-white transition-colors ${!value || value < 1
                     ? "bg-blue-600/50 cursor-not-allowed"
@@ -539,7 +542,7 @@ export default function Note() {
                 </button>
 
                 <button
-                  onClick={() => handleSavereview("pending")}
+                  onClick={() => handleSavereview("PENDING")}
                   disabled={!value || value < 1}
                   className={`flex-1 px-4 py-2 rounded-lg text-sm font-semibold text-white transition-colors ${!value || value < 1
                     ? "bg-blue-400/50 cursor-not-allowed"
@@ -558,7 +561,7 @@ export default function Note() {
                 {/* 自作プレイリスト */}
 
 
-                <div className="flex flex-col md:flex">
+                <div className="flex flex-wrap gap-4">
                   {playlist.slice(4).map((p) => (
                     <div key={p.id} className="flex gap-2 items-center">
                       <button
@@ -574,7 +577,7 @@ export default function Note() {
                         onClick={() => handleDeletePlaylist(p.id)}
                         className="flex-1 px-4 bg-gray-600 text-shadow-red-600 py-2 rounded-lg text-xs hover:bg-gray-800"
                       >
-                         <FontAwesomeIcon icon={faTrash} /> 
+                        <FontAwesomeIcon icon={faTrash} />
                       </button>
                     </div>
                   ))}

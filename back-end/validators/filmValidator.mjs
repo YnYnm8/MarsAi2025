@@ -17,7 +17,8 @@ export const filmSchema = z.object({
 
     description:
         z.string()
-            .min(10, "Description obligatoire minimum 10 caractères"),
+            .min(10, "Description obligatoire minimum 10 caractères")
+            .max(300, "Description maximum 300 caractères"),
 
     generateAi:
         z.string()

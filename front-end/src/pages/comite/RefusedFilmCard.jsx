@@ -8,7 +8,7 @@ export default function RefusedFilmCard() {
     const fetchFilm = async () => {
       try {
         const response = await fetch(
-          "http://localhost:3000/comite/refused",
+          "http://localhost:3004/comite/refused",
          
             // credentials: "include"
         );

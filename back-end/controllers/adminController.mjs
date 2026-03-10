@@ -95,14 +95,20 @@ export const getPendingFilms = async (req, res) => {
 
 // PUT /admin/:id/status
 export const updateFilmStatus = async (req, res) => {
+ 
   try {
     const { id } = req.params;
-    const { playlistId, reason } = req.body; // ajout de reason 
+    const { playlistId, reason } = req.body;
 
-    // On passe playlistId au service
     const result = await adminService.updateFilmStatus(id, playlistId);
 
-    // Notification au réalisateur selon le nouveau statut -----------------
+    // ✅ Dériver le status depuis playlistId
+    const pId = parseInt(playlistId);
+    const status = pId === 2 ? "selected"
+      : pId === 3 ? "rejected"
+        : pId === 4 ? "pending"
+          : "submitted";
+
     try {
       const film = await Film.findByPk(id, { include: [{ model: User }] });
       if (film && film.User) {
@@ -113,9 +119,8 @@ export const updateFilmStatus = async (req, res) => {
           await notifyFilmSelected({ director: film.User, film, deps });
         } else if (status === "rejected") {
           await notifyFilmRejectedAdmin({
-            director: film.User,
-            film,
-            reason: reason || "Votre film ne correspond pas aux critères de sélection.",
+            director: film.User, film,
+            reason: reason || "Votre film ne correspond pas aux critères.",
             deps,
           });
         } else if (status === "banned") {
@@ -125,9 +130,7 @@ export const updateFilmStatus = async (req, res) => {
     } catch (notifError) {
       console.error("[adminController] Notification error:", notifError.message);
     }
-    // ----------------------------------------------------------------------------
 
-    
     res.json({ success: true, data: result });
   } catch (error) {
     console.error("Erreur contrôleur status:", error.message);
@@ -139,27 +142,27 @@ export const updateFilmStatus = async (req, res) => {
 export const getPlaylistDetails = async (req, res) => {
   try {
     const { id } = req.params;
-    
+
     const playlist = await adminService.getFilmsByPlaylistId(id);
-    
+
     if (!playlist) {
-      return res.status(404).json({ 
-        success: false, 
-        message: "Playlist non trouvée ou vide" 
+      return res.status(404).json({
+        success: false,
+        message: "Playlist non trouvée ou vide"
       });
     }
-    
-    res.json({ 
-      success: true, 
-      data: playlist 
+
+    res.json({
+      success: true,
+      data: playlist
     });
 
   } catch (error) {
     console.error("Erreur contrôleur playlist:", error.message);
-    res.status(500).json({ 
-      success: false, 
-      message: "Erreur serveur", 
-      error: error.message 
+    res.status(500).json({
+      success: false,
+      message: "Erreur serveur",
+      error: error.message
     });
   }
 };

@@ -1,120 +1,144 @@
+import React from 'react';
 
 function Reservation() {
   return (
-
-    
-
-  
-    <div className="bg-[#EFF0F4] mx-15 ">
+    <div className="bg-[#EFF0F4] min-h-screen p-4 md:p-10">
       
-      <h2 className="text-[#246BAD] font-bold text-3xl mb-10 mt-10">
-        MODIFIER MON CHOIX
-      </h2>
-
-      <div className="bg-white p-10 rounded-2xl">
-
-        <h1 className="text-[#282828] font-bold text-4xl mb-10">
-          RESERVER MA PLACE
-        </h1>
-
-        <div className="flex gap-10 mb-10">
-          <div>
-            <p>NOM *</p>
-            <div className="bg-gray-100 p-5 rounded-2xl w-200">
-              <h2 className="text-xl text-gray-400">NOM</h2>
-            </div>
-          </div>
-
-          <div>
-            <p>PRENOM *</p>
-            <div className="bg-gray-100 p-5 rounded-2xl w-200">
-              <h2 className="text-xl text-gray-400">PRENOM</h2>
-            </div>
-          </div>
-        </div>
-
-        <div className="flex gap-10 mb-10">
-            <div>
-            <p>ADRESSE EMAIL *</p>
-          <div className="bg-gray-100 p-5 rounded-2xl w-200">
-            <p className="text-xl text-gray-400">EMAIL@EXEMPLE.COM</p>
-          </div>
-          </div>
-          <div>
-<p>PROFESSION *</p>
-          <div className="bg-gray-100 p-5 rounded-2xl w-200">
-            <p className="text-xl text-gray-400">PROFESSION/SPECIALITE</p>
-          </div>
-          </div>
-        </div>
-
-
-<input type="checkbox" class="checkbox validator" required title="Required" />
-<p className="validator-hint text-[#64748B] text-2xl">J'accepte les conditions générales de participation et le règlement de protection des données.</p>
-
-     
-        <button className="btn btn-neutral w-full h-15 mt-10 text-2xl rounded-2xl">
-          VALIDER MON INSCRIPTION
-        </button>
-
+      {/* Contenedor centrado con ancho máximo */}
+      <div className="max-w-4xl mx-auto">
         
-        </div>
+        {/* Botón superior de volver */}
+        <h2 className="text-[#246BAD] font-bold text-lg mb-6 uppercase cursor-pointer hover:underline">
+          ← MODIFIER MON CHOIX
+        </h2>
 
-        <div className="flex gap-10 mt-10 bg-[#EFF0F4] ">
-          <div className="bg-[#246BAD] p-10 rounded-2xl w-full h-170">
-            <p className="text-white mb-10">EVENEMENT SELECTIONNE</p>
-            <p className="text-5xl font-bold text-white">GENERATION VIDEO : LES BASES</p> 
-            
-            <img src="clock.svg" alt="clock" className="w-15 h-15 object-contain" />
-    <div>
-      <p className="text-white text-xl">
-        HORAIRE
-      </p>
-      <p className="text-white text-2xl font-bold mb-10">
-       14H30-13 JUIN 
-      </p>
-    </div>
-
-   <img src="local.jpg" alt="local" className="w-15 h-15 object-contain" />
-    <div>
-      <p className="text-white text-xl">
-        LIEU
-      </p>
-      <p className="text-white text-2xl font-bold mb-10">
-       STUDIO 1- LA PLATEFORME_ 
-      </p>
-    </div>
-
-<img src="yo.png" alt="yo" className="w-15 h-15 object-contain" />
-    <div>
-      <p className="text-white text-xl">
-        COACH EXPERT
-      </p>
-      <p className="text-white text-2xl font-bold">
-       THOMAS AUBERT 
-      </p>
-    </div>
-
-
-    <div className="flex gap-10 mt-10 py-40">
-          <div className="bg-[#B0D2FF] p-20 rounded-2xl w-full h-70">
-            <img src="male.png" alt="male" className="flex"></img>
-            <p className="font-bold text-2xl mb-10">CERTIFICAT DE PROPRIETE</p>
-            <p className="text-[#626262] text-xl "> EN SOUMETTANT CE DOSSIER, VOUS CERTIFIEZ SUR L'HONNEUR ETRE L'AUTEUR ORIGINAL DE L'OEUVRE ET DETENIR L'INTEGRALITE DES DROITS DE DIFFUSION. VOUS ACCEPTEZ QUE MARS.A.I UTILISE CES ELEMENTS POUR LA PROMOTION DU FESTIVAL.
- </p>
-     
-          </div>
+        <div className="flex flex-col gap-8">
           
-        
-          </div>
-          <div className=" flex justify-center"> 
-      <button className=" btn btn-active bg-[#246BAD] rounded-xl w-80 text-white text-xl h-16 mb-70">Finaliser ma soumission</button>     
-</div>
+          {/* BLOQUE 1: FORMULARIO */}
+          <div className="w-full">
+            <div className="bg-white p-6 md:p-10 rounded-2xl shadow-sm border border-gray-200">
+              <h1 className="text-[#282828] font-bold text-2xl md:text-3xl mb-8 text-center uppercase">
+                RÉSERVER MA PLACE
+              </h1>
+
+              <form className="space-y-5">
+                {/* Filas de Inputs con Borde Negro y Letra más chica */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div className="flex flex-col gap-1.5">
+                    <label className="font-bold text-[11px] text-gray-700 ml-1">NOM *</label>
+                    <input 
+                      type="text" 
+                      placeholder="NOM" 
+                      className="bg-white border border-black p-3 text-gray-600 rounded-xl w-full text-sm outline-none focus:ring-2 focus:ring-[#246BAD] transition-all" 
+                    />
+                  </div>
+                  <div className="flex flex-col gap-1.5">
+                    <label className="font-bold text-[11px] text-gray-700 ml-1">PRÉNOM *</label>
+                    <input 
+                      type="text" 
+                      placeholder="PRÉNOM" 
+                      className="bg-white border border-black p-3 text-gray-600 rounded-xl w-full text-sm outline-none focus:ring-2 focus:ring-[#246BAD] transition-all" 
+                    />
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div className="flex flex-col gap-1.5">
+                    <label className="font-bold text-[11px] text-gray-700 ml-1">ADRESSE EMAIL *</label>
+                    <input 
+                      type="email" 
+                      placeholder="EMAIL@EXEMPLE.COM" 
+                      className="bg-white border border-black p-3 text-gray-600 rounded-xl w-full text-sm outline-none focus:ring-2 focus:ring-[#246BAD] transition-all" 
+                    />
+                  </div>
+                  <div className="flex flex-col gap-1.5">
+                    <label className="font-bold text-[11px] text-gray-700 ml-1">PROFESSION *</label>
+                    <input 
+                      type="text" 
+                      placeholder="PROFESSION / SPÉCIALITÉ" 
+                      className="bg-white border border-black p-3 rounded-xl w-full text-gray-600 text-sm outline-none focus:ring-2 focus:ring-[#246BAD] transition-all" 
+                    />
+                  </div>
+                </div>
+
+                {/* Checkbox centrado un poco más */}
+                <div className="flex items-center gap-3 py-2 px-1">
+                  <input type="checkbox" className="w-5 h-5 accent-[#246BAD] cursor-pointer" required />
+                  <p className="text-gray-500 text-[12px] leading-tight">
+                    J'accepte les conditions générales de participation et le règlement de protection des données.
+                  </p>
+                </div>
+
+                <button className="w-full cursor-pointer bg-[#282828] text-white font-bold py-4 rounded-xl text-lg hover:bg-black transition-all shadow-md uppercase tracking-wide">
+                  VALIDER MON INSCRIPTION
+                </button>
+              </form>
+            </div>
           </div>
 
+          {/* BLOQUE 2: EVENTO SELECCIONADO */}
+          <div className="w-full">
+            <div className="bg-[#246BAD] p-6 md:p-8 rounded-2xl text-white shadow-lg">
+              <p className="text-[10px] opacity-80 mb-1 uppercase tracking-widest text-center md:text-left">Événement sélectionné</p>
+              <h3 className="text-2xl md:text-3xl font-bold mb-8 text-center md:text-left">
+                GÉNÉRATION VIDÉO : LES BASES
+              </h3>
+
+              {/* Info grid compacta */}
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div className="flex items-center gap-3">
+                  <div className="bg-white/20 p-2.5 rounded-xl">
+                    <img src="clock.svg" alt="clock" className="w-5 h-5 brightness-0 invert" />
+                  </div>
+                  <div>
+                    <p className="text-[10px] opacity-70 uppercase">Horaire</p>
+                    <p className="font-bold text-sm">14H30 - 13 JUIN</p>
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-3">
+                  <div className="bg-white/20 p-2.5 rounded-xl">
+                    <img src="local.jpg" alt="local" className="w-5 h-5 rounded-full object-cover" />
+                  </div>
+                  <div>
+                    <p className="text-[10px] opacity-70 uppercase">Lieu</p>
+                    <p className="font-bold text-sm">STUDIO 1 - LA PLATEFORME_</p>
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-3">
+                  <div className="bg-white/20 p-2.5 rounded-xl">
+                    <img src="yo.png" alt="yo" className="w-5 h-5 rounded-full object-cover" />
+                  </div>
+                  <div>
+                    <p className="text-[10px] opacity-70 uppercase">Coach Expert</p>
+                    <p className="font-bold text-sm">THOMAS AUBERT</p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Cuadro de Certificado */}
+              <div className="mt-8 bg-[#B0D2FF] p-5 rounded-2xl text-[#282828] flex items-start gap-4 border border-black/10">
+                <img src="male.png" alt="male" className="w-8 h-8 opacity-80" />
+                <div>
+                  <p className="font-bold text-[12px] mb-1 uppercase italic">Certificat de propriété</p>
+                  <p className="text-[10px] leading-snug opacity-90 uppercase">
+                    En soumettant ce dossier, vous certifiez sur l'honneur être l'auteur original de l'oeuvre et détenir l'intégralité des droits de diffusion.
+                  </p>
+                </div>
+              </div>
+
+              <div className="mt-8 flex justify-center">
+                <button className="bg-white cursor-pointer text-[#246BAD] hover:bg-gray-100 font-bold py-3 px-10 rounded-xl transition-all uppercase text-sm shadow-md">
+                  Finaliser ma soumission
+                </button>
+              </div>
+            </div>
+          </div>
+
+        </div>
       </div>
     </div>
-    
   );
 }
 
