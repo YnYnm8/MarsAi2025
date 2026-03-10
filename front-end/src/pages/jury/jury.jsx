@@ -55,7 +55,8 @@ function Jury() {
           </p>
           
           <button className="bg-[#FF5845]  cursor-pointer hover:bg-[#e04b3b] text-white font-bold py-4 px-10 rounded-2xl self-start transition-all shadow-lg uppercase hover:-translate-y-1">
-            {t("president.cta")}
+            <a href="https://fr.wikipedia.org/wiki/Wikip%C3%A9dia:Accueil_principal" target="_blank" rel="noopener noreferrer">{t("president.cta")} </a>
+            
           </button>
         </div>
       </div>
@@ -124,7 +125,7 @@ function Jury() {
               key={pillar} 
               className="bg-white border-2 border-[#EFF0F4] p-8 rounded-3xl flex items-center gap-8 hover:border-[#246BAD] hover:shadow-xl transition-all duration-300 group/pillar cursor-default"
             >
-              <div className="text-5xl font-black text-[#EFF0F4] group-hover/pillar:text-[#246BAD]/20 transition-colors">
+              <div className="text-5xl font-black text-[#246bad33] group-hover/pillar:text-[#246BAD]/20 transition-colors">
                 0{idx + 1}
               </div>
               <div>
