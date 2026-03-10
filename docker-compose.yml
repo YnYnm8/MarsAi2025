@@ -18,8 +18,7 @@ services:
     image:  luzrivera/mars-front
     build: ./front-end
     ports:
-      - "8004:80"
-
+    - "8004:80"
 
   back:
     image: luzrivera/mars-back

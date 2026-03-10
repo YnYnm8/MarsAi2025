@@ -29,7 +29,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const app = express();
 const PORT = process.env.PORT || 3000;
-const FRONTEND_URL = 'http://whiletrue.fr:8004'.replace(/\/$/, '');
+const FRONTEND_URL = 'http://whiletrue.fr:8004 '.replace(/\/$/, '');
 console.log({FRONTEND_URL});
 // Créer le serveur HTTP à partir d'Express
 const httpServer = createServer(app);
