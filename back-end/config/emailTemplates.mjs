@@ -1,4 +1,4 @@
-const BASE_URL = process.env.FRONTEND_URL || "http://localhost:5173";
+const BASE_URL = process.env.FRONTEND_URL_HOST || "http://localhost:5173";
 
 /**
  * Wrapper HTML commun à tous les emails

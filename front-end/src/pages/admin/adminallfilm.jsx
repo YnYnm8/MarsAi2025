@@ -13,7 +13,7 @@ const AdminAllFilms = () => {
 
     const fetchAllFilms = async () => {
         try {
-            const response = await fetch('http://localhost:3004/admin/films', { credentials: 'include' });
+            const response = await fetch(`${API_URL_FRONTEND}/admin/films`, { credentials: 'include' });
             const json = await response.json();
             let data = Array.isArray(json) ? json : (json.data || []);
             setAllFilms(data);
@@ -92,7 +92,7 @@ const AdminAllFilms = () => {
                                 <tr><td colSpan="6" className="py-10 text-center text-gray-400 text-sm italic">Aucun film trouvé</td></tr>
                             ) : currentFilms.map((film) => {
                                 const rawPoster = film.Files?.[0]?.poster_url;
-                                const poster = rawPoster ? (rawPoster.startsWith('http') ? rawPoster : `http://localhost:3004${rawPoster}`) : "/src/assets/youtube.png";
+                                const poster = rawPoster ? (rawPoster.startsWith('http') ? rawPoster : `${API_URL_FRONTEND}${rawPoster}`) : "/src/assets/youtube.png";
                                 const { label, classes } = getStatusDetails(film.status);
                                 return (
                                     <tr key={film.id} className="group hover:bg-gray-50/50 transition-colors">
@@ -137,7 +137,7 @@ const AdminAllFilms = () => {
                             <div className="py-10 text-center text-gray-400 text-sm italic bg-white rounded-2xl">Aucun film trouvé</div>
                         ) : currentFilms.map((film) => {
                             const rawPoster = film.Files?.[0]?.poster_url;
-                            const poster = rawPoster ? (rawPoster.startsWith('http') ? rawPoster : `http://localhost:3004${rawPoster}`) : "/src/assets/youtube.png";
+                            const poster = rawPoster ? (rawPoster.startsWith('http') ? rawPoster : `${API_URL_FRONTEND}${rawPoster}`) : "/src/assets/youtube.png";
                             const { label, classes } = getStatusDetails(film.status);
                             return (
                                 <div key={film.id} className="bg-white rounded-2xl p-4 flex items-center gap-4 shadow-sm">

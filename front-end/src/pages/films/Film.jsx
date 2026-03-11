@@ -9,7 +9,7 @@ export default function Film() {
     const fetchFilm = async () => {
       try {
         const response = await fetch(
-          `http://localhost:3004/films/${id}`,
+          `${API_URL_FRONTEND}/films/${id}`,
           {
             method: "GET",
             headers: {

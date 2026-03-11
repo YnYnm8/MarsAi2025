@@ -10,7 +10,7 @@ export function FilmList() {
     useEffect(() => {
         const fetchFilms = async () => {
             try {
-                const response = await fetch("http://localhost:3004/films");
+                const response = await fetch(`${API_URL_FRONTEND}/films`);
                 const data = await response.json();
                 setFilms(data);
             } catch (error) {

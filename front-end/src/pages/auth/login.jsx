@@ -42,7 +42,7 @@ const Login = () => {
     setServerError("");
 
     try {
-      const response = await fetch('http://localhost:3004/login', {
+      const response = await fetch(`${API_URL_FRONTEND}/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',

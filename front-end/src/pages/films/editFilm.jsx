@@ -12,7 +12,7 @@ import defaultImg from "../../assets/image-default.png";
 export default function EditFilm() {
     const { id } = useParams();
     const navigate = useNavigate();
-    const BACKEND_URL = "http://localhost:3004";
+    const BACKEND_URL = API_URL_FRONTEND;
 
     const [movie, setMovie] = useState(null);
     const [selected, setSelected] = useState(null);

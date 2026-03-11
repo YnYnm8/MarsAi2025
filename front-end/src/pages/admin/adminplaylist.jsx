@@ -10,7 +10,7 @@ const AdminPlaylist = () => {
     useEffect(() => {
         const fetchPlaylists = async () => {
             try {
-                const response = await fetch('http://localhost:3004/comite/allplaylists', { credentials: 'include' });
+                const response = await fetch(`${API_URL_FRONTEND}/comite/allplaylists`, { credentials: 'include' });
                 const data = await response.json();
                 if (Array.isArray(data)) {
                     setPlaylists(data.filter(pl => ![1, 2, 3, 4].includes(pl.id)));

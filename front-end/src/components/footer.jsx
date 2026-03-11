@@ -25,7 +25,7 @@ export default function Footer() {
 
     try {
       const response = await fetch(
-        "http://localhost:3004/api/newsletter/subscribe",
+        `${API_URL_FRONTEND}/api/newsletter/subscribe`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },

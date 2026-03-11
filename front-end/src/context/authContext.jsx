@@ -8,7 +8,7 @@ export const AuthProvider = ({ children }) => {
 
   const refreshAuth = async () => {
     try {
-      const res = await fetch("http://localhost:3004/me", {
+      const res = await fetch(`${API_URL_FRONTEND}/me`, {
         credentials: "include",
       });
       setIsLoggedIn(res.ok);
@@ -20,7 +20,7 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     const checkAuth = async () => {
       try {
-        const res = await fetch("http://localhost:3004/me", {
+        const res = await fetch(`${API_URL_FRONTEND}/me`, {
           credentials: "include",
         });
         setIsLoggedIn(res.ok);

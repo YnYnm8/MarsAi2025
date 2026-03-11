@@ -45,7 +45,7 @@ const Register = () => {
     setServerError("");
 
     try {
-      const res = await fetch("http://localhost:3004/register", {
+      const res = await fetch(`${API_URL_FRONTEND}/register`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

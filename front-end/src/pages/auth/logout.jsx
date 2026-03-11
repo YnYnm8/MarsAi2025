@@ -3,7 +3,7 @@
 const Logout = () => {
   const handleLogout = async () => {
     try {
-      const response = await fetch("http://localhost:3004/logout", {
+      const response = await fetch(`${API_URL_FRONTEND}/logout`, {
         method: "POST",
         credentials: "include", // cookie jwt
       });

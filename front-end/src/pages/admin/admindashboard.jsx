@@ -19,7 +19,7 @@ const AdminDash = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await fetch('http://localhost:3004/admin/stats', { credentials: 'include' });
+                const response = await fetch(`${API_URL_FRONTEND}/admin/stats`, { credentials: 'include' });
                 const json = await response.json();
                 if (json.success) setStats(prev => ({ ...prev, ...json.data }));
             } catch (err) { console.error("Erreur chargement stats:", err); }

@@ -14,7 +14,7 @@ export const FilmComponent = ({ data, variant = "details" }) => {
 
 
         const cleanPath = path.startsWith('/') ? path : `/${path}`;
-        const BACKEND_URL = "http://localhost:3004";
+        const BACKEND_URL = `${API_URL_FRONTEND}`;
         return `${BACKEND_URL}${cleanPath}`;
     };
 
