@@ -6,10 +6,10 @@ const ProtectedRoute = ({ roles, children }) => {
 
   if (loading) return null;
 
-  if (!user) return <Navigate to="/login" replace />;
+  if (!user) return <Navigate to="/" replace />;
 
   if (roles && !roles.includes(user.role)) {
-    return <Navigate to="/login" replace />;
+    return <Navigate to="/" replace />;
   }
 
   return children;
