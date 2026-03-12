@@ -8,11 +8,11 @@ import { Toast } from "../../components/toastMessage";
 import { faPencil, faPlus, faTrash, faFilm, faMicrochip, faSave, faUsers, faCloudUploadAlt, faInfo } from '@fortawesome/free-solid-svg-icons';
 import defaultImg from "../../assets/image-default.png";
 
-
+import { VITE_API_URL_FRONTEND } from "../../services/config";
 export default function EditFilm() {
     const { id } = useParams();
     const navigate = useNavigate();
-    const BACKEND_URL = API_URL_FRONTEND;
+    const BACKEND_URL = VITE_API_URL_FRONTEND;
 
     const [movie, setMovie] = useState(null);
     const [selected, setSelected] = useState(null);

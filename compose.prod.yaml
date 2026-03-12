@@ -1,0 +1,16 @@
+services:
+
+  front:
+      ports:
+        - "8004:80"
+      build:
+        context: ./front-end
+        dockerfile: Dockerfile.prod
+        args:
+          - VITE_API_URL_FRONTEND=http://whiletrue.fr:3004
+
+
+  back:
+    environment:
+      - FRONTEND_URL=http://whiletrue.fr:8004
+   

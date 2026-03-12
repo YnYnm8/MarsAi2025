@@ -1,5 +1,6 @@
 
  import { useState, useEffect } from "react";
+import { VITE_API_URL_FRONTEND } from "../services/config";
 
 export default function RefusedFilmCard() {
   const [film, setFilm] = useState([]);
@@ -8,7 +9,7 @@ export default function RefusedFilmCard() {
     const fetchFilm = async () => {
       try {
         const response = await fetch(
-          `${API_URL_FRONTEND}/comite/refused`,
+          `${VITE_API_URL_FRONTEND}/comite/refused`,
          
             // credentials: "include"
         );

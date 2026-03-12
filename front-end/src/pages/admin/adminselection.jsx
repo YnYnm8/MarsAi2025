@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from "react-router-dom";
 import Sidebar from '../../components/sidebar.jsx';
 import { getStatusDetails } from '../../services/statusHelper.js';
-
+import { VITE_API_URL_FRONTEND } from '../../services/config.js';
 const AdminSelected = () => {
     const [selectedFilms, setSelectedFilms] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -15,7 +15,7 @@ const AdminSelected = () => {
 
     const fetchSelected = async () => {
         try {
-            const response = await fetch(`${API_URL_FRONTEND}/admin/films/selected`, { credentials: 'include' });
+            const response = await fetch(`${VITE_API_URL_FRONTEND}/admin/films/selected`, { credentials: 'include' });
             const json = await response.json();
             let data = Array.isArray(json) ? json : (json.data || []);
             setSelectedFilms(data);
@@ -34,7 +34,7 @@ const AdminSelected = () => {
     const confirmMoveToPending = async () => {
         if (!selectedFilmId) return;
         try {
-            const response = await fetch(`${API_URL_FRONTEND}/admin/films/${selectedFilmId}/status`, {
+            const response = await fetch(`${VITE_API_URL_FRONTEND}/admin/films/${selectedFilmId}/status`, {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ playlistId: 4 }),
@@ -67,7 +67,7 @@ const AdminSelected = () => {
 
     const getPoster = (film) => {
         const raw = film.Files?.[0]?.poster_url || film.poster_url;
-        return raw ? (raw.startsWith('http') ? raw : `${API_URL_FRONTEND}${raw}`) : "/src/assets/youtube.png";
+        return raw ? (raw.startsWith('http') ? raw : `${VITE_API_URL_FRONTEND}${raw}`) : "/src/assets/youtube.png";
     };
 
     const Skeleton = () => (

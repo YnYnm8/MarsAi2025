@@ -1,3 +1,5 @@
+import { VITE_API_URL_FRONTEND } from "../services/config";
+
 export const FilmComponent = ({ data, variant = "details" }) => {
 
     if (!data) return null;
@@ -14,7 +16,7 @@ export const FilmComponent = ({ data, variant = "details" }) => {
 
 
         const cleanPath = path.startsWith('/') ? path : `/${path}`;
-        const BACKEND_URL = `${API_URL_FRONTEND}`;
+        const BACKEND_URL = `${VITE_API_URL_FRONTEND}`;
         return `${BACKEND_URL}${cleanPath}`;
     };
 

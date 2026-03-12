@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-
+import { VITE_API_URL_FRONTEND } from "../../services/config";
 const Gallery = () => {
   const navigate = useNavigate();
   const { t } = useTranslation("gallery", "common");
@@ -34,7 +34,7 @@ const Gallery = () => {
     const fetchFilms = async () => {
       try {
         setLoading(true);
-        const response = await fetch(`${API_URL_FRONTEND}/films`, {
+        const response = await fetch(`${VITE_API_URL_FRONTEND}/films`, {
           method: "GET",
           headers: { "Content-Type": "application/json" },
         });
@@ -69,7 +69,7 @@ const Gallery = () => {
     if (typeof director === "string") return director;
     return t("unknown_director", "Inconnu");
   };
-  const BACKEND_URL = API_URL_FRONTEND;
+  const BACKEND_URL = VITE_API_URL_FRONTEND;
 
   const getPosterUrl = (film) => {
     if (film.Files && film.Files.length > 0 && film.Files[0].poster_url) {
@@ -140,7 +140,7 @@ const Gallery = () => {
     }
     setActiveShareId(null);
     try {
-      const response = await fetch(`${API_URL_FRONTEND}/films/share/${film.id}`, { method: "POST" });
+      const response = await fetch(`${VITE_API_URL_FRONTEND}/films/share/${film.id}`, { method: "POST" });
       const result = await response.json();
       if (result.success && result.incremented) {
         setFilms((prevFilms) =>

@@ -4,7 +4,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useTranslation } from "react-i18next";
-
+import { VITE_API_URL_FRONTEND } from "../../services/config";
 const profileSchema = z.object({
   firstName: z.string().min(2, "val_min_2").optional(),
   lastName: z.string().min(2, "val_min_2").optional(),
@@ -42,7 +42,7 @@ const Profile = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const userRes = await fetch(`${API_URL_FRONTEND}/me`, { credentials: 'include' });
+        const userRes = await fetch(`${VITE_API_URL_FRONTEND}/me`, { credentials: 'include' });
 
         if (userRes.status === 401) { navigate('/login'); return; }
 
@@ -66,7 +66,7 @@ const Profile = () => {
           setValue("x", currentUser.socialNetworks?.x || "");
         }
 
-        const filmsRes = await fetch('API_URL_FRONTEND/my-films', { credentials: 'include' });
+        const filmsRes = await fetch('VITE_API_URL_FRONTEND/my-films', { credentials: 'include' });
         if (filmsRes.ok) {
           const filmsData = await filmsRes.json();
           const filmsArray = Array.isArray(filmsData) ? filmsData : (filmsData.data || []);
@@ -112,7 +112,7 @@ const Profile = () => {
         formData.append("avatar", selectedFile);
       }
 
-      const res = await fetch('API_URL_FRONTEND/profile', {
+      const res = await fetch('VITE_API_URL_FRONTEND/profile', {
         method: 'PUT',
         credentials: 'include',
         body: formData
@@ -135,7 +135,7 @@ const Profile = () => {
     if (!window.confirm(t("confirm_delete"))) return;
 
     try {
-      const res = await fetch(`API_URL_FRONTEND/films/${filmId}`, {
+      const res = await fetch(`VITE_API_URL_FRONTEND/films/${filmId}`, {
         method: 'DELETE',
         credentials: 'include'
       });
@@ -177,7 +177,7 @@ const Profile = () => {
 
   const avatarSrc = previewUrl
     ? previewUrl
-    : (user.avatar ? `API_URL_FRONTEND/${user.avatar.replace(/\\/g, "/")}` : null);
+    : (user.avatar ? `VITE_API_URL_FRONTEND/${user.avatar.replace(/\\/g, "/")}` : null);
 
   const getStatusLabel = (status) => {
     const safeStatus = status ? status.toLowerCase() : 'submitted';
@@ -191,7 +191,7 @@ const Profile = () => {
 
   // Helper pour sécuriser l'URL des réseaux 
   const formatUrl = (url) => url.startsWith('http') ? url : `https://${url}`;
-  const BACKEND_URL = "API_URL_FRONTEND";
+  const BACKEND_URL = "VITE_API_URL_FRONTEND";
 
   return (
     <div className="min-h-screen bg-black text-white font-sans selection:bg-purple-500 selection:text-white">

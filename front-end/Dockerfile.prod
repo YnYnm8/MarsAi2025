@@ -1,7 +1,8 @@
 FROM node as build
 
 WORKDIR /app
-
+ARG VITE_API_URL_FRONTEND
+ENV VITE_API_URL_FRONTEND=$VITE_API_URL_FRONTEND
 COPY . .
 RUN npm install
 # npm install

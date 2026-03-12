@@ -1,14 +1,14 @@
 import { useState, useEffect } from "react";
 
 import HeaderWorkshop from "./headerWorkshop";
-
+import { VITE_API_URL_FRONTEND } from "../../services/config";
 function Workshop() {
   const [workshops, setWorkshops] = useState([]);
   const [loading, setLoading] = useState(true);
 
   async function fetchWorkshop() {
     try {
-      const response = await fetch(`${API_URL_FRONTEND}/api/admin/workshops`);
+      const response = await fetch(`${VITE_API_URL_FRONTEND}/api/admin/workshops`);
 
       if (!response.ok) {
         throw new Error("Erreur HTTP");

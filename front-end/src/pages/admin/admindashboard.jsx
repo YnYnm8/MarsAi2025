@@ -7,7 +7,7 @@ import statistiqueIcon from "/src/assets/statistique.png";
 import calendarIcon from "/src/assets/calendar.png";
 import iconFilm from "/src/assets/icon-film.png";
 import earthIcon from "/src/assets/earth.png";
-
+import { VITE_API_URL_FRONTEND } from '../../services/config';
 const AdminDash = () => {
     const [stats, setStats] = useState({
         totalUsers: 0, totalFilms: 0, totalSelected: 0, totalRejected: 0,
@@ -19,7 +19,7 @@ const AdminDash = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await fetch(`${API_URL_FRONTEND}/admin/stats`, { credentials: 'include' });
+                const response = await fetch(`${VITE_API_URL_FRONTEND}/admin/stats`, { credentials: 'include' });
                 const json = await response.json();
                 if (json.success) setStats(prev => ({ ...prev, ...json.data }));
             } catch (err) { console.error("Erreur chargement stats:", err); }

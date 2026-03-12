@@ -9,6 +9,8 @@ import {
 } from "@fortawesome/free-brands-svg-icons";
 import { useTranslation } from 'react-i18next'; 
 
+import { VITE_API_URL_FRONTEND } from "../services/config";
+
 export default function Footer() {
   const [email, setEmail] = useState("");
   const [status, setStatus] = useState("idle"); 
@@ -25,7 +27,7 @@ export default function Footer() {
 
     try {
       const response = await fetch(
-        `${API_URL_FRONTEND}/api/newsletter/subscribe`,
+        `${VITE_API_URL_FRONTEND}/api/newsletter/subscribe`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },

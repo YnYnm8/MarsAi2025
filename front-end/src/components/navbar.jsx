@@ -8,8 +8,9 @@ import DrapeauCr from "/src/assets/drapeauCr.png";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { useAuth } from "../context/authContext";
+import { VITE_API_URL_FRONTEND } from "../services/config";
 
-const API = `${API_URL_FRONTEND}`;
+const API = `${VITE_API_URL_FRONTEND}`;
 
 const TYPE_ICONS = {
   FILM_SELECTED: { icon: "🏆" },

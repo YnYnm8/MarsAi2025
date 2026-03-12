@@ -1,5 +1,6 @@
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
+import { VITE_API_URL_FRONTEND } from "../services/config";
 
 export default function Film() {
   const { id } = useParams();
@@ -9,7 +10,7 @@ export default function Film() {
     const fetchFilm = async () => {
       try {
         const response = await fetch(
-          `${API_URL_FRONTEND}/films/${id}`,
+          `${VITE_API_URL_FRONTEND}/films/${id}`,
           {
             method: "GET",
             headers: {

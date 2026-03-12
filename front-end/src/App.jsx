@@ -34,7 +34,7 @@ import ComiteProfile from "./pages/comite/ComiteProfile.jsx";
 function App() {
   const location = useLocation();
   const isNotePage = location.pathname === "/comite/note" || location.pathname === "/comite/profile"; // Vérifie si on est sur la page de notation ou de profil du comité pour ne pas afficher le footer
-
+  console.log(import.meta.env);
   return (
     <>
       <TopNavbar />

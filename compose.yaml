@@ -29,11 +29,8 @@ services:
 
   front:
     image: luzrivera/mars-front
-    build: ./front-end
-    ports:
-      - "8004:80"
-    env_file:
-      - ./front-end/.env.prod
+    # ports is NOT HERE look compose.dev.yaml and compose.prod.yaml
+    # build is NOT HERE look compose.dev.yaml and compose.prod.yaml
 
 
   back:
@@ -41,8 +38,25 @@ services:
     build: ./back-end
     ports:
       - "3004:3000"
-    env_file:
-      - ./back-end/.env.prod
+    environment:
+      - DB_NAME=MarsAI-database
+      - DB_USER=user
+      - DB_PASS=user
+      - DB_HOST=bdd
+      - DB_PORT=3306
+      - PORT=3000
+      # - FRONTEND_URL=http://grpfour.whiletrue.fr 
+      - NODE_ENV=production
+      - RESEND_API_KEY=re_cW54KG7F_AwyqtHCuakGBzCmZMfdamhj6
+      - JWT_SECRET=secret123
+      - SMTP_HOST=smtp.mailtrap.io
+      - SMTP_PORT=587
+      - SMTP_USER=resend
+      - SMTP_PASS=re_cW54KG7F_AwyqtHCuakGBzCmZMfdamhj6
+      - SMTP_FROM=noreply@marsai.fr
+      - SMTP_FROM=onboarding@resend.dev
+      - API_KEY=AIzaSyB5clZNC7q8e5s5S6wSn_zg6MT9WCjGt7g
+      - RATELIMIT=500
     depends_on:
       bdd :
         condition: service_healthy
