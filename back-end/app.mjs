@@ -22,6 +22,7 @@ import { WorkshopSeed } from './seeds/workshopSeed.mjs';
 import publicRoutes from './routes/publicRoutes.mjs';
 import contctRoutes from './routes/contactRoute.mjs';
 import notificationRoute from "./routes/notificationRoutes.mjs";
+import reservationRoutes from "./routes/reservationRoutes.mjs"
 import http from "http";
 dotenv.config();
 
@@ -99,6 +100,8 @@ app.use("/comite", comiteRouter);
 app.use("/contact", contctRoutes);
 app.use("/", profileRoutes);
 app.use("/notifications", notificationRoute);
+app.use("/programs", reservationRoutes);
+
 
 app.get("/", (req, res) => res.send("API OK"));
 
