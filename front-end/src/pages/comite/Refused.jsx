@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import RefusedFilmCard from "./RefusedFilmCard.jsx";
+import { VITE_API_URL_FRONTEND } from "../services/config";
 
 export default function Refused() {
   const [films, setFilms] = useState([]);
@@ -7,7 +8,7 @@ export default function Refused() {
   useEffect(() => {
     async function fetchRefused() {
       try {
-        const res = await fetch("http://localhost:3004/playlist/status/refused/2"); // APIのURLに合わせて変更
+        const res = await fetch(`${VITE_API_URL_FRONTEND}/playlist/status/refused/2`); // APIのURLに合わせて変更
         const data = await res.json();
         setFilms(data);
       } catch (err) {

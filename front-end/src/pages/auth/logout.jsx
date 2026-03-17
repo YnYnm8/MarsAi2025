@@ -1,9 +1,9 @@
  import React from "react";
-
+import { VITE_API_URL_FRONTEND } from "../../services/config";
 const Logout = () => {
   const handleLogout = async () => {
     try {
-      const response = await fetch("http://localhost:3004/logout", {
+      const response = await fetch(`${VITE_API_URL_FRONTEND}/logout`, {
         method: "POST",
         credentials: "include", // cookie jwt
       });

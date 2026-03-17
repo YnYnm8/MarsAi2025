@@ -1,0 +1,14 @@
+FROM node
+
+WORKDIR /app
+ARG VITE_API_URL_FRONTEND
+ENV VITE_API_URL_FRONTEND=$VITE_API_URL_FRONTEND
+COPY . .
+# npm install
+RUN npm install
+
+EXPOSE 5173
+
+
+# run the dev server when the container starts
+ENTRYPOINT [ "npm","run","devlan" ]

@@ -4,7 +4,8 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useTranslation } from "react-i18next";
-import { useAuth } from "../../context/authContext";
+import { useAuth } from "../../context/authContext"; 
+import { VITE_API_URL_FRONTEND } from "../../services/config";
 import mailIcon from "/src/assets/mail.png";
 import logo from "/src/assets/icon-stars.png";
 import cadenaIcon from "/src/assets/cadena.png";
@@ -39,10 +40,10 @@ const Login = () => {
   const onSubmit = async (formData) => {
     setServerError("");
     try {
-      const response = await fetch("http://localhost:3004/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        credentials: "include",
+      const response = await fetch(`${VITE_API_URL_FRONTEND}/login`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
         body: JSON.stringify(formData),
       });
 

@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { FilmComponent } from "./film";
 import { useNavigate } from "react-router-dom";
 
+import { VITE_API_URL_FRONTEND } from "../services/config";
 export function FilmList() {
     const [films, setFilms] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -10,7 +11,7 @@ export function FilmList() {
     useEffect(() => {
         const fetchFilms = async () => {
             try {
-                const response = await fetch("http://localhost:3004/films");
+                const response = await fetch(`${VITE_API_URL_FRONTEND}/films`);
                 const data = await response.json();
                 setFilms(data);
             } catch (error) {

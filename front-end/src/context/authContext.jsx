@@ -1,5 +1,6 @@
 /* eslint-disable react-refresh/only-export-components */
 import { createContext, useContext, useState, useEffect } from "react";
+import { VITE_API_URL_FRONTEND } from "../services/config";
 
 const AuthContext = createContext();
 
@@ -9,7 +10,7 @@ export const AuthProvider = ({ children }) => {
 
   const refreshAuth = async () => {
     try {
-      const res = await fetch("http://localhost:3004/me", {
+      const res = await fetch(`${VITE_API_URL_FRONTEND}/me`, {
         credentials: "include",
       });
       if (res.ok) {
@@ -26,7 +27,7 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     const checkAuth = async () => {
       try {
-        const res = await fetch("http://localhost:3004/me", {
+        const res = await fetch(`${VITE_API_URL_FRONTEND}/me`, {
           credentials: "include",
         });
         if (res.ok) {

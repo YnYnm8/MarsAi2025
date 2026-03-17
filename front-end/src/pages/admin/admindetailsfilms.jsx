@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Sidebar from '../../components/sidebar';
-
+import { VITE_API_URL_FRONTEND } from '../../services/config';
 const AdminDetailsFilms = () => {
     const [films, setFilms] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -10,7 +10,7 @@ const AdminDetailsFilms = () => {
     useEffect(() => {
         const fetchFilms = async () => {
             try {
-                const res = await fetch('http://localhost:3004/admin/films', { credentials: 'include' });
+                const res = await fetch(`${VITE_API_URL_FRONTEND}/admin/films`, { credentials: 'include' });
                 const json = await res.json();
                 if (json.success) setFilms(json.data);
             } catch (err) { console.error("Erreur films:", err); }

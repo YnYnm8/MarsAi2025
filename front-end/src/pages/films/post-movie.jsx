@@ -8,7 +8,7 @@ import { useNavigate } from "react-router";
 import { Toast } from "../../components/toastMessage";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faInfo, faTrash, faFilm, faUser, faShieldHeart, faCloudArrowUp, faBookOpen, faCircleInfo, faStar} from '@fortawesome/free-solid-svg-icons';
-
+import { VITE_API_URL_FRONTEND } from "../../services/config";
 export default function PostFilm() {
     const { t } = useTranslation("formulaireF");
 
@@ -60,7 +60,7 @@ export default function PostFilm() {
 
         setIsLoadingYoutube(true);
         try {
-            const response = await fetch(`http://localhost:3004/films/youtube-info?url=${encodeURIComponent(cleanUrl)}`);
+            const response = await fetch(`${VITE_API_URL_FRONTEND}/films/youtube-info?url=${encodeURIComponent(cleanUrl)}`);
             const data = await response.json();
             console.log(data)
             if (response.ok && data.title) {
@@ -136,7 +136,7 @@ export default function PostFilm() {
             formData.set("posterUrl", posterFile);
         }
         try {
-            const response = await fetch("http://localhost:3004/films", {
+            const response = await fetch(`${VITE_API_URL_FRONTEND}/films`, {
                 method: "POST",
                 body: formData,
                 credentials: "include"

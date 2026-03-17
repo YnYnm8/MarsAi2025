@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router';
 import Sidebar from '../../components/sidebar';
-
+import { VITE_API_URL_FRONTEND } from '../../services/config';
 const AdminPlaylist = () => {
     const [playlists, setPlaylists] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -10,7 +10,7 @@ const AdminPlaylist = () => {
     useEffect(() => {
         const fetchPlaylists = async () => {
             try {
-                const response = await fetch('http://localhost:3004/comite/allplaylists', { credentials: 'include' });
+                const response = await fetch(`${VITE_API_URL_FRONTEND}/comite/allplaylists`, { credentials: 'include' });
                 const data = await response.json();
                 if (Array.isArray(data)) {
                     setPlaylists(data.filter(pl => ![1, 2, 3, 4].includes(pl.id)));

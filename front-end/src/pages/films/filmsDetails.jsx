@@ -3,7 +3,7 @@ import { FilmComponent } from "../../components/film"
 import { useParams, useNavigate } from "react-router-dom"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowLeft, faTrashCan, faPenToSquare } from '@fortawesome/free-solid-svg-icons';
-
+import { VITE_API_URL_FRONTEND } from "../../services/config";
 export default function FilmsDetails() {
     const { id } = useParams();
     const [movie, setMovie] = useState(null);
@@ -17,7 +17,7 @@ export default function FilmsDetails() {
         if (!window.confirm("Voulez-vous vraiment supprimer ce film définitivement ?")) return;
 
         try {
-            const res = await fetch(`http://localhost:3004/films/${filmId}`, {
+            const res = await fetch(`${VITE_API_URL_FRONTEND}/films/${filmId}`, {
                 method: 'DELETE',
                 credentials: 'include'
             });
@@ -38,7 +38,7 @@ export default function FilmsDetails() {
         const fetchFilmData = async () => {
             try {
                 setLoading(true);
-                const response = await fetch(`http://localhost:3004/films/${id}`);
+                const response = await fetch(`${VITE_API_URL_FRONTEND}/films/${id}`);
 
                 if (!response.ok) {
                     throw new Error('Film introuvable');

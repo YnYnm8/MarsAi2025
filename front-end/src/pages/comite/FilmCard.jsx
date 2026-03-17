@@ -1,5 +1,7 @@
+import { VITE_API_URL_FRONTEND } from "../../services/config";
+
 export default function FilmCard({ film, isActive }) {
-  const BACKEND_URL = "http://localhost:3004";
+  const BACKEND_URL = `${VITE_API_URL_FRONTEND}`;
 
   const getPosterUrl = () => {
     const file = film.Files?.[0];

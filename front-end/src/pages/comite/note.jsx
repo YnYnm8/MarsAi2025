@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { useRef } from "react";
 import { faTrash, faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-
+import { VITE_API_URL_FRONTEND } from "../../services/config";
 export default function Note() {
   const [films, setFilms] = useState([]);
   const [playlist, setPlaylist] = useState([]);
@@ -26,7 +26,7 @@ export default function Note() {
   const fetchFilmAndPlaylists = async () => {
     try {
 
-      const playlistRes = await fetch("http://localhost:3004/comite/allplaylistsbyuserid", { credentials: 'include' });
+      const playlistRes = await fetch(`${VITE_API_URL_FRONTEND}/comite/allplaylistsbyuserid`, { credentials: 'include' });
 
       if (!playlistRes.ok) throw new Error("Failed to fetch playlists");
 
@@ -72,7 +72,7 @@ export default function Note() {
     try {
       //  レビューを登録
       const reviewResponse = await fetch(
-        `http://localhost:3004/comite/review/${selectedFilm.id}`,
+        `${VITE_API_URL_FRONTEND}/comite/review/${selectedFilm.id}`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -105,7 +105,7 @@ export default function Note() {
     if (!newListName.trim()) return alert("Please enter a name for the list");
 
     try {
-      const response = await fetch("http://localhost:3004/comite/create/playlist", {
+      const response = await fetch(`${VITE_API_URL_FRONTEND}/comite/create/playlist`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
@@ -134,7 +134,7 @@ export default function Note() {
 
 
     try {
-      const playlistResponse = await fetch("http://localhost:3004/comite/film/list", {
+      const playlistResponse = await fetch(`${VITE_API_URL_FRONTEND}/comite/film/list`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
@@ -147,7 +147,7 @@ export default function Note() {
       await playlistResponse.json();
 
 
-      const noteResponse = await fetch("http://localhost:3004/comite/note", {
+      const noteResponse = await fetch(`${VITE_API_URL_FRONTEND}/comite/note`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
@@ -176,7 +176,7 @@ export default function Note() {
     if (!playlistId) return alert("No playlist selected to delete!");
 
     try {
-      const response = await fetch("http://localhost:3004/comite/deletestatus", {
+      const response = await fetch(`${VITE_API_URL_FRONTEND}/comite/deletestatus`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
@@ -219,7 +219,7 @@ const filteredFilms = useMemo(() => {
     if (!comment.trim()) return alert("Veuillez entrer un commentaire.");
 
     try {
-      const response = await fetch(`http://localhost:3004/comite/note`, {
+      const response = await fetch(`${VITE_API_URL_FRONTEND}/comite/note`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
@@ -364,8 +364,8 @@ const filteredFilms = useMemo(() => {
                     <video
                       ref={videoRef}
                       key={selectedFilm.Files[0].film_url}
-                      src={selectedFilm.Files[0].film_url.startsWith('http') ? selectedFilm.Files[0].film_url : `http://localhost:3004${selectedFilm.Files[0].film_url}`}
-                      poster={selectedFilm.Files[0].poster_url?.startsWith('http') ? selectedFilm.Files[0].poster_url : `http://localhost:3004${selectedFilm.Files[0].poster_url}`}
+                      src={selectedFilm.Files[0].film_url.startsWith('http') ? selectedFilm.Files[0].film_url : `${VITE_API_URL_FRONTEND}${selectedFilm.Files[0].film_url}`}
+                      poster={selectedFilm.Files[0].poster_url?.startsWith('http') ? selectedFilm.Files[0].poster_url : `${VITE_API_URL_FRONTEND}${selectedFilm.Files[0].poster_url}`}
                       controls
                       className="w-full rounded-lg"
                     />
@@ -397,7 +397,7 @@ const filteredFilms = useMemo(() => {
               <img
                 src={selectedFilm?.Files?.[0]?.poster_url?.startsWith('http')
                   ? selectedFilm.Files[0].poster_url
-                  : `http://localhost:3004${selectedFilm?.Files?.[0]?.poster_url || "/uploads/youtubeimg.webp"}`}
+                  : `${VITE_API_URL_FRONTEND}${selectedFilm?.Files?.[0]?.poster_url || "/uploads/youtubeimg.webp"}`}
                 alt={selectedFilm?.title || "Film Poster"}
                 className="w-full h-64 object-cover rounded-lg mb-4"
               />

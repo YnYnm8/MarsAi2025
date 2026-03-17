@@ -1,5 +1,6 @@
 import { useEffect, useState, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
+import { VITE_API_URL_FRONTEND } from "../../services/config";
 export default function ComiteProfile() {
   const navigate = useNavigate();
   const [films, setFilms] = useState([]);
@@ -16,11 +17,11 @@ export default function ComiteProfile() {
 
   const fetchFilmAndPlaylists = async () => {
     try {
-      const filmRes = await fetch("http://localhost:3004/films");
+      const filmRes = await fetch(`${VITE_API_URL_FRONTEND}/films`);
       if (!filmRes.ok) throw new Error("Failed to fetch film data");
       const filmsData = await filmRes.json();
 
-      const playlistRes = await fetch("http://localhost:3004/comite/allplaylistsbyuserid", {
+      const playlistRes = await fetch(`${VITE_API_URL_FRONTEND}/comite/allplaylistsbyuserid`, {
         credentials: "include",
       });
       if (!playlistRes.ok) throw new Error("Failed to fetch playlists");
@@ -122,8 +123,8 @@ export default function ComiteProfile() {
                   film.Files?.[0]?.poster_url
                     ? (film.Files[0].poster_url.startsWith('http')
                       ? film.Files[0].poster_url
-                      : `http://localhost:3004${film.Files[0].poster_url}`)
-                    : "http://localhost:3004/uploads/youtubeimg.webp"
+                      : `${VITE_API_URL_FRONTEND}${film.Files[0].poster_url}`)
+                    : `${VITE_API_URL_FRONTEND}/uploads/youtubeimg.webp`
                 }
                 className="w-full h-40 object-cover rounded"
               />

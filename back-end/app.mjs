@@ -29,15 +29,18 @@ dotenv.config();
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const app = express();
-const PORT = process.env.PORT || 3000;
-const FRONTEND_URL = 'http://whiletrue.fr:8004 '.replace(/\/$/, '');
-console.log({FRONTEND_URL});
+const PORT = process.env.PORT;
+const BACKEND_URL = process.env.BACKEND_URL_HOST;
+const FRONTEND_URL = process.env.FRONTEND_URL_HOST;
+
+console.log(" ")
+console.log("-----------------", { FRONTEND_URL }, "-----------------");
 // Créer le serveur HTTP à partir d'Express
 const httpServer = createServer(app);
 // Initialiser Socket.io sur le serveur HTTP
 const io = new Server(httpServer, {
   cors: {
-    origin: ['http://localhost:8004', FRONTEND_URL].filter(Boolean),
+    origin: ['http://grpfour.whiletrue.fr', FRONTEND_URL].filter(Boolean),
     credentials: true,
     methods: ['GET', 'POST'],
   },
@@ -53,7 +56,7 @@ initSocket(io, db);
 // MIDDLEWARES
 
 app.use(cors({
-  origin: ['http://localhost:8004', FRONTEND_URL].filter(Boolean),
+  origin: ['http://grpfour.whiletrue.fr', FRONTEND_URL].filter(Boolean),
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept', 'Origin'],
@@ -71,13 +74,13 @@ app.use(helmet({
       defaultSrc: ["'self'"],
       styleSrc: ["'self'", "'unsafe-inline'"],
       scriptSrc: ["'self'"],
-      imgSrc: ["'self'", 'data:', 'blob:', 'http://localhost:3004'],
+      imgSrc: ["'self'", 'data:', 'blob:', `${BACKEND_URL}`],
       connectSrc: [
         "'self'",
-        "http://localhost:8004",
-        "http://localhost:3004",
-        "ws://localhost:3004",   // WebSocket Socket.io
-        "wss://localhost:3004",
+        "http://grpfour.whiletrue.fr",
+        `${BACKEND_URL}`,
+        `ws://whiletrue.fr:3004`,   // WebSocket Socket.io
+        `wss://whiletrue.fr:3004`,
         FRONTEND_URL.replace('http', 'ws'),
         FRONTEND_URL.replace('http', 'wss'),
       ],
@@ -125,9 +128,9 @@ try {
   console.log("\n      💾 Seeds insérés avec succès  ✅");
 
   // httpServer.listen()
-  httpServer.listen(PORT, () => {
-    console.log(`\n    🚀 Serveur démarré sur http://localhost:${PORT} 🔌`);
-    console.log(`    🔔 Socket.io actif sur ws://localhost:${PORT}`);
+  httpServer.listen(PORT,() => {
+    console.log(`\n    🚀 Serveur démarré sur ${PORT} 🔌`);
+    console.log(`    🔔 Socket.io actif sur ws:${PORT}`);
   });
 
 } catch (error) {

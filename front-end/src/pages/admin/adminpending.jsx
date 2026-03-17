@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from "react-router-dom";
 import Sidebar from '../../components/sidebar.jsx';
 import { getStatusDetails } from '../../services/statusHelper.js';
-
+import { VITE_API_URL_FRONTEND } from '../../services/config.js';
 const AdminPending = () => {
     const [pendingFilms, setSelections] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -14,7 +14,7 @@ const AdminPending = () => {
 
     const fetchFilmsToDiscuss = async () => {
         try {
-            const response = await fetch('http://localhost:3004/admin/films/pending', { credentials: 'include' });
+            const response = await fetch(`${VITE_API_URL_FRONTEND}/admin/films/pending`, { credentials: 'include' });
             const json = await response.json();
             let data = [];
             if (json.success && Array.isArray(json.data)) data = json.data;
@@ -42,7 +42,7 @@ const AdminPending = () => {
         const { filmId, newStatus } = modalConfig;
         const playlistId = newStatus === 'selected' ? 2 : 3;
         try {
-            const response = await fetch(`http://localhost:3004/admin/films/${filmId}/status`, {
+            const response = await fetch(`VITE_API_URL_FRONTEND/admin/films/${filmId}/status`, {
                 method: 'PUT', headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ playlistId }), credentials: 'include'
             });
@@ -56,7 +56,7 @@ const AdminPending = () => {
     const formatDate = (d) => d ? new Date(d).toLocaleDateString('fr-FR') : "N/C";
     const getPoster = (film) => {
         const raw = film.Files?.[0]?.poster_url || film.poster_url;
-        return raw ? (raw.startsWith('http') ? raw : `http://localhost:3004${raw}`) : "/src/assets/youtube.png";
+        return raw ? (raw.startsWith('http') ? raw : `VITE_API_URL_FRONTEND${raw}`) : "/src/assets/youtube.png";
     };
 
     const filteredFilms = pendingFilms.filter(film => {

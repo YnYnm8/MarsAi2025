@@ -9,7 +9,7 @@ import logo from "/src/assets/icon-stars.png";
 import profile from "/src/assets/profil.png";
 import mailIcon from "/src/assets/mail.png";
 import cadenaIcon from "/src/assets/cadena.png";
-
+import { VITE_API_URL_FRONTEND } from "../../services/config";
 const registerSchema = z.object({
   firstName: z.string().min(2, 'val_fname_min'),
   lastName: z.string().min(2, 'val_lname_min'),
@@ -45,7 +45,7 @@ const Register = () => {
     setServerError("");
 
     try {
-      const res = await fetch("http://localhost:3004/register", {
+      const res = await fetch(`${VITE_API_URL_FRONTEND}/register`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

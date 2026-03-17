@@ -1,0 +1,14 @@
+services:
+
+  front:
+      ports:
+        - "8004:5173"
+      build:
+        context: ./front-end
+        dockerfile: Dockerfile.dev
+        args:
+          - VITE_API_URL_FRONTEND=http://localhost:3004
+  
+  back:
+    environment:
+      - FRONTEND_URL_HOST=http://localhost:8004

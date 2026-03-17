@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router';
 import Sidebar from '../../components/sidebar.jsx';
-
+import { VITE_API_URL_FRONTEND } from '../../services/config.js';
 const Admin = () => {
     const navigate = useNavigate();
     const [stats, setStats] = useState({ totalUsers: 0, activeUsers: 0, totalFilms: 0, totalViews: 0, totalShares: 0, filmsByCountry: [], toolsUsage: [] });
@@ -22,8 +22,8 @@ const Admin = () => {
             try {
                 setLoading(true);
                 const [statsRes, usersRes] = await Promise.all([
-                    fetch('http://localhost:3004/admin/stats', { credentials: 'include' }),
-                    fetch('http://localhost:3004/admin/users', { credentials: 'include' })
+                    fetch(`${VITE_API_URL_FRONTEND}/admin/stats`, { credentials: 'include' }),
+                    fetch(`${VITE_API_URL_FRONTEND}/admin/users`, { credentials: 'include' })
                 ]);
                 if (!statsRes.ok || !usersRes.ok) throw new Error("Erreur serveur");
                 const statsJson = await statsRes.json();
@@ -38,7 +38,7 @@ const Admin = () => {
 
     const onUpdateRole = async (userId, newRole) => {
         try {
-            const response = await fetch(`http://localhost:3004/admin/users/${userId}/role`, {
+            const response = await fetch(`${VITE_API_URL_FRONTEND}/admin/users/${userId}/role`, {
                 method: 'PATCH', headers: { 'Content-Type': 'application/json' },
                 credentials: 'include',
                 body: JSON.stringify({ role: newRole })

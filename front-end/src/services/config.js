@@ -1,0 +1,1 @@
+export const VITE_API_URL_FRONTEND = import.meta.env.VITE_API_URL_FRONTEND || "http://localhost:3004";

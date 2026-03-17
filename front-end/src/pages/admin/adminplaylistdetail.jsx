@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router';
 import Sidebar from '../../components/sidebar';
-
+import { VITE_API_URL_FRONTEND } from '../../services/config';
 const AdminPlaylistDetail = () => {
     const { id } = useParams();
     const navigate = useNavigate();
@@ -11,7 +11,7 @@ const AdminPlaylistDetail = () => {
     useEffect(() => {
         const fetchPlaylistFilms = async () => {
             try {
-                const response = await fetch(`http://localhost:3004/admin/playlist/${id}`, { credentials: 'include' });
+                const response = await fetch(`${VITE_API_URL_FRONTEND}/admin/playlist/${id}`, { credentials: 'include' });
                 const result = await response.json();
                 if (result.success && result.data) {
                     setPlaylist(result.data);
@@ -88,7 +88,7 @@ const AdminPlaylistDetail = () => {
                                                 // Sinon c'est un chemin local, on ajoute le serveur devant
                                                 const urlComplete = posterUrl.startsWith('http')
                                                     ? posterUrl
-                                                    : 'http://localhost:3000' + posterUrl;
+                                                    : `${VITE_API_URL_FRONTEND}${posterUrl}`;
 
                                                 //  on affiche l'image
                                                 return (
