@@ -1,7 +1,7 @@
 services:
   bdd:
-    image: mysql  # Utilisation de la version Long Term Support
-    restart: always     
+    image: mysql 
+    restart: always    
     environment:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_USER: user
@@ -34,7 +34,7 @@ services:
 
 
   back:
-    image: luzrivera/mars-back
+    # image:
     build: ./back-end
     ports:
       - "3004:3000"

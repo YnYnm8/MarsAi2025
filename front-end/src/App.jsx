@@ -1,5 +1,5 @@
-// import { useState } from 'react'
 import { Routes, Route, useLocation } from "react-router-dom";
+import ProtectedRoute from "./components/protectedRoute.jsx";
 import Note from "./pages/comite/note.jsx";
 import PostFilm from "./pages/films/post-movie.jsx";
 import Register from "./pages/auth/register.jsx";
@@ -20,70 +20,139 @@ import Reservation from "./pages/reservation/reservation.jsx";
 import Jury from "./pages/jury/jury.jsx";
 import Gallery from "./pages/gallery/Gallery.jsx";
 import EditFilm from "./pages/films/editFilm.jsx";
-// import AdminProfile from "./pages/admin/adminprofile.jsx";
-import AdminAllFilms from "./pages/admin/adminallfilm.jsx"
+import AdminAllFilms from "./pages/admin/adminallfilm.jsx";
 import TopNavbar from "./components/navbar.jsx";
 import Footer from "./components/footer.jsx";
 import AdminPlaylist from './pages/admin/adminplaylist.jsx';
 import AdminPlaylistDetail from './pages/admin/adminplaylistdetail.jsx';
+import MentionsLegales from "./pages/mentionsLegales.jsx";
 
 import Contact from "./pages/auth/Contact.jsx";
 import ComiteProfile from "./pages/comite/ComiteProfile.jsx";
 
-
 function App() {
   const location = useLocation();
-  const isNotePage = location.pathname === "/comite/note" || location.pathname === "/comite/profile"; // Vérifie si on est sur la page de notation ou de profil du comité pour ne pas afficher le footer
-  console.log(import.meta.env);
+  const isNotePage =
+    location.pathname === "/comite/note" ||
+    location.pathname === "/comite/profile";
+
   return (
     <>
       <TopNavbar />
       <main>
         <Routes>
           {/* PUBLIC */}
+          <Route path="/" element={<Home />} />
           <Route path="/gallery" element={<Gallery />} />
           <Route path="/jury" element={<Jury />} />
           <Route path="/top-rated" element={<Gallery />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/programs" element={<Reservation />} />
-
-          {/* FILMS*/}
+          <Route path="/mentions-legales" element={<MentionsLegales />} />
           <Route path="/films/:id" element={<FilmsDetails />} />
-          <Route path="/form-movie" element={<PostFilm />} />
-          <Route path="/edit/:id" element={<EditFilm />} />
-
-          {/* COMITE*/}
-          <Route path="/comite/note" element={<Note />} />
-          <Route path="/comite/profile" element={<ComiteProfile />} />
-
-          {/* USER */}
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/logout" element={<Logout />} />
-          <Route path="/me" element={<Profile />} />
-          <Route path="/profile" element={<Profile />} />
-          <Route path="/" element={<Home />} />
 
-          {/*ADMINISTRATOR*/}
-          <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/workshop" element={<Workshop />} />
-          <Route path="/admin/dashboard" element={<AdminDash />} />
-          <Route path="/admin/statistique" element={<AdminDashboard />} />
-          <Route path="/admin/detailsfilms" element={<AdminDetailsFilms />} />
-          <Route path="/admin/films/selected" element={<AdminSelection />} />
-          <Route path="/admin/films/rejected" element={<Adminrejected />} />
-          <Route path="/admin/films/pending" element={<Adminpending />} />
-          {/* <Route path="/admin/profile" element={<AdminProfile />} /> */}
-          <Route path="/admin/films" element={<AdminAllFilms />} />
-          <Route path="/admin/films/:status" element={<AdminAllFilms />} />
-          <Route path="/admin/playlists" element={<AdminPlaylist />} />
-          <Route path="/admin/playlist/:id" element={<AdminPlaylistDetail />} />
+          {/* CONNECTÉ (tous rôles) */}
+          <Route path="/me" element={
+            <ProtectedRoute>
+              <Profile />
+            </ProtectedRoute>
+          } />
+          <Route path="/profile" element={
+            <ProtectedRoute>
+              <Profile />
+            </ProtectedRoute>
+          } />
+          <Route path="/form-movie" element={
+            <ProtectedRoute>
+              <PostFilm />
+            </ProtectedRoute>
+          } />
+          <Route path="/edit/:id" element={
+            <ProtectedRoute>
+              <EditFilm />
+            </ProtectedRoute>
+          } />
+          <Route path="/workshop" element={
+            <ProtectedRoute>
+              <Workshop />
+            </ProtectedRoute>
+          } />
 
+          {/* COMITÉ + ADMIN */}
+          <Route path="/comite/note" element={
+            <ProtectedRoute roles={['admin', 'committee']}>
+              <Note />
+            </ProtectedRoute>
+          } />
+          <Route path="/comite/profile" element={
+            <ProtectedRoute roles={['admin', 'committee']}>
+              <ComiteProfile />
+            </ProtectedRoute>
+          } />
 
-
+          {/* ADMIN UNIQUEMENT */}
+          <Route path="/dashboard" element={
+            <ProtectedRoute roles={['admin']}>
+              <Dashboard />
+            </ProtectedRoute>
+          } />
+          <Route path="/admin/dashboard" element={
+            <ProtectedRoute roles={['admin']}>
+              <AdminDash />
+            </ProtectedRoute>
+          } />
+          <Route path="/admin/statistique" element={
+            <ProtectedRoute roles={['admin']}>
+              <AdminDashboard />
+            </ProtectedRoute>
+          } />
+          <Route path="/admin/detailsfilms" element={
+            <ProtectedRoute roles={['admin']}>
+              <AdminDetailsFilms />
+            </ProtectedRoute>
+          } />
+          <Route path="/admin/films/selected" element={
+            <ProtectedRoute roles={['admin']}>
+              <AdminSelection />
+            </ProtectedRoute>
+          } />
+          <Route path="/admin/films/rejected" element={
+            <ProtectedRoute roles={['admin']}>
+              <Adminrejected />
+            </ProtectedRoute>
+          } />
+          <Route path="/admin/films/pending" element={
+            <ProtectedRoute roles={['admin']}>
+              <Adminpending />
+            </ProtectedRoute>
+          } />
+          <Route path="/admin/films" element={
+            <ProtectedRoute roles={['admin']}>
+              <AdminAllFilms />
+            </ProtectedRoute>
+          } />
+          <Route path="/admin/films/:status" element={
+            <ProtectedRoute roles={['admin']}>
+              <AdminAllFilms />
+            </ProtectedRoute>
+          } />
+          <Route path="/admin/playlists" element={
+            <ProtectedRoute roles={['admin']}>
+              <AdminPlaylist />
+            </ProtectedRoute>
+          } />
+          <Route path="/admin/playlist/:id" element={
+            <ProtectedRoute roles={['admin']}>
+              <AdminPlaylistDetail />
+            </ProtectedRoute>
+          } />
         </Routes>
       </main>
-      {!isNotePage && <Footer />}    </>
+      {!isNotePage && <Footer />}
+    </>
   );
 }
 

@@ -5,16 +5,22 @@ import { VITE_API_URL_FRONTEND } from "../services/config";
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true); 
 
   const refreshAuth = async () => {
     try {
       const res = await fetch(`${VITE_API_URL_FRONTEND}/me`, {
         credentials: "include",
       });
-      setIsLoggedIn(res.ok);
+      if (res.ok) {
+        const data = await res.json();
+        setUser(data.user);
+      } else {
+        setUser(null);
+      }
     } catch {
-      setIsLoggedIn(false);
+      setUser(null);
     }
   };
 
@@ -24,16 +30,32 @@ export const AuthProvider = ({ children }) => {
         const res = await fetch(`${VITE_API_URL_FRONTEND}/me`, {
           credentials: "include",
         });
-        setIsLoggedIn(res.ok);
+        if (res.ok) {
+          const data = await res.json();
+          setUser(data.user);
+        } else {
+          setUser(null);
+        }
       } catch {
-        setIsLoggedIn(false);
+        setUser(null);
+      } finally {
+        setLoading(false); 
       }
     };
     checkAuth();
   }, []);
 
   return (
-    <AuthContext.Provider value={{ isLoggedIn, setIsLoggedIn, refreshAuth }}>
+    <AuthContext.Provider
+      value={{
+        user,
+        setUser,
+        loading,
+        isLoggedIn: !!user,   
+        setIsLoggedIn: (v) => { if (!v) setUser(null); },
+        refreshAuth,
+      }}
+    >
       {children}
     </AuthContext.Provider>
   );

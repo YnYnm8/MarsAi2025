@@ -170,72 +170,63 @@ export async function getAllPlaylists(req, res) {
 export async function getAllPlaylistsByUserId(req, res) {
   try {
     const userId = req.user.id;
+    const userRole = req.user.role;
     const DEFAULT_LISTS = ["NOT_WATCHED", "PENDING", "SELECTED", "REJECTED"];
 
-    // 1. Aseguramos que las listas existan (AFUERA del proceso de películas)
+    // vue globale de tous les films sans filtre userId
+    if (userRole === 'admin') {
+      const playlists = await Playlist.findAll({
+        include: [
+          {
+            model: Film,
+            include: [
+              { model: File, as: "Files", attributes: ["id", "film_url", "poster_url", "galerie_url"] },
+              { model: User, attributes: ["id", "firstName", "lastName", "country"] },
+              { model: Note, as: "NotesDirect", required: false, attributes: ["score", "comment"] }
+            ]
+          }
+        ],
+        order: [['id', 'ASC']]
+      });
+      return res.json(playlists);
+    }
+
     for (const status of DEFAULT_LISTS) {
       await Playlist.findOrCreate({
         where: { status, UserId: userId },
-        defaults: { status, UserId: userId }, // Importante añadir UserId aquí también
+        defaults: { status, UserId: userId },
       });
     }
 
-    // 2. Buscamos la playlist "NOT_WATCHED" del usuario una sola vez
     const notWatchedPlaylist = await Playlist.findOne({
       where: { status: "NOT_WATCHED", UserId: userId }
     });
 
-    // 3. Traemos todas las películas del sistema una sola vez
     const allFilms = await Film.findAll();
 
-    // 4. Asignamos las películas que el usuario aún no tiene en ninguna lista
-    // Usamos un bucle simple para asegurar que cada peli tenga una relación con este usuario
     for (const film of allFilms) {
       await PlaylistFilm.findOrCreate({
-        where: {
-          FilmId: film.id,
-          UserId: userId
-          // No ponemos PlaylistId en el "where" para que si ya está en SELECTED, no la cree en NOT_WATCHED
-        },
-        defaults: {
-          FilmId: film.id,
-          UserId: userId,
-          PlaylistId: notWatchedPlaylist.id // Solo si es nueva, va a NOT_WATCHED
-        }
+        where: { FilmId: film.id, UserId: userId },
+        defaults: { FilmId: film.id, UserId: userId, PlaylistId: notWatchedPlaylist.id }
       });
     }
 
-    // 5. UNA SOLA CONSULTA FINAL para traer todo limpio y actualizado
     const playlists = await Playlist.findAll({
       where: { UserId: userId },
       include: [
         {
           model: Film,
           include: [
-           {
-          model: File,
-          as: "Files",
-          attributes: ["id", "film_url", "poster_url", "galerie_url"]
-        },
-        {
-          model: User,
-          attributes: ["id", "firstName", "lastName", "country"]
-        },
-        {
-          model: Note,
-          as: "NotesDirect",
-          where: { UserId: userId },
-          required: false,
-          attributes: ["score", "comment"]
-        }
+            { model: File, as: "Files", attributes: ["id", "film_url", "poster_url", "galerie_url"] },
+            { model: User, attributes: ["id", "firstName", "lastName", "country"] },
+            { model: Note, as: "NotesDirect", where: { UserId: userId }, required: false, attributes: ["score", "comment"] }
           ]
         }
       ],
       order: [['id', 'ASC']]
     });
-    
-    return res.json(playlists);
 
+    return res.json(playlists);
   } catch (err) {
     console.error("Error en getAllPlaylists:", err);
     res.status(500).json({ error: err.message });
