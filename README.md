@@ -1,108 +1,120 @@
-# mars-ia-atelier2-toulouse
-La plateforme marsAI est le support numérique officiel du festival marsAI, concours international de courts-métrages générés par intelligence artificielle.
+# 🎬 MarsAI 2025 — Plateforme Mobile Film Festival
 
-## Arborescence
-/back
-/front
-README.md
+> **Plateforme web full-stack pour un festival international de cinéma mobile**  
+> Stage Full-Stack | La Plateforme × Mars AI | Toulouse | janvier – mars 2026
+
+---
+
+## 📖 Présentation du projet
+
+Développement d'une plateforme web pour un **festival international de cinéma mobile** accueillant des participants de plus de 120 pays.  
+Le cœur du projet est une **interface de jury** permettant aux juges d'évaluer et noter les films soumis au festival, intégrée à une API RESTful sécurisée.
+
+---
+
+## ✨ Fonctionnalités principales
+
+- 🎥 **Catalogue des films** — Parcourir et consulter les œuvres soumises au festival
+- ⭐ **Interface d'évaluation** — Les jurés notent et soumettent leurs scores par film
+- 🔐 **Authentification JWT** — Connexion sécurisée et gestion des sessions
+- 🌍 **Conception scalable** — Architecture pensée pour 120+ pays participants
+
+---
+
+## 🛠️ Stack technique
+
+### Frontend
+| Technologie | Usage |
+|-------------|-------|
+| React + Vite | Composants UI, application SPA |
+| TypeScript | Développement typé |
+| Tailwind CSS | Design responsive |
+
+### Backend
+| Technologie | Usage |
+|-------------|-------|
+| Node.js + Express | Serveur API RESTful |
+| JWT | Authentification & autorisation |
+| MySQL + Sequelize ORM | Gestion de la base de données |
+
+### Outils & Méthodes
+| Outil | Usage |
+|-------|-------|
+| Git / GitHub | Versioning & collaboration |
+| Postman | Tests API |
+| Figma | Prototypage UI |
+| Docker | Gestion des environnements |
+| Agile / Scrum | Organisation en sprints |
+
+---
+
+## 🚀 Installation
+
+### Prérequis
+- Node.js v18+
+- MySQL
+- Git
+
+### Lancer le projet
+
+```bash
+# Cloner le dépôt
+git clone https://github.com/YnYnm8/MarsAi2025.git
+cd MarsAi2025
+```
+
+**Backend**
+```bash
+cd back-end
+cp .env.example .env   # Configurer les variables d'environnement
+npm install
+npm run dev
+```
+
+**Frontend**
+```bash
+cd front-end
+npm install
+npm run dev
+```
+
+---
+
+## 📁 Structure du projet
+
+```
+MarsAi2025/
+├── back-end/
+│   ├── src/
+│   │   ├── controllers/
+│   │   ├── models/
+│   │   ├── routes/
+│   │   └── middlewares/
+│   └── .env.example
+└── front-end/
+    ├── src/
+    │   ├── components/
+    │   ├── pages/
+    │   └── services/
+    └── vite.config.ts
+```
+
+---
+
+## 👩‍💻 Développeure
+
+**Meiko YAHYAOUI**  
+Développeuse Web & Web Mobile — La Plateforme, Toulouse  
+[GitHub](https://github.com/YnYnm8) · [Email](mailto:meikotoulouse0726@gmail.com)
+
+---
+
+## 📄 Licence
+
+Ce projet a été développé dans le cadre d'un stage de formation professionnelle.
 
 
-## EntityDiagram
-```mermaid
-erDiagram
 
-
-User {
-  int id 
-}
-
-Film {
-  int id
-  int user_id
-}
-
-Sponsor {
-  int id
-}
-
-Prix {
-  int id
-  int film_id
-  int sponsor_id
-}
-
-Workshop {
-  int id
-  int user_id
-  int category_id
-}
-
-WorkshopCategory {
-  int id
-}
-
-Playlist {
-  int id
-  int user_id
-}
-
-Selection {
-  int id
-  int user_id
-}
-
-Notification {
-  int id
-  int user_id
-  int workshop_id
-  int film_id
-  int prix_id
-}
-
-File {
-  int id
-  int film_id
-}
-
-PlaylistFilm {
-  int id
-  int playlist_id
-  int film_id
-}
-
-SelectionFilm {
-  int id
-  int selection_id
-  int film_id
-}
-
-FilmSponsor {
-  int id
-  int film_id
-  int sponsor_id
-}
-
-User ||--o{ Film : candidate
-User ||--o{Playlist : has
-User }o--o{Film:Comment
-User }o--o{Film:annotation
-User }o--o{Workshop:sub
-User ||--o{Notification: received
-
-Film }o--||Selection:select
-Film||--||File:dubbed(url)
-Film||--||File:posted
-Film||--||File:subtitled
-Film}o--o{Playlist:select
-Film||--o{Prix:won
-
-Prix}o--o{Sponsor:support
-Pris}o--||Selection:belong
-sponsor}o--o|Selection:support
-
-workshop}o--o|Notification:recieve
-workshop}o--|{{workshopcategory:has
-workshop}o--o{Sponsor:support
 
 
 
