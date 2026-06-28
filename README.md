@@ -20,7 +20,13 @@ Le cœur du projet est une **interface de jury** permettant aux juges d'évaluer
 - 🌍 **Conception scalable** — Architecture pensée pour 120+ pays participants
 
 ---
-
+👩‍💻 Mon rôle
+Développement de l’interface jury (React)
+Implémentation des appels API REST
+Intégration du système d’authentification JWT
+Participation à l’architecture front/back
+Travail en équipe Agile 
+---
 ## 🛠️ Stack technique
 
 ### Frontend
