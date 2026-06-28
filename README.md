@@ -21,11 +21,11 @@ Le cœur du projet est une **interface de jury** permettant aux juges d'évaluer
 
 ---
 ## 👩‍💻 Mon rôle
--Développement de l’interface jury (React)
--Implémentation des appels API REST
--Intégration du système d’authentification JWT
--Participation à l’architecture front/back
--Travail en équipe Agile 
+- Développement de l’interface jury (React)
+- Implémentation des appels API REST
+- Intégration du système d’authentification JWT
+- Participation à l’architecture front/back
+- Travail en équipe Agile 
 ---
 ## 🛠️ Stack technique
 
